@@ -19,11 +19,15 @@ body {
 
 .header {
 	color: rgb(255,220,80);
+	font-family: 'Bebas Neue', cursive;
+	font-size: 80px;
 }
 
 .box-text {
 	color: #272727;
 	font-weight: bold;
+	font-family: 'Bebas Neue';
+	font-size: 80px;
 }
 
 nav{
@@ -69,8 +73,9 @@ nav a:hover {
 
 .contain-box {
 	border-radius: 0;
-	border-color: white;
+	border-color: rgb(236,236,233);
 	border-style: solid;
+	box-shadow: rgb(236,236,233) 10px 10px 0px;
 }
 
 .footer-bg {
