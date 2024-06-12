@@ -1,0 +1,199 @@
+---
+title: "Computer Graphics"
+publishDate: "19th April 2024"
+---
+
+## Blurb: Things from the Internet
+
+[Learning Opengl](https://open.gl/introduction)
+[Math For Game Developers](https://www.youtube.com/playlist?list=PLW3Zl3wyJwWNQjMz941uyOIq3Nw6bcDYC)
+[OpenGL Tutorials](https://antongerdelan.net/opengl/index.html)
+[OpenGL Documentation](https://docs.gl/)
+
+Rust:
+[Learn OpenGL Rust](https://rust-tutorials.github.io/learn-opengl/introduction.html)
+[OpenGL with Rust - glfw Lib](https://crates.io/crates/glfw)
+[Unreal Rust](https://maikklein.github.io/unreal-rust-1/)
+
+## How GPU rendering works
+
+Branch Education Video [Link](https://www.youtube.com/watch?v=C8YtdC8mxTU&pp=ygUXSG93IEdQVSByZW5kZXJpbmcgd29ya3M%3D)
+Graphical Processing Units [Link](https://www.youtube.com/watch?v=bZdxcHEM-uc&pp=ygUXSG93IEdQVSByZW5kZXJpbmcgd29ya3M%3D)
+Playlist of Learning OpenGL [Link](https://www.youtube.com/playlist?list=PLvv0ScY6vfd9zlZkIIqGDeG5TUWswkMox)
+
+## Computer Graphics
+
+A consciously managed and documented technology directed toward communicating information accurately and descriptively -- Computer Graphics, by William Fetter, 1966.
+
+### Books
+
+"Computer Graphics with OpenGL" D. Hearn, M. P. baker, Prentce Hall 2003
+"Computer Graphics: Principles and Practices" Foley
+
+## Computer Graphics with OpenGL
+
+### What is OpenGL?
+
+OpenGL is mainly considered an API (an Application Programming Interface) that provides us with a large set of functions that we can use to manipulate graphics and images. However, OpenGL by itself is not an API, but merely a specification, developed and maintained by the www.khronos.org.
+
+The OpenGL specification specifies exactly what the result/output of each function should be
+and how it should perform. This means we have different solutions that achieve the same specifications provided. This is also why we have different OpenGL versions on different drivers written and manufactured by numerous companies: Apple, Linux, etc.
+
+> Source of problems related to graphics
+> Since most implementations are built by graphics card manufacturers. Whenever there is
+a bug in the implementation, this is usually solved by updating your video card drivers;
+those drivers include the newest versions of OpenGL that your card supports. This is one
+of the reasons why it’s always advised to occasionally update your graphic drivers.
+
+What is immediate mode and core-profile in OpenGL computer graphics:
+
+- Immediate Mode (frequently known as `Fixed Function Pipeline`) refers to a method of rendering graphical objects directly on the screen without any intermediate data structures. In this approach, each object's attributes are specified individually and immediately before being rendered, allowing for more flexibility but also requiring more manual control over the drawing process. This can lead to faster performance when dealing with simple scenes or small numbers of objects, as there is no need to build up complex data structures. However, it may not be suitable for large-scale applications that require efficient management of multiple objects.
+- Unlike Immediate Mode, `Core-Profile` insist on the use of a set of functions as a standard from OpenGL maintainers in every OpenGL version. The Core Profile aims to provide a stable foundation for future versions of OpenGL while maintaining backward compatibility with existing codebases.
+
+OpenGL extensions are additional code implemented that usually haven't been included in the main OpenGL project, but are useful for some graphics computation and processing.
+
+### OpenGL Contexts
+
+OpenGL is by itself a large state machine: a collection of variables that define how OpenGL should
+currently operate. The state of OpenGL is commonly referred to as the `OpenGL context`.
+
+### OpenGL and GLFW (other libraries too)
+
+The first thing we need to do before we start creating stunning graphics is to create an OpenGL
+context and an application window to draw in. However, those operations are specific per operating system and OpenGL purposefully tries to abstract itself from these operations. This means we have to create a window, define a context, and handle user input all by ourselves.
+
+Luckily, there are quite a few libraries out there that provide the functionality we seek, some
+specifically aimed at OpenGL. Those libraries save us all the operation-system specific work and
+give us a window and an OpenGL context to render in. Some of the more popular libraries are
+GLUT, SDL, SFML and GLFW.
+
+> GLFW
+> GLFW is a library, written in C, specifically targeted at OpenGL. GLFW gives us the bare necessities required for rendering goodies to the screen. It allows us to create an OpenGL context, define window parameters, and handle user input, which is plenty enough for our purposes.
+
+### Graphics Pipeline
+
+The graphics pipeline takes as input a set of 3D coordinates and transforms these to colored
+2D pixels on your screen. The graphics pipeline can be divided into several steps where each step
+requires the output of the previous step as its input.
+
+
+All of these steps are highly specialized (they have one specific function) and can easily be executed in parallel. Because of their parallel nature, graphics cards of today have thousands of small processing cores to quickly process your data within the graphics pipeline.
+
+The processing cores run small programs on the GPU for each step of the pipeline. These small programs are called `shaders`.
+
+Some of these shaders are configurable by the developer which allows us to write our own
+shaders to replace the existing default shaders. This gives us much more fine-grained control over
+specific parts of the pipeline and because they run on the GPU, they can also save us valuable CPU
+time. Shaders are written in the`OpenGL Shading Language (GLSL)` and we’ll delve more into that in the next chapter.
+
+> Primitives
+> How we want our Vertex Data[^1] to be rendered are aided by hints. These hints are called Primitives because they essentially tell the shaders in the graphics pipeline how to arrange and render the vertex data.
+> Some of these hints are `GL_POINTS`, `GL_TRIANGLES` and `GL_LINE_STRIP`.
+
+The first part of the pipeline is the `vertex shader` that takes as input a single vertex. The main
+purpose of the vertex shader is to transform 3D coordinates into different 3D coordinates (more on
+that later) and the vertex shader allows us to do some basic processing on the vertex attributes.
+
+The `primitive assembly stage` takes as input all the vertices (or vertex if `GL_POINTS` is chosen) from the vertex shader that form a primitive and assembles all the point(s) in the primitive shape given; in this case a triangle.
+
+The output of the primitive assembly stage is passed to the `geometry shader`. The geometry
+shader takes as input a collection of vertices that form a primitive and has the ability to generate
+other shapes by emitting new vertices to form new (or other) primitive(s). In this example case, it
+generates a second triangle out of the given shape.
+
+The output of the geometry shader is then passed on to the `rasterization stage` where it maps the resulting primitive(s) to the corresponding pixels on the final screen, resulting in fragments for the `fragment shader` to use.
+
+Before the fragment shaders run, clipping is performed. Clipping discards all fragments that are outside your view, increasing performance.
+
+> Normalized Device Coordinates (NDC)
+> Once your vertex coordinates have been processed in the vertex shader, they should be in normalized device coordinates which is a small space where the x, y and z values vary from -1.0 to 1.0.
+
+### Shaders
+
+Shaders are little programs that rest on the GPU. They convert input into output, usually in the graphics pipeline. Shaders are written in the C-like language GLSL. GLSL is tailored for use with graphics and contains useful features specifically targeted at vector and matrix manipulation.
+
+Shaders typically follow this structure:
+
+```GLSL
+#version version_number
+in type in_variable_name;
+in type in_variable_name;
+
+out type out_variable_name;
+
+uniform type uniform_name;
+
+void main() {
+ ...
+ out_variable_name = function_or_some_procedure;
+}
+```
+
+> When we are talking about the vertex shader, each input variable is also known as the `vertex attribute`
+
+There is a maximum number of vertex attributes we're allowed to declare, limited by the hardware. OpenGL guarantees there are always at least 16 4-component vertex attributes available, but some hardware may allow for more, which you can retrieve by querying `GL_MAX_VERTEX_ATTRIBS`
+
+#### Data Types
+
+GLSL has `int`, `float`, `double`. `uint`, `bool` and also features two container types `vectors` and `matrices`.
+
+Vectors in GLSL come in 2, 3, or 4 component containers for any of the basic types mentioned. They can take the following form, **n represents the number of components**:
+
+- `vecn`: the default vector of `n` floats.
+- `bvecn`: a vector of `n` booleans.
+- `ivecn`: a vector of `n` integers.
+- `uvecn`: a vector of `n` unsigned integers.
+- `dvecn`: a vector of `n` double components.
+
+#### Uniforms
+
+Uniforms are another way to pass data from our application on the CPU to the shaders on the GPU. Uniforms are however slightly different compared to vertex attributes. First of all, uniforms are`global`. Global, meaning that a uniform variable is unique per shader program object, and can be accessed from any shader at any stage in the shader program. Second, whatever you set the uniform value to, uniforms will keep their values until they’re either reset or updated.
+
+> Uniforms
+>If you declare a uniform that isn’t used anywhere in your GLSL code the compiler will
+silently remove the variable from the compiled version which is the cause for several
+frustrating errors; keep this in mind!
+
+This is how we initial uniforms:
+
+```glsl
+uniform data_type uniform_name;
+```
+
+#### Textures
+
+A texture is a 2D image (even 1D and 3D textures exist) used to add detail to an object; think of a texture as a piece of paper with a nice brick image (for example) on it neatly folded over your 3D house so it looks like your house has a stone exterior.
+
+> Next to images, textures can also be used to store a large collection of arbitrary data tosend to the shaders, but we’ll leave that for a different topic.
+
+In order to map a texture to the triangle we need to tell each vertex of the triangle which part of the texture it corresponds to. Each vertex should thus have a texture coordinate associated with them that specifies what part of the texture image to sample from. Fragment interpolation then does the rest for the other fragments.
+
+Retrieving the texture color using texture coordinates is called `sampling`. Texture coordinates
+start at (0,0) for the lower left corner of a texture image to (1,1) for the upper right corner of a
+texture image. The following image shows how we map texture coordinates to the triangle:
+
+
+We only have to pass 3 texture coordinates (in the case of a triangle) to the vertex shader, which then passes those to the fragment shader that neatly interpolates all the texture coordinates for each fragment.
+
+##### Texture Wrapping
+
+When we specify the sampling texture coordinates outside the range of (0, 0 ) to (1, 1), OpenGL defaults to repeating the images as many times as it can. We can change that by defining what it has to do with the following enums:
+
+- `GL_REPEAT`: The default behavior for textures. Repeats the texture image.
+- `GL_MIRRORED_REPEAT`: Same as GL_REPEAT but mirrors the image with each repeat.
+- `GL_CLAMP_TO_EDGE`: Clamps the coordinates between 0 and 1. The result is that higher
+coordinates become clamped to the edge, resulting in a stretched edge pattern.
+- `GL_CLAMP_TO_BORDER`: Coordinates outside the range are now given a user-specified
+border color.
+
+
+> If we are to use the `GL_CLAMP_TO_BORDER` enum option, we would also have to set the border color and pass it to the `glTexParameter` Function Attribute setter.
+
+```glsl
+float borderColor[] = { 1.0f, 1.0f, 0.0f, 1.0f };
+glTexParameterfv(GL_TEXTURE_2D, GL_TEXTURE_BORDER_COLOR, borderColor);
+```
+
+##### Texture Filtering
+
+[^1] Vertex Data is a collection of 3D coordinates.
