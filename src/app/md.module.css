@@ -1,5 +1,5 @@
 .markdown {
-  @apply font-sans text-gray-800 leading-relaxed text-sm;
+  @apply font-sans text-gray-800 leading-relaxed text-sm text-white;
 }
 
 .markdown h1 {
@@ -11,19 +11,19 @@
 }
 
 .markdown p {
-  @apply my-4;
+  @apply my-4 text-base;
 }
 
 .markdown code {
-  @apply bg-gray-200 px-1.5 py-0.5 rounded text-sm font-mono;
+  @apply bg-transparent px-1.5 py-0.5 rounded text-sm font-mono text-[#FE7A00];
 }
 
 .markdown pre {
-  @apply bg-gray-200 p-4 rounded overflow-x-auto;
+  @apply bg-blue-950 text-black p-4 rounded overflow-x-auto;
 }
 
 .markdown a {
-  @apply text-blue-500 underline;
+  @apply text-[#FE7A00] underline;
 }
 
 .markdown ul {

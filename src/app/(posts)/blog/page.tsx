@@ -8,7 +8,7 @@ async function Page() {
     <div>
       <div>
         <h3>Posts</h3>
-        <p className="text-neutral-500">{`${blogs.length} ${
+        <p className="text-[#FE7A00]">{`${blogs.length} ${
           blogs.length === 1 ? "post published" : "posts published"
         }`}</p>
       </div>
@@ -21,7 +21,7 @@ async function Page() {
                 <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
                   <h5>{item.frontmatter.title}</h5>
                 </div>
-                <p className="text-neutral-500">
+                <p className="text-[#FE7A00]">
                   {item.frontmatter.publishDate}
                 </p>
               </div>

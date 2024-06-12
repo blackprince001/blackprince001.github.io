@@ -17,7 +17,7 @@ async function BlogPosts() {
         </div>
         <Link
           href={"/blog"}
-          className="text-neutral-500 underline hover:text-black ease-in-out duration-500"
+          className="text-orange-800 underline hover:text-black ease-in-out duration-500"
         >
           <p className="text-sm">View Posts</p>
         </Link>
@@ -35,7 +35,7 @@ async function BlogPosts() {
               <Link href={`/blog/${item.slug}`} className="hover:underline">
                 <h6>{item.frontmatter.title}</h6>
               </Link>
-              <p className="text-neutral-500">{item.frontmatter.publishDate}</p>
+              <p className="text-[#FE7A00]">{item.frontmatter.publishDate}</p>
             </div>
           );
         })}

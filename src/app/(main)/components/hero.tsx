@@ -8,7 +8,7 @@ function HeroSection() {
     <div className="pb-[10vh]">
       <div>
         <h2 className="font-semibold">0xDEADC0DE</h2>
-        <p className="text-neutral-500">
+        <p className="text-[#FE7A00]">
             engineering architect / mfiridwuma ho nimdefoɔ
         </p>
 

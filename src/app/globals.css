@@ -8,7 +8,7 @@
 
 @layer base {
   body {
-    @apply bg-[#ffffff] text-black bg-[url('/noise.png')] bg-[0] bg-size-default
+    @apply text-white bg-[url('/noise.png')] bg-[0] bg-size-default bg-[#5200FF]
   }
   h1 {
     @apply scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl;
@@ -29,15 +29,15 @@
     @apply scroll-m-20 text-sm font-semibold tracking-tight;
   }
   p {
-    @apply leading-7 font-light text-sm;
+    @apply leading-7 font-light text-base;
   }
 }
 
 @layer components {
   .btn {
-    @apply bg-[#202020] text-white px-4 py-2 flex gap-3 items-center hover:shadow-md;
+    @apply bg-[#FE7A00] text-white px-4 py-2 flex gap-3 items-center hover:shadow-md;
   }
   .nav-container{
-    @apply bg-[#ffffff] bg-[url('/noise.png')] bg-[0] bg-size-default
+    @apply bg-[#5200FF] bg-[url('/noise.png')] bg-[0] bg-size-default text-white font-bold text-2xl
   }
 }
