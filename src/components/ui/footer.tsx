@@ -16,7 +16,7 @@ function Footer() {
         </div>
 
       <p>
-        © {new Date().getFullYear()} Copywright not Reserved.
+        © {new Date().getFullYear()} Copyright not Reserved.
       </p>
     </footer>
   );
