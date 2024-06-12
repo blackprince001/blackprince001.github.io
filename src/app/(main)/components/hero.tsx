@@ -20,11 +20,11 @@ function HeroSection() {
         </p>
         <br />
         <p>
-        Manya osuahu adwuma wɔ tebea ahodoɔ ne amanyɔsɛm mu, na mehwɛ nso sɛ ɛbɛma ENHENCE m'adwuma. Ɛyɛ adwuma wɔ engineering adwumakuo anaa Adesuabea, mɛsiesie me ho ma challenges, na mɛyɛ krado bere nyinaa ma any challenge.
+        Manya osuahu adwuma wɔ tebea ahodoɔ ne amanyɔsɛm mu, na mehwɛ nso sɛ ɛbɛma ENHENCE madwuma. Ɛyɛ adwuma wɔ engineering adwumakuo anaa Adesuabea, mɛsiesie me ho ma challenges, na mɛyɛ krado bere nyinaa ma any challenge.
         </p>
         <br />
         <p>
-        Nnipa dodow no ara gye di sɛ meyɛ onipa a wayera a ɔfiri nsase a asɛe no mu, nanso mewɔ ha sɛ megye m'ani kɛkɛ. M'ani gye nneɛma bi a ɛyɛ nwonwa paa ho paa. Mɛyɛ nhwehwɛmu a ɛbɛboa wo, Stranger.
+        Nnipa dodow no ara gye di sɛ meyɛ onipa a wayera a ɔfiri nsase a asɛe no mu, nanso mewɔ ha sɛ megye mani kɛkɛ. Mani gye nneɛma bi a ɛyɛ nwonwa paa ho paa. Mɛyɛ nhwehwɛmu a ɛbɛboa wo, Stranger.
         </p>
       </div>
     </div>

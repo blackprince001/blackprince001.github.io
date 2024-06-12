@@ -8,8 +8,7 @@ const nextConfig = {
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 };
 
-module.exports = nextConfig;
- 
+
 const withMDX = createMDX({
   options: {
    
