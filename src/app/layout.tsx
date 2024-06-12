@@ -32,16 +32,16 @@ export const metadata: Metadata = {
   openGraph: {
     title: "blackprince",
     description: "Engineering Journal",
-    url: "https://nkasante.com",
+    url: "https://blackprince001.github.io",
     siteName: "blackprince",
     images: [
       {
-        url: "https://nkasante.com/images/nk-dark.png",
+        url: "https://blackprince001.github.io/images/nk-dark.png",
         width: 800,
         height: 600,
       },
       {
-        url: "https://nkasante.com/images/nk-dark.png",
+        url: "https://blackprince001.github.io/images/nk-dark.png",
         width: 1800,
         height: 1600,
         alt: "blackprince",

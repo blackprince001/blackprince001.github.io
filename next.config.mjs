@@ -2,8 +2,13 @@ import createMDX from '@next/mdx'
  
 /** @type {import('next').NextConfig} */
 const nextConfig = {
+  basePath: "/public",
+  output: "export",  // <=== enables static exports
+  reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
-}
+};
+
+module.exports = nextConfig;
  
 const withMDX = createMDX({
   options: {
