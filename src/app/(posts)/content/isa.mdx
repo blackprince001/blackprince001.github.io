@@ -96,7 +96,7 @@ The name R-type is short for register-type. R-type instructions use three regist
 
 - The operation the instruction performs is encoded in the two fields highlighted in blue: op (also called opcode or operation code) and funct (also called the function).
 
-> [!NOTE] Note for Opcode and Funct for R-type:
+> Note for Opcode and Funct for R-type:
 > All R-type instructions have an opcode of 0.
 > The specific R-type operation is determined by the funct field.
 > For example, the opcode and funct fields for the add instruction are 0 (0000002) and 32 (1000002), respectively. Similarly, the sub instruction has an opcode and funct field of 0 and 34.
@@ -122,7 +122,7 @@ rs and imm are always used as source operands. rt is used as a destination for s
 <img src="i-types_mips.png"/>
 
 I-type instructions have a 16-bit immediate field, but the immediates are used in 32-bit operations. For example, lw adds a 16-bit offset to a 32-bit base register.
-> [!NOTE] What should go in the upper half of the 32 bits?
+> What should go in the upper half of the 32 bits?
 > For positive immediates, the upper half should be all 0's, but for negative immediates, the upper half should be all 1's.
 > An exception to this rule is that logical operations (andi, ori, xori) place 0's in the upper half; this is called zero extension rather than sign extension.
 
