@@ -36,12 +36,12 @@ export const metadata: Metadata = {
     siteName: "blackprince",
     images: [
       {
-        url: "https://blackprince001.github.io/images/nk-dark.png",
+        url: "https://blackprince001.github.io/images/meta.png",
         width: 800,
         height: 600,
       },
       {
-        url: "https://blackprince001.github.io/images/nk-dark.png",
+        url: "https://blackprince001.github.io/images/meta.png",
         width: 1800,
         height: 1600,
         alt: "blackprince",
