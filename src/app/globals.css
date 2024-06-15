@@ -8,7 +8,7 @@
 
 @layer base {
   body {
-    @apply text-white bg-[url('/noise.png')] bg-[0] bg-size-default bg-[#5200FF]
+    @apply text-[#5200ff] bg-[url('/noise.png')] bg-[0] bg-size-default bg-[#FDF6EC]
   }
   h1 {
     @apply scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl;
@@ -35,9 +35,9 @@
 
 @layer components {
   .btn {
-    @apply bg-[#FE7A00] text-white px-4 py-2 flex gap-3 items-center hover:shadow-md;
+    @apply bg-[#5200ff] text-[#FDF6EC] px-4 py-2 flex gap-3 items-center hover:shadow-md;
   }
   .nav-container{
-    @apply bg-[#5200FF] bg-[url('/noise.png')] bg-[0] bg-size-default text-white font-bold text-2xl
+    @apply bg-[#FDF6EC] bg-[url('/noise.png')] bg-[0] bg-size-default text-[#5200ff] font-bold text-2xl
   }
 }

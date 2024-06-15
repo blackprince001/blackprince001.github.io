@@ -1,5 +1,5 @@
 .markdown {
-  @apply font-sans text-gray-800 leading-relaxed text-sm text-white;
+  @apply text-gray-800 leading-relaxed text-sm text-[#5200ff];
 }
 
 .markdown h1 {
@@ -15,11 +15,11 @@
 }
 
 .markdown code {
-  @apply bg-transparent px-1.5 py-0.5 rounded text-sm font-mono text-[#FE7A00];
+  @apply bg-transparent px-1.5 py-0.5 rounded text-sm font-mono text-white;
 }
 
 .markdown pre {
-  @apply bg-blue-950 text-black p-4 rounded overflow-x-auto;
+  @apply bg-[#5e6067] text-black p-4 rounded overflow-x-auto;
 }
 
 .markdown a {
