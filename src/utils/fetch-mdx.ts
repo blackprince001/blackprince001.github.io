@@ -1,20 +1,44 @@
 import fs from "fs";
 import path from "path";
+
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import rehypeHighlight from "rehype-highlight";
 import { compileMDX } from "next-mdx-remote/rsc";
+import { MDXRemoteProps } from "next-mdx-remote/rsc";
 
 const contentDir = path.join(process.cwd(), "/src/app/(posts)/content");
+
+// Create a custom type that extends MDXRemoteProps
+type CustomMDXRemoteProps = Omit<MDXRemoteProps, 'options'> & {
+  options?: MDXRemoteProps['options'] & {
+    mdxOptions?: {
+      remarkPlugins?: any[];
+      rehypePlugins?: any[];
+    };
+  };
+};
 
 export async function getBlogBySlug(slug: string) {
   const fileName = slug + ".mdx";
   const filePath = path.join(contentDir, fileName);
   const fileContent = fs.readFileSync(filePath, "utf8");
+  
+  // Use the custom type here
   const { frontmatter, content } = await compileMDX<{
     title: string;
     publishDate: string;
   }>({
     source: fileContent,
-    options: { parseFrontmatter: true },
-  });
+    options: { 
+      parseFrontmatter: true,
+      mdxOptions: {
+        remarkPlugins: [remarkMath],
+        rehypePlugins: [rehypeKatex, rehypeHighlight],
+      }
+    },
+  } as CustomMDXRemoteProps);
+
   return {
     frontmatter,
     content,

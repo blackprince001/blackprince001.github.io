@@ -19,7 +19,7 @@
 }
 
 .markdown pre {
-  @apply bg-[#5e6067] text-black p-4 rounded overflow-x-auto;
+  @apply bg-[#5e6067] p-4 rounded overflow-x-auto;
 }
 
 .markdown a {

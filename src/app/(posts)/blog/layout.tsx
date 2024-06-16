@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import "katex/dist/katex.min.css";
 
 export const metadata: Metadata = {
     title: "blackprince | Nebula",

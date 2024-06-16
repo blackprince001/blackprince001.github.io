@@ -1,4 +1,5 @@
 import type { MDXComponents } from 'mdx/types'
+import 'katex/dist/katex.css'
 import Image, { ImageProps } from 'next/image'
  
 export function useMDXComponents(components: MDXComponents): MDXComponents {
