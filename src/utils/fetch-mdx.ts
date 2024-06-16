@@ -7,7 +7,7 @@ import rehypeHighlight from "rehype-highlight";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { MDXRemoteProps } from "next-mdx-remote/rsc";
 
-const contentDir = path.join(process.cwd(), "/src/app/(posts)/content");
+const contentDir = path.join(process.cwd(), "/posts/");
 
 // Create a custom type that extends MDXRemoteProps
 type CustomMDXRemoteProps = Omit<MDXRemoteProps, 'options'> & {

@@ -15,7 +15,7 @@
 }
 
 .markdown code {
-  @apply bg-transparent px-1.5 py-0.5 rounded text-sm font-mono text-white;
+  @apply bg-[#5e6067] px-1.5 py-0.5 rounded text-sm font-mono text-white;
 }
 
 .markdown pre {
