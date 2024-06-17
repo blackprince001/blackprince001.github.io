@@ -1,4 +1,7 @@
 import createMDX from '@next/mdx'
+import remarkMath from 'remark-math'
+import rehypeKatex from 'rehype-katex'
+import rehypeHighlight from 'rehype-highlight'
  
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -11,13 +14,9 @@ const nextConfig = {
 const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
-    remarkPlugins: [require('remark-math')],
-    rehypePlugins: [require('rehype-katex'), require('rehype-highlight')],
+    remarkPlugins: [remarkMath],
+    rehypePlugins: [rehypeKatex, rehypeHighlight],
   },
-})
-
-module.exports = withMDX({
-  pageExtensions: ['js', 'jsx', 'mdx'],
 })
  
 export default withMDX(nextConfig)
