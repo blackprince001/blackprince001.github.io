@@ -6,8 +6,9 @@ import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from "rehype-highlight";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { MDXRemoteProps } from "next-mdx-remote/rsc";
+import MeshRender from "@/components/graphics/render";
 
-const contentDir = path.join(process.cwd(), "/posts/");
+const contentDir = path.join(process.cwd(), "/src/content/");
 
 // Create a custom type that extends MDXRemoteProps
 type CustomMDXRemoteProps = Omit<MDXRemoteProps, 'options'> & {
@@ -37,6 +38,7 @@ export async function getBlogBySlug(slug: string) {
         rehypePlugins: [rehypeKatex, rehypeHighlight],
       }
     },
+    components: {MeshRender},
   } as CustomMDXRemoteProps);
 
   return {

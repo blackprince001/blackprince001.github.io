@@ -1,6 +1,7 @@
 import type { MDXComponents } from 'mdx/types'
-import 'katex/dist/katex.css'
 import Image, { ImageProps } from 'next/image'
+import MeshRender from './components/graphics/render'
+import 'katex/dist/katex.css'
  
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -11,6 +12,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
           {...(props as ImageProps)}
         />
       ),
+    MeshRender,
     ...components,
   }
 }
