@@ -1,7 +1,7 @@
 @import "https://unpkg.com/mafs@0.5.0/build/index.css";
 
 .markdown {
-  @apply text-gray-800 leading-relaxed text-sm text-[#5200ff];
+  @apply text-gray-800 leading-relaxed text-sm text-white;
 }
 
 .markdown h1 {
@@ -25,7 +25,7 @@
 }
 
 .markdown a {
-  @apply text-[#FE7A00] underline;
+  @apply text-[#63cc79] underline;
 }
 
 .markdown ul {

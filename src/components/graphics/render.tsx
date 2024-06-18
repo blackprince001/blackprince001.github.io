@@ -15,7 +15,7 @@ function MeshRender(prop: RenderProp) {
 
   return (
     <div className='flex justify-center items-center w-auto h-96'>
-      <Canvas flat linear className="border-solid border-2 border-[#FE7A00] rounded-lg">
+      <Canvas flat linear className="border-solid border-2 border-[#63cc79] rounded-lg">
         <ambientLight intensity={1} />
         <OrbitControls />
         <pointLight position={[10, 10, 10]} />

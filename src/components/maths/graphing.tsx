@@ -7,7 +7,8 @@ export function InequalitiesExample() {
   const a = useMovablePoint([0, -1])
 
   return (
-    <Mafs>
+    <div className="rounded-lg border-solid border-4 border-[#63cc79]">
+    <Mafs height={320}>
       <Coordinates.Cartesian />
 
       <Plot.Inequality
@@ -28,14 +29,17 @@ export function InequalitiesExample() {
 
       {a.element}
     </Mafs>
+    </div>
   )
 }
 
 export function HelloFx() {
   return (
-    <Mafs>
+    <div className="rounded-lg border-solid border-4 border-[#63cc79]">
+    <Mafs height={320}>
         <Coordinates.Cartesian subdivisions={4} />
         <Plot.OfX y={(x) => 2 * Math.tan(x)} />
     </Mafs>
+    </div>
   )
 }

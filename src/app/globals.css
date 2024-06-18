@@ -10,7 +10,7 @@
 
 @layer base {
   body {
-    @apply text-[#5200ff] bg-[0] bg-size-default bg-[#FDF6EC]
+    @apply text-white bg-[0] bg-size-default bg-[#242526]
   }
   h1 {
     @apply scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl;
@@ -37,9 +37,9 @@
 
 @layer components {
   .btn {
-    @apply bg-[#5200ff] text-[#FDF6EC] px-4 py-2 flex gap-3 items-center hover:shadow-md;
+    @apply bg-[#63cc79] text-[#FDF6EC] px-4 py-2 flex gap-3 items-center hover:shadow-md;
   }
   .nav-container{
-    @apply bg-[#FDF6EC] bg-[0] bg-size-default text-[#5200ff] font-bold text-2xl
+    @apply bg-[#242526] bg-[0] bg-size-default text-[#63cc79] font-bold text-2xl
   }
 }

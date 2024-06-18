@@ -10,14 +10,14 @@ async function BlogPosts() {
     <div className="mb-16">
       <div className="flex flex-row justify-between items-center gap-5">
         <div>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 text-[#63cc79]">
             <CiPen />
-            <h5>Recent Posts</h5>
+            <h3>Recent Posts</h3>
           </div>
         </div>
         <Link
           href={"/blog"}
-          className="text-orange-800 underline hover:text-black ease-in-out duration-500"
+          className="text-[#63cc79] underline hover:text-black ease-in-out duration-500"
         >
           <p className="text-sm">View Posts</p>
         </Link>
@@ -33,9 +33,9 @@ async function BlogPosts() {
               className="flex flex-col sm:flex-row sm:justify-between sm:items-center"
             >
               <Link href={`/blog/${item.slug}`} className="hover:underline">
-                <h6>{item.frontmatter.title}</h6>
+                <h4>{item.frontmatter.title}</h4>
               </Link>
-              <p className="text-[#FE7A00]">{item.frontmatter.publishDate}</p>
+              <p className="text-[#63cc79]">{item.frontmatter.publishDate}</p>
             </div>
           );
         })}
