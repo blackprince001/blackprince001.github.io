@@ -7,6 +7,7 @@ import rehypeHighlight from "rehype-highlight";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { MDXRemoteProps } from "next-mdx-remote/rsc";
 import MeshRender from "@/components/graphics/render";
+import {HelloFx, InequalitiesExample} from "@/components/maths/graphing";
 
 const contentDir = path.join(process.cwd(), "/src/content/");
 
@@ -19,6 +20,8 @@ type CustomMDXRemoteProps = Omit<MDXRemoteProps, 'options'> & {
     };
   };
 };
+
+const customComponents = {MeshRender, HelloFx, InequalitiesExample};
 
 export async function getBlogBySlug(slug: string) {
   const fileName = slug + ".mdx";
@@ -38,7 +41,7 @@ export async function getBlogBySlug(slug: string) {
         rehypePlugins: [rehypeKatex, rehypeHighlight],
       }
     },
-    components: {MeshRender},
+    components: customComponents,
   } as CustomMDXRemoteProps);
 
   return {
