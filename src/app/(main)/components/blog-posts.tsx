@@ -35,7 +35,7 @@ async function BlogPosts() {
               <Link href={`/blog/${item.slug}`} className="hover:underline">
                 <h4>{item.frontmatter.title}</h4>
               </Link>
-              <p className="text-[#63cc79]">{item.frontmatter.publishDate}</p>
+              <p className="text-[#52d0ff]">t/{item.frontmatter.tag}</p>
             </div>
           );
         })}

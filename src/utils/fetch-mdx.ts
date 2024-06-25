@@ -30,6 +30,7 @@ export async function getBlogBySlug(slug: string) {
   
   // Use the custom type here
   const { frontmatter, content } = await compileMDX<{
+    tag: string;
     title: string;
     publishDate: string;
   }>({

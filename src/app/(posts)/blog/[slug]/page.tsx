@@ -12,6 +12,7 @@ export default async function Page({ params }: { params: { slug: string } }) {
     <BlogWrapper
       title={blog.frontmatter.title}
       publishDate={blog.frontmatter.publishDate}
+      tag={blog.frontmatter.tag}
     >
       {blog.content}
     </BlogWrapper>
