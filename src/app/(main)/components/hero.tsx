@@ -3,7 +3,7 @@ function HeroSection() {
   return (
     <div className="pb-[10vh]">
       <div>
-        <h2 className="font-semibold">0xDEADC0DE</h2>
+        <h2 className="font-semibold">blackprince</h2>
         <p className="text-[#63cc79]">
             engineering architect / mfiridwuma ho nimdefoɔ
         </p>

@@ -10,7 +10,7 @@
 
 @layer base {
   body {
-    @apply text-white bg-[0] bg-size-default bg-[#242526]
+    @apply text-[#242526] bg-[0] bg-size-default bg-white
   }
   h1 {
     @apply scroll-m-20 text-4xl font-bold tracking-tight lg:text-5xl;
@@ -40,6 +40,6 @@
     @apply bg-[#63cc79] text-[#FDF6EC] px-4 py-2 flex gap-3 items-center hover:shadow-md;
   }
   .nav-container{
-    @apply bg-[#242526] bg-[0] bg-size-default text-[#63cc79] font-bold text-2xl
+    @apply bg-white bg-[0] bg-size-default text-[#63cc79] font-bold text-2xl
   }
 }

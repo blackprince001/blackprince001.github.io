@@ -1,7 +1,7 @@
 @import "https://unpkg.com/mafs@0.5.0/build/index.css";
 
 .markdown {
-  @apply text-gray-800 leading-relaxed text-sm text-white;
+  @apply text-gray-800 leading-relaxed text-sm text-[#242526];
 }
 
 .markdown h1 {
@@ -17,11 +17,11 @@
 }
 
 .markdown code {
-  @apply bg-[#5e6067] px-1.5 py-0.5 rounded text-sm font-mono text-white;
+  @apply bg-[#FAF9F6] px-1.5 py-0.5 rounded text-sm font-mono text-[#242526];
 }
 
 .markdown pre {
-  @apply bg-[#5e6067] p-4 rounded overflow-x-auto;
+  @apply bg-[#FAF9F6] p-4 rounded overflow-x-auto;
 }
 
 .markdown a {
