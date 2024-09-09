@@ -13,8 +13,8 @@ function BlogWrapper({ ...props }: Props) {
     <main className={`my-5 ${styles.markdown} w-full`}>
       <div>
         <h5>{props.title}</h5>
-        <p className="text-[#63cc79]">{props.publishDate}</p>
-        <p className="text-[#52d0ff]">#{props.tag}</p>
+        <p className="text-gray-500">{props.publishDate}</p>
+        <p className="text-gray-500">#{props.tag}</p>
       </div>
       <hr className="my-5" />
       <div className="w-full">{props.children}</div>

@@ -4,23 +4,22 @@ function HeroSection() {
     <div className="pb-[10vh]">
       <div>
         <h2 className="font-semibold">blackprince</h2>
-        <p className="text-[#63cc79]">
-            engineering architect / mfiridwuma ho nimdefoɔ
+        <p className="text-gray-500">
+            engineering architect / researcher
         </p>
-
       </div>
       <br />
       <div>
         <p>
-        Meyɛ sukuuni wɔ Kwame Nkrumah Sukuupɔn a ɛhwɛ nyansahu ne kɔmputa mfiridwuma so.
+        I had my undergraduate studies at <a className="text-blue" href="https://www.knust.edu.gh">Kwame Nkrumah University of Science and Technology.</a>
         </p>
         <br />
         <p>
-        Manya osuahu adwuma wɔ tebea ahodoɔ ne amanyɔsɛm mu, na mehwɛ nso sɛ ɛbɛma ENHENCE madwuma. Ɛyɛ adwuma wɔ engineering adwumakuo anaa Adesuabea, mɛsiesie me ho ma challenges, na mɛyɛ krado bere nyinaa ma any challenge.
+        My passion lies in creating interactive software and systems that fosters idea sharing and personal expression. As a generalist, I'm deeply investedin both technical and non-technical fields: hoping to bridge the gap between them. I believe that these fundamental aspects are crucial for developing meaningful products and research.
         </p>
         <br />
         <p>
-        Nnipa dodow no ara gye di sɛ meyɛ onipa a wayera a ɔfiri nsase a asɛe no mu, nanso mewɔ ha sɛ megye mani kɛkɛ. Mani gye nneɛma bi a ɛyɛ nwonwa paa ho paa. Mɛyɛ nhwehwɛmu a ɛbɛboa wo, Stranger.
+        While pursuing my studies at Kwame Nkrumah University of Science and Technology, I've gained valuable experience in diverse contexts and political environments. This exposure has equipped me to tackle challenges head-on and adapt to various work environments.
         </p>
       </div>
     </div>
