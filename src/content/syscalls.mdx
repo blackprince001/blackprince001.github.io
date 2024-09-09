@@ -1,0 +1,136 @@
+---
+title: "The Shapeshifter of System Calls, evecve!"
+publishDate: "9th September, 2024"
+tag: "TodayILearnt"
+---
+
+## Greetings
+
+Imagine you're a wizard in a world where every spell is a system call. You've mastered the art of cloning yourself with the `fork` spell, but what if you could transform entirely into something new? Enter `execve`, the shapeshifter of system calls.
+
+In the realm of Unix-like operating systems, system calls (syscalls) are the magic incantations that allow mere mortal programs to request services from the all-powerful kernel. They're the bridge between the user space and the kernel space, enabling everything from reading files to creating new processes. All this jargon would have been clearer if you have prior knowledge in operating systems. Don't fret! I am not going to worry you about all that junk today because we would just be writing C code.
+
+Today, we're going to dive into one of the most fascinating syscalls: `execve`. But here's a teaser: while `fork` creates a copy of your current self, `execve` allows you to shed your current form and become something entirely different. Intrigued? Let's dive in!
+
+
+### What does execve do?
+
+At its core, `execve` is a syscall that performs a seemingly impossible feat: it replaces the current process with an entirely new program. It's like a caterpillar transforming into a butterfly, but at the speed of computation!
+
+When a process calls `execve`, it's essentially saying, "I'm done with my current existence. I want to become this other program now." The kernel obliges by loading the new program into memory, setting up its environment, and then running it in place of the original process.
+
+### Syntax and Parameters
+
+From the linux manual, `execve` - [link](https://man7.org/linux/man-pages/man2/execve.2.html) syscall takes three parameters:
+
+```c
+int execve(const char *pathname, char *const argv[], char *const envp[]);
+```
+
+1. `pathname`: The path to the new program to be executed.
+2. `argv`: An array of argument strings passed to the new program.
+3. `envp`: An array of strings, conventionally of the form "key=value", which are passed as environment to the new program.
+
+These are all essentially to help run the new process we are going to specify.
+
+Here's a simple example:
+
+```c
+
+#include <errno.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <unistd.h>
+
+int main(int argc, char* argv[])
+{
+  printf("I am going to become another process\n");
+
+  char* exec_argv[] = { "ls", NULL };
+  char* exec_envp[] = { NULL };
+
+  int exec_return = execve(
+      "/usr/bin/ls", exec_argv, exec_envp); // you can change the location of the
+                                         // command binary you want to run
+
+  if (exec_return == -1) {
+    exec_return = errno;
+    perror("execve failed");
+    return exec_return;
+  }
+
+  printf("if execve worked, this will never get printed.\n");
+
+  return EXIT_SUCCESS;
+}
+```
+
+This code demonstrates the use of the `execve` system call in C. Let's break it down step by step:
+
+The necessary header files are included:
+   - `errno.h` for error handling
+   - `stdio.h` for input/output operations
+   - `stdlib.h` for general utilities like `EXIT_SUCCESS`
+   - `unistd.h` for POSIX operating system API, which includes `execve`
+
+A message is printed to inform the user that the process is about to transform:
+   ```c
+   printf("I am going to become another process\n");
+   ```
+
+Two arrays are set up:
+   - `exec_argv`: An array of strings that will be passed as arguments to the new program. Here, it contains just "ls" (the name of the command) and a NULL terminator.
+   - `exec_envp`: An empty environment array (just a NULL terminator), meaning the new program will inherit the current environment.
+
+The `execve` system call is made:
+   ```c
+   int exec_return = execve("/usr/bin/ls", exec_argv, exec_envp);
+   ```
+   This attempts to replace the current process with the `ls` command (located at "/usr/bin/ls").
+
+Error handling is implemented:
+   - If `execve` returns (which only happens if it fails), the return value will be -1.
+   - In this case, the error number is stored in `exec_return`, an error message is printed using `perror()`, and the program exits with the error code.
+
+A final printf statement is included:
+   ```c
+   printf("if execve worked, this will never get printed.\n");
+   ```
+   This line is crucial for understanding `execve`. If `execve` succeeds, the entire process is replaced, and this line will never be executed. It is  only reached if `execve` fails.
+
+The function returns `EXIT_SUCCESS`, but this line will also never be reached if `execve` succeeds. We will come back to this snippet soon. Just sip your coffee.
+
+### 1945, First World Fork!
+
+What the heck is a fork syscall? The `fork` syscall creates a new process by duplicating the calling process. The new process (child) is an exact copy of the parent process, except for a few details like the process ID.
+
+
+What `fork` does differently from `execve`:
+1. `fork` creates a new process, while `execve` transforms an existing one.
+2. After `fork`, both parent and child processes continue execution from the next line. After `execve`, the original program is completely replaced.
+3. `fork` duplicates the current process, maintaining its memory and open file descriptors. `execve` loads an entirely new program, discarding the previous process memory (though it can inherit open file descriptors).
+
+But wait a minute, what if from the code sample I showed, we could somehow perform a fork syscall without even calling fork.
+
+### Einstein's Eureka
+
+I am going to modify our initial snippet for creating running ls command through `execve` syscall. First point of edit: the binary we are going to be running.
+
+```c
+  int exec_return = execve(
+      "./execve", exec_argv, exec_envp);
+```
+
+By changing the binary path from `"/usr/bin/ls"` to `"./execve"` which in this case would be the compiled source of our code, you could see what I am attempting here. Our caterpillar never gets to be transformed into a butterfly. We get stuck in this infinite of recursion and this basically resembles a `fork`.
+
+Ladies, Gentlemen, and Cyborgs, we have a spun something new. Not entirely new but you get the idea.
+
+There are numerous usecases for this: maliciously. I don't want to give you wild ideas but this could be an exciting experiment you could do on a potential virtual machine and explore the possibilities of this exploit.
+
+## This is not a goodbye
+
+This is an extract from my attempts to redo my Operating Systems Courseware again to better understand the kernel and operating systems in general. Code snippets can be found here because I am not ready to open my learning repositories for judgement. [Malicious execve FORK BOMB](https://gist.github.com/blackprince001/ed4e54fb3732248a25d9e0279909ce0d)
+
+Remember, with great power comes great responsibility. While `execve` opens up exciting avenues for system programming, always ensure you're using it safely and ethically, especially when exploring its more unconventional uses. Don't tell them I taught you this if you get caught.
+
+So go forth, brave wizard of syscalls! May your processes be swift, your transformations smooth, and your code forever free of segmentation faults. Thank you for reading and Happy coding!
