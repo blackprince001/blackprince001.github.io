@@ -15,11 +15,11 @@ function HeroSection() {
         </p>
         <br />
         <p>
-        My passion lies in creating interactive software and systems that fosters idea sharing and personal expression. As a generalist, I'm deeply investedin both technical and non-technical fields: hoping to bridge the gap between them. I believe that these fundamental aspects are crucial for developing meaningful products and research.
+        My passion lies in creating interactive software and systems that fosters idea sharing and personal expression. As a generalist, I am deeply invested in both technical and non-technical fields: hoping to bridge the gap between them. I believe that these fundamental aspects are crucial for developing meaningful products and research.
         </p>
         <br />
         <p>
-        While pursuing my studies at Kwame Nkrumah University of Science and Technology, I've gained valuable experience in diverse contexts and political environments. This exposure has equipped me to tackle challenges head-on and adapt to various work environments.
+        While pursuing my studies at Kwame Nkrumah University of Science and Technology, I have gained valuable experience in diverse contexts and political environments. This exposure has equipped me to tackle challenges head-on and adapt to various work environments.
         </p>
       </div>
     </div>
