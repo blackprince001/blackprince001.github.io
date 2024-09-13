@@ -37,9 +37,9 @@
 
 @layer components {
   .btn {
-    @apply bg-gray-500 text-[#FDF6EC] px-4 py-2 flex gap-3 items-center hover:shadow-md;
+    @apply bg-[#0f4c81] text-[#FDF6EC] px-4 py-2 flex gap-3 items-center hover:shadow-md;
   }
   .nav-container{
-    @apply bg-white bg-[0] bg-size-default text-gray-500 font-bold text-2xl
+    @apply bg-white bg-[0] bg-size-default text-[#0f4c81] font-bold text-2xl
   }
 }

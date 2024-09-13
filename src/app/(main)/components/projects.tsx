@@ -21,7 +21,7 @@ const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project }) => {
   return (
     <div className="mb-8 p-6 bg-white rounded-lg shadow-md">
       <h3 className="text-2xl font-bold mb-2">
-        <a href={project.html_url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:underline">
+        <a href={project.html_url} target="_blank" rel="noopener noreferrer" className="text-[#0f4c81] hover:underline">
           {project.name}
         </a>
       </h3>
@@ -112,13 +112,13 @@ const ProjectShowcase: React.FC = () => {
         <br />
         <p className="text-lg">
           If you find something interesting,
-          <a className="text-gray-500 "href="mailto:appiahboaduprince@gmail.com?subject=Software%20Projects"> let me know</a>!
+          <a className="text-[#0f4c81] "href="mailto:appiahboaduprince@gmail.com?subject=Software%20Projects"> let me know</a>!
         </p>
       </section>
 
       <div className="text-neutral-200">
         <section className="max-w-4xl mx-auto py-12 px-4">
-          <h2 className="text-3xl font-bold text-gray-500 mb-4">Table of Contents</h2>
+          <h2 className="text-3xl font-bold text-[#0f4c81] mb-4">Table of Contents</h2>
           <ul className="sm:columns-2">
             {sortedProjects.map((project) => (
               <li key={project.id}>
@@ -134,13 +134,13 @@ const ProjectShowcase: React.FC = () => {
       <div className="bg-white border-b border-gray-200 py-4 sticky top-0 z-10">
         <div className="flex justify-center space-x-6">
           <button
-            className={`flex items-center ${sortOrder === 'date' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
+            className={`flex items-center ${sortOrder === 'date' ? 'text-[#0f4c81]' : 'text-gray-400'} transition-colors hover:text-black`}
             onClick={() => setSortOrder('date')}
           >
             <CalendarDays size={18} strokeWidth={1.8} className="mr-1.5" /> by Date
           </button>
           <button
-            className={`flex items-center ${sortOrder === 'stars' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
+            className={`flex items-center ${sortOrder === 'stars' ? 'text-[#0f4c81]' : 'text-gray-400'} transition-colors hover:text-black`}
             onClick={() => setSortOrder('stars')}
           >
             <Star size={18} strokeWidth={1.8} className="mr-1.5" /> by Stars

@@ -4,7 +4,7 @@ function HeroSection() {
     <div className="pb-[10vh]">
       <div>
         <h2 className="font-semibold">blackprince</h2>
-        <p className="text-gray-500">
+        <p className="text-[#0f4c81]">
             engineering architect / researcher
         </p>
       </div>
