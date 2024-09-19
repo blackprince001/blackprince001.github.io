@@ -1,11 +1,11 @@
 
 function HeroSection() {
   return (
-    <div className="pb-[10vh]">
+    <div className="mt-6 pb-[10vh]">
       <div>
-        <h2 className="font-semibold">blackprince</h2>
-        <p className="text-[#0f4c81]">
-            engineering architect / researcher
+        <h1 className="font-bold">Prince K. Appiah Boadu</h1>
+        <p className="font-semibold text-gray-500">
+            Computer Engineer, Researcher and Design Architect
         </p>
       </div>
       <br />

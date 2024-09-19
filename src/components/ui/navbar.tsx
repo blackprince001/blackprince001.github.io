@@ -3,25 +3,30 @@ import React from "react";
 
 function Navbar() {
   return (
-    <div className="fixed w-full h-[7vh] nav-container">
+    <div className="mt-4 h-[7vh] w-full nav-container">
       <nav className="flex justify-between items-center max-w-3xl mx-auto h-full px-6 py-3">
-        <Link href={`/`}>CrackOverflow</Link>
-        <div className="text-[#0f4c81]">
+        <Link href={`/`}><h4>$root</h4></Link>
+        <div className="text-gray-500">
           <div className="flex items-center gap-3">
             <Link href={`/projects`}>
-              <p className="text-sm underline hover:text-[#0f4c81] ease-in duration-200">
-                Projects
-              </p>
+              <h4 className="text-sm underline hover:text-gray-500 ease-in duration-200">
+                projects
+              </h4>
+            </Link>
+            <Link href={`/publications`}>
+              <h4 className="text-sm underline hover:text-gray-500 ease-in duration-200">
+                publications
+              </h4>
             </Link>
             <Link href={`/blog`}>
-              <p className="text-sm underline hover:text-[#0f4c81] ease-in duration-200">
-                Blog
-              </p>
+              <h4 className="text-sm underline hover:text-gray-500 ease-in duration-200">
+                writing
+              </h4>
             </Link>
             <Link href={`https://read.cv/blackprince`}>
-              <p className="text-sm underline hover:text-[#0f4c81] ease-in duration-200">
-                Resume
-              </p>
+              <h4 className="text-sm underline hover:text-gray-500 ease-in duration-200">
+                resume
+              </h4>
             </Link>
           </div>
         </div>

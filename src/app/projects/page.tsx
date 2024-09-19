@@ -3,7 +3,7 @@ import ProjectShowcase from '../(main)/components/projects'
 
 
 export const metadata: Metadata = {
-  title: 'blackprince001 - Projects',
+  title: 'Github - Projects',
   description: 'Portfolio of open-source projects',
 }
 

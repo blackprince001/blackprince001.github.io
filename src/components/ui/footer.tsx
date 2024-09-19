@@ -1,23 +1,30 @@
 import Link from "next/link";
 import React from "react";
-import { BiEnvelope } from "react-icons/bi";
 
 function Footer() {
   return (
-    <footer className="flex justify-between items-center max-w-3xl mx-auto h-full px-6 py-5">
+    <footer className="font-semibold flex justify-between items-center max-w-3xl mx-auto h-full px-6 py-5">
         
-        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-5 my-5">
+        <div className="flex flex-col sm:flex-row sm:items-center gap-5 my-5">
+          Email:
           <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank">
-            <button className="btn rounded-full">
-              <BiEnvelope />
-              <p className="text-sm mt-0">contact</p>
-            </button>
+            <p className="mt-0">appiahboaduprince@gmail.com</p>
           </Link>
         </div>
 
-      <p>
-        © {new Date().getFullYear()} Copyright not Reserved.
-      </p>
+        <div className="flex flex-col sm:flex-row sm:items-center gap-5 my-5">
+          Twitter:
+          <Link href={"https://x.com/0xed8"} target="_blank">
+            <p className="mt-0">@0xed8</p>
+          </Link>
+        </div>
+        
+        <div className="flex flex-col sm:flex-row sm:items-center gap-5 my-5">
+          Github:
+          <Link href={"https://github.com/blackprince001"} target="_blank">
+            <p className="mt-0">@blackprince001</p>
+          </Link>
+        </div>
     </footer>
   );
 }
