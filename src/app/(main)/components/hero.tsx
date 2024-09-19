@@ -1,9 +1,10 @@
+import Link from "next/link";
 
 function HeroSection() {
   return (
     <div className="mt-6 pb-[10vh]">
       <div>
-        <h1 className="font-bold">Prince K. Appiah Boadu</h1>
+        <h1 className="font-bold">blackprince</h1>
         <p className="font-semibold text-gray-500">
             Computer Engineer, Researcher and Design Architect
         </p>
@@ -11,7 +12,7 @@ function HeroSection() {
       <br />
       <div>
         <p>
-        I had my undergraduate studies at <a className="text-blue" href="https://www.knust.edu.gh">Kwame Nkrumah University of Science and Technology.</a>
+        I had my undergraduate studies at <Link className="hover:underline" href="https://www.knust.edu.gh">Kwame Nkrumah University of Science and Technology.</Link>
         </p>
         <br />
         <p>

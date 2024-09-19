@@ -1,30 +1,28 @@
 import Link from "next/link";
 import React from "react";
+import { CiBarcode, CiMail, CiTwitter } from "react-icons/ci";
 
 function Footer() {
   return (
-    <footer className="font-semibold flex justify-between items-center max-w-3xl mx-auto h-full px-6 py-5">
-        
-        <div className="flex flex-col sm:flex-row sm:items-center gap-5 my-5">
-          Email:
-          <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank">
-            <p className="mt-0">appiahboaduprince@gmail.com</p>
+    <footer className="font-semibold flex justify-center items-center max-w-3xl mx-auto h-full px-6 py-5">
+        <ul className="flex flex-col sm:flex-row sm:items-center gap-5 my-5 px-6 py-5">
+          <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank" className="hover:underline">
+            <CiMail />
           </Link>
-        </div>
+        </ul>
 
-        <div className="flex flex-col sm:flex-row sm:items-center gap-5 my-5">
-          Twitter:
-          <Link href={"https://x.com/0xed8"} target="_blank">
-            <p className="mt-0">@0xed8</p>
+        <ul className="flex flex-col sm:flex-row sm:items-center gap-5 my-5 px-6 py-5">
+          <Link href={"https://x.com/0xed8"} target="_blank" className="hover:underline">
+            <CiTwitter />
           </Link>
-        </div>
-        
-        <div className="flex flex-col sm:flex-row sm:items-center gap-5 my-5">
-          Github:
-          <Link href={"https://github.com/blackprince001"} target="_blank">
-            <p className="mt-0">@blackprince001</p>
+        </ul>
+{/*         
+        <ul className="flex flex-col sm:flex-row sm:items-center gap-5 my-5">
+
+          <Link href={"https://github.com/blackprince001"} target="_blank" className="hover:underline">
+            <CiBarcode />
           </Link>
-        </div>
+        </ul> */}
     </footer>
   );
 }

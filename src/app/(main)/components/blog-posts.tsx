@@ -1,6 +1,5 @@
 import { getBlogs } from "@/utils/fetch-mdx";
 import Link from "next/link";
-import { CiPen } from "react-icons/ci";
 
 async function BlogPosts() {
   const blogs = await getBlogs();
@@ -11,7 +10,6 @@ async function BlogPosts() {
       <div className="flex flex-row justify-between items-center gap-5">
         <div>
           <div className="flex items-center gap-3 text-gray-500">
-            <CiPen />
             <h3>Recent Posts</h3>
           </div>
         </div>
@@ -33,7 +31,7 @@ async function BlogPosts() {
               className="flex flex-col sm:flex-row sm:justify-between sm:items-center"
             >
               <Link href={`/blog/${item.slug}`} className="hover:underline">
-                <h4>{item.frontmatter.title}</h4>
+                <ul>{item.frontmatter.title}</ul>
               </Link>
               <p className="text-gray-500">t/{item.frontmatter.tag}</p>
             </div>

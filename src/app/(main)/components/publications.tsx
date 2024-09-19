@@ -2,7 +2,6 @@
 
 import { Link } from "lucide-react";
 import React from "react";
-import { CiPen } from "react-icons/ci";
 
 // Change this structure to fit Publications
 interface Publication {
@@ -24,7 +23,6 @@ export const RecentPublications: React.FC = () => {
       <div className="flex flex-row justify-between items-center gap-5">
         <div>
           <div className="flex items-center gap-3 text-gray-500">
-            <CiPen />
             <h3>Recent Publications</h3>
           </div>
         </div>
