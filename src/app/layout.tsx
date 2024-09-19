@@ -7,12 +7,12 @@ import Footer from "@/components/ui/footer";
 const inter = local({
   src: [
     {
-      path: "../../public/fonts/Quicksand-Regular.ttf",
+      path: "../../public/fonts/GentiumPlus-Regular.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../../public/fonts/Inter-Medium.ttf",
+      path: "../../public/fonts/GentiumPlus-Bold.ttf",
       weight: "600",
       style: "bold",
     },
@@ -59,7 +59,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={inter.className}>
         <Navbar />
-        <div className="py-[10vh] max-w-3xl mx-auto p-6">{children}</div>
+        <div className="max-w-3xl mx-auto p-6">{children}</div>
         <Footer />
       </body>
     </html>

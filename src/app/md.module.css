@@ -25,7 +25,7 @@
 }
 
 .markdown a {
-  @apply text-[#0f4c81] underline;
+  @apply text-gray-500 underline;
 }
 
 .markdown ul {
