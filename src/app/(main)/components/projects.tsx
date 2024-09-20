@@ -20,12 +20,12 @@ interface GitHubRepo {
 
 const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project }) => {
   return (
-    <div className="mb-8 p-6 bg-white rounded-lg shadow-md">
-      <h3 className="text-2xl font-bold mb-2">
+    <div className="mb-8">
+      <p className="text-3xl font-bold mb-2">
         <a href={project.html_url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:underline">
           {project.name}
         </a>
-      </h3>
+      </p>
       <p className="text-sm text-gray-600 mb-2">
         Created: {new Date(project.created_at).toLocaleDateString()} • 
         {project.stargazers_count} stars
@@ -38,6 +38,8 @@ const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project }) => {
           </span>
         ))}
       </div>
+
+      <hr />
     </div>
   );
 };
@@ -117,7 +119,7 @@ const ProjectShowcase: React.FC = () => {
         </p>
       </section>
 
-      <div className="text-neutral-200">
+      <div>
         <section className="max-w-4xl mx-auto py-12 px-4">
           <h2 className="text-3xl font-bold text-gray-500 mb-4">Table of Contents</h2>
           <ul className="sm:columns-2">
@@ -132,7 +134,7 @@ const ProjectShowcase: React.FC = () => {
         </section>
       </div>
 
-      <div className="mt-6 bg-white border-b border-gray-200 py-4 top-0 z-10">
+      <div className="mt-6 bg-[#242526] border-b border-gray-200 py-4 top-0 z-10">
         <div className="flex justify-center space-x-6">
           <button
             className={`flex items-center ${sortOrder === 'date' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
@@ -149,7 +151,7 @@ const ProjectShowcase: React.FC = () => {
         </div>
       </div>
 
-      <section className="max-w-4xl mx-auto py-12 px-4">
+      <section className="mx-auto py-12">
         {sortedProjects.map((project) => (
           <div key={project.id} id={project.name}>
             <ProjectComponent project={project} />
