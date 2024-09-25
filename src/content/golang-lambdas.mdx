@@ -1,0 +1,70 @@
+---
+title: "Lambda Functions in Golang. Sort of?"
+publishDate: "25th Sept, 2024"
+tag: "TodayILearnt"
+---
+
+You might be familiar with lambda functions. Even though the lingo is not formally used in Golang, there is a neat way to express lambda functions in the language.
+
+Lambda functions, for those who don't know, are known as anonymous functions or lambda expressions, are a fundamental concept in programming that allows developers to create small, self-contained blocks of code without declaring a named function.
+
+Your typical python dev would express this with the keyword `lambda`, define the key parameters or parameters for that function and compose the logic like below.
+
+```python
+add = lambda x, y: x + y
+print(add(3, 4))  # Output: 7
+```
+
+Notice that we did not explicitly name our function but we could use the assigned variable `add` to call the function and produce a result. This is because *functions are values* in python and most especially Golang and C++ and Java... the list goes on and on.
+
+Generally, the type of a function is built out of its keyword (`fn`, `def`, `func`) and the types of the parameters and return values. This combination is called the *signature of the function*. Any function that has the exact same number and types of parameters and return values meets the type signature.
+
+Having functions as values allows us to do some clever things, and as you would expect from this blog, define lambda functions... coughs! Sorry anonymous functions in Golang. An illustration below.
+
+```python
+>>> squares = lambda x: x * x
+>>>
+>>> squares(12)
+144
+>>> squares(21)
+441
+```
+
+Just as before we assign an anonymous... sorry (I keep messing it up with lingo for each language), we assign a lambda function to the variable squares. Simple logic. We square any input value we receive. Ironically 12 and 21 produce identical squares just as the numbers are flipped around themselves. Funny.
+
+We try to replicate this in Golang by use of an anonymous function, yes, got it.
+
+```go
+// now that looks like a lambda function to me but not exactly
+x := func(x int) int {
+    return x * x
+}(12)
+```
+
+Mmhhmm, not exactly what we are looking but they kinda look sim- no they don't. In python, we do not pass the input value to the function right after pseudo-declaring it but it seems we have to do that in Golang (designed this way, I don't make the rules).
+
+These inner functions are anonymous functions; they don't have a name. You don't have to assign them to a variable, either. You can write them inline and call them immediately.
+
+```go
+func main() { 
+    for i:=0; i<5; i++ {
+        func(j int) {
+            fmt.Println("printing", j, "from inside of an anonymous function")
+        }(i) 
+    }
+}
+```
+
+What I haven't showed you but we have already discussed hints at using function signatures. If a function has a signature (even lambdas) then it means we could define the function anywhere (check out a brain teaser at the end of the blog) then we could just assign any variables with the name of the function defined. Totally defeats the purpose a lambda as seen in python but we get to see the cool effects it has.
+
+```go
+// true lambdas (and squares is defined above)
+sq := squares
+
+// because functions are values
+fmt.Println(sq(21)) // YOU KNOW WHAT THIS OUTPUTS ALREADY!
+```
+
+Anonymous functions are pretty cool and they afford you the luxury of just implementing the needed logic to complete a task right where you need it: a receiving variable. If you want to explore more, I would employ thee to have a look at this [link](https://www.practical-go-lessons.com/chap-24-anonymous-functions-and-closures) and maybe take up Golang sometime.
+
+Now for your brain teaser, If anonymous functions are functions, usually declared in the scope of another fuction, when is it a called **closure** then? And are **Goroutines** considered as anonymous functions?
