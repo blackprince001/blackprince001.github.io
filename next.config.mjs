@@ -2,6 +2,8 @@ import createMDX from '@next/mdx'
 import remarkMath from 'remark-math'
 import rehypeKatex from 'rehype-katex'
 import rehypeHighlight from 'rehype-highlight'
+import rehypeSlug from 'rehype-slug';
+import rehypeAutolinkHeadings from 'rehype-autolink-headings';
  
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -15,7 +17,7 @@ const withMDX = createMDX({
   extension: /\.mdx?$/,
   options: {
     remarkPlugins: [remarkMath],
-    rehypePlugins: [rehypeKatex, rehypeHighlight],
+    rehypePlugins: [rehypeKatex, rehypeHighlight, rehypeSlug, rehypeAutolinkHeadings],
   },
 })
  

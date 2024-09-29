@@ -1,5 +1,8 @@
-import { ReactNode } from "react";
+"use client"
+
+import { ReactNode, useRef } from "react";
 import styles from '../../../../md.module.css';
+import TOC from "@/app/(main)/components/table-of-contents";
 
 type Props = {
   title: string;
@@ -8,17 +11,28 @@ type Props = {
   children: ReactNode;
 };
 
-function BlogWrapper({ ...props }: Props) {
+function BlogWrapper({ title, publishDate, tag, children }: Props) {
+  const contentRef = useRef<HTMLDivElement | null>(null); // Reference for content
+
   return (
-    <main className={`my-5 ${styles.markdown} w-full`}>
-      <div>
-        <h5>{props.title}</h5>
-        <p className="text-gray-500">{props.publishDate}</p>
-        <p className="text-gray-500">#{props.tag}</p>
+    <div className={`my-5 ${styles.markdown} w-full flex flex-col lg:flex-row`}>
+      {/* div content area */}
+      <div className="lg:w-full pr-8" ref={contentRef}>
+        <div>
+          <h5>{title}</h5>
+          <p className="text-gray-500">{publishDate}</p>
+          <p className="text-gray-500">#{tag}</p>
+        </div>
+        <hr className="my-5" />
+        {/* Render the blog content */}
+        <div className="w-full">{children}</div>
       </div>
-      <hr className="my-5" />
-      <div className="w-full">{props.children}</div>
-    </main>
+
+      {/* Table of Contents */}
+      <aside className="lg:w-1/4">
+        <TOC content={contentRef} />
+      </aside>
+    </div>
   );
 }
 

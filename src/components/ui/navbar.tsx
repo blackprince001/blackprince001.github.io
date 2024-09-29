@@ -4,7 +4,7 @@ import React from "react";
 function Navbar() {
   return (
     <div className="mt-4 h-[7vh] w-full nav-container">
-      <nav className="flex justify-between items-center max-w-3xl mx-auto h-full px-6 py-3">
+      <nav className="flex justify-between items-center max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
         <Link href={`/`}><h4>$</h4></Link>
         <div className="text-gray-500">
           <div className="flex items-center gap-3">
