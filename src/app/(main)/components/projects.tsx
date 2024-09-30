@@ -21,25 +21,23 @@ interface GitHubRepo {
 const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project }) => {
   return (
     <div className="mb-8">
-      <p className="text-3xl font-bold mb-2">
+      <p className="text-2xl mb-2">
         <a href={project.html_url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:underline">
           {project.name}
         </a>
       </p>
-      <p className="text-sm text-gray-600 mb-2">
+      <p className="text-sm text-gray-400 mb-2">
         Created: {new Date(project.created_at).toLocaleDateString()} • 
         {project.stargazers_count} stars
       </p>
       <p className="mb-4">{project.description}</p>
       <div className="flex flex-wrap gap-2">
-        {project.topics.map((topic) => (
-          <span key={topic} className="px-2 py-1 bg-gray-200 text-sm rounded-full">
-            {topic}
+        Topics:{project.topics.map((topic) => (
+          <span key={topic} className="px-2 py-2 text-sm text-gray-400 bg-gray-600 rounded-full">
+            #{topic}
           </span>
         ))}
       </div>
-
-      <hr />
     </div>
   );
 };
