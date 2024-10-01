@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import Link from 'next/link';
 import { CalendarDays, Star } from 'lucide-react';
+import { Skeleton } from '@/components/ui/skeleton';
 
 
 interface GitHubRepo {
@@ -95,7 +96,17 @@ const ProjectShowcase: React.FC = () => {
   });
 
   if (isLoading) {
-    return <div className="text-center py-20">Loading projects...</div>;
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <div className="flex flex-col space-y-5 p-5">
+          <Skeleton className="h-[200px] w-[350px] rounded-xl" />
+          <div className="space-y-3">
+            <Skeleton className="h-6 w-[300px]" />
+            <Skeleton className="h-6 w-[250px]" />
+          </div>
+        </div>
+      </div>
+    );    
   }
 
   if (error) {
