@@ -43,7 +43,7 @@ async function Page() {
             <h4 className="text-xl font-semibold mb-4 text-gray-500">{tag}</h4>
             {items.map((item) => (
               <Link href={`/blog/${item.slug}`} key={item.slug}>
-                <div className="border-b py-5 hover:scale-[1.02] ease-in-out duration-500">
+                <div className="py-5 hover:scale-[1.02] ease-in-out duration-500">
                   <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
                     <h5>{item.frontmatter.title}</h5>
                   </div>
