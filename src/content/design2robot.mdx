@@ -6,3 +6,51 @@ tag: "Robotics"
 
 {/* 3D Objects being renedered with React-Three
 <MeshRenderSwitch url="../base_link.stl"/> */}
+
+Picture this: You've just finished designing the perfect robotic arm in Autodesk Fusion 360. Every joint is precisely engineered, every component carefully considered. But what if you could see it move, test its limitations, and simulate its behavior in a physics-based environment before building it in the real world? Enter the magical world of URDF (Unified Robot Description Format) and Gazebo simulation.
+
+*Interactive model showing the key components of our example robot*
+<MeshRenderSwitch url="../full_bot.stl"/>
+
+
+### Why This Matters
+
+Transforming your static CAD models into dynamic, simulatable robots isn't just a technical exercise—it's like giving your creation a spark of life. By converting Fusion 360 models to URDF format for Gazebo, you're building a bridge between the precision of CAD design and the dynamic world of robotics simulation.
+
+### Visual Guide to Our Process
+
+    <center>
+        <video className="rounded-lg" width={720} height={640} controls>
+            <source src="../robotics/motion.webm" type="video/webm" />
+            Your browser does not support the video tag.
+        </video>
+    </center>
+
+
+### Robot Creation Process Summary
+
+CAD Design Design the robot in Fusion 360, ensuring the orientation is set up correctly (x-axis forward, y-axis to the side, and z-axis up) so the robot moves as expected. The design process involves:
+
+    *   Creating a base for the robot (e.g., a square).
+    <center><img className="rounded-lg" src="../robotics/base_link.png" width="500" height="600"/></center>
+    *   Designing and positioning the wheels.
+    <ImageGrid srcs={["../robotics/wheels.png", "../robotics/wheels-2.png"]} />
+    *   Adding caster wheels to prevent the robot from falling.
+    <center><img className="rounded-lg" src="../robotics/caster.png" width="500" height="600"/></center>
+    *   Incorporating sensors like a LIDAR unit.
+    <center><img className="rounded-lg" src="../robotics/lidar.png" width="500" height="600"/></center>
+
+*   **Export Preparation:** Prepare the model for export by:
+    *   Naming the different components (e.g., base\_link, right\_wheel, left\_wheel, lidar).
+    *   Assigning materials to the parts for realistic simulation (e.g., ABS plastic for the body, rubber for the wheels).
+    *   Converting the bodies into components.
+    *   Defining joints to enable movement (e.g., revolute joints for the wheels, rigid joint for the lidar).
+*   **URDF Conversion:**
+    *   Utilize the Fusion 360 to URDF exporter plugin to convert the Fusion 360 model into a URDF (Unified Robot Description Format) file. This generates a set of files including the URDF file itself, launch files, meshes, etc.
+*   **Gazebo Simulation:**
+    *   Set up a ROS (Robot Operating System) environment. The source uses Ubuntu 18.04 with ROS Melodic installed in a virtual machine.
+    *   Create or use an existing catkin workspace.
+    *   Copy the generated robot description package into the 'src' folder of your catkin workspace.
+    *   Build the package using 'catkin\_make'.
+    *   Launch the robot simulation in Gazebo using the provided launch file (e.g., 'display.launch'). This will visually display the robot model in the Gazebo simulator and allow you to interact with it.
+    *   The next step would be to add plugins for controlling the robot, like a differential drive plugin to enable movement based on velocity commands.
