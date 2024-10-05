@@ -50,9 +50,9 @@ const TOC: React.FC<TableOfContentsProps> = ({ content }) => {
   return (
     <>
       {/* Mobile View - Table of Contents at the top */}
-      <div className="block lg:hidden bg-[#242526] p-4 mb-6">
-        <h5 className="text-sm font-bold mb-4">Table of Contents</h5>
-        <ul className="space-y-2 text-sm">
+      <div className="block lg:hidden bg-[#242526] p-6 mb-6">
+        <h6 className="text-sm font-bold mb-4">Table of Contents</h6>
+        <ul>
           {headings.map((heading) => (
             <li
               key={heading.id}
@@ -67,7 +67,7 @@ const TOC: React.FC<TableOfContentsProps> = ({ content }) => {
       {/* Desktop View - Table of Contents on the right */}
       <div className="hidden lg:block sticky top-0 max-w-xs p-4 bg-[#242526] shadow-lg">
         <h5 className="text-sm font-bold mb-4">Table of Contents</h5>
-        <ul className="space-y-2 text-sm">
+        <ol className="space-y-2 text-sm">
           {headings.map((heading) => (
             <li
               key={heading.id}
@@ -76,7 +76,7 @@ const TOC: React.FC<TableOfContentsProps> = ({ content }) => {
               <a href={`#${heading.id}`}>{heading.text}</a>
             </li>
           ))}
-        </ul>
+        </ol>
       </div>
     </>
   );
