@@ -7,6 +7,7 @@ import rehypeHighlight from "rehype-highlight";
 import { compileMDX } from "next-mdx-remote/rsc";
 import { MDXRemoteProps } from "next-mdx-remote/rsc";
 import MeshRenderSwitch from "@/components/graphics/render";
+import ImageGrid from "@/components/ui/image-grid";
 import {HelloFx, InequalitiesExample} from "@/components/maths/graphing";
 
 const contentDir = path.join(process.cwd(), "/src/content/");
@@ -21,7 +22,7 @@ type CustomMDXRemoteProps = Omit<MDXRemoteProps, 'options'> & {
   };
 };
 
-const customComponents = {MeshRenderSwitch, HelloFx, InequalitiesExample};
+const customComponents = {ImageGrid, MeshRenderSwitch, HelloFx, InequalitiesExample};
 
 export async function getBlogBySlug(slug: string) {
   const fileName = slug + ".mdx";
