@@ -4,36 +4,46 @@ import { ReactNode, useRef } from "react";
 import styles from '../../../../md.module.css';
 import TOC from "@/app/(main)/components/table-of-contents";
 
-type Props = {
+interface BlogWrapperProps {
   title: string;
   publishDate: string;
   tag: string;
   children: ReactNode;
-};
+}
 
-function BlogWrapper({ title, publishDate, tag, children }: Props) {
-  const contentRef = useRef<HTMLDivElement | null>(null); // Reference for content
+const BlogWrapper: React.FC<BlogWrapperProps> = ({
+  title,
+  publishDate,
+  tag,
+  children
+}) => {
+  const contentRef = useRef<HTMLDivElement | null>(null);
 
   return (
-    <div className={`my-5 ${styles.markdown} w-full flex flex-col lg:flex-row`}>
-      {/* div content area */}
-      <div className="lg:w-full pr-8" ref={contentRef}>
-        <div>
-          <h5>{title}</h5>
-          <p className="text-gray-500">{publishDate}</p>
-          <p className="text-gray-500">#{tag}</p>
+    <div className="w-full max-w-none px-4 sm:px-6 lg:px-8">
+      <div className={`${styles.markdown} flex flex-col lg:flex-row lg:space-x-8`}>
+        {/* Main content area */}
+        <div className="flex-1" ref={contentRef}>
+          <header>
+            <h1>{title}</h1>
+            <div className="flex flex-wrap gap-2 text-gray-500">
+              <p>{publishDate}</p>
+              <p>#{tag}</p>
+            </div>
+          </header>
+          <hr className="my-5 border-gray-700" />
+          <div className="w-full">
+            {children}
+          </div>
         </div>
-        <hr className="my-5" />
-        {/* Render the blog content */}
-        <div className="w-full">{children}</div>
-      </div>
 
-      {/* Table of Contents */}
-      <aside className="lg:w-1/4">
-        <TOC content={contentRef} />
-      </aside>
+        {/* Sidebar - reordered for mobile first */}
+        <aside className="w-full lg:w-1/4 lg:flex-shrink-0">
+          <TOC content={contentRef} />
+        </aside>
+      </div>
     </div>
   );
-}
+};
 
 export default BlogWrapper;

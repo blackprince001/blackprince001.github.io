@@ -1,11 +1,11 @@
-import { useEffect, useState, MutableRefObject } from 'react';
+import React from "react";
+import styles from '../../md.module.css';
 
-// Helper function to generate slug-friendly IDs from headings
 const slugify = (text: string) =>
   text
     .toLowerCase()
-    .replace(/[^\w]+/g, '-') // Replace non-word characters with hyphens
-    .replace(/^-+|-+$/g, ''); // Remove leading/trailing hyphens
+    .replace(/[^\w]+/g, '-')
+    .replace(/^-+|-+$/g, '');
 
 interface Heading {
   text: string;
@@ -13,14 +13,14 @@ interface Heading {
   id: string;
 }
 
-interface TableOfContentsProps {
-  content: MutableRefObject<HTMLElement | null>;
+interface TOCProps {
+  content: React.MutableRefObject<HTMLElement | null>;
 }
 
-const TOC: React.FC<TableOfContentsProps> = ({ content }) => {
-  const [headings, setHeadings] = useState<Heading[]>([]);
+const TOC: React.FC<TOCProps> = ({ content }) => {
+  const [headings, setHeadings] = React.useState<Heading[]>([]);
 
-  useEffect(() => {
+  React.useEffect(() => {
     if (content.current) {
       const headingElements = Array.from(
         content.current.querySelectorAll('h1, h2, h3, h4, h5, h6')
@@ -28,14 +28,8 @@ const TOC: React.FC<TableOfContentsProps> = ({ content }) => {
 
       const headingsArray = headingElements.map((heading) => {
         const text = heading.innerText || heading.textContent || '';
-        let id = heading.id;
-
-        // If the heading doesn't have an ID, generate one using slugify
-        if (!id) {
-          id = slugify(text);
-          heading.id = id; // Assign the generated ID to the heading
-        }
-
+        let id = heading.id || slugify(text);
+        heading.id = id;
         return {
           text,
           level: Number(heading.tagName.replace('H', '')),
@@ -47,36 +41,43 @@ const TOC: React.FC<TableOfContentsProps> = ({ content }) => {
     }
   }, [content]);
 
+  const renderTOCContent = () => (
+    <nav>
+      <ol className={`${styles.markdown} space-y-2`}>
+        {headings.map((heading) => (
+          <li
+            key={heading.id}
+            style={{ marginLeft: `${(heading.level - 1) * 1}rem` }}
+            className="text-sm"
+          >
+            <a href={`#${heading.id}`} className="hover:text-gray-300 transition-colors">
+              {heading.text}
+            </a>
+          </li>
+        ))}
+      </ol>
+    </nav>
+  );
+
   return (
     <>
-      {/* Mobile View - Table of Contents at the top */}
-      <div className="block lg:hidden bg-[#242526] p-6 mb-6">
-        <h6 className="text-sm font-bold mb-4">Table of Contents</h6>
-        <ul>
-          {headings.map((heading) => (
-            <li
-              key={heading.id}
-              className={`ml-${(heading.level - 1) * 4} hover:text-blue-500`}
-            >
-              <a href={`#${heading.id}`}>{heading.text}</a>
-            </li>
-          ))}
-        </ul>
+      {/* Mobile TOC */}
+      <div className="lg:hidden w-full bg-gray-800 rounded-lg mb-6">
+        <details className="group w-full">
+          <summary className="list-none flex justify-between items-center cursor-pointer text-white p-4">
+            <h6 className="text-sm font-bold">Table of Contents</h6>
+            <span className="transition-transform duration-200 group-open:rotate-180">▼</span>
+          </summary>
+          <div className="px-4 pb-4">
+            {renderTOCContent()}
+          </div>
+        </details>
       </div>
 
-      {/* Desktop View - Table of Contents on the right */}
-      <div className="hidden lg:block sticky top-0 max-w-xs p-4 bg-[#242526] shadow-lg">
-        <h5 className="text-sm font-bold mb-4">Table of Contents</h5>
-        <ol className="space-y-2 text-sm">
-          {headings.map((heading) => (
-            <li
-              key={heading.id}
-              className={`ml-${(heading.level - 1) * 4} hover:text-blue-500`}
-            >
-              <a href={`#${heading.id}`}>{heading.text}</a>
-            </li>
-          ))}
-        </ol>
+      {/* Desktop TOC */}
+      <div className="hidden lg:block sticky top-4 bg-gray-800 rounded-lg p-6">
+        <h6 className="text-sm font-bold mb-4 text-white">Table of Contents</h6>
+        {renderTOCContent()}
       </div>
     </>
   );
