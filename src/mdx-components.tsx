@@ -4,6 +4,7 @@ import MeshRenderSwitch from './components/graphics/render'
 import {HelloFx, InequalitiesExample} from './components/maths/graphing'
 import ImageGrid from './components/ui/image-grid'
 import 'katex/dist/katex.css'
+import BlogSuggestion from './components/ui/blog-suggested'
  
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -15,6 +16,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         />
       ),
     MeshRenderSwitch,
+    BlogSuggestion,
     ImageGrid,
     HelloFx,
     InequalitiesExample,
