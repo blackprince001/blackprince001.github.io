@@ -1,5 +1,6 @@
 import { Metadata } from "next";
 import "katex/dist/katex.min.css";
+import Comments from "@/app/(main)/components/comments";
 
 export const metadata: Metadata = {
     title: "blackprince | Nebula",
@@ -39,6 +40,8 @@ export default function RootLayout({
     <div>
       <script async src="https://0.observe.so/script.js" data-app="cm1ox74dc01sga2mnzpda7460"></script>
       {children}
+
+      <Comments />
     </div>
   );
 }
