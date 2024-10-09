@@ -10,7 +10,7 @@ const ProudGhanaian: React.FC = () => {
         fill="none"
         xmlns="http://www.w3.org/2000/svg"
         className="animate-[rotate_3s]">
-        <g clip-path="url(#clip0_6_12)">
+        <g clipPath="url(#clip0_6_12)">
             <path
                 d="M17.36 30.97L14.46 35.44L17.59 37.47L15.51 40.68L6.13 34.6L11.11 26.92C13.18 23.73 15.23 22.8 17.26 24.12L17.39 24.21C19.44 25.54 19.43 27.8 17.36 30.98V30.97ZM10.34 32.77L12.35 34.08L15.21 29.66C15.85 28.67 15.85 27.96 15.2 27.54L15.16 27.51C14.5 27.08 13.84 27.36 13.2 28.36L10.34 32.78V32.77Z"
                 fill="currentColor">

@@ -13,7 +13,9 @@ function HeroSection() {
         </div>
 
         <div>
-          <ProudGhanaian />
+          <div className="flex justify-end items-center">
+            <ProudGhanaian />
+          </div>
         </div>
       </div>
 
