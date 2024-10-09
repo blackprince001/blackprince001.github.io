@@ -1,14 +1,22 @@
+import ProudGhanaian from "@/components/ui/pg";
 import Link from "next/link";
 
 function HeroSection() {
   return (
     <div className="mt-6 pb-[10vh]">
-      <div>
-        <h1 className="font-bold">blackprince</h1>
-        <p className="font-semibold text-gray-500">
-            Computer Engineer, Researcher and Design Architect
-        </p>
+      <div className="grid grid-cols-2 gap-4">
+        <div>
+          <h1 className="font-bold">blackprince</h1>
+          <p className="font-semibold text-gray-500">
+              Computer Engineer, Researcher and Design Architect
+          </p>
+        </div>
+
+        <div>
+          <ProudGhanaian />
+        </div>
       </div>
+
       <br />
       <div>
         <p>
