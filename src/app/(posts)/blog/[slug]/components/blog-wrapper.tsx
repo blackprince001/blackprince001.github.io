@@ -3,6 +3,7 @@
 import { ReactNode, useRef } from "react";
 import styles from '../../../../md.module.css';
 import TOC from "@/app/(main)/components/table-of-contents";
+import Comments from "@/app/(main)/components/comments";
 
 interface BlogWrapperProps {
   title: string;
@@ -25,7 +26,7 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
         {/* Main content area */}
         <div className="flex-1" ref={contentRef}>
           <header>
-            <h1>{title}</h1>
+            <h2>{title}</h2>
             <div className="flex flex-wrap gap-2 text-gray-500">
               <p>{publishDate}</p>
               <p>#{tag}</p>
@@ -42,6 +43,8 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
           <TOC content={contentRef} />
         </aside>
       </div>
+      
+      <Comments />
     </div>
   );
 };

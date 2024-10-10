@@ -40,8 +40,6 @@ export default function RootLayout({
     <div>
       <script async src="https://0.observe.so/script.js" data-app="cm1ox74dc01sga2mnzpda7460"></script>
       {children}
-
-      <Comments />
     </div>
   );
 }
