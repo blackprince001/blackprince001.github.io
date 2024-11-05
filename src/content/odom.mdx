@@ -1,0 +1,92 @@
+---
+title: "Odometry, Math and Importance."
+publishDate: "30th October, 2024"
+tag: "Robotics"
+---
+
+**Odometry is a method for robots to estimate their position and orientation (pose) by measuring the movement of their wheels. This process is like a robot keeping track of its steps to figure out where it is.** Odometry is a core concept in robotics and is used for various purposes, including navigation and control.
+
+Odometry is particularly useful in situations where robots lack access to external positioning systems like GPS or rely on sensors like cameras or laser rangefinders. It provides a way for the robot to estimate its position based on its own motion. 
+
+Odometry relies on the integration of wheel velocities over time. **By measuring how much the wheels have rotated, odometry algorithms can determine the robot's change in position and orientation.** However, it's important to note that odometry errors accumulate over time due to wheel slippage, uneven surfaces, and inaccuracies in sensor readings.
+
+## How Odometry Works
+
+Odometry comes from the Greek words öðóç [odos] (route) and μsτpov [metron] (measurement) which literally mean:"measurement of the route".
+
+The odometry problem can be formulated as: given an initial pose $q$ of $t_0$ at some initial time, find the pose at any future time $t_0+\Delta t.$
+
+<center><img className="rounded-lg" src="../robotics/odom.webp" width="500" height="600"/></center>
+
+Given:
+
+<center> $$q(t_0)=q_{t_0}=q_0=\begin{bmatrix}x_0&y_0&\theta_0\end{bmatrix}^T$$ </center>
+
+Find:
+
+<center> $$ q_{t_0+\Delta t},\forall\Delta t>0$$ </center>
+
+When $\Delta t$ is small enough to consider the angular speed of the wheels constant, the pose update can be approximated as a simple sum.
+
+<center> $$q_t=\begin{bmatrix}x_t&y_t&\theta_t\end{bmatrix}^T$$ </center>
+
+
+<center> $$q_{t_{k+1}}=q_{t_k}+\dot{q}_{t_k}(t_{k+1}-t_k)$$ </center>
+
+The process can then be applied iteratively to find the pose at any time, and at each iteration using the previous estimate as an initial condition.
+
+Imagine a robot with two wheels driven independently by motors, like a differential drive robot. These robots are commonly used in robotics due to their simplicity and maneuverability. To implement odometry, these robots typically use wheel encoders.
+
+### Wheel Encoders
+**Wheel encoders are sensors that measure the rotation of a wheel.** They work by detecting pulses as the wheel rotates, allowing the robot to keep track of how far each wheel has turned. By combining this information with the robot's kinematic model, it can estimate its position and orientation.
+
+Although there are various implementations, the operation principle of wheel encoders is simple. We can utilize markers on the wheels to work it out. Knowing how many markers there are in a whole circumference, we can derive how much each wheel rotated by just counting the pulses in each of the k-th time interval.
+
+<center><img className="rounded-lg" src="../robotics/odom_wheel.webp" width="500" height="600"/></center>
+
+This means Wheel rotation (in $\Delta t_k){:}\Delta\phi_k=N_k\cdot\boldsymbol{\alpha}$ where $\alpha=\frac{2\pi}{N_{tot}}$ radians for one pulse.
+
+By dividing the total rotation by delta $t$, we can then measure the average wheel angular speed in that time frame.
+
+Angular speed then can be represented by $\dot{\phi}_{t_k}\approx\frac{\Delta\phi_k}{\Delta t_k}$. Have this for both wheels on a non-holonomic robot with two wheels, you get yourself to components $\dot{\phi}_{L,t_k}$ and $\dot{\phi}_{R,t_k}$ to represent the left and right wheels.
+ 
+## Here's a step-by-step breakdown of Odometry for Implementation
+
+There are four compartments on creating an odometry system for robots (at least from what I've realized). You attempt to measure the wheel rotations, calculate the wheel distances, estimate pose, update overall pose of robot.
+
+**Measure Wheel Rotations**: Using wheel encoders, the robot measures how much each wheel has rotated since the last measurement. These measurements are represented as $\Delta \phi$ indicating the change in wheel angle.
+
+**Calculate Wheel Distances**: Knowing the wheel radius (R), the robot calculates the distance traveled by each wheel using the formula $\text{d} = R \Delta \phi$
+
+**Estimate Position and Orientation Changes**: Based on the wheel distances and the robot's kinematic model (which takes into account factors like the distance between the wheels), the robot estimates its change in position $(\Delta x, \Delta y)$ and orientation $\Delta \theta$. 
+
+**Update Overall Pose**: The robot adds the calculated changes to its previous position and orientation estimates to obtain its current estimated pose.
+
+<center> $\dot{q}_t=\begin{bmatrix}\dot{x}_t\\\dot{y}_t\\\dot{\theta}_t\end{bmatrix}=\frac R2\begin{bmatrix}cos(\theta_t)&0\\sin(\theta_t)&0\\0&1\end{bmatrix}\begin{bmatrix}1&1\\\frac1L&-\frac1L\end{bmatrix}\begin{bmatrix}\dot{\phi}_{r,t}\\\dot{\phi}_{l,t}\end{bmatrix}$ </center>
+
+This model allows us to perform the pose update once we determine its parameters, which are the wheel radii, which we assume identical, and the distance between the wheels, or the baseline.
+
+Parameters
+
+- $R$: wheel radius
+- $2L$: baseline (distance between wheels)
+
+<BlogSuggestion link="https://github.com/blackprince001/ros_tt_kontroller_diff_drive" title="I implemented Odometry for ROS here using the concepts highlight above. Take a look and don't forget to leave a star." />
+
+## Challenges in Odometry
+
+While odometry is a powerful tool, it faces several challenges:
+
+- **Error Accumulation:** Odometry errors, primarily caused by wheel slippage and inaccuracies in sensor readings, accumulate over time, leading to drift in the estimated pose. This drift can make the robot's position estimate increasingly unreliable over long distances or extended periods.
+- **Kinematic Model Accuracy:** The accuracy of the kinematic model is crucial for precise odometry. Any discrepancies between the model and the real robot, such as variations in wheel radius or distance between wheels, will introduce systematic errors in the pose estimation.
+- **Calibration:** Accurate odometry relies on proper calibration of the robot's parameters, including wheel radius, wheel separation, and encoder resolution. Calibration procedures involve measuring these parameters precisely and feeding them into the odometry algorithm.
+
+## Addressing Odometry Challenges
+
+To mitigate odometry errors and improve accuracy, roboticists often use additional sensors and techniques, such as:
+
+- **Sensor Fusion:** Combining odometry data with measurements from other sensors, like IMUs (Inertial Measurement Units), laser rangefinders, or cameras, can help correct for drift and improve the overall pose estimate.
+- **Loop Closure:** In environments with recognizable features, loop closure techniques can detect when the robot has returned to a previously visited location. By recognizing these loops, the robot can correct its accumulated odometry error.
+- **Particle Filters and Kalman Filters:** These are statistical filtering techniques used to estimate the robot's pose by combining odometry data with sensor measurements and a probabilistic model of the robot's motion.
+
+**In conclusion, odometry is a fundamental technique for robot localization that relies on integrating wheel motion measurements. It plays a vital role in robotics, enabling robots to estimate their position and orientation in various environments. However, it's essential to be aware of the challenges associated with odometry and to employ techniques like sensor fusion and filtering to improve its accuracy and reliability.**

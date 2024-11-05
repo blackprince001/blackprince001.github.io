@@ -40,17 +40,37 @@ CAD Design Design the robot in Fusion 360, ensuring the orientation is set up co
     *   Incorporating sensors like a LIDAR unit.
     <center><img className="rounded-lg" src="../robotics/lidar.png" width="500" height="600"/></center>
 
-*   **Export Preparation:** Prepare the model for export by:
-    *   Naming the different components (e.g., base\_link, right\_wheel, left\_wheel, lidar).
-    *   Assigning materials to the parts for realistic simulation (e.g., ABS plastic for the body, rubber for the wheels).
-    *   Converting the bodies into components.
-    *   Defining joints to enable movement (e.g., revolute joints for the wheels, rigid joint for the lidar).
-*   **URDF Conversion:**
-    *   Utilize the Fusion 360 to URDF exporter plugin to convert the Fusion 360 model into a URDF (Unified Robot Description Format) file. This generates a set of files including the URDF file itself, launch files, meshes, etc.
-*   **Gazebo Simulation:**
-    *   Set up a ROS (Robot Operating System) environment. The source uses Ubuntu 18.04 with ROS Melodic installed in a virtual machine.
-    *   Create or use an existing catkin workspace.
-    *   Copy the generated robot description package into the 'src' folder of your catkin workspace.
-    *   Build the package using 'catkin\_make'.
-    *   Launch the robot simulation in Gazebo using the provided launch file (e.g., 'display.launch'). This will visually display the robot model in the Gazebo simulator and allow you to interact with it.
-    *   The next step would be to add plugins for controlling the robot, like a differential drive plugin to enable movement based on velocity commands.
+
+### Export Preparation
+
+To prepare your model for export, start by organizing and naming each component in Fusion 360 according to its intended function. For instance, you could label the main body as `base_link`, while individual parts like the wheels and lidar sensor could be labeled `right_wheel`, `left_wheel`, and `lidar`. Proper naming is crucial as it allows for easy reference in the URDF structure, making it more straightforward to define interactions and movement later on.
+
+Next, assign realistic materials to each part. Using ABS plastic or a similar material for the body mimics the rigidity and appearance typical of plastic components, while assigning rubber to the wheels gives them realistic friction properties. These materials not only give your model a realistic look but also affect physical behavior in simulations, contributing to more accurate results. Once the materials are set, convert your parts into components in Fusion 360. Structuring the model into components enables each part to be transformed and joined individually, which is essential when defining the robot's movement and interactions.
+
+<center><img className="rounded-lg" src="../robotics/material.png" width="500" height="600"/></center>
+
+
+Defining joints is the next step. For wheels, use revolute joints, allowing them to rotate around a fixed axis. This is critical for simulating wheel motion and enabling the robot to move. For components like the lidar, a rigid joint is appropriate since it should remain fixed relative to the body. Make sure the joints are oriented correctly, as this directly influences the realism and accuracy of your simulation in Gazebo.
+
+### URDF Conversion
+
+With the model organized, you can now convert it into a URDF file. Fusion 360 offers a URDF exporter plugin that handles this process, converting your model into the URDF format and generating a package containing all necessary files. 
+
+<BlogSuggestion link="https://github.com/syuntoku14/fusion2urdf" title="fusion2urdf Exporter to export your designs to urdf." />
+
+These include the URDF file itself, which defines the robot's structure, along with launch files to load the model in Gazebo and mesh files in STL or COLLADA format, which Gazebo will use to render the robot. After the export, it's good practice to check the URDF for any errors or missing tags, as minor adjustments may be needed to ensure compatibility with ROS and Gazebo.
+
+
+### Final Thoughts and Future References
+
+By following these steps, you've successfully transformed your Fusion 360 model into a URDF format, setting the foundation for seamless integration with ROS. This conversion process—from organizing components, assigning materials, and defining joints, to exporting with the Fusion 360 URDF plugin—empowers you to bring complex CAD models into a virtual environment where they can be interacted with programmatically. 
+
+Whether you're designing for simulations, testing robotic kinematics, or preparing a model for more advanced control setups, having your Fusion 360 model in URDF format is a powerful step forward. With your model now in ROS-compatible format, you're well-prepared to continue exploring robotics, experimenting with new configurations, or integrating additional sensors and mechanisms. This process not only enhances your model's realism but also provides a bridge from design to functional simulation and beyond.
+
+You can follow the suggestion below to see how I setup gazebo to simulate the robot moving around. 
+
+<BlogSuggestion link="/blog/gazebo" title="Simulations with Gazebo" />
+
+Here are also a list of resources used to design the robot and export to URDF.
+
+[1] [Youtube Link for Designing this particular Roboot](https://www.youtube.com/watch?v=cQh0gNfb6ro&list=PLfbivN9Wky4lAPHJVxBx2F8PCIp70X7fo&index=1&pp=iAQB)

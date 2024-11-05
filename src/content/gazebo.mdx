@@ -1,0 +1,13 @@
+---
+title: "Simulations with Gazebo"
+publishDate: "3rd October, 2024"
+tag: "Robotics"
+---
+
+To run your model in Gazebo, you'll need a ROS environment set up on Ubuntu 18.04, ideally with ROS Melodic. If you're using a virtual machine, make sure it's configured with enough resources for running Gazebo smoothly. Begin by creating a catkin workspace or using an existing one, then place the exported robot description package into the `src` folder of this workspace. In a terminal, navigate to your catkin workspace's root directory and run `catkin_make` to build the package, integrating the URDF with ROS.
+
+Once the package is built, you can launch the model in Gazebo using the provided launch file—often named something like `display.launch`. This command will open Gazebo and load your robot model, allowing you to view it in the simulated environment and verify that the joints and components are placed correctly.
+
+### Adding Control Plugins
+
+With your model up and running in Gazebo, you're ready to add plugins that will allow you to control the robot. One of the most common is the differential drive plugin, which enables the robot to move based on velocity commands and respond to input like a real wheeled robot. This plugin, along with any others you may need, can be added to further refine the robot's simulated behavior and prepare it for tasks and interaction within Gazebo. 
