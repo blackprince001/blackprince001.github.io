@@ -21,19 +21,24 @@ function HeroSection() {
       </div>
 
       <br />
-      <div>
-        <p>
-        I had my undergraduate studies at <Link className="hover:underline" href="https://www.knust.edu.gh">Kwame Nkrumah University of Science and Technology.</Link>
-        </p>
-        <br />
-          <Image src='https://blackprince001.github.io/images/drone.png' alt={"Drone"} width={500} height={600}/>
-        <p>
-        My passion lies in creating interactive software and systems that fosters idea sharing and personal expression. As a generalist, I am deeply invested in both technical and non-technical fields: hoping to bridge the gap between them. I believe that these fundamental aspects are crucial for developing meaningful products and research.
-        </p>
-        <br />
-        <p>
-        While pursuing my studies at Kwame Nkrumah University of Science and Technology, I have gained valuable experience in diverse contexts and political environments. This exposure has equipped me to tackle challenges head-on and adapt to various work environments.
-        </p>
+      <p>
+      I had my undergraduate studies at <Link className="hover:underline" href="https://www.knust.edu.gh">Kwame Nkrumah University of Science and Technology.</Link>
+      </p>
+      <br />
+      <p>
+      While pursuing my studies at Kwame Nkrumah University of Science and Technology, I have gained valuable experience in diverse contexts and political environments. This exposure has equipped me to tackle challenges head-on and adapt to various work environments.
+      </p>
+      <br />
+      <p>
+      My passion lies in creating interactive software and systems that fosters idea sharing and personal expression. As a generalist, I am deeply invested in both technical and non-technical fields: hoping to bridge the gap between them. I believe that these fundamental aspects are crucial for developing meaningful products and research.
+      </p>
+      
+      <div className="flex flex-row justify-center items-center">
+          <Image 
+          src='https://blackprince001.github.io/images/drone.png' 
+          alt={"Drone"}
+          width={500}
+          height={600}/>
       </div>
     </div>
   );
