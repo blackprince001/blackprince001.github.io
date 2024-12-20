@@ -1,41 +1,139 @@
 @import "https://unpkg.com/mafs@0.5.0/build/index.css";
 
-.markdown {
-  @apply text-gray-800 leading-relaxed text-white;
+/* Sidenote specific styles */
+.markdown .sidenote-wrapper {
+  position: relative;
+  display: inline;
 }
 
+.markdown .sidenote-content {
+  @apply text-gray-400 text-sm;
+}
+
+/* Desktop sidenotes */
+@media (min-width: 1024px) {
+  .markdown p {
+    position: relative;
+  }
+
+  .markdown .sidenote {
+    position: absolute;
+    right: -16rem; /* Adjust based on your layout */
+    width: 14rem;
+    margin-top: -1.5rem;
+    padding-left: 1rem;
+    box-sizing: border-box;
+  }
+}
+
+/* Mobile sidenotes */
+@media (max-width: 1023px) {
+  .markdown .sidenote {
+    display: inline;
+    padding-left: 0.25rem;
+    padding-right: 0.25rem;
+  }
+}
+
+.markdown {
+  @apply text-[#f5f5f5];
+  font-size: 1.4rem;
+}
+
+/* Heading styles */
 .markdown h1 {
-  @apply text-5xl font-bold mt-6 mb-4;
+  @apply text-[2.5rem] font-bold mb-8;
 }
 
 .markdown h2 {
-  @apply text-4xl font-semibold mt-5 mb-3;
+  @apply text-[2rem] font-semibold mb-6;
 }
 
+.markdown h3 {
+  @apply text-[1.5rem] font-semibold mb-4;
+}
+
+/* Paragraph styles */
 .markdown p {
-  @apply my-4 text-base;
+  @apply mb-8 text-lg leading-relaxed;
+  font-size: 1.2rem;
 }
 
+/* Link styles */
+.markdown a {
+  @apply underline text-[#f5f5f5];
+  @apply hover:text-[#d1d1d1] transition-colors;
+}
+
+/* Code styles */
 .markdown code {
-  @apply bg-gray-800 px-1.5 py-0.5 rounded text-sm font-mono text-white;
+  @apply bg-[#2a2a2a] px-2 py-1 rounded;
+  @apply font-mono text-base;
 }
 
 .markdown pre {
-  @apply bg-gray-800 p-4 rounded overflow-x-auto;
+  @apply bg-[#2a2a2a] p-6 rounded-lg my-8;
+  @apply overflow-x-auto;
 }
 
-.markdown a {
-  @apply text-gray-500 underline;
-}
-
-.markdown ul {
-  @apply list-disc list-inside my-4;
-}
-
+/* List styles */
+.markdown ul, 
 .markdown ol {
-  @apply list-decimal list-inside my-4;
+  @apply my-6 ml-8 text-lg;
 }
 
 .markdown li {
-  @apply my-1 ml-5;
+  @apply my-2;
+}
+
+/* Blockquote styles */
+.markdown blockquote {
+  @apply border-l-4 border-[#333333] pl-6 my-8;
+  @apply text-[#a0a0a0] italic;
+}
+
+/* Table styles */
+.markdown table {
+  @apply w-full my-8;
+  @apply border-collapse;
+}
+
+.markdown th,
+.markdown td {
+  @apply border border-[#333333] px-4 py-2;
+  @apply text-left;
+}
+
+.markdown th {
+  @apply bg-[#2a2a2a];
+}
+
+/* Image styles */
+.markdown img {
+  @apply rounded-lg my-8;
+  @apply max-w-full h-auto;
+}
+
+/* Custom classes for specific elements */
+.markdown .footnote {
+  @apply text-[#a0a0a0] text-base;
+}
+
+.markdown .highlight {
+  @apply bg-[#2a2a2a] px-2 py-1 rounded;
+}
+
+/* Sidenote specific improvements */
+.markdown .sidenote-wrapper {
+  position: relative;
+}
+
+.markdown .sidenote-number {
+  @apply text-gray-400;
+}
+
+@media (min-width: 1024px) {
+  .markdown .sidenote {
+    margin-top: -1.5em;
+  }
 }

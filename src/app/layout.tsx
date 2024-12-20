@@ -7,12 +7,12 @@ import Footer from "@/components/ui/footer";
 const inter = local({
   src: [
     {
-      path: "../../public/fonts/Inter-Regular.ttf",
+      path: "../../public/fonts/et-book-roman-line-figures.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../../public/fonts/Inter-Bold.ttf",
+      path: "../../public/fonts/et-book-semi-bold-old-style-figures.ttf",
       weight: "600",
       style: "bold",
     },
