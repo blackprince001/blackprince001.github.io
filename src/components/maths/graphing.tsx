@@ -43,3 +43,14 @@ export function HelloFx() {
     </div>
   )
 }
+
+export function Sigmoid() {
+  return (
+    <div className="rounded-lg border-solid border-4 border-gray-500">
+    <Mafs height={300} viewBox={{ x: [-1, 1], y: [-1, 1], padding: 0.5, }}>
+      <Coordinates.Cartesian subdivisions={4}/>
+        <Plot.OfX y={(x) => 1 / (1 + Math.exp(-x))} />
+    </Mafs>
+    </div>
+  )
+}

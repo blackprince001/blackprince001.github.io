@@ -8,7 +8,7 @@ import { compileMDX } from "next-mdx-remote/rsc";
 import { MDXRemoteProps } from "next-mdx-remote/rsc";
 import MeshRenderSwitch from "@/components/graphics/render";
 import ImageGrid from "@/components/ui/image-grid";
-import {HelloFx, InequalitiesExample} from "@/components/maths/graphing";
+import {HelloFx, InequalitiesExample, Sigmoid } from "@/components/maths/graphing";
 import BlogSuggestion from "@/components/ui/blog-suggested";
 import Sidenote, { AutoNumberedSidenote } from "@/components/ui/sidenotes";
 
@@ -24,7 +24,7 @@ type CustomMDXRemoteProps = Omit<MDXRemoteProps, 'options'> & {
   };
 };
 
-const customComponents = {ImageGrid, BlogSuggestion, MeshRenderSwitch, HelloFx, InequalitiesExample, Sidenote, AutoNumberedSidenote};
+const customComponents = {ImageGrid, BlogSuggestion, MeshRenderSwitch, HelloFx, InequalitiesExample, Sigmoid, Sidenote, AutoNumberedSidenote};
 
 export async function getBlogBySlug(slug: string) {
   const fileName = slug + ".mdx";

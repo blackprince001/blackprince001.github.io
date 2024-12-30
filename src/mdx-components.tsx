@@ -1,7 +1,7 @@
 import type { MDXComponents } from 'mdx/types'
 import Image, { ImageProps } from 'next/image'
 import MeshRenderSwitch from './components/graphics/render'
-import { HelloFx, InequalitiesExample } from './components/maths/graphing'
+import { HelloFx, InequalitiesExample, Sigmoid } from './components/maths/graphing'
 import ImageGrid from './components/ui/image-grid'
 import BlogSuggestion from './components/ui/blog-suggested'
 import Sidenote, { AutoNumberedSidenote } from './components/ui/sidenotes'
@@ -23,6 +23,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     ImageGrid,
     HelloFx,
     InequalitiesExample,
+    Sigmoid,
     ...components,
   }
 }
