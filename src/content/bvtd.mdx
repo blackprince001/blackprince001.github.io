@@ -1,0 +1,25 @@
+---
+title: "Bias-Variance Tradeoff"
+publishDate: "21th December, 2024"
+tag: "Machine Learning"
+---
+
+The bias/variance trade-off is a fundamental concept in machine learning that relates to the generalization error of a model. The generalization error can be divided into three parts:
+
+- **Bias:** This error is due to wrong assumptions, such as assuming the data is linear when it is actually quadratic. A high-bias model is likely to underfit the training data.
+
+- **Variance:** This error is due to the model's excessive sensitivity to small variations in the training data. A model with many degrees of freedom (such as a high-degree polynomial model) is likely to have high variance and overfit the training data.
+
+- **Irreducible error:** This error is due to the noisiness of the data itself. The only way to reduce this part of the error is to clean up the data (e.g., fix data errors and remove outliers).
+
+> The goal is to find the right balance between bias and variance to minimize the overall generalization error.
+
+
+<center><img src="../bvtd/bullseye.png" width="500" height="600"/></center>
+
+In the context of machine learning, a "bullseye" explanation for the bias-variance tradeoff uses a dartboard analogy where the bullseye represents the true target value, and the darts thrown represent the model's predictions.
+
+A model with high bias would consistently miss the bullseye by landing far away from the center <Sidenote number={1}>meaning it makes the same systematic error</Sidenote>.
+
+A model with high variance would have darts scattered wildly across the board, indicating inconsistent predictions even on similar data points, and the ideal model would hit close to the bullseye with consistent accuracy, balancing both bias and variance.
+ 
