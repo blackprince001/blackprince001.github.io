@@ -58,7 +58,7 @@
 @layer base {
   body {
     @apply text-[#f5f5f5] bg-[#1a1a1a];
-    font-size: 1.2rem;
+    font-size: 1.2rem; /* Default font size */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -71,18 +71,21 @@
 
   /* Typography scale */
   h1 {
-    @apply text-6xl font-bold mb-8;
+    @apply text-6xl sm:text-5xl md:text-6xl lg:text-7xl; /* Adjust heading sizes */
+    @apply font-bold mb-8;
     @apply text-[#f5f5f5];
   }
 
   h2 {
-    @apply text-2xl font-semibold mb-6;
+    @apply text-2xl sm:text-xl md:text-2xl lg:text-3xl; /* Adjust subheading sizes */
+    @apply font-semibold mb-6;
     @apply text-[#f5f5f5];
   }
 
   p {
     font-size: 1.2rem;
     @apply text-[#f5f5f5];
+    @apply sm:text-lg md:text-xl; /* Adjust paragraph text size */
   }
 
   a {

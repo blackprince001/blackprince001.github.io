@@ -6,6 +6,7 @@
     user-select: none;
     font-family: inherit;
     font-variant-numeric: tabular-nums;
+    font-size: 1rem;
     touch-action: none;
     outline: 0;
   
@@ -30,9 +31,10 @@
   
   .MafsView text {
     fill: var(--mafs-fg);
+    font-size: inherit; /* Inherit the font size from the parent element */
     cursor: default;
   }
-  
+   
   .MafsView path {
     stroke: var(--mafs-fg);
   }

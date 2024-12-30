@@ -18,7 +18,7 @@ const BlogSuggestion: React.FC<BlogSuggestionProps> = ({
       <CardContent className="p-4">
         <div className="flex items-start space-x-2">
           <div className="flex-grow px-8">
-            <h3 className="text-sm font-semibold text-white mb-2">{title}</h3>
+            <h3 className="text-white mb-2" style={{fontSize: 16}}>{title}</h3>
             <Link 
               href={link}
               className="text-blue-600 hover:text-blue-800 flex items-center justify-center text-sm group"

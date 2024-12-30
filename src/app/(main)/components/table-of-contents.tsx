@@ -62,7 +62,7 @@ const TOC: React.FC<TOCProps> = ({ content }) => {
   return (
     <>
       {/* Mobile TOC */}
-      <div className="lg:hidden w-full bg-gray-800 rounded-lg mb-6">
+      <div className="lg:hidden w-full border rounded-lg mb-6">
         <details className="group w-full">
           <summary className="list-none flex justify-between items-center cursor-pointer text-white p-4">
             <h6 className="text-sm font-bold">Table of Contents</h6>
@@ -75,7 +75,7 @@ const TOC: React.FC<TOCProps> = ({ content }) => {
       </div>
 
       {/* Desktop TOC */}
-      <div className="hidden lg:block sticky top-4 bg-gray-800 rounded-lg p-6">
+      <div className="hidden lg:block sticky top-4 border rounded-lg p-6">
         <h6 className="text-sm font-bold mb-4 text-white">Table of Contents</h6>
         {renderTOCContent()}
       </div>

@@ -1,0 +1,108 @@
+---
+title: "The Normal Equation"
+publishDate: "30th December, 2024"
+tag: "Machine Learning"
+---
+
+## What is Linear Regression?
+
+**Linear regression** is a type of **model-based machine learning** that predicts a target numerical value by calculating a weighted sum of input features, plus a constant called the bias term. Examples of problems that could be addressed with linear regression include:
+
+- 1 Predicting life satisfaction based on GDP per capita.
+- 2 Predicting housing prices based on features like square footage and the number of bedrooms.
+- 3 Predicting crop yields based on factors like rainfall and fertilizer use.
+- 4 Predicting a company's revenue next year based on previous performance metrics.
+
+Linear Regression is represented mathematically by: $$\begin{aligned}\\&\widehat{y}=\theta_{0}+\theta_{1}x_{1}+\theta_{2}x_{2}+\cdots+\theta_{n}x_{n}\end{aligned}$$
+
+where $\widehat{y}$ is the predicted value, $n$ is the number of features, $x$ is the $i^{th}$ feature value and $\theta_{j}$ is the model parameter including the bias term.
+
+### Finding Optimal Parameters
+
+The goal of training a linear regression model is to find the optimal values for the parameter vector $\theta$ that minimize the difference between the model's predictions $\widehat{y}$  and the actual target values $y$ in the training data.
+
+#### Normal Equation
+
+The Normal Equation is a mathematical formula used to find the optimal values for the parameters of a linear regression model. The `optimal` values are the ones that minimize the difference between the model's predictions and the actual target values in the training data.
+
+<center style={{padding: 16}}>$$\widehat{\mathbf{\theta}}=\left(\mathbf{X}^{\mathsf{T}}\mathbf{X}\right)^{-1}\quad\mathbf{X}^{\mathsf{T}}\quad\mathbf{y}$$</center>
+
+
+We'd like to minimize the least-squares cost:
+
+<center style={{padding: 16}}>$$J(\theta_{0...n})=\dfrac{1}{2m}\sum_{i=1}^m(h_\theta(x^{(i)})-y^{(i)})^2$$</center>
+
+Where $x^(i)$ is the i-th sample (from a set of m samples) and $y^{(i)}$is the i-th expected result
+To proceed, well represent the problem in matrix notation; this is natural, since we essentially have a system of linear equations here. 
+
+The regression coefficients $\theta$ we're looking for are the vector:
+
+<center style={{padding: 16}}>$$\begin{pmatrix}\theta_0\\\theta_1\\...\\\theta_n\end{pmatrix}\in\mathbb R^{n+1}$$</center>
+
+Given a training set, define the design matrix $X$ to be the $n$-by-$d$ matrix <Sidenote number={1}>actually $n$-by-$d+1$, if we include the intercept</Sidenote> 
+
+that contains the training examples input values in its rows:
+
+<center style={{padding: 16}}>$$\left.X=\left[\begin{array}{c}-(x^{(1)})^T-\\-(x^{(2)})^T-\\\vdots\\-(x^{(n)})^T-\end{array}\right.\right].$$</center>
+
+Also, let $\vec{y}$ be the $n$-dimensional vector containing all the target values from the training set:
+
+<center style={{padding: 16}}>$$\left.\vec{y}=\left[\begin{array}{c}y^{(1)}\\y^{(2)}\\\vdots\\y^{(n)}\end{array}\right.\right].$$</center>
+
+
+Now, since $h_\theta(x^{(i)})=(x^{(i)})^T\theta$, we can easily verify that
+
+<center style={{padding: 16}}>$$\begin{aligned}X\theta-\vec{y}&=\quad\left[\begin{array}{c}(x^{(1)})^T\theta\\\vdots\\(x^{(n)})^T\theta\end{array}\right]-\left[\begin{array}{c}y^{(1)}\\\vdots\\y^{(n)}\end{array}\right]\\&=\quad\left[\begin{array}{c}h_\theta(x^{(1)})-y^{(1)}\\\vdots\\h_\theta(x^{(n)})-y^{(n)}\end{array}\right].\end{aligned}$$</center>
+
+Thus, using the fact that for a vector $z$, we have that $z^Tz=\sum_iz_i^2$:
+
+$$\begin{aligned}\frac12(X\theta-\vec{y})^T(X\theta-\vec{y})&=\quad\frac12\sum_{i=1}^n(h_\theta(x^{(i)})-y^{(i)})^2\\&=\quad J(\theta)\end{aligned}$$
+
+Finally, to minimize $J$, let's find its derivatives with respect to $\theta.$ Hence,
+
+$$\begin{aligned}\nabla_\theta J(\theta)&=\quad\nabla_\theta\frac12(X\theta-\vec{y})^T(X\theta-\vec{y})\\&=\quad\frac12\nabla_\theta\left((X\theta)^TX\theta-(X\theta)^T\vec{y}-\vec{y}^T(X\theta)+\vec{y}^T\vec{y}\right)\\&=\quad\frac12\nabla_\theta\left(\theta^T(X^TX)\theta-\vec{y}^T(X\theta)-\vec{y}^T(X\theta)\right)\\&=\quad\frac12\nabla_\theta\left(\theta^T(X^TX)\theta-2(X^T\vec{y})^T\theta\right)\\&=\quad\frac12\left(2X^TX\theta-2X^T\vec{y}\right)\\&=\quad X^TX\theta-X^T\vec{y}\end{aligned}$$ <Sidenote number={2}>Proof was derived in Andrew Ng Stanford CS229 Notes.</Sidenote>
+
+In the third step, we used the fact that $a^Tb=b^Ta$, and in the fifth step used the facts $\nabla_xb^Tx=b$ and $\nabla_xx^TAx=2Ax$ for symmetric matrix $A$ <Sidenote number={3}>for more details, see Section 4.3 of “Linear Algebra Review and Reference"</Sidenote>
+
+To minimize $J$, we set its derivatives to zero, and obtain the normal equations:
+
+<center style={{padding: 16}}>$$X^TX\theta=X^T\vec{y}$$</center>
+
+Thus, the value of $\theta$ that minimizes $J(\theta)$ is given in closed form by the equation
+
+<center style={{padding: 16}}>$$\theta=(X^TX)^{-1}X^T\vec{y}$$</center>
+
+### Key points
+
+- **Purpose**: The Normal Equation provides a direct, closed-form solution to calculate the best parameters (weights) for a linear regression model.
+
+<details style={{color: "#faddaa"}}>
+<summary>Normal Equation in sklearn and numpy python.</summary>
+```python
+from sklearn.preprocessing import add_dummy_feature
+import numpy as np
+
+
+def normal_equation(X: np.array, Y: np.array):
+    X_b = add_dummy_feature(X)
+    theta_best = np.linalg.inv(X_b.T @ X_b) @ X_b.T @ Y
+    
+    return theta_best    
+```
+</details>
+
+- **Cost Function**: It works by finding the parameter values that minimize the Mean Squared Error (MSE) cost function. The MSE measures the average squared difference between the model's predictions and the actual target values.
+
+<center style={{padding: 16}}>$$\mathrm{MSE}(\mathbf{X},h_{\mathbf{\theta}})=\frac{1}{m}\sum_{i = 1}^{m}\left(\mathbf{\theta}^{\mathsf{T}}\mathbf{x}^{(i)}-y^{(i)}\right)^{2}$$</center>
+
+#### Advantages
+    - Fast and efficient for smaller datasets with a limited number of features.
+    - Direct solution without needing iterative optimization algorithms like gradient descent.
+
+#### Disadvantages
+    - Can become computationally very expensive for datasets with a very large number of features.
+    - Does not handle cases where certain features are redundant or when the number of features exceeds the number of training instances.
+
+**Alternative to the Normal Equation**: For datasets with many features or when computational efficiency is critical, alternative methods like **gradient descent** algorithms are used to find the optimal parameters iteratively. 
+
+<BlogSuggestion link="/blog/grad-descent" title="Checkout Gradient Descent Here" />

@@ -28,8 +28,8 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
   return (
     <div className="min-h-screen">
       {/* Main container with wide margins for sidenotes */}
-      <div className="max-w-[1400px] mx-auto px-6 py-12">
-        <div className="flex flex-col lg:flex-row lg:space-x-16">
+      <div className="max-w-[1920px] mx-auto px-4 py-10">
+        <div className="flex flex-col lg:flex-row lg:space-x-8">
           {/* Main content area with fixed width */}
           <main className="lg:w-[750px]">
             <article className={styles.markdown} ref={contentRef}>
@@ -39,7 +39,7 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
                 <div className="flex flex-wrap gap-3 text-[#a0a0a0] text-lg">
                   <time dateTime={publishDate}>{publishDate}</time>
                   <span>•</span>
-                  <span>#{tag}</span>
+                  <span>{tag}</span>
                 </div>
               </header>
 
