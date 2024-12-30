@@ -1,0 +1,114 @@
+---
+title: "Classification? More like Logistic Regression"
+publishDate: "22nd December, 2024"
+tag: "Machine Learning"
+---
+
+**Logistic regression is a machine learning algorithm used to predict the probability that an instance belongs to a particular class**. It is typically used for binary classification problems, where the output is either 0 or 1. However, it can be generalized to support multiple classes using **softmax regression**.
+
+Mathematically, the logistic regression model prediction can be represented as:
+
+<center className="p-12 py-10">$$\widehat{p}=h_{{\mathbf{\theta}}}(\mathbf{x})=\sigma(\mathbf{\theta}^{{\mathsf{T}}}\mathbf{x})$$</center>
+
+**Logistic regression is similar to linear regression in that it computes a weighted sum of the input features (plus a bias term)**. However, instead of outputting the result directly, logistic regression applies the **sigmoid function**, also called the **logistic function**, to the result.
+
+The sigmoid function is an S-shaped function that outputs a number between 0 and 1. This output represents the estimated probability that the instance belongs to the positive class.<Sidenote number={1}>Sigmoid Logistic function</Sidenote>
+
+<center className="p-12 py-10">$$\begin{aligned}\sigma(t)=\frac1{1+\exp{(-t)}}\end{aligned}$$</center>
+
+## How Does Logistic Regression Make Predictions?
+
+If the estimated probability is greater than a given threshold (typically 50%), then the model predicts that the instance belongs to the positive class (labeled "1"). Otherwise, it predicts that it belongs to the negative class (labeled "0").
+
+Example: Logistic regression model prediction using a 50% threshold probability
+
+<center className="p-12 py-10">$$\widehat{y}=\begin{cases}0&\mathrm{if~}\widehat{p}<0.5\\1&\mathrm{if~}\widehat{p}\geq0.5&\end{cases}$$</center>
+
+where:
+
+- $\widehat{y}$ is the predicted class
+- $p$ is the estimated probability that the instance belongs to the positive class.
+
+## How is a Logistic Regression Model Trained?
+
+The objective of training a logistic regression model is to set the parameter vector $\theta$ so that the model estimates high probabilities for positive instances (y = 1) and low probabilities for negative instances (y = 0). This is achieved by minimizing a cost function, typically the **log loss**.
+
+The log loss function penalizes the model when it estimates a low probability for a target class. For a single training instance, the cost function is:
+
+$$c(\mathbf{\theta})=\begin{cases}-\log(\widehat{p})&\mathrm{if~}y=1\\-\log(1-\widehat{p})&\mathrm{if~}y=0&\end{cases}$$
+
+The cost function for the entire training set is simply the average cost over all training instances represented by:
+
+$$J(\mathbf{\theta})=-\frac1m\Sigma_{i\operatorname{=}1}^m A$$
+
+$$A = \left[y^{(i)}log{\left(\widehat{p}^{(i)}\right)}+ \left(1-y^{(i)}\right)log{\left(1-\widehat{p}^{(i)}\right)}\right]$$
+
+
+
+## What is Softmax Regression?
+
+Softmax regression, also known as multinomial logistic regression, is a generalization of logistic regression used for **multiclass classification problems** where the classes are mutually exclusive. This means that each instance can only belong to one class.
+
+For example, you could use softmax regression to classify iris flowers into different species, but not to recognize multiple people in one picture.
+
+### How Softmax Regression Works:
+
+- 1 **Calculating Scores:** Softmax regression calculates a score, $s_{k}(\mathbf{x})$, for each class $k$ given an instance _x_. This score represents how likely the instance is to belong to that class. 
+
+    The score is calculated using an equation similar to linear regression, where each class has its own parameter vector, 
+
+    <center className="p-12 py-10">$\theta^{(k)}$ : $$s_{k}(\mathbf{x})=\left(\mathbf{\theta}^{(k)}\right)^{\mathsf{T}}\mathbf{x}$$</center>
+
+    > These parameter vectors are stored as rows in a parameter matrix, _Θ_.
+
+- 2 **Estimating Probabilities:** The scores for each class are then converted into probabilities using the **softmax function**. The softmax function, also called the normalized exponential, calculates the exponential of each score and then divides by the sum of all exponentials:
+
+    $$\widehat{p}_k=\sigma(\mathbf{s}(\mathbf{x}))_k=\frac{\exp\left(s_k(\mathbf{x})\right)}{\Sigma_{j=1}^K\exp\left(s_j(\mathbf{x})\right)}$$
+        Where
+        - $K$ is the number of classes.
+        - $s( x)$  is a vector containing the scores of each class for the instance x
+        - $\left.\sigma(\mathbf{s}(\mathbf{x})\right)_k$ is the estimated probability that the instance x belongs to class $k$, given the scores of each class for that instance.
+	
+- 3 **Making Predictions:** The softmax regression classifier predicts the class with the highest estimated probability, which corresponds to the class with the highest score:
+
+    <center className="p-12 py-10">$$\widehat{y}=\underset{k}{\operatorname*{\mathrm{~argmax~}}}\sigma(\mathbf{s}(\mathbf{x}))_k=\underset{k}{\operatorname*{\mathrm{~argmax~}}}s_k(\mathbf{x})=\underset{k}{\operatorname*{\mathrm{~argmax~}}}\left(\left(\mathbf{\theta}^{(k)}\right)^{\mathsf{T}}\mathbf{x}\right)$$</center>
+
+### Training Softmax Regression:
+
+- **The Goal**: To train a softmax regression model is to adjust the parameter matrix _Θ_ so that the model assigns a high probability to the correct class and low probabilities to the other classes.
+    
+- **Cost Function**: This is achieved by minimizing a cost function called the **cross-entropy**. Cross-entropy measures how well the estimated class probabilities match the true class probabilities. The cross-entropy cost function is given by:
+
+<center className="p-12 py-10">$$\nabla_{\mathbf{\theta}}(k)J(\mathbf{\Theta})=\frac1m\sum_{i=1}^m\left(\widehat{p}_k^{(i)}-y_k^{(i)}\right)\mathbf{x}^{(i)}$$</center>
+
+	where:
+	- $y_k^{(i)}$ is the target probability that the $i_{th}$ instance belongs to class $k$. This is typically 1 if the instance belongs to class $k$ and 0 otherwise.
+
+- **Minimizing Cross-Entropy:** Gradient descent can be used to find the parameter values that minimize the cross-entropy cost function.
+
+> The cross-entropy will be low when the predicted probabilities are close to the target probabilities. Conversely, the cross-entropy will be high if the predicted probabilities are far from the target probabilities.
+
+## Example
+
+Let's imagine a scenario with three classes (A, B, and C) and a single training instance.
+
+<div className="rounded-lg bg-zinc-500 pb-8">
+- **Scenario 1: Correct Prediction with High Confidence**
+    - True class: Class A (represented as)
+    - Predicted probabilities: [0.9, 0.05, 0.05]
+    - The cross-entropy would be relatively low because the model correctly predicted a high probability for class A.
+</div>
+
+<div className="rounded-lg bg-zinc-600">
+- **Scenario 2: Correct Prediction with Low Confidence**
+    - True class: Class A (represented as)
+    - Predicted probabilities: [0.4, 0.3, 0.3]
+    - The cross-entropy would be higher than in Scenario 1 because, although the model predicts the correct class, it does so with lower confidence (a lower probability for class A).
+</div>
+
+<div className="rounded-lg bg-zinc-700">
+- **Scenario 3: Incorrect Prediction**
+    - True class: Class A (represented as)
+    - Predicted probabilities: [0.1, 0.7, 0.2]
+    - The cross-entropy would be the highest in this scenario because the model predicted the wrong class (assigning the highest probability to class B).
+</div>
