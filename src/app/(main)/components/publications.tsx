@@ -184,7 +184,7 @@ export const PublicationShowcase: React.FC = () => {
                   rel="noopener noreferrer"
                   className="inline-flex items-center text-gray-500 hover:text-gray-400 transition-colors"
                 >
-                  <span>Download PDF</span>
+                  <span>Read</span>
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     className="h-5 w-5 ml-1"
