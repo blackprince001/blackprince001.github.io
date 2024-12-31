@@ -116,7 +116,7 @@ const ProjectShowcase: React.FC = () => {
   return (
     <main>
       <section className='mt-6'>
-        <h1>Open Source Projects</h1>
+        <h1 className="text-3xl font-bold mb-8 text-gray-500">Open Source Projects</h1>
         <br />
         <p>
           I view building software in the open as a mode of <em className="font-serif text-[110%] leading-[100%]">creative exploration</em>. It lets me quickly act on inspiration, delve into new topics, and make tools that improve the lives of people.
