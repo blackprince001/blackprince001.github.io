@@ -29,7 +29,7 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
     <div className="min-h-screen">
       {/* Main container with wide margins for sidenotes */}
       <div className="max-w-[1920px] mx-auto px-4 py-10">
-        <div className="flex flex-col lg:flex-row lg:space-x-8">
+        <div className="flex flex-col lg:flex-row lg:space-x-4">
           {/* Main content area with fixed width */}
           <main className="lg:w-[750px]">
             <article className={styles.markdown} ref={contentRef}>
