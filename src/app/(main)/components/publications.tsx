@@ -23,7 +23,7 @@ export const RecentPublications: React.FC = () => {
   useEffect(() => {
     const fetchPublications = async () => {
       try {
-        const response = await fetch('/blackprince001.github.io/api/publications');
+        const response = await fetch('/api/publications');
         if (!response.ok) {
           throw new Error(`Failed to fetch publications: ${response.statusText}`);
         }
@@ -105,7 +105,7 @@ export const PublicationShowcase: React.FC = () => {
   useEffect(() => {
     const fetchPublications = async () => {
       try {
-        const response = await fetch('/blackprince001.github.io/api/publications');
+        const response = await fetch('/api/publications');
         if (!response.ok) {
           throw new Error(`Failed to fetch publications: ${response.statusText}`);
         }
