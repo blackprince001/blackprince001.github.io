@@ -10,7 +10,7 @@ import rehypeRaw from 'rehype-raw';
 const nextConfig = {
   basePath: "/blackprince001.github.io",
   output: "export",
-  images: { unoptimized: true },
+  // images: { unoptimized: true },
   reactStrictMode: true,
   pageExtensions: ['js', 'jsx', 'md', 'mdx', 'ts', 'tsx'],
 };
