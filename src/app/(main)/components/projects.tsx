@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation';
 import { CalendarDays, Star } from 'lucide-react';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import Link from 'next/link';
 
 interface GitHubRepo {
   id: number;
@@ -171,6 +172,89 @@ const ProjectShowcase: React.FC = () => {
           </div>
         ))}
       </section>
+    </main>
+  );
+};
+
+export const RecentProjects: React.FC = () => {
+  const pathname = usePathname();
+  const [sortOrder, setSortOrder] = useState<'date' | 'stars'>('date');
+  const [projects, setProjects] = useState<GitHubRepo[]>([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  useEffect(() => {
+    const fetchProjects = async () => {
+      setIsLoading(true);
+      try {
+        const response = await fetch(
+          `https://api.github.com/users/blackprince001/repos?per_page=5&sort=created`
+        );
+        if (!response.ok) {
+          throw new Error('Failed to fetch projects');
+        }
+        const data: GitHubRepo[] = await response.json();
+        // Filter out forked repositories
+        const nonForkedProjects = data.filter(project => !project.fork);
+        setProjects(nonForkedProjects);
+      } catch (err) {
+        setError('An error occurred while fetching projects. Please try again later.');
+        console.error(err);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+  useEffect(() => {
+    const selected = pathname.split('#')[1];
+    if (selected) {
+      setTimeout(() => {
+        if (pathname.split('#')[1] === selected) {
+          document.getElementById(selected)?.scrollIntoView();
+        }
+      }, 500);
+    }
+  }, [pathname]);
+  const sortedProjects = [...projects].sort((a, b) => {
+    if (sortOrder === 'date') {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+    } else {
+      return b.stargazers_count - a.stargazers_count;
+    }
+  });
+  if (isLoading) {
+    return <div className="text-center py-20">Loading projects...</div>;
+  }
+  if (error) {
+    return <div className="text-center py-20 text-red-600">{error}</div>;
+  }
+  return (
+    <main>
+      <div className="flex flex-row justify-between items-center gap-5">
+        <div>
+          <div className="flex items-center gap-3 text-gray-500">
+            <h3>Recent Projects</h3>
+          </div>
+        </div>
+        <Link
+          href={"/projects"}
+          className="text-gray-500 underline hover:text-black ease-in-out duration-500"
+        >
+          <h5>View All Projects</h5>
+        </Link>
+      </div>
+    <br />
+    <div>
+      {sortedProjects.map((project) => (
+        <div
+        key={project.name}
+        className="flex flex-col sm:flex-row sm:justify-between sm:items-center"
+      >
+        <ul>{project.full_name}</ul>
+      </div>
+      ))}
+    </div>
+    <br />
     </main>
   );
 };
