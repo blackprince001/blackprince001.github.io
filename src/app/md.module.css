@@ -1,43 +1,95 @@
 @import "https://unpkg.com/mafs@0.5.0/build/index.css";
 
-/* Sidenote specific styles */
-.markdown .sidenote-wrapper {
-  position: relative;
-  display: inline;
-}
-
-.markdown .sidenote-content {
-  @apply text-gray-400 text-sm;
-}
-
-/* Desktop sidenotes */
-@media (min-width: 1024px) {
-  .markdown p {
-    position: relative;
-  }
-
-  .markdown .sidenote {
-    position: absolute;
-    right: -16rem; /* Adjust based on your layout */
-    width: 14rem;
-    margin-top: -1.5rem;
-    padding-left: 1rem;
-    box-sizing: border-box;
-  }
-}
-
-/* Mobile sidenotes */
-@media (max-width: 1023px) {
-  .markdown .sidenote {
-    display: inline;
-    padding-left: 0.25rem;
-    padding-right: 0.25rem;
-  }
-}
-
+/* Markdown module CSS */
 .markdown {
-  @apply text-[#f5f5f5];
-  font-size: 1.4rem;
+  max-width: 750px; /* Ensure the main content width is fixed */
+  margin: 0 auto; /* Center the content */
+  padding: 0 1rem; /* Add some padding for better readability */
+}
+
+/* Sidenote wrapper */
+.sidenote-wrapper {
+  position: relative;
+  display: inline-block; /* Ensure it doesn't break the flow of text */
+}
+
+/* Sidenote number (superscript) */
+.sidenote-number {
+  vertical-align: super;
+  font-size: 0.875rem; /* Smaller font size for superscript */
+  cursor: pointer;
+  color: #6b7280; /* Gray color for the number */
+}
+
+/* Sidenote content (desktop) */
+.sidenote {
+  display: none; /* Hidden by default */
+}
+
+@media (min-width: 1024px) {
+  .sidenote {
+    display: block;
+    position: absolute;
+    left: 100%; /* Position to the right of the main content */
+    width: 16rem; /* Fixed width for sidenotes */
+    padding-left: 1rem; /* Spacing from the main content */
+    font-size: 0.875rem; /* Smaller font size for sidenotes */
+    color: #9ca3af; /* Light gray color for sidenotes */
+    top: 0;
+    transform: translateY(-50%); /* Center vertically */
+  }
+}
+
+/* Sidenote content (mobile) */
+.sidenote-mobile {
+  display: inline-block;
+  font-size: 0.875rem; /* Smaller font size for sidenotes */
+  color: #9ca3af; /* Light gray color for sidenotes */
+  margin-left: 0.25rem; /* Spacing from the number */
+}
+
+@media (min-width: 1024px) {
+  .sidenote-mobile {
+    display: none; /* Hide on desktop */
+  }
+}
+
+/* Prose styles for markdown content */
+.prose-lg {
+  line-height: 1.75; /* Better readability */
+  color: #374151; /* Dark gray color for text */
+}
+
+.prose-lg h1,
+.prose-lg h2,
+.prose-lg h3,
+.prose-lg h4,
+.prose-lg h5,
+.prose-lg h6 {
+  margin-top: 1.5rem;
+  margin-bottom: 1rem;
+  font-weight: 600;
+  color: #111827; /* Darker color for headings */
+}
+
+.prose-lg p {
+  margin-top: 1rem;
+  margin-bottom: 1rem;
+}
+
+.prose-lg a {
+  color: #3b82f6; /* Blue color for links */
+  text-decoration: underline;
+}
+
+.prose-lg a:hover {
+  color: #2563eb; /* Darker blue on hover */
+}
+
+.prose-lg hr {
+  border-color: #e5e7eb; /* Light gray color for horizontal rules */
+  margin-top: 2rem;
+  margin-bottom: 2rem;
 }
 
 /* Heading styles */
@@ -121,19 +173,4 @@
 
 .markdown .highlight {
   @apply bg-[#2a2a2a] px-2 py-1 rounded;
-}
-
-/* Sidenote specific improvements */
-.markdown .sidenote-wrapper {
-  position: relative;
-}
-
-.markdown .sidenote-number {
-  @apply text-gray-400;
-}
-
-@media (min-width: 1024px) {
-  .markdown .sidenote {
-    margin-top: -1.5em;
-  }
 }

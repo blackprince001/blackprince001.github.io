@@ -31,8 +31,10 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
       <div className="max-w-[1920px] mx-auto px-4 py-10">
         <div className="flex flex-col lg:flex-row lg:space-x-4">
           {/* Main content area with fixed width */}
-          <main className="lg:w-[750px]">
-            <article className={styles.markdown} ref={contentRef}>
+          
+          <main className="">
+            <div className={styles.markdown} ref={contentRef}>
+
               {/* Header section */}
               <header className="mb-12">
                 <h1 className="text-[2.5rem] mb-4">{title}</h1>
@@ -44,12 +46,9 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
               </header>
 
               <hr className="border-[#333333] mb-12" />
-
-              {/* Main content */}
-              <div className="relative prose-lg">
-                {children}
-              </div>
-            </article>
+              
+              {children}
+            </div>
 
             {/* Comments section */}
             <div className="mt-20">
