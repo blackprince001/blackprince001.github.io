@@ -1,0 +1,126 @@
+---
+title: "Instruction Set Architectures"
+publishDate: "6th April, 2024"
+tag: "Computer Systems"
+---
+
+## Instruction Set Architectures: The Language of Computers
+
+To perform any task on a computer, three essential components are required: **the computer itself**, **data**, and a **program**. A computer program is a sequence of instructions that tells the computer how to process data to achieve a specific goal. These instructions are the building blocks of all computational tasks, and understanding them is key to understanding how computers work.
+
+### Programs, Instructions, and Instruction Sets
+
+At the heart of every computer program are **instructions**, which are the smallest units of work a computer can perform. Each instruction is a command that tells the computer to perform a specific operation, such as adding two numbers or moving data from one location to another. 
+
+The collection of all instructions that a computer can execute is known as its **Instruction Set**. Think of the instruction set as the computer’s vocabulary—the set of words it understands. Just as human languages have dialects, different computer architectures have different instruction sets. However, most instruction sets share common features, such as basic operations like addition, subtraction, and jumping to different parts of a program. Once you understand one instruction set, learning others becomes much easier.
+
+### The Anatomy of an Instruction
+
+Every instruction consists of several key elements:
+
+<center><img src="../isa/instruction.png" width="500" height="600"/></center>
+
+- **Opcode (Operation Code):** Specifies the operation to be performed (e.g., add, subtract, load, store).
+- **Source Operand(s):** The input(s) for the operation. An instruction can have one or more source operands.
+- **Result Operand:** The location where the result of the operation will be stored.
+- **Next Instruction Reference:** Tells the processor where to fetch the next instruction.
+
+These elements work together to define what the computer should do at each step of a program.
+
+### Operands: Where Data Resides
+
+Instructions operate on **operands**, which are the data values being processed. Operands can be stored in several places:
+
+1. **Registers:** Small, fast storage locations within the CPU. Registers are used to hold data that is being actively processed.
+2. **Memory:** A larger but slower storage area where data is stored when not in use.
+3. **Constants:** Fixed values that are embedded directly within the instruction itself.
+
+For example, consider the following high-level code and its corresponding MIPS assembly code:
+
+```assembly
+High-Level Code
+a = b + c;
+
+MIPS Assembly Code
+add a, b, c
+```
+
+In this example, `a`, `b`, and `c` are operands. The `add` instruction tells the computer to add the values in `b` and `c` and store the result in `a`. The operands can be stored in registers, memory, or as constants within the instruction.
+
+#### The MIPS Register File
+
+The MIPS architecture uses 32 registers, collectively known as the **register file**. Registers are incredibly fast, but they are limited in number. This is why programs also use memory to store data. By combining registers and memory, a program can access a large amount of data relatively quickly.
+
+<center><img src="../isa/register-file.png" width="500" height="600"/></center>
+
+### Memory: The Larger Storage
+
+While registers are fast, they are limited in number. Memory, on the other hand, can store vast amounts of data but is slower to access. MIPS uses a **byte-addressable memory**, meaning each byte in memory has a unique address. This allows for fine-grained control over data storage and retrieval.
+
+#### Word vs. Byte Addressable Memory
+
+- **Word Addressable Memory:** In this model, each word (typically 32 bits) has a unique address. For example, the word `0xF2F1AC07` might be stored at address `00000001`.
+  
+  <center><img src="../isa/word-addr.png" width="500" height="600"/></center>
+
+- **Byte Addressable Memory:** In MIPS, memory is byte-addressable, meaning each byte has a unique address. Words are typically 4 bytes long, so the address of a word is four times its word number.
+
+  <center><img src="../isa/byte-addr.png" width="500" height="600"/></center>
+
+For example, the following MIPS assembly code reads and writes words from memory:
+
+```assembly
+MIPS Assembly Code
+lw $s0, 0($0)    # read data word 0 (0xABCDEF78) into $s0
+lw $s1, 8($0)    # read data word 2 (0x01EE2842) into $s1
+lw $s2, OxC($0)  # read data word 3 (0x40F30788) into $s2
+sw $s3, 4($0)    # write $s3 to data word 1
+sw $s4, 0x20($0) # write $s4 to data word 8
+sw $s5, 400($0)  # write $s5 to data word 100
+```
+
+We do a lot of memory addressing with offsets and a base address by orders of 4. We can use  the decimal or hexadecimal for the offset value.
+
+Constants and Immediate Operands. The immediate specified in an instruction is a 16-bit two's comple-ment number in the range $[-32,768, 32,767]$. Which is $[-2^{15}, 2^{15}]$ in terms of bit size width.
+
+### Instruction Formats: R-type, I-type, and J-type
+
+MIPS instructions come in three formats, each designed for different types of operations:
+
+1. **R-type (Register-type):** Used for operations that involve three registers. The instruction format includes fields for the opcode, source registers, destination register, and a shift amount.
+
+   <center><img src="../isa/r-type.png" width="500" height="600"/></center>
+
+   - **Opcode:** Determines the operation (e.g., add, subtract).
+   - **Source Registers (rs, rt):** The registers containing the operands.
+   - **Destination Register (rd):** The register where the result will be stored.
+   - **Shift Amount (shamt):** Used in shift operations to specify the number of bits to shift.
+
+   <center><img src="../isa/r-type mips.png" width="500" height="600"/></center>
+
+2. **I-type (Immediate-type):** Used for operations that involve two registers and an immediate value. The immediate value is a 16-bit constant embedded in the instruction.
+
+   <center><img src="../isa/i-type.png" width="500" height="600"/></center>
+
+   - **Opcode:** Determines the operation (e.g., add immediate, load word).
+   - **Source Register (rs):** The register containing the first operand.
+   - **Destination Register (rt):** The register where the result will be stored.
+   - **Immediate (imm):** A 16-bit constant used in the operation.
+
+   <center><img src="../isa/i-types mips.png" width="500" height="600"/></center>
+
+3. **J-type (Jump-type):** Used for jump instructions that change the program counter to a new address. The instruction contains a 26-bit address field.
+
+   <center><img src="../isa/j-type.png" width="500" height="600"/></center>
+
+### Connecting the Dots: How It All Fits Together
+
+Understanding instruction sets, operands, and memory is crucial for understanding how a computer executes programs. Here’s how everything connects:
+
+1. **Program Execution:** A program is a sequence of instructions stored in memory. The CPU fetches each instruction, decodes it, and executes it.
+2. **Operand Access:** During execution, the CPU accesses operands from registers, memory, or constants embedded in the instruction.
+3. **Instruction Formats:** The format of an instruction (R-type, I-type, J-type) determines how the CPU interprets it and what operations it performs.
+4. **Memory Hierarchy:** Registers provide fast access to data, while memory offers larger storage capacity. Programs use both to balance speed and storage needs.
+
+
+Instruction Set Architectures are the foundation of how computers execute programs. By understanding the elements of instructions, the role of operands, and the different instruction formats, you gain insight into the inner workings of a computer. Whether you're working with MIPS or another architecture, these concepts are universal and provide a solid foundation for further exploration in computer systems.
