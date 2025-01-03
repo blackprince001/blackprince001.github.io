@@ -11,6 +11,7 @@ import ImageGrid from "@/components/ui/image-grid";
 import {HelloFx, InequalitiesExample, Sigmoid } from "@/components/maths/graphing";
 import BlogSuggestion from "@/components/ui/blog-suggested";
 import Sidenote, { AutoNumberedSidenote } from "@/components/ui/sidenotes";
+import Quiz from "@/components/quiz/quiz";
 
 const contentDir = path.join(process.cwd(), "/src/content/");
 
@@ -24,7 +25,7 @@ type CustomMDXRemoteProps = Omit<MDXRemoteProps, 'options'> & {
   };
 };
 
-const customComponents = {ImageGrid, BlogSuggestion, MeshRenderSwitch, HelloFx, InequalitiesExample, Sigmoid, Sidenote, AutoNumberedSidenote};
+const customComponents = {Quiz, ImageGrid, BlogSuggestion, MeshRenderSwitch, HelloFx, InequalitiesExample, Sigmoid, Sidenote, AutoNumberedSidenote};
 
 export async function getBlogBySlug(slug: string) {
   const fileName = slug + ".mdx";

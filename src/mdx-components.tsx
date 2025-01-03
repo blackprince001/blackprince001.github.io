@@ -6,6 +6,7 @@ import ImageGrid from './components/ui/image-grid'
 import BlogSuggestion from './components/ui/blog-suggested'
 import Sidenote, { AutoNumberedSidenote } from './components/ui/sidenotes'
 import 'katex/dist/katex.css'
+import Quiz from './components/quiz/quiz'
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
   return {
@@ -24,6 +25,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     HelloFx,
     InequalitiesExample,
     Sigmoid,
+    Quiz,
     ...components,
   }
 }

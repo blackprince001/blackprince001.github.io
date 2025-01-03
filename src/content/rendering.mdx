@@ -44,3 +44,26 @@ Here is a collection of beautiful images.
 <BlogSuggestion link="/blog/default" title="Generating default blog items" />
 
 For special cases, you can also manually number your sidenotes<Sidenote number={42}>This sidenote has a custom number</Sidenote>.
+
+# Quizes are available Now
+
+<Quiz quizData={[
+  {
+    question: "What is the capital of France?",
+    answers: [
+      { text: "Paris", correct: true },
+      { text: "London", correct: false },
+      { text: "Berlin", correct: false },
+    ],
+    explanation: "Paris is the capital of France.",
+  },
+  {
+    question: "What is 2 + 2?",
+    answers: [
+      { text: "3", correct: false },
+      { text: "4", correct: true },
+      { text: "5", correct: false },
+    ],
+    explanation: "2 + 2 equals 4.",
+  },
+]} />
