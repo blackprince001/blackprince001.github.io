@@ -1,28 +1,37 @@
+'use client'
+
 import Link from "next/link";
-import React from "react";
-import { CiBarcode, CiMail, CiTwitter } from "react-icons/ci";
+import { CenterUnderline, ComesInGoesOutUnderline, GoesOutComesInUnderline } from "@/components/ui/underline-animation";
+
 
 function Footer() {
   return (
-    <footer className="font-semibold flex justify-center items-center max-w-3xl mx-auto h-full px-6 py-5">
-        <ul className="flex flex-col sm:flex-row sm:items-center gap-5 my-5 px-6 py-5">
-          <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank" className="hover:underline">
-            <CiMail />
+    <footer className="font-semibold flex justify-center items-center py-12 w-full">
+      <div className="flex flex-row font-overusedGrotesk items-start text-[#0015ff] uppercase space-x-8 text-xs sm:text-sm md:text-base lg:text-lg">
+        <div>Contact</div>
+        <ul className="flex flex-col space-y-1 h-full">
+          <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank">
+            <CenterUnderline label="EMAIL" />
           </Link>
-        </ul>
+          <Link href={"https://x.com/0xed8"} target="_blank">
+            <ComesInGoesOutUnderline label="X (TWITTER)" direction="right" />
+          </Link>
+          <Link href={"https://github.com/blackprince001"} target="_blank">
+            <ComesInGoesOutUnderline label="GITHUB" direction="left" />
+          </Link>
 
-        <ul className="flex flex-col sm:flex-row sm:items-center gap-5 my-5 px-6 py-5">
-          <Link href={"https://x.com/0xed8"} target="_blank" className="hover:underline">
-            <CiTwitter />
-          </Link>
+          {/* <div className="pt-12">
+            <ul className="flex flex-col space-y-1 h-full">
+              <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank">
+                <GoesOutComesInUnderline
+                  label="APPIAHBOADUPRINCE@GMAIL.COM"
+                  direction="left"
+                />
+              </Link>
+            </ul>
+          </div> */}
         </ul>
-{/*         
-        <ul className="flex flex-col sm:flex-row sm:items-center gap-5 my-5">
-
-          <Link href={"https://github.com/blackprince001"} target="_blank" className="hover:underline">
-            <CiBarcode />
-          </Link>
-        </ul> */}
+      </div>
     </footer>
   );
 }
