@@ -1,45 +1,49 @@
-import { getBlogs } from "@/utils/fetch-mdx";
-import Link from "next/link";
+import { getBlogs } from "@/utils/fetch-mdx"
+import { parseDate, formatDate } from "@/utils/date"
+import Link from "next/link"
+import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
+import { ArrowRight } from "lucide-react"
 
 async function BlogPosts() {
-  const blogs = await getBlogs();
-  const recentBlogs = blogs.slice(0, 10);
+  const blogs = await getBlogs()
+  const recentBlogs = blogs.slice(0, 5)
 
   return (
-    <div className="mb-16">
-      <div className="flex flex-row justify-between items-center gap-5">
-        <div>
-          <div className="flex items-center gap-3 text-gray-500">
-            <h3>Recent Posts</h3>
-          </div>
-        </div>
-        <Link
-          href={"/blog"}
-          className="text-gray-500 underline hover:text-black ease-in-out duration-500"
-        >
-          <h5>View Posts</h5>
-        </Link>
+    <section className="space-y-8">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold tracking-tight">Recent Posts</h2>
+        <Button asChild variant="ghost">
+          <Link href="/blog" className="group">
+            View all posts
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </Button>
       </div>
-      
-      <br />
 
-      <div>
-        {recentBlogs.map((item) => {
-          return (
-            <div
-              key={item.slug}
-              className="flex flex-col sm:flex-row sm:justify-between sm:items-center"
-            >
-              <Link href={`/blog/${item.slug}`} className="hover:underline">
-                <ul>{item.frontmatter.title}</ul>
-              </Link>
-              <p className="text-gray-500">{item.frontmatter.tag} - {item.frontmatter.publishDate}</p>
-            </div>
-          );
-        })}
+      <div className="grid gap-4">
+        {recentBlogs.map((item) => (
+          <Link key={item.slug} href={`/blog/${item.slug}`}>
+            <Card className="transition-colors hover:bg-muted/50">
+              <CardHeader>
+                <div className="flex justify-between items-start gap-4">
+                  <CardTitle className="text-lg">{item.frontmatter.title}</CardTitle>
+                  <CardDescription className="text-right shrink-0">
+                    {formatDate(parseDate(item.frontmatter.publishDate))}
+                  </CardDescription>
+                </div>
+                <CardDescription className="flex items-center gap-2">
+                  <span className="inline-block w-2 h-2 rounded-full bg-primary/50" />
+                  {item.frontmatter.tag}
+                </CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
+        ))}
       </div>
-    </div>
-  );
+    </section>
+  )
 }
 
-export default BlogPosts;
+export default BlogPosts
+

@@ -1,180 +1,113 @@
 @import "https://unpkg.com/mafs@0.5.0/build/index.css";
 
-/* Markdown module CSS */
-.markdown {
-  max-width: 750px; /* Ensure the main content width is fixed */
-  margin: 0 auto; /* Center the content */
-  padding: 0 1rem; /* Add some padding for better readability */
-}
-
-/* Sidenote wrapper */
-.sidenote-wrapper {
+.blogContent {
+  /* Container for sidenotes */
+  --sidenote-width: 200px;
+  --content-width: 100%;
   position: relative;
-  display: inline-block; /* Ensure it doesn't break the flow of text */
-}
 
-/* Sidenote number (superscript) */
-.sidenote-number {
-  vertical-align: super;
-  font-size: 0.875rem; /* Smaller font size for superscript */
-  cursor: pointer;
-  color: #6b7280; /* Gray color for the number */
-}
+  /* Math equation handling */
+  & .katex-display {
+    padding: 1rem 0;
+    overflow-x: auto;
+    overflow-y: hidden;
+  }
 
-/* Sidenote content (desktop) */
-.sidenote {
-  display: none; /* Hidden by default */
-}
+  /* Sidenote positioning */
+  & .sidenote-wrapper {
+    position: relative;
+  }
 
-@media (min-width: 1024px) {
-  .sidenote {
-    display: block;
+  & .sidenote {
     position: absolute;
-    left: 100%; /* Position to the right of the main content */
-    width: 16rem; /* Fixed width for sidenotes */
-    padding-left: 1rem; /* Spacing from the main content */
-    font-size: 0.875rem; /* Smaller font size for sidenotes */
-    color: #9ca3af; /* Light gray color for sidenotes */
+    right: calc(-1 * var(--sidenote-width) - 2rem);
+    width: var(--sidenote-width);
     top: 0;
-    transform: translateY(-50%); /* Center vertically */
+    font-size: 0.875rem;
+    color: var(--muted-foreground);
+    padding-left: 1rem;
+    border-left: 1px solid var(--border);
   }
-}
 
-/* Sidenote content (mobile) */
-.sidenote-mobile {
-  display: inline-block;
-  font-size: 0.875rem; /* Smaller font size for sidenotes */
-  color: #9ca3af; /* Light gray color for sidenotes */
-  margin-left: 0.25rem; /* Spacing from the number */
-}
-
-@media (min-width: 1024px) {
-  .sidenote-mobile {
-    display: none; /* Hide on desktop */
+  @media (max-width: 1024px) {
+    & .sidenote {
+      position: static;
+      display: block;
+      width: auto;
+      margin: 0.5rem 0;
+      padding: 0.5rem 1rem;
+      background: var(--muted);
+      border-radius: 0.5rem;
+      border-left: 2px solid var(--primary);
+    }
   }
-}
 
-/* Prose styles for markdown content */
-.prose-lg {
-  line-height: 1.75; /* Better readability */
-  color: #F5F3EE; /* Updated text color */
-}
+  /* Paragraph spacing */
+  & p {
+    margin: 1rem 0;
+    line-height: 1.6;
+  }
 
-.prose-lg h1,
-.prose-lg h2,
-.prose-lg h3,
-.prose-lg h4,
-.prose-lg h5,
-.prose-lg h6 {
-  margin-top: 1.5rem;
-  margin-bottom: 1rem;
-  font-weight: 600;
-  color: #F8D39C; /* Updated header color */
-}
+  /* Code block improvements */
+  & pre {
+    margin: 1rem 0;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    overflow-x: auto;
+  }
 
-.prose-lg p {
-  margin-top: 1rem;
-  margin-bottom: 1rem;
-}
+  & code {
+    font-size: 0.875rem;
+    line-height: 1.5;
+  }
 
-.prose-lg a {
-  color: #F5F3EE; /* Updated text color */
-  text-decoration: underline;
-}
+  /* Image container */
+  & .image-container {
+    margin: 1.5rem 0;
+    text-align: center;
+  }
 
-.prose-lg a:hover {
-  color: #d1d1d1; /* Lighter color on hover */
-}
+  & img {
+    max-width: 100%;
+    height: auto;
+    border-radius: 0.5rem;
+  }
 
-.prose-lg hr {
-  border-color: #333333; /* Darker color for horizontal rules */
-  margin-top: 2rem;
-  margin-bottom: 2rem;
-}
+  /* Table styles */
+  & table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 1.5rem 0;
+  }
 
-/* Heading styles */
-.markdown h1 {
-  @apply text-[2.5rem] font-bold mb-8;
-  color: #F8D39C; /* Updated header color */
-}
+  & th,
+  & td {
+    padding: 0.5rem;
+    border: 1px solid var(--border);
+  }
 
-.markdown h2 {
-  @apply text-[2rem] font-semibold mb-6;
-  color: #F8D39C; /* Updated header color */
-}
+  & th {
+    background: var(--muted);
+    font-weight: 600;
+  }
 
-.markdown h3 {
-  @apply text-[1.5rem] font-semibold mb-4;
-  color: #F8D39C; /* Updated header color */
-}
+  /* List styles */
+  & ul,
+  & ol {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+  }
 
-/* Paragraph styles */
-.markdown p {
-  @apply mb-8 text-lg leading-relaxed;
-  font-size: 1.2rem;
-  color: #F5F3EE; /* Updated text color */
-}
+  & li {
+    margin: 0.5rem 0;
+  }
 
-/* Link styles */
-.markdown a {
-  @apply underline text-[#F5F3EE]; /* Updated text color */
-  @apply hover:text-[#d1d1d1] transition-colors;
-}
-
-/* Code styles */
-.markdown code {
-  @apply bg-[#2a2a2a] px-2 py-1 rounded;
-  @apply font-mono text-base;
-}
-
-.markdown pre {
-  @apply bg-[#2a2a2a] p-6 rounded-lg my-8;
-  @apply overflow-x-auto;
-}
-
-/* List styles */
-.markdown ul,
-.markdown ol {
-  @apply my-6 ml-8 text-lg;
-}
-
-.markdown li {
-  @apply my-2;
-}
-
-/* Blockquote styles */
-.markdown blockquote {
-  @apply border-l-4 border-[#333333] pl-6 my-8;
-  @apply text-[#a0a0a0] italic;
-}
-
-/* Table styles */
-.markdown table {
-  @apply w-full my-8;
-  @apply border-collapse;
-}
-
-.markdown th,
-.markdown td {
-  @apply border border-[#333333] px-4 py-2;
-  @apply text-left;
-}
-
-.markdown th {
-  @apply bg-[#2a2a2a];
-}
-
-/* Image styles */
-.markdown img {
-  @apply rounded-lg my-8;
-  @apply max-w-full h-auto;
-}
-
-/* Custom classes for specific elements */
-.markdown .footnote {
-  @apply text-[#a0a0a0] text-base;
-}
-
-.markdown .highlight {
-  @apply bg-[#2a2a2a] px-2 py-1 rounded;
+  /* Blockquote styles */
+  & blockquote {
+    margin: 1rem 0;
+    padding: 1rem 1.5rem;
+    border-left: 4px solid var(--primary);
+    background: var(--muted);
+    border-radius: 0.5rem;
+  }
 }

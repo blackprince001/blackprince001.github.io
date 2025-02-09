@@ -5,6 +5,11 @@ import styles from '../../../../md.module.css';
 import TOC from "@/app/(main)/components/table-of-contents";
 import Comments from "@/app/(main)/components/comments";
 import { resetSidenoteCounter } from "@/components/ui/sidenotes";
+import { formatDate, parseDate } from "@/utils/date";
+import { cn } from "@/lib/utils";
+import { Card } from "@/components/ui/card";
+import { Badge } from "lucide-react";
+
 
 interface BlogWrapperProps {
   title: string;
@@ -23,42 +28,63 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
 
   useEffect(() => {
     resetSidenoteCounter();
-  }, [title]);
+  }, []);
 
   return (
-    <div className="min-h-screen">
-      {/* Main container with wide margins for sidenotes */}
-      <div className="max-w-[1920px] mx-auto px-4 py-10">
-        <div className="flex flex-col lg:flex-row lg:space-x-4">
-          {/* Main content area with fixed width */}
-          
-          <main className="">
-            <div className={styles.markdown} ref={contentRef}>
+    <div className="min-h-screen py-10">
+      <div className="container max-w-[1920px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
+          <main className="relative">
+            <div className="overflow-visible">
+              <div
+                className={cn(
+                  styles.blogContent,
+                  "px-6 py-8 lg:px-10 prose prose-gray dark:prose-invert max-w-none",
+                  // Math equation styles
+                  "prose-katex:overflow-x-auto prose-katex:overflow-y-hidden",
+                  // Code block styles
+                  "prose-pre:bg-muted prose-pre:border prose-pre:border-border",
+                  // Image styles
+                  "prose-img:rounded-lg prose-img:mx-auto",
+                  // Link styles
+                  "prose-a:text-primary prose-a:no-underline hover:prose-a:underline",
+                  // Heading styles
+                  "prose-headings:scroll-mt-20"
+                )}
+                ref={contentRef}
+              >
+                {/* Header */}
+                <header className="not-prose mb-10">
+                  <h1 className="text-4xl font-bold tracking-tight mb-4">
+                    {title}
+                  </h1>
+                  <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
+                    <time dateTime={publishDate}>
+                      {formatDate(parseDate(publishDate))}
+                    </time>
+                    <span>•</span>
+                    <Badge>
+                      {tag}
+                    </Badge>
+                  </div>
+                </header>
 
-              {/* Header section */}
-              <header className="mb-12">
-                <h1 className="text-[2.5rem] mb-4">{title}</h1>
-                <div className="flex flex-wrap gap-3 text-[#a0a0a0] text-lg">
-                  <time dateTime={publishDate}>{publishDate}</time>
-                  <span>•</span>
-                  <span>{tag}</span>
-                </div>
-              </header>
+                <hr className="my-10 border-border" />
 
-              <hr className="border-[#333333] mb-12" />
-              
-              {children}
-            </div>
+                {/* Content */}
+                {children}
+              </div>
 
-            {/* Comments section */}
-            <div className="mt-20">
-              <Comments />
+              {/* Comments */}
+              <div className="px-6 lg:px-10 pb-8">
+                <Comments />
+              </div>
             </div>
           </main>
 
-          {/* Table of Contents sidebar */}
-          <aside className="w-72 flex-shrink-0 order-first lg:order-last">
-            <div className="sticky top-24">
+          {/* Table of Contents */}
+          <aside className="order-first lg:order-last">
+            <div className="sticky top-20">
               <TOC content={contentRef} />
             </div>
           </aside>

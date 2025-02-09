@@ -1,101 +1,114 @@
-'use client';
+'use client'
 
-import React, { useEffect, useState } from 'react';
-import Link from 'next/link';
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import type React from "react"
+import { useEffect, useState } from "react"
+import Link from "next/link"
+import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "@/components/ui/card"
+import { Button } from "@/components/ui/button"
 import { Skeleton } from '@/components/ui/skeleton';
+import { ArrowRight } from "lucide-react"
+
 
 interface Publication {
-  id: number;
-  title: string;
-  authors: string[];
-  journal: string;
-  year: number;
-  link: string;
-  pdf?: string;
+  id: number
+  title: string
+  authors: string[]
+  journal: string
+  year: number
+  link: string
+  pdf?: string
 }
 
 export const RecentPublications: React.FC = () => {
-  const [publications, setPublications] = useState<Publication[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  const [publications, setPublications] = useState<Publication[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
   useEffect(() => {
     const fetchPublications = async () => {
       try {
-        const response = await fetch('/api/publications');
+        const response = await fetch("/api/publications")
         if (!response.ok) {
-          throw new Error(`Failed to fetch publications: ${response.statusText}`);
+          throw new Error(`Failed to fetch publications`)
         }
-        const data = await response.json();
-        setPublications(data.slice(0, 5)); // Show only the first 5 publications
+        const data = await response.json()
+        setPublications(data.slice(0, 5))
       } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          setError('An unknown error occurred');
-        }
+        setError("An error occurred while fetching publications.")
       } finally {
-        setLoading(false);
+        setLoading(false)
       }
-    };
+    }
 
-    fetchPublications();
-  }, []);
+    fetchPublications()
+  }, [])
 
   if (loading) {
-    return <div>Loading recent publications...</div>;
+    return (
+      <section className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-semibold tracking-tight">Recent Publications</h2>
+        </div>
+        <div className="grid gap-4">
+          {[...Array(3)].map((_, i) => (
+            <Card key={i} className="animate-pulse">
+              <CardHeader>
+                <div className="h-6 bg-muted rounded w-2/3" />
+                <div className="h-4 bg-muted rounded w-1/3 mt-2" />
+              </CardHeader>
+            </Card>
+          ))}
+        </div>
+      </section>
+    )
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    return (
+      <section className="space-y-8">
+        <div className="flex justify-between items-center">
+          <h2 className="text-2xl font-semibold tracking-tight">Recent Publications</h2>
+        </div>
+        <Card className="bg-destructive/10">
+          <CardHeader>
+            <CardDescription className="text-destructive">{error}</CardDescription>
+          </CardHeader>
+        </Card>
+      </section>
+    )
   }
 
   return (
-    <main>
-      <div className="flex flex-row justify-between items-center gap-5">
-        <div>
-          <div className="flex items-center gap-3 text-gray-500">
-            <h3>Recent Publications</h3>
-          </div>
-        </div>
-        <Link
-          href="/publications"
-          className="text-gray-500 underline hover:text-black ease-in-out duration-500"
-        >
-          View All Publications
-        </Link>
+    <section className="space-y-8">
+      <div className="flex justify-between items-center">
+        <h2 className="text-2xl font-semibold tracking-tight">Recent Publications</h2>
+        <Button asChild variant="ghost">
+          <Link href="/publications" className="group">
+            View all publications
+            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
+          </Link>
+        </Button>
       </div>
 
-      <br />
-
-      <div>
+      <div className="grid gap-4">
         {publications.map((publication) => (
-          <div
-            key={publication.id}
-            className="flex flex-col sm:flex-row sm:justify-between sm:items-center"
-          >
-            <h4>
-              <a
-                href={publication.link}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:underline"
-              >
-                {publication.title}
-              </a>
-            </h4>
-            <p className="text-gray-500">
-              {publication.authors.join(', ')} - {publication.year}
-            </p>
-          </div>
+          <Link key={publication.id} href={publication.link} target="_blank" rel="noopener noreferrer">
+            <Card className="transition-colors hover:bg-muted/50">
+              <CardHeader>
+                <div className="flex justify-between items-start gap-4">
+                  <CardTitle className="text-lg">{publication.title}</CardTitle>
+                  <CardDescription className="text-right shrink-0">{publication.year}</CardDescription>
+                </div>
+                <CardDescription>{publication.authors.join(", ")}</CardDescription>
+                <CardDescription className="text-primary">{publication.journal}</CardDescription>
+              </CardHeader>
+            </Card>
+          </Link>
         ))}
       </div>
-
-      <br />
-    </main>
-  );
-};
+    </section>
+  )
+}
 
 export const PublicationShowcase: React.FC = () => {
   const [publications, setPublications] = useState<Publication[]>([]);
@@ -160,9 +173,9 @@ export const PublicationShowcase: React.FC = () => {
       <h1 className="text-3xl font-bold mb-8 text-gray-500">Publications</h1>
       <div className="space-y-8">
         {publications.map((publication) => (
-          <Card key={publication.id} className="border border-gray-600 rounded-lg shadow-sm hover:shadow-md transition-shadow bg-[#242526]">
+          <Card key={publication.id} className="h-full border border-border bg-card hover:border-primary/20 hover:shadow-md transition-all duration-300">
             <CardHeader>
-              <CardTitle className="text-xl font-semibold text-gray-500">
+              <CardTitle className="text-lg font-medium">
                 <a
                   href={publication.link}
                   target="_blank"
@@ -172,7 +185,7 @@ export const PublicationShowcase: React.FC = () => {
                   {publication.title}
                 </a>
               </CardTitle>
-              <CardDescription className="text-gray-400">
+              <CardDescription className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
                 {publication.authors.join(', ')} - {publication.journal}, {publication.year}
               </CardDescription>
             </CardHeader>
