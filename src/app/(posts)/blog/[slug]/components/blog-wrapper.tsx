@@ -7,7 +7,6 @@ import Comments from "@/app/(main)/components/comments";
 import { resetSidenoteCounter } from "@/components/ui/sidenotes";
 import { formatDate, parseDate } from "@/utils/date";
 import { cn } from "@/lib/utils";
-import { Card } from "@/components/ui/card";
 import { Badge } from "lucide-react";
 
 
