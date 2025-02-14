@@ -6,7 +6,7 @@ import { Mesh } from "three";
 import { STLLoader } from 'three-stdlib';
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Suspense } from "react";
-import {StlViewer} from "react-stl-viewer";
+import { StlViewer } from "react-stl-viewer";
 
 interface RenderProp {
   url: string
@@ -20,16 +20,16 @@ const style = {
 }
 
 function STLRender(prop: RenderProp) {
-    return (
-      <div className="flex justify-center items-center h-96 border-solid border border-gray-600 rounded-lg">
-        <StlViewer
-            style={style}
-            orbitControls
-            shadows
-            url={prop.url}
-        />
-      </div>
-    );
+  return (
+    <div className="flex justify-center items-center max-w-2xl mx-auto border-solid border border-gray-600 rounded-lg">
+      <StlViewer
+        style={style}
+        orbitControls
+        shadows
+        url={prop.url}
+      />
+    </div>
+  );
 }
 
 // function STLMesh({ url }: RenderProp) {
@@ -61,7 +61,7 @@ function STLRender(prop: RenderProp) {
 //         <directionalLight position={[-5, 5, 5]} intensity={0.8} castShadow />
 //         <Environment preset="sunset" background backgroundBlurriness={0.5} />
 //         <OrbitControls />
-        
+
 //         <Suspense fallback={null}>
 //           <STLMesh url={prop.url} />
 //         </Suspense>
@@ -91,7 +91,7 @@ function GLBMesh({ url }: RenderProp) {
 
 function GLBMeshRender(prop: RenderProp) {
   return (
-    <div className="flex justify-center items-center w-auto h-96">
+    <div className="flex justify-center items-center max-w-2xl mx-auto">
       <Canvas flat linear className="border-solid border-2 border-gray-500 rounded-lg">
         {/* Lighting */}
         <ambientLight intensity={0.4} />
@@ -99,7 +99,7 @@ function GLBMeshRender(prop: RenderProp) {
         <directionalLight position={[-5, 5, 5]} intensity={0.8} castShadow />
         <Environment preset="city" />
         <OrbitControls />
-        
+
         <Suspense fallback={null}>
           <GLBMesh url={prop.url} />
         </Suspense>

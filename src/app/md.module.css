@@ -23,7 +23,7 @@
     right: calc(-1 * var(--sidenote-width) - 2rem);
     width: var(--sidenote-width);
     top: 0;
-    font-size: 0.875rem;
+    font-size: 0.625rem;
     color: var(--muted-foreground);
     padding-left: 1rem;
     border-left: 1px solid var(--border);
@@ -46,6 +46,8 @@
   & p {
     margin: 1rem 0;
     line-height: 1.6;
+    font-size: 0.875rem;
+    /* Equivalent to text-sm in Tailwind */
   }
 
   /* Code block improvements */
@@ -92,14 +94,61 @@
   }
 
   /* List styles */
-  & ul,
+  & ul {
+    padding-left: 1.5rem;
+    margin: 1rem 0;
+    font-size: 0.875rem;
+    list-style-type: disc;
+  }
+
   & ol {
     padding-left: 1.5rem;
     margin: 1rem 0;
+    font-size: 0.875rem;
   }
 
   & li {
     margin: 0.5rem 0;
+    padding-left: 0.5rem;
+    position: relative;
+    font-size: 0.875rem;
+  }
+
+  /* Custom bullet points for unordered lists */
+  & ul li::before {
+    content: "•";
+    color: var(--primary);
+    /* Use your primary color */
+    font-size: 1.2em;
+    position: absolute;
+    left: -1.25rem;
+    top: 0.1rem;
+  }
+
+  & h3,
+  & h4,
+  & h5,
+  &h6 {
+    color: #F8D39C;
+    /* Updated header color */
+  }
+
+  /* Custom number styling for ordered lists */
+  & ol li::before {
+    content: counter(list-item) ".";
+    color: var(--primary);
+    /* Use your primary color */
+    font-weight: 600;
+    position: absolute;
+    left: -1.5rem;
+    top: 0;
+  }
+
+  /* Hover effect for list items */
+  & li:hover {
+    background: var(--muted);
+    border-radius: 0.25rem;
+    transition: background 0.2s ease;
   }
 
   /* Blockquote styles */

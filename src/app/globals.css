@@ -11,7 +11,8 @@
 /* Improved content width and readability */
 .content-container {
   @apply max-w-2xl mx-auto px-4 sm:px-6 lg:px-8;
-  @apply relative; /* For sidenote positioning */
+  @apply relative;
+  /* For sidenote positioning */
 }
 
 /* Sidenote Styling */
@@ -57,8 +58,10 @@
 /* Base typography improvements */
 @layer base {
   body {
-    @apply text-[#F5F3EE] bg-[#1e1e21]; /* Updated background and text colors */
-    font-size: 1.2rem; /* Default font size */
+    @apply text-[#F5F3EE] bg-[#1e1e21];
+    /* Updated background and text colors */
+    font-size: 1.2rem;
+    /* Default font size */
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
   }
@@ -71,31 +74,51 @@
 
   /* Typography scale */
   h1 {
-    @apply text-6xl sm:text-5xl md:text-6xl lg:text-7xl; /* Adjust heading sizes */
+    @apply text-6xl sm:text-5xl md:text-6xl lg:text-7xl;
+    /* Adjust heading sizes */
     @apply font-bold mb-8;
-    @apply text-[#F8D39C]; /* Updated header color */
+    @apply text-[#F8D39C];
+    @apply py-4;
+    /* Updated header color */
   }
 
   h2 {
-    @apply text-2xl sm:text-xl md:text-2xl lg:text-3xl; /* Adjust subheading sizes */
+    @apply text-2xl sm:text-xl md:text-2xl lg:text-3xl;
+    /* Adjust subheading sizes */
     @apply font-semibold mb-6;
-    @apply text-[#F8D39C]; /* Updated header color */
+    @apply text-[#F8D39C];
+    @apply py-4;
+    /* Updated header color */
+  }
+
+  h3,
+  h4,
+  h5,
+  h6 {
+    @apply text-[#F8D39C];
+    @apply py-4;
+    /* Updated header color */
   }
 
   p {
     font-size: 1.2rem;
-    @apply text-[#F5F3EE]; /* Updated text color */
-    @apply sm:text-lg md:text-xl; /* Adjust paragraph text size */
+    @apply text-[#F5F3EE];
+    /* Updated text color */
+    @apply sm:text-lg md:text-xl;
+    /* Adjust paragraph text size */
   }
 
   a {
-    @apply text-[#F5F3EE]; /* Updated text color */
+    @apply text-[#F5F3EE];
+    /* Updated text color */
     @apply hover:text-[#d1d1d1] transition-colors;
   }
 
   :root {
-    --background: 30 5% 13%; /* Updated background color */
-    --foreground: 45 90% 95%; /* Updated text color */
+    --background: 30 5% 13%;
+    /* Updated background color */
+    --foreground: 45 90% 95%;
+    /* Updated text color */
     --card: 30 5% 13%;
     --card-foreground: 45 90% 95%;
     --popover: 30 5% 13%;
@@ -122,8 +145,10 @@
   }
 
   .dark {
-    --background: 30 5% 13%; /* Updated background color */
-    --foreground: 45 90% 95%; /* Updated text color */
+    --background: 30 5% 13%;
+    /* Updated background color */
+    --foreground: 45 90% 95%;
+    /* Updated text color */
     --card: 30 5% 13%;
     --card-foreground: 45 90% 95%;
     --popover: 30 5% 13%;
@@ -155,6 +180,7 @@
 
 @layer components {
   .nav-container {
-    @apply bg-[#1e1e21] bg-[0] bg-size-default text-gray-500 font-bold; /* Updated background color */
+    @apply bg-[#1e1e21] bg-[0] bg-size-default text-gray-500 font-bold;
+    /* Updated background color */
   }
 }

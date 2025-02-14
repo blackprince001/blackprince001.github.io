@@ -55,7 +55,7 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
               >
                 {/* Header */}
                 <header className="not-prose mb-10">
-                  <h1 className="text-4xl font-bold tracking-tight mb-4">
+                  <h1 className="text-2xl font-bold tracking-tight mb-4">
                     {title}
                   </h1>
                   <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
@@ -69,7 +69,7 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
                   </div>
                 </header>
 
-                <hr className="my-10 border-border" />
+                <hr className="my-10 border-border text-sm" />
 
                 {/* Content */}
                 {children}
