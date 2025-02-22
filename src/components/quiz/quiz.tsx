@@ -71,9 +71,9 @@ const Quiz = ({ quizData }: QuizProps) => {
   const currentQuestionData = quizData[currentQuestion];
 
   return (
-    <div className="quiz my-8">
-      <div className="space-y-4">
-        <h3 className="text-[1.5rem] font-semibold mb-4 text-[#f5f5f5]">
+    <div className="quiz my-8 border rounded-lg">
+      <div className="space-y-4 px-8">
+        <h3 className="text-lg font-semibold mb-4 ">
           {currentQuestionData.question}
         </h3>
         <div className="space-y-2">
@@ -94,7 +94,7 @@ const Quiz = ({ quizData }: QuizProps) => {
           ))}
         </div>
         {submitted && currentQuestionData.explanation && (
-          <div className="text-sm text-[#a0a0a0] mt-4">
+          <div className="text-sm mt-4">
             {currentQuestionData.explanation}
           </div>
         )}
@@ -102,17 +102,17 @@ const Quiz = ({ quizData }: QuizProps) => {
 
       <div className="flex items-center justify-between mt-6">
         <button
-          className="btn bg-[#2a2a2a] text-[#f5f5f5] px-4 py-2 rounded-lg hover:bg-[#333333] transition-colors"
+          className="btn px-4 py-2 rounded-lg"
           disabled={currentQuestion === 0}
           onClick={() => handleQuestionChange(currentQuestion - 1)}
         >
           <ArrowLeft className="-ml-0.5 mr-2 h-4 w-4" /> Previous
         </button>
-        <span className="text-[#a0a0a0]">
+        <span>
           Question {currentQuestion + 1} of {quizData.length}
         </span>
         <button
-          className="btn bg-[#2a2a2a] text-[#f5f5f5] px-4 py-2 rounded-lg hover:bg-[#333333] transition-colors"
+          className="btn px-4 py-2 rounded-lg"
           disabled={canMoveOn && currentQuestion === quizData.length - 1}
           onClick={() => {
             if (!canMoveOn) {
@@ -149,44 +149,39 @@ const QuizMCAnswer = ({
 }: QuizMCAnswerProps) => {
   return (
     <button
-      className={`flex w-full items-start bg-[#2a2a2a] rounded-lg px-4 py-3 text-left focus:outline-none ${
-        showVerdict
-          ? correct
-            ? "ring-2 ring-green-600 bg-[#1a1a1a]"
-            : "ring-2 ring-red-600 bg-[#1a1a1a]"
-          : ""
-      } ${
-        isSelected && !showVerdict
-          ? "ring-2 ring-[#3b82f6] bg-[#1a1a1a]"
+      className={`flex w-full items-start border rounded-lg px-4 py-3 text-left focus:outline-none ${showVerdict
+        ? correct
+          ? "ring-2 ring-green-600 "
+          : "ring-2 ring-red-600"
+        : ""
+        } ${isSelected && !showVerdict
+          ? "ring-2"
           : "hover:bg-[#333333] transition-colors"
-      }`}
+        }`}
       onClick={onClick}
       disabled={showVerdict}
     >
       <span
         className={`
           flex-shrink-0 h-6 w-6 rounded-full font-medium inline-flex items-center justify-center
-          ${
-            isSelected || showVerdict
-              ? "ring-2 ring-offset-2 ring-offset-[#2a2a2a] text-[#f5f5f5] font-bold"
-              : "border border-[#333333] text-[#a0a0a0]"
+          ${isSelected || showVerdict
+            ? "ring-2 ring-offset-2 ring-offset-[#2a2a2a] font-bold"
+            : "border border-[#333333]"
           }
-          ${
-            showVerdict
-              ? correct
-                ? "ring-green-600 bg-green-600"
-                : "ring-red-600 bg-red-600"
-              : ""
+          ${showVerdict
+            ? correct
+              ? "ring-green-600 bg-green-600"
+              : "ring-red-600 bg-red-600"
+            : ""
           }
-          ${
-            isSelected && !showVerdict
-              ? "ring-[#3b82f6] bg-[#3b82f6]"
-              : ""
+          ${isSelected && !showVerdict
+            ? "ring-[#3b82f6]"
+            : ""
           }
         `}
       >
       </span>
-      <div className="flex-1 ml-3 text-[#f5f5f5]">{children}</div>
+      <div className="flex-1 ml-3">{children}</div>
     </button>
   );
 };

@@ -7,7 +7,7 @@ import { CenterUnderline, ComesInGoesOutUnderline, GoesOutComesInUnderline } fro
 function Footer() {
   return (
     <footer className="font-semibold flex justify-center items-center py-12 w-full">
-      <div className="flex flex-row font-overusedGrotesk items-start text-[#F8D39C] uppercase space-x-8 text-xs sm:text-sm md:text-base lg:text-lg">
+      <div className="flex flex-row font-overusedGrotesk items-start uppercase space-x-8 text-xs sm:text-sm md:text-base lg:text-lg">
         <div>Contact</div>
         <ul className="flex flex-col space-y-1 h-full">
           <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank">

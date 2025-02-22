@@ -144,14 +144,14 @@ export const PublicationShowcase: React.FC = () => {
         <Skeleton className="h-8 w-48 mb-8" />
         <div className="space-y-8">
           {[...Array(3)].map((_, index) => (
-            <Card key={index} className="border border-gray-600 rounded-lg shadow-sm bg-[#242526]">
+            <Card key={index} className="border rounded-lg shadow-sm">
               <CardHeader>
-                <Skeleton className="h-6 w-3/4 mb-2 bg-gray-700" />
-                <Skeleton className="h-4 w-1/2 bg-gray-700" />
+                <Skeleton className="h-6 w-3/4 mb-2 bg-gray-500" />
+                <Skeleton className="h-4 w-1/2 bg-gray-500" />
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-4 w-full mb-2 bg-gray-700" />
-                <Skeleton className="h-4 w-3/4 bg-gray-700" />
+                <Skeleton className="h-4 w-full mb-2 bg-gray-500" />
+                <Skeleton className="h-4 w-3/4 bg-gray-500" />
               </CardContent>
             </Card>
           ))}

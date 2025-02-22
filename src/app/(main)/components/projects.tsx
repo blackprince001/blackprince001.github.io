@@ -22,7 +22,7 @@ interface GitHubRepo {
 
 export const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project }) => {
   return (
-    <Card className="h-full border border-border bg-card hover:border-primary/20 hover:shadow-md transition-all duration-300">
+    <Card className="h-full border border-border bg-card transition-colors hover:bg-muted/50">
       <CardHeader>
         <CardTitle className="text-lg font-medium">
           <a
@@ -69,7 +69,7 @@ export const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project })
 
 const ProjectShowcase: React.FC = () => {
   const pathname = usePathname();
-  const [sortOrder, setSortOrder] = useState<'date' | 'stars'>('date');
+  const [sortOrder, setSortOrder] = useState<'date' | 'stars'>('stars');
   const [projects, setProjects] = useState<GitHubRepo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -124,14 +124,14 @@ const ProjectShowcase: React.FC = () => {
         <Skeleton className="h-8 w-48 mb-8" />
         <div className="space-y-8">
           {[...Array(3)].map((_, index) => (
-            <Card key={index} className="border border-gray-600 rounded-lg shadow-sm bg-[#242526]">
+            <Card key={index} className="border rounded-lg">
               <CardHeader>
-                <Skeleton className="h-6 w-3/4 mb-2 bg-gray-700" />
-                <Skeleton className="h-4 w-1/2 bg-gray-700" />
+                <Skeleton className="h-6 w-3/4 mb-2 bg-gray-500" />
+                <Skeleton className="h-4 w-1/2 bg-gray-500" />
               </CardHeader>
               <CardContent>
-                <Skeleton className="h-4 w-full mb-2 bg-gray-700" />
-                <Skeleton className="h-4 w-3/4 bg-gray-700" />
+                <Skeleton className="h-4 w-full mb-2 bg-gray-500" />
+                <Skeleton className="h-4 w-3/4 bg-gray-500" />
               </CardContent>
             </Card>
           ))}
@@ -167,7 +167,7 @@ const ProjectShowcase: React.FC = () => {
         !
       </p>
 
-      <div className="mt-6 bg-[#242526] border-b border-gray-200 py-4 top-0 z-10">
+      <div className="mt-6 border-b border-gray-200 py-4 top-0 z-10">
         <div className="flex justify-center space-x-6">
           <button
             className={`flex items-center ${sortOrder === 'date' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
