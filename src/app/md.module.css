@@ -23,7 +23,7 @@
     right: calc(-1 * var(--sidenote-width) - 2rem);
     width: var(--sidenote-width);
     top: 0;
-    font-size: 0.625rem;
+    font-size: 0.875rem;
     color: var(--muted-foreground);
     padding-left: 1rem;
     border-left: 1px solid var(--border);

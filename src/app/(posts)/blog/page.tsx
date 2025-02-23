@@ -65,7 +65,7 @@ async function Page() {
             <div className="block lg:flex lg:flex-row lg:gap-[2%] lg:flex-wrap gap-2">
               {items.map((item, index) => (
                 <Link href={`/blog/${item.slug}`} key={item.slug} className={getItemClassName(index)}>
-                  <Card className="h-full border border-border bg-card hover:border-primary/20 hover:shadow-md transition-all duration-300">
+                  <Card className="h-full border border-border bg-card transition-colors hover:bg-muted/50">
                     <CardHeader>
                       <CardTitle className="text-lg font-medium">{item.frontmatter.title}</CardTitle>
                     </CardHeader>

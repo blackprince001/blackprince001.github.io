@@ -173,7 +173,7 @@ export const PublicationShowcase: React.FC = () => {
       <h1 className="text-3xl font-bold mb-8 text-gray-500">Publications</h1>
       <div className="space-y-8">
         {publications.map((publication) => (
-          <Card key={publication.id} className="h-full border border-border bg-card hover:border-primary/20 hover:shadow-md transition-all duration-300">
+          <Card key={publication.id} className="h-full border border-border bg-card transition-colors hover:bg-muted/50">
             <CardHeader>
               <CardTitle className="text-lg font-medium">
                 <a

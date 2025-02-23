@@ -2,6 +2,8 @@ import ProudGhanaian from "@/components/ui/pg"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
+import styles from '@/app/preview.module.css';
+
 
 function HeroSection() {
   return (
@@ -33,7 +35,7 @@ function HeroSection() {
           I had my undergraduate studies at{" "}
           <Link
             href="https://www.knust.edu.gh"
-            className="font-medium text-primary hover:text-primary/80 transition-colors underline"
+            className={styles.Link}
           >
             Kwame Nkrumah University of Science and Technology
           </Link>

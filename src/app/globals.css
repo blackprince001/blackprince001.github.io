@@ -23,7 +23,7 @@
 .sidenote-number {
   @apply align-super text-sm;
   @apply text-[#a0a0a0];
-  margin: 0 0.2rem;
+  margin: 0 1rem;
 }
 
 /* Desktop sidenotes */
@@ -58,6 +58,8 @@
 /* Base typography improvements */
 @layer base {
   :root {
+    --color-blue: oklch(45% 50% 264);
+    --color-red: oklch(50% 55% 31);
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
     --card: 0 0% 100%;
@@ -68,7 +70,7 @@
     --primary-foreground: 0 0% 98%;
     --secondary: 0 0% 96.1%;
     --secondary-foreground: 0 0% 9%;
-    --muted: 0 0% 96.1%;
+    --muted: 0 0% 95%;
     --muted-foreground: 0 0% 45.1%;
     --accent: 0 0% 96.1%;
     --accent-foreground: 0 0% 9%;
@@ -100,7 +102,7 @@
     --secondary: 0 0% 13%;
     /* Slightly lighter than #333 for contrast */
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 13%;
+    --muted: 0 0% 15%;
     --muted-foreground: 0 0% 63.9%;
     --accent: 0 0% 13%;
     --accent-foreground: 0 0% 98%;
@@ -164,6 +166,10 @@
 
   a {
     @apply transition-colors;
+  }
+
+  .Root {
+    isolation: isolate;
   }
 }
 

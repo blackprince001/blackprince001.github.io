@@ -39,6 +39,7 @@ interface QuizAnswer {
 interface QuizQuestion {
   question: string;
   answers: QuizAnswer[];
+  image?: string;
   explanation?: string;
 }
 
@@ -73,9 +74,16 @@ const Quiz = ({ quizData }: QuizProps) => {
   return (
     <div className="quiz my-8 border rounded-lg">
       <div className="space-y-4 px-8">
-        <h3 className="text-lg font-semibold mb-4 ">
+        <p className="text-lg font-semibold mb-4 ">
           {currentQuestionData.question}
-        </h3>
+        </p>
+        <div className="flex justify-center">
+          <img
+            src={currentQuestionData.image}
+            alt="Question Image"
+            className="max-w-full h-auto"
+          />
+        </div>
         <div className="space-y-2">
           {currentQuestionData.answers.map((answer, index) => (
             <QuizMCAnswer
@@ -106,7 +114,7 @@ const Quiz = ({ quizData }: QuizProps) => {
           disabled={currentQuestion === 0}
           onClick={() => handleQuestionChange(currentQuestion - 1)}
         >
-          <ArrowLeft className="-ml-0.5 mr-2 h-4 w-4" /> Previous
+          <ArrowLeft className="-ml-0.5 mr-2 h-4 w-4" />
         </button>
         <span>
           Question {currentQuestion + 1} of {quizData.length}
@@ -123,7 +131,7 @@ const Quiz = ({ quizData }: QuizProps) => {
             }
           }}
         >
-          {selectedAnswer === null ? "Skip" : submitted ? "Next" : "Submit"}{" "}
+          {selectedAnswer === null ? "" : submitted ? "" : "Submit"}{" "}
           {canMoveOn && <ArrowRight className="-mr-0.5 ml-2 h-4 w-4" />}
         </button>
       </div>

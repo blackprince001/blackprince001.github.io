@@ -1,0 +1,102 @@
+---
+
+title: "What If We Could All Fly/Float"  
+publishDate: "February 23, 2025"  
+tag: "Science"  
+
+---
+
+How many times have you tried to sink an object into water or any fluid and yelled out, "Eureka!"? I doubt you probably have, but this guy named <PreviewLink  
+    title="Archimedes"  
+    link="https://en.wikipedia.org/wiki/Archimedes"  
+    summary="Archimedes was an ancient Greek mathematician, physicist, engineer, inventor, and astronomer, widely regarded as one of the greatest thinkers of antiquity. He is famous for his principles of buoyancy (Archimedes' Principle), his work on levers, and his innovative war machines. His contributions to mathematics, such as calculating pi and developing early calculus concepts, remain foundational to this day."  
+/> did.  
+
+The story goes like this, if you are not familiar.  
+
+> Archimedes discovered <PreviewLink  
+    title="buoyancy"  
+    link="#"  
+    summary="We will explore this very soon."  
+/> while solving a problem for King Hiero II, who suspected his goldsmith had mixed silver into his golden crown. While taking a bath, Archimedes noticed that the water level rose as he submerged himself. Realizing that the displaced water could measure volume, he shouted, **"Eureka!"** He tested the crown by comparing its water displacement to pure gold, proving it was adulterated. This led to **Archimedes' Principle**. <AutoNumberedSidenote>Story Shortened by Deepseek</AutoNumberedSidenote>  
+
+Surprisingly, this serendipitous event is the reason our theory stands: Can we really fly or float without any mechanized tools? We will explore the concepts believed to make it possible.  
+
+## Buoyancy  
+
+If you jump into water, chances are you'll float, whether it be saltwater or freshwater, but if you throw an anvil, it goes straight to the bottom. The reason why one floats and the other sinks is very simple and can be understood by considering a pool of water, free of people, anvils, or other debris.  
+
+Consider some selection of water, $$ \Gamma_S $$, within the pool, of volume $$V_{\textrm{H}_2\textrm{O}}$$, of arbitrary shape, indicated by the black closed circle in the diagram below.  
+
+![](http://i61.tinypic.com/2gyd2q0.png)  
+
+Because the pool is in a gravitational field, $$ \Gamma_S $$ is pulled down by the force  
+
+<center style={{padding: 16}}>$$F=m_{\textrm{H}_2\textrm{O}}g = V_{\textrm{H}_2\textrm{O}}\rho_{\textrm{H}_2\textrm{O}}g$$</center>  
+
+Now, the pool maintains a stable shape within the container; therefore, the forces on any such arbitrary volume are balanced. Concretely, any volume $$ V_{\textrm{H}_2\textrm{O}} $$ in the pool experiences an upward force $$ V_{\textrm{H}_2\textrm{O}}\rho_{\textrm{H}_2\textrm{O}}g $$, called the **buoyant force**.  
+
+The pool doesn't know that $$ \Gamma_S $$ is a volume of water. If we replaced $$ \Gamma_S $$ with the same volume of some other substance with the same weight as $$ \Gamma_S$$, it would feel the same buoyant force and would float in place. In fact, if we replaced $$ \Gamma_S $$ with any object of the same volume, it would feel the same buoyant force, regardless of its weight. Hence, we have arrived at Archimedes' principle.  
+
+### Archimedes' Principle
+
+The buoyant force on a body is vertical and is equal and opposite to the weight of the fluid displaced by the body. This idea holds whether the fluid is water, molasses, air, or some other simple fluid.  
+  
+<center style={{padding: 16}}>$$F_\text{buoyant}=\rho_\text{fluid}V_\text{object}g$$</center>  
+
+## Floating  
+
+Even for objects that ultimately sink, Archimedes' principle suggests an apparent weight reduction. When walking in water, a human of mass $m$ who usually feels like they weigh $mg$ will feel a reduced weight of $mg -V_\text{human}\rho_{\textrm{H}_2\textrm{O}}g$.  
+
+Because the density of flesh is approximately 0.97 g/mL, the weight of a typical human will be  
+
+<center style={{padding: 16}}>$$\begin{aligned} &mg - \frac{m}{\rho_\text{flesh}}\rho_{\textrm{H}_2\textrm{O}}g \\ &= mg\left(1-\frac{\rho_{\textrm{H}_2\textrm{O}}}{\rho_\text{flesh}}\right)\\ &\approx 0.03\times mg \end{aligned}$$</center>  
+
+just 3% of their normal weight. **This makes swimming pools a convenient place for physical therapists who need to start teaching people to walk before their legs are strong enough to walk normally**.  
+
+### Test it out - Question
+
+<Quiz quizData={[  
+  {  
+    question: "People are often surprised to find just how much of an iceberg sits below the surface of the water. Suppose that the density of an iceberg is (uniformly) 0.92 g/mL, and that of the ocean is 1.02 g/mL. What fraction of the iceberg's volume is hidden below the ocean surface?",  
+    image: "https://ds055uzetaobb.cloudfront.net/brioche/solvable/6fd4502450.920b3bdfad.35hpXx.jpg?width=250",  
+    answers: [  
+      { text: "0.85", correct: false },  
+      { text: "0.902", correct: true },  
+      { text: "0.95", correct: false },  
+      { text: "0.98", correct: false },  
+    ],  
+    explanation: "The fraction of the iceberg's volume hidden below the ocean surface can be calculated using the densities of the iceberg and the ocean. The formula is: Fraction submerged = (Density of iceberg) / (Density of ocean) = 0.92 / 1.02 ≈ 0.902. This means approximately 90.2% of the iceberg's volume is below the surface.",  
+  },  
+]} />  
+
+### Hypothesis Formulation
+
+If the weight of the object submerged in the fluid is higher than the weight of the fluid (in this case air), the object would sink. **How much do you need, weight-wise, to make any object subjected to the fluid float around?**
+
+Since Archimedes' principle applies to our known fluids of water and air—specifically atmospheric air in this case—we can also make the assumption that, given a good density of air in any atmosphere, the possibility of floating around like <PreviewLink  
+    title="Zaheer"  
+    link="https://avatar.fandom.com/wiki/Zaheer"  
+    summary="Avatar Lore - Zaheer is the leader of the Red Lotus, a martial arts expert, and an anarchist, who strongly believes in the foundation of a new world without the Order of the White Lotus, the four nations, or the Avatar."  
+/> wouldn't be a myth amongst the most esteemed Airbenders.  
+
+The density of dry air can be calculated using the [ideal gas law](https://en.wikipedia.org/wiki/Ideal_gas_law "Ideal gas law"), expressed as a function of temperature and pressure:  
+
+<center style={{padding: 16}}>$${\displaystyle {\begin{aligned}\rho &={\frac {p}{R_{\text{specific}}T}}\\R_{\text{specific}}&={\frac {R}{M}}={\frac {k_{\rm {B}}}{m}}\\\rho &={\frac {pM}{RT}}={\frac {pm}{k_{\rm {B}}T}}\\\end{aligned}}}$$</center>  
+
+where:  
+
+- ${\displaystyle \rho }$  , air density (kg/m<sup>3</sup>)  
+- ${\displaystyle p}$  , absolute [pressure](https://en.wikipedia.org/wiki/Pressure "Pressure") (Pa)  
+- ${\displaystyle T}$  , [absolute temperature](https://en.wikipedia.org/wiki/Absolute_temperature "Absolute temperature") (K)  
+- ${\displaystyle R}$ is the [gas constant](https://en.wikipedia.org/wiki/Gas_constant "Gas constant"), 8.31446261815324 in [J](https://en.wikipedia.org/wiki/Joule "Joule")⋅[K](https://en.wikipedia.org/wiki/Kelvin "Kelvin")<sup>-1</sup>⋅[mol](https://en.wikipedia.org/wiki/Mole_\(unit\) "Mole (unit)")<sup>-1</sup>  
+- ${\displaystyle M}$ is the [molar mass](https://en.wikipedia.org/wiki/Molar_mass "Molar mass") of dry air, approximately 0.0289652 in [kg](https://en.wikipedia.org/wiki/Kilogram "Kilogram")⋅[mol](https://en.wikipedia.org/wiki/Mole_\(unit\) "Mole (unit)")<sup>-1</sup>.  
+- ${\displaystyle k_{\rm {B}}}$ is the [Boltzmann constant](https://en.wikipedia.org/wiki/Boltzmann_constant "Boltzmann constant"), 1.380649x10<sup>-23</sup> in [J](https://en.wikipedia.org/wiki/Joule "Joule")⋅[K](https://en.wikipedia.org/wiki/Kelvin "Kelvin")<sup>-1</sup>  
+- ${\displaystyle m}$ is the [molecular mass](https://en.wikipedia.org/wiki/Molecular_mass "Molecular mass") of dry air, approximately 4.81x10<sup>-26</sup> in [kg](https://en.wikipedia.org/wiki/Kilogram "Kilogram").  
+- ${\displaystyle R_{\text{specific}}}$  , the [specific gas constant](https://en.wikipedia.org/wiki/Specific_gas_constant "Specific gas constant") for dry air, which using the values presented above would be approximately 287.0500676 in J⋅kg<sup>-1</sup>⋅K<sup>-1</sup>. <AutoNumberedSidenote>Wikipedia - <a href="https://en.wikipedia.org/wiki/Density_of_air">Density of Air</a></AutoNumberedSidenote>  
+
+Since the density is directly dependent on pressure, it is pretty intuitive to assume that an increase in atmospheric pressure would increase the density to a desired state where we can basically float. I leave that proof to you. We can't rely on the temperature to determine the density design. It either gets too cold to live in, or we all get fried up as crisps.  
+
+### Conundrum
+
+What do you think? Could humanity one day harness the principles of buoyancy and air density to achieve the dream of floating or flying effortlessly? While the math and physics suggest it's theoretically possible, the practical challenges are immense. But isn't that where innovation begins—with a dream and a dash of curiosity? Perhaps the next "Eureka!" moment is just around the corner, waiting for someone to take the plunge. Until then, let's keep exploring, questioning, and imagining the impossible. After all, as Archimedes showed us, sometimes the greatest discoveries start with a simple observation—and maybe a little water displacement.

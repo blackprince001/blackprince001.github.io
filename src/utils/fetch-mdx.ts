@@ -12,6 +12,7 @@ import { HelloFx, InequalitiesExample, Sigmoid } from "@/components/maths/graphi
 import BlogSuggestion from "@/components/ui/blog-suggested"
 import Sidenote, { AutoNumberedSidenote } from "@/components/ui/sidenotes"
 import Quiz from "@/components/quiz/quiz"
+import PreviewLink from "@/components/ui/linked-previews"
 
 const contentDir = path.join(process.cwd(), "/src/content/")
 
@@ -42,6 +43,7 @@ const customComponents = {
   Sigmoid,
   Sidenote,
   AutoNumberedSidenote,
+  PreviewLink
 }
 
 export async function getBlogBySlug(slug: string) {
