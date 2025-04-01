@@ -19,6 +19,9 @@ function Footer() {
           <Link href={"https://github.com/blackprince001"} target="_blank">
             <ComesInGoesOutUnderline label="GITHUB" direction="left" />
           </Link>
+          <Link href={"https://www.linkedin.com/in/pkab23/"} target="_blank">
+            <ComesInGoesOutUnderline label="LINKEDIN" direction="right" />
+          </Link>
 
           {/* <div className="pt-12">
             <ul className="flex flex-col space-y-1 h-full">
