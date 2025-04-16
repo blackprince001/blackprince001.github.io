@@ -8,6 +8,7 @@ import Sidenote, { AutoNumberedSidenote } from './components/ui/sidenotes'
 import 'katex/dist/katex.css'
 import Quiz from './components/quiz/quiz'
 import PreviewLink from "./components/ui/linked-previews"
+import RustRunner from './components/code-runner/rust'
 
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -29,6 +30,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Sigmoid,
     Quiz,
     PreviewLink,
+    RustRunner,
     ...components,
   }
 }
