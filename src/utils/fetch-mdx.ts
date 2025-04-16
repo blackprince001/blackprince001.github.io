@@ -13,6 +13,7 @@ import BlogSuggestion from "@/components/ui/blog-suggested"
 import Sidenote, { AutoNumberedSidenote } from "@/components/ui/sidenotes"
 import Quiz from "@/components/quiz/quiz"
 import PreviewLink from "@/components/ui/linked-previews"
+import RustRunner from "@/components/code-runner/rust"
 
 const contentDir = path.join(process.cwd(), "/src/content/")
 
@@ -43,7 +44,8 @@ const customComponents = {
   Sigmoid,
   Sidenote,
   AutoNumberedSidenote,
-  PreviewLink
+  PreviewLink,
+  RustRunner
 }
 
 export async function getBlogBySlug(slug: string) {
