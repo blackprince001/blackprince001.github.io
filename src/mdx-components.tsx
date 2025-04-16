@@ -9,6 +9,7 @@ import 'katex/dist/katex.css'
 import Quiz from './components/quiz/quiz'
 import PreviewLink from "./components/ui/linked-previews"
 import RustRunner from './components/code-runner/rust'
+import GoRunner from './components/code-runner/golang'
 
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -31,6 +32,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     Quiz,
     PreviewLink,
     RustRunner,
+    GoRunner,
     ...components,
   }
 }

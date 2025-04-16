@@ -14,6 +14,7 @@ import Sidenote, { AutoNumberedSidenote } from "@/components/ui/sidenotes"
 import Quiz from "@/components/quiz/quiz"
 import PreviewLink from "@/components/ui/linked-previews"
 import RustRunner from "@/components/code-runner/rust"
+import GoRunner from "@/components/code-runner/golang"
 
 const contentDir = path.join(process.cwd(), "/src/content/")
 
@@ -45,7 +46,8 @@ const customComponents = {
   Sidenote,
   AutoNumberedSidenote,
   PreviewLink,
-  RustRunner
+  RustRunner,
+  GoRunner
 }
 
 export async function getBlogBySlug(slug: string) {
