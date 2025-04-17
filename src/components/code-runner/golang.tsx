@@ -4,16 +4,11 @@ import type React from "react"
 import { useState, useRef } from "react"
 
 interface GoPlaygroundResponse {
-  Errors?: string
-  Events?: {
+  events?: {
     Message: string
     Kind: "stdout" | "stderr"
     Delay: number
   }[]
-  Status?: number
-  IsTest?: boolean
-  TestsFailed?: number
-  VetErrors?: string
 }
 
 interface OutputItem {
@@ -28,96 +23,70 @@ interface GoRunnerProps {
 const GoRunner: React.FC<GoRunnerProps> = ({
   initialCode = 'package main\n\nimport (\n\t"fmt"\n)\n\nfunc main() {\n\tfmt.Println("Hello, World!")\n}\n',
 }) => {
-  const [code, setCode] = useState(initialCode)
-  const [output, setOutput] = useState<OutputItem[]>([])
-  const [isRunning, setIsRunning] = useState(false)
-  const [hasErrors, setHasErrors] = useState(false)
-  const outputEndRef = useRef<HTMLDivElement>(null)
+  const [code, setCode] = useState(initialCode);
+  const [output, setOutput] = useState<OutputItem[]>([]);
+  const [isRunning, setIsRunning] = useState(false);
+  const [hasErrors, setHasErrors] = useState(false);
+  const outputEndRef = useRef<HTMLDivElement>(null);
 
   const runCode = async () => {
-    setIsRunning(true)
-    setHasErrors(false)
-    setOutput([])
+    setIsRunning(true);
+    setHasErrors(false);
+    setOutput([]);
 
     const requestBody = {
       files: {
         "main.go": code
       }
-    }
+    };
 
     try {
-      const response = await fetch('https://goplay.tools/api/v2/run?vet=false&backend=', {
+      const workerEndpoint = 'https://remote-golang.appiahboaduprince.workers.dev';
+      const response = await fetch(workerEndpoint, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Accept': 'application/json',
-          'Origin': 'https://goplay.tools',
-          'Referer': 'https://goplay.tools/',
-          'DNT': '1',
-          'Priority': 'u=1, i',
         },
         body: JSON.stringify(requestBody),
-      })
+      });
 
       if (!response.ok) {
-        throw new Error(`HTTP error! status: ${response.status}`)
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
 
-      const data: GoPlaygroundResponse = await response.json()
-      const newOutput: OutputItem[] = []
+      const data: GoPlaygroundResponse = await response.json();
+      const newOutput: OutputItem[] = [];
 
-      // Handle compilation errors
-      if (data.Errors) {
-        newOutput.push({ text: data.Errors, type: "stderr" })
-      }
+      data.events?.forEach(event => {
+        if (event.Message) {
+          newOutput.push({
+            text: event.Message,
+            type: event.Kind
+          });
+        }
+      });
 
-      // Handle vet errors
-      if (data.VetErrors) {
-        newOutput.push({ text: data.VetErrors, type: "stderr" })
-      }
-
-      // Handle output events
-      if (data.Events?.length) {
-        data.Events.forEach(event => {
-          if (event.Message) { // Ensure message exists
-            newOutput.push({
-              text: event.Message,
-              type: event.Kind
-            })
-          }
-        })
-      }
-
-      // Handle test failures
-      if (data.TestsFailed && data.TestsFailed > 0) {
-        newOutput.push({
-          text: `${data.TestsFailed} tests failed`,
-          type: "stderr"
-        })
-      }
-
-      // If no output at all, show a message
       if (newOutput.length === 0) {
         newOutput.push({
           text: "Program executed successfully (no output)",
           type: "stdout"
-        })
+        });
       }
 
-      setOutput(newOutput)
-      setHasErrors(newOutput.some(item => item.type === "stderr"))
+      setOutput(newOutput);
+      setHasErrors(newOutput.some(item => item.type === "stderr"));
 
     } catch (error) {
-      const errorMessage = error instanceof Error ? error.message : String(error)
+      const errorMessage = error instanceof Error ? error.message : String(error);
       setOutput([{
         text: `Error: ${errorMessage}`,
         type: "stderr"
-      }])
-      setHasErrors(true)
+      }]);
+      setHasErrors(true);
     } finally {
-      setIsRunning(false)
+      setIsRunning(false);
     }
-  }
+  };
 
   const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setCode(e.target.value)
@@ -142,6 +111,8 @@ const GoRunner: React.FC<GoRunnerProps> = ({
             </svg>
             {isRunning ? "Running..." : "Run Code"}
           </button>
+
+          <div>main.go</div>
         </div>
         <textarea
           value={code}

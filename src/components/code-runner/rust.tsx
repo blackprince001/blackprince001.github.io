@@ -153,6 +153,8 @@ const RustRunner: React.FC<RustRunnerProps> = ({
               }`} />
           </div>
 
+          <div>main.rs</div>
+
         </div>
         <textarea
           value={code}
