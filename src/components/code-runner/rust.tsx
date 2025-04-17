@@ -3,6 +3,9 @@
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
 
+import CodeEditor from '@uiw/react-textarea-code-editor'
+
+
 interface WebSocketMessage {
   type: string
   payload: any
@@ -156,11 +159,17 @@ const RustRunner: React.FC<RustRunnerProps> = ({
           <div>main.rs</div>
 
         </div>
-        <textarea
+
+        <CodeEditor
           value={code}
+          language="go"
+          placeholder="Enter Go code here..."
           onChange={handleCodeChange}
-          className="w-full h-96 p-6 font-mono text-sm resize-y leading-relaxed"
-          spellCheck="false"
+          className="w-full font-mono text-sm dark:bg-transparent dark:text-slate-100 m-4"
+          style={{
+            fontFamily: 'monospace',
+          }}
+          data-color-mode="light"
         />
       </div>
 

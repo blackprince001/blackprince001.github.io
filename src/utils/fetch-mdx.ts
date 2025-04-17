@@ -15,6 +15,7 @@ import Quiz from "@/components/quiz/quiz"
 import PreviewLink from "@/components/ui/linked-previews"
 import RustRunner from "@/components/code-runner/rust"
 import GoRunner from "@/components/code-runner/golang"
+import CodeSnippet from "@/components/code-runner/code-snippet"
 
 const contentDir = path.join(process.cwd(), "/src/content/")
 
@@ -47,7 +48,8 @@ const customComponents = {
   AutoNumberedSidenote,
   PreviewLink,
   RustRunner,
-  GoRunner
+  GoRunner,
+  CodeSnippet
 }
 
 export async function getBlogBySlug(slug: string) {
@@ -61,7 +63,7 @@ export async function getBlogBySlug(slug: string) {
       parseFrontmatter: true,
       mdxOptions: {
         remarkPlugins: [remarkMath],
-        rehypePlugins: [rehypeKatex, rehypeHighlight],
+        rehypePlugins: [rehypeKatex],
       },
     },
     components: customComponents,

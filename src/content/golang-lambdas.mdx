@@ -10,10 +10,9 @@ Lambda functions, for those who don't know, are known as anonymous functions or 
 
 Your typical python dev would express this with the keyword `lambda`, define the key parameters or parameters for that function and compose the logic like below.
 
-```python
+<CodeSnippet language="python" code={`
 add = lambda x, y: x + y
-print(add(3, 4))  # Output: 7
-```
+print(add(3, 4))  # Output: 7`} />
 
 Notice that we did not explicitly name our function but we could use the assigned variable `add` to call the function and produce a result. This is because *functions are values* in python and most especially Golang and C++ and Java... the list goes on and on.
 
@@ -21,49 +20,51 @@ Generally, the type of a function is built out of its keyword (`fn`, `def`, `fun
 
 Having functions as values allows us to do some clever things, and as you would expect from this blog, define lambda functions... coughs! Sorry anonymous functions in Golang. An illustration below.
 
-```python
+<CodeSnippet language="bash" code={`
 >>> squares = lambda x: x * x
 >>>
 >>> squares(12)
 144
 >>> squares(21)
-441
-```
+441`}/>
 
 Just as before we assign an anonymous... sorry (I keep messing it up with lingo for each language), we assign a lambda function to the variable squares. Simple logic. We square any input value we receive. Ironically 12 and 21 produce identical squares just as the numbers are flipped around themselves. Funny.
 
 We try to replicate this in Golang by use of an anonymous function, yes, got it.
 
-```go
+
+<CodeSnippet code={`
 // now that looks like a lambda function to me but not exactly
 x := func(x int) int {
     return x * x
-}(12)
-```
+}(12)`} language="go"/>
+
 
 Mmhhmm, not exactly what we are looking but they kinda look sim- no they don't. In python, we do not pass the input value to the function right after pseudo-declaring it but it seems we have to do that in Golang (designed this way, I don't make the rules).
 
 These inner functions are anonymous functions; they don't have a name. You don't have to assign them to a variable, either. You can write them inline and call them immediately.
 
-```go
+
+<GoRunner initialCode={`
+package main
+
 func main() { 
     for i:=0; i<5; i++ {
         func(j int) {
             fmt.Println("printing", j, "from inside of an anonymous function")
         }(i) 
     }
-}
-```
+}`}/>
 
 What I haven't showed you but we have already discussed hints at using function signatures. If a function has a signature (even lambdas) then it means we could define the function anywhere (check out a brain teaser at the end of the blog) then we could just assign any variables with the name of the function defined. Totally defeats the purpose a lambda as seen in python but we get to see the cool effects it has.
 
-```go
+<CodeSnippet code={`
 // true lambdas (and squares is defined above)
 sq := squares
 
 // because functions are values
 fmt.Println(sq(21)) // YOU KNOW WHAT THIS OUTPUTS ALREADY!
-```
+`} language="go"/>
 
 Anonymous functions are pretty cool and they afford you the luxury of just implementing the needed logic to complete a task right where you need it: a receiving variable. If you want to explore more, I would employ thee to have a look at this [link](https://www.practical-go-lessons.com/chap-24-anonymous-functions-and-closures) and maybe take up Golang sometime.
 
