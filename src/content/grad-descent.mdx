@@ -47,20 +47,16 @@ where:
 
 The gradient vector points in the direction of the steepest ascent of the cost function. By subtracting it from the current parameter vector, we move the parameters in the direction that decreases the cost function (downhill in our valley analogy).
 
-<details className="rounded-lg p-12">
-<summary>Gradient Descent Implementation python</summary>
-```python
+<CodeSnippet code={`
 import numpy as np
 
 np.random.seed(42)
 
 m = 100
 X = np.random.rand(m, 1)
-y = 4 + 3 * X + np.random.rand(m, 1)
-```
+y = 4 + 3 * X + np.random.rand(m, 1)`} language="python"/>
 
-```python
-
+<CodeSnippet code={`
 eta = .271828 # learning rate
 n_epochs = 1000
 m = len(X_b) # number of instances
@@ -71,14 +67,14 @@ theta = np.random.randn(2, 1) # our initial guess for theta
 for epoch in range(n_epochs):
     gradients = 2 / m * X_b.T @ (X_b @ theta - y) # MSE value
     theta = theta - eta * gradients
-```
+`} language="python"/>
 
 Values for theta as computed would be: 
-```python
+
+<CodeSnippet code={`
 array([[4.51359766],
        [2.96646836]])
-```
-</details>
+`} language="bash"/>
 
 <br/>
 
@@ -104,9 +100,10 @@ In contrast to batch gradient descent, SGD randomly selects a single instance fr
  
 <center><img src="../grad/grad-5.png" width="500" height="600"/></center>
 
-<details className="rounded-lg p-12">
-<summary>Stochastic Gradient Descent Implementation python</summary>
-```python
+
+Stochastic Gradient Descent Implementation python
+
+<CodeSnippet code={`
 n_epochs = 50
 t0, t1 = 5, 50
 
@@ -125,8 +122,7 @@ for epoch in range(n_epochs):
 
         eta = learning_schedule(epoch * m + iteration)
         theta = theta - eta * gradients
-```
-</details> 
+`} language="python"/>
 
 <br/>
 

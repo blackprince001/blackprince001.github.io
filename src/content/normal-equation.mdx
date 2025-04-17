@@ -76,9 +76,10 @@ Thus, the value of $\theta$ that minimizes $J(\theta)$ is given in closed form b
 
 - **Purpose**: The Normal Equation provides a direct, closed-form solution to calculate the best parameters (weights) for a linear regression model.
 
-<details style={{color: "#faddaa"}}>
+<details>
 <summary>Normal Equation in sklearn and numpy python.</summary>
-```python
+
+<CodeSnippet language="python" code={`
 from sklearn.preprocessing import add_dummy_feature
 import numpy as np
 
@@ -87,8 +88,9 @@ def normal_equation(X: np.array, Y: np.array):
     X_b = add_dummy_feature(X)
     theta_best = np.linalg.inv(X_b.T @ X_b) @ X_b.T @ Y
     
-    return theta_best    
-```
+    return theta_best
+`}/>
+
 </details>
 
 - **Cost Function**: It works by finding the parameter values that minimize the Mean Squared Error (MSE) cost function. The MSE measures the average squared difference between the model's predictions and the actual target values.
