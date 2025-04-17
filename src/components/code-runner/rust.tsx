@@ -98,7 +98,7 @@ const RustRunner: React.FC<RustRunnerProps> = ({
       type: "output/execute/wsExecuteRequest",
       payload: {
         channel: "stable",
-        mode: "release",
+        mode: "debug", // can be changed to release for release versions of binaries
         edition: "2024",
         crateType: "bin",
         tests: false,
