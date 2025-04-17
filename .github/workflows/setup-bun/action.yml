@@ -8,16 +8,15 @@ runs:
       with:
         bun-version: latest
 
-    - name: Cache dependencies ⚡
-      id: cache_dependencies
-      uses: actions/cache@v3
-      with:
-        path: |
-          ~/.bun
-          node_modules
-        key: bun-deps-${{ hashFiles('bun.lockb') }}
+    # - name: Cache dependencies ⚡
+    #   id: cache_dependencies
+    #   uses: actions/cache@v3
+    #   with:
+    #     path: |
+    #       ~/.bun
+    #       node_modules
+    #     key: bun-deps-${{ hashFiles('bun.lockb') }}
 
     - name: Install dependencies 🔧
       shell: bash
-      if: steps.cache_dependencies.outputs.cache-hit != 'true'
       run: bun install --frozen-lockfile
