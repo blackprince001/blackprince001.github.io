@@ -9,7 +9,7 @@ import { ThemeProvider } from "@/components/theme-provider"
 const inter = local({
   src: [
     {
-      path: "../../public/fonts/Inter-Regular.ttf",
+      path: "../../public/fonts/source-sans3-regular.ttf",
       weight: "400",
       style: "normal",
     },

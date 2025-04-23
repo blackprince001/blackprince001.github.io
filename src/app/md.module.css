@@ -46,7 +46,7 @@
   & p {
     margin: 1rem 0;
     line-height: 1.6;
-    font-size: 0.875rem;
+    font-size: 1rem;
     /* Equivalent to text-sm in Tailwind */
   }
 
@@ -98,7 +98,7 @@
     padding-left: 1.5rem;
     margin: 1rem 0;
     font-size: 0.875rem;
-    list-style-type: disc;
+    /* list-style-type: disc; */
   }
 
   & ol {

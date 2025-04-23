@@ -58,7 +58,7 @@
 /* Base typography improvements */
 @layer base {
   :root {
-    --color-blue: oklch(45% 50% 264);
+    --color-blue: oklch(51% 25.9% 264);
     --color-red: oklch(50% 55% 31);
     --background: 0 0% 100%;
     --foreground: 0 0% 3.9%;
@@ -149,7 +149,7 @@
     /* Adjust subheading sizes */
     @apply font-semibold mb-6;
     /* @apply text-[#F8D39C]; */
-    @apply py-4;
+    @apply py-4 hover:underline;
     /* Updated header color */
   }
 
@@ -157,7 +157,8 @@
   h4,
   h5,
   h6 {
-    @apply py-4;
+    @apply py-4 hover:underline;
+
   }
 
   p {
