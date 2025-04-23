@@ -46,7 +46,7 @@
   & p {
     margin: 1rem 0;
     line-height: 1.6;
-    font-size: 1rem;
+    font-size: 0.9rem;
     /* Equivalent to text-sm in Tailwind */
   }
 
