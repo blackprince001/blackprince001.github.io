@@ -1,13 +1,14 @@
 import { getBlogs } from "@/utils/fetch-mdx"
 import { parseDate, formatDate } from "@/utils/date"
 import Link from "next/link"
-import { Card, CardHeader, CardTitle, CardDescription } from "@/components/ui/card"
+import { Card, CardHeader, CardContent, CardFooter, CardTitle, CardDescription } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
-import { ArrowRight } from "lucide-react"
+import { ArrowRight, Calendar } from "lucide-react"
+import { GradientPlaceholder } from "@/components/gradient-placeholder"
 
 async function BlogPosts() {
   const blogs = await getBlogs()
-  const recentBlogs = blogs.slice(0, 5)
+  const recentBlogs = blogs.slice(0, 6)
 
   return (
     <section className="space-y-8">
@@ -21,22 +22,32 @@ async function BlogPosts() {
         </Button>
       </div>
 
-      <div className="grid gap-4">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {recentBlogs.map((item) => (
-          <Link key={item.slug} href={`/blog/${item.slug}`}>
-            <Card className="transition-colors hover:bg-muted/50">
-              <CardHeader>
-                <div className="flex justify-between items-start gap-4">
-                  <CardTitle className="text-lg">{item.frontmatter.title}</CardTitle>
-                  <CardDescription className="text-right shrink-0">
-                    {formatDate(parseDate(item.frontmatter.publishDate))}
-                  </CardDescription>
+          <Link key={item.slug} href={`/blog/${item.slug}`} className="block h-full">
+            <Card className="hover:border-muted/50 h-full flex flex-col">
+              <div className="aspect-video w-full relative overflow-hidden">
+                {/* Abstract gradient placeholder based on blog slug */}
+                <GradientPlaceholder seed={item.frontmatter.tag} />
+
+                {/* Tag overlay */}
+                <div className="absolute bottom-3 right-3">
+                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-background/80 backdrop-blur-sm text-foreground">
+                    {item.frontmatter.tag}
+                  </span>
                 </div>
-                <CardDescription className="flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full bg-primary/50" />
-                  {item.frontmatter.tag}
-                </CardDescription>
+              </div>
+              <CardHeader>
+                <CardTitle className="line-clamp-2 text-sm">{item.frontmatter.title}</CardTitle>
               </CardHeader>
+              <CardContent className="flex-grow">
+              </CardContent>
+              <CardFooter className="border-t pt-4 flex items-center text-sm text-muted-foreground">
+                <div className="flex items-center gap-2">
+                  <Calendar className="h-4 w-4" />
+                  {formatDate(parseDate(item.frontmatter.publishDate))}
+                </div>
+              </CardFooter>
             </Card>
           </Link>
         ))}
@@ -46,4 +57,3 @@ async function BlogPosts() {
 }
 
 export default BlogPosts
-
