@@ -16,12 +16,12 @@ export const metadata: Metadata = {
     siteName: "blackprince001.github.io",
     images: [
       {
-        url: "https://blackprince001.github.io/images/blog.png",
+        url: "https://blackprince001.github.io/images/seo-image-post.png",
         width: 800,
         height: 600,
       },
       {
-        url: "https://blackprince001.github.io/images/blog.png",
+        url: "https://blackprince001.github.io/images/seo-image-post.png",
         width: 1800,
         height: 1600,
         alt: "blackprince/blog-post",
