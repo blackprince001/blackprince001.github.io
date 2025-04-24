@@ -14,19 +14,13 @@ export const metadata: Metadata = {
     description: "Engineering Journal",
     url: "https://blackprince001.github.io",
     siteName: "blackprince001.github.io",
-    images: [
-      {
-        url: "https://blackprince001.github.io/images/seo-image-post.png",
-        width: 800,
-        height: 600,
-      },
-      {
-        url: "https://blackprince001.github.io/images/seo-image-post.png",
-        width: 1800,
-        height: 1600,
-        alt: "blackprince/blog-post",
-      },
-    ],
+    images:
+    {
+      url: "https://blackprince001.github.io/images/seo-image-post.png",
+      width: 1130,
+      height: 693,
+      alt: "blackprince",
+    },
   },
 };
 
