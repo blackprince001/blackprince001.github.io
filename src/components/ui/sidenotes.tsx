@@ -22,7 +22,7 @@ const Sidenote: React.FC<SidenoteProps> = ({ children, number, className }) => {
       <span
         className={cn(
           "sidenote hidden lg:block",
-          "prose-sm",
+          "prose-sm text-sm",
           "transition-opacity duration-200 hover:opacity-100",
           className,
         )}

@@ -5,6 +5,7 @@ import styles from '../../../../md.module.css';
 import TOC from "@/app/(main)/components/table-of-contents";
 import Comments from "@/app/(main)/components/comments";
 import { resetSidenoteCounter } from "@/components/ui/sidenotes";
+import CicadaQuestion from "@/components/cicada-questions";
 import { formatDate, parseDate } from "@/utils/date";
 import { cn } from "@/lib/utils";
 import { Badge } from "lucide-react";
@@ -83,9 +84,9 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
 
           {/* Table of Contents */}
           <aside className="order-first lg:order-last">
-            <div className="sticky top-20">
-              <TOC content={contentRef} />
-            </div>
+            <TOC content={contentRef} />
+
+            <CicadaQuestion />
           </aside>
         </div>
       </div>

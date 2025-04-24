@@ -58,7 +58,7 @@ export default function RootLayout({
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <script async src="https://0.observe.so/script.js" data-app="cm1ox74dc01sga2mnzpda7460"></script>
             <Navbar />
-            <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
+            <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">{children}</div>
             <Footer />
           </ThemeProvider>
         </div>
