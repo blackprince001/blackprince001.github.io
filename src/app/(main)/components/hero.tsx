@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import styles from '@/app/preview.module.css';
+import GlobeWithLocation from "@/components/earth-globe-location";
 
 
 function HeroSection() {
@@ -52,6 +53,10 @@ function HeroSection() {
           the gap between them. I believe that these fundamental aspects are crucial for developing meaningful products
           and research.
         </p>
+      </div>
+
+      <div className="max-w-none space-y-6">
+        <GlobeWithLocation />
       </div>
     </div>
   )
