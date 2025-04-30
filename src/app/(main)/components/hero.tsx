@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
 import styles from '@/app/preview.module.css';
-import GlobeWithLocation from "@/components/earth-globe-location";
+// import GlobeWithLocation from "@/components/earth-globe-location";
 
 
 function HeroSection() {
@@ -54,10 +54,10 @@ function HeroSection() {
           and research.
         </p>
       </div>
-
+      {/* 
       <div className="max-w-none space-y-6">
         <GlobeWithLocation />
-      </div>
+      </div> */}
     </div>
   )
 }
