@@ -10,30 +10,38 @@
     overflow-y: hidden;
   }
 
-  /* Paragraph spacing */
+  /* Paragraph spacing - increased text size and improved spacing */
   & p {
-    margin: 1rem 0;
-    line-height: 1.6;
-    font-size: 0.9rem;
-    /* Equivalent to text-sm in Tailwind */
+    margin: 1.5rem 0;
+    /* Increased from 1rem */
+    line-height: 1.7;
+    /* Increased from 1.6 for better readability */
+    font-size: 1.125rem;
+    /* Increased from 0.9rem */
+    /* Equivalent to text-lg in Tailwind */
   }
 
   /* Code block improvements */
   & pre {
-    margin: 1rem 0;
-    padding: 1rem;
+    margin: 1.5rem 0;
+    /* Increased from 1rem */
+    padding: 1.25rem;
+    /* Increased from 1rem */
     border-radius: 0.5rem;
     overflow-x: auto;
   }
 
   & code {
-    font-size: 0.875rem;
-    line-height: 1.5;
+    font-size: 1rem;
+    /* Increased from 0.875rem */
+    line-height: 1.6;
+    /* Increased from 1.5 */
   }
 
   /* Image container */
   & .image-container {
-    margin: 1.5rem 0;
+    margin: 2rem 0;
+    /* Increased from 1.5rem */
     text-align: center;
   }
 
@@ -47,12 +55,14 @@
   & table {
     width: 100%;
     border-collapse: collapse;
-    margin: 1.5rem 0;
+    margin: 2rem 0;
+    /* Increased from 1.5rem */
   }
 
   & th,
   & td {
-    padding: 0.5rem;
+    padding: 0.75rem;
+    /* Increased from 0.5rem */
     border: 1px solid var(--border);
   }
 
@@ -61,25 +71,33 @@
     font-weight: 600;
   }
 
-  /* List styles */
+  /* List styles - increased text size and spacing */
   & ul {
     padding-left: 1.5rem;
-    margin: 1rem 0;
-    font-size: 0.875rem;
+    margin: 1.5rem 0;
+    /* Increased from 1rem */
+    font-size: 1.125rem;
+    /* Increased from 0.875rem */
     /* list-style-type: disc; */
   }
 
   & ol {
     padding-left: 1.5rem;
-    margin: 1rem 0;
-    font-size: 0.875rem;
+    margin: 1.5rem 0;
+    /* Increased from 1rem */
+    font-size: 1.125rem;
+    /* Increased from 0.875rem */
   }
 
   & li {
-    margin: 0.5rem 0;
+    margin: 0.75rem 0;
+    /* Increased from 0.5rem */
     padding-left: 0.5rem;
     position: relative;
-    font-size: 0.875rem;
+    font-size: 1.125rem;
+    /* Increased from 0.875rem */
+    line-height: 1.6;
+    /* Added for better readability */
   }
 
   /* Custom bullet points for unordered lists */
@@ -119,12 +137,18 @@
     transition: background 0.2s ease;
   }
 
-  /* Blockquote styles */
+  /* Blockquote styles - improved spacing and text size */
   & blockquote {
-    margin: 1rem 0;
-    padding: 1rem 1.5rem;
+    margin: 1.5rem 0;
+    /* Increased from 1rem */
+    padding: 1.25rem 1.75rem;
+    /* Increased padding */
     border-left: 4px solid var(--primary);
     background: var(--muted);
     border-radius: 0.5rem;
+    font-size: 1.125rem;
+    /* Increased text size */
+    line-height: 1.6;
+    /* Better line height */
   }
 }

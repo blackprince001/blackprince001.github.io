@@ -11,12 +11,23 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isHovering, setIsHovering] = useState(false)
 
+  // Convert HSL to RGB
+  const hslToRgb = (h: number, s: number, l: number): [number, number, number] => {
+    s /= 100
+    l /= 100
+    const k = (n: number) => (n + h / 30) % 12
+    const a = s * Math.min(l, 1 - l)
+    const f = (n: number) => l - a * Math.max(-1, Math.min(k(n) - 3, Math.min(9 - k(n), 1)))
+    return [255 * f(0), 255 * f(8), 255 * f(4)]
+  }
+
   // Generate consistent colors based on the seed string
   const getColors = (seed: string) => {
     // Simple hash function to generate a number from a string
     const hashString = (str: string) => {
       let hash = 0
-      for (let i = 0; i < str.length; i++) {
+      for (let i = 0; i < str.length; i++)
+      {
         hash = (hash << 5) - hash + str.charCodeAt(i)
         hash = hash & hash
       }
@@ -25,12 +36,43 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
 
     const hash = hashString(seed)
 
-    // Generate HSL colors with good saturation and lightness
+    // Generate softer, more professional colors for light mode
+    // Using pastel and muted tones that work well together
     const hue1 = hash % 360
-    const hue2 = (hue1 + 40 + (hash % 80)) % 360
-    const hue3 = (hue2 + 40 + (hash % 80)) % 360
+    const hue2 = (hue1 + 120 + (hash % 60)) % 360  // Complementary with variation
+    const hue3 = (hue1 + 240 + (hash % 60)) % 360  // Triadic with variation
 
-    return [`hsl(${hue1}, 70%, 65%)`, `hsl(${hue2}, 80%, 60%)`, `hsl(${hue3}, 75%, 55%)`]
+    // Softer, more professional color palette with RGB values
+    const colorPalettes = [
+      // Soft blues and purples
+      [
+        hslToRgb(hue1, 45, 85),
+        hslToRgb(hue2, 50, 80),
+        hslToRgb(hue3, 40, 90)
+      ],
+      // Warm pastels
+      [
+        hslToRgb(hue1, 40, 88),
+        hslToRgb(hue2, 45, 82),
+        hslToRgb(hue3, 35, 85)
+      ],
+      // Cool greens and teals
+      [
+        hslToRgb(hue1, 35, 87),
+        hslToRgb(hue2, 40, 83),
+        hslToRgb(hue3, 30, 89)
+      ],
+      // Soft pinks and corals
+      [
+        hslToRgb(hue1, 42, 86),
+        hslToRgb(hue2, 38, 84),
+        hslToRgb(hue3, 45, 88)
+      ],
+    ]
+
+    // Select palette based on hash
+    const paletteIndex = hash % colorPalettes.length
+    return colorPalettes[paletteIndex]
   }
 
   useEffect(() => {
@@ -48,31 +90,64 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
     const drawGradient = () => {
       ctx.clearRect(0, 0, width, height)
 
-      // Create a complex gradient with multiple circles
-      const circles = [
-        { x: width * 0.3, y: height * 0.3, r: width * 0.5, color: colors[0] },
-        { x: width * 0.7, y: height * 0.6, r: width * 0.4, color: colors[1] },
-        { x: width * 0.5, y: height * 0.5, r: width * 0.6, color: colors[2] },
+      // Create a more sophisticated gradient with multiple overlapping shapes
+      const shapes = [
+        {
+          x: width * 0.25,
+          y: height * 0.25,
+          r: width * 0.6,
+          color: colors[0],
+          opacity: 0.7
+        },
+        {
+          x: width * 0.75,
+          y: height * 0.65,
+          r: width * 0.5,
+          color: colors[1],
+          opacity: 0.6
+        },
+        {
+          x: width * 0.5,
+          y: height * 0.5,
+          r: width * 0.7,
+          color: colors[2],
+          opacity: 0.5
+        },
       ]
 
-      // Fill background
-      ctx.fillStyle = "#f8f8f8"
+      // Fill background with a very light neutral color
+      ctx.fillStyle = "#fafafa"
       ctx.fillRect(0, 0, width, height)
 
-      // Draw gradient circles with blend mode
+      // Draw gradient shapes with better blending
       ctx.globalCompositeOperation = "multiply"
 
-      circles.forEach((circle, i) => {
-        const gradient = ctx.createRadialGradient(circle.x, circle.y, 0, circle.x, circle.y, circle.r)
+      shapes.forEach((shape, i) => {
+        const gradient = ctx.createRadialGradient(shape.x, shape.y, 0, shape.x, shape.y, shape.r)
 
-        gradient.addColorStop(0, circle.color)
+        // Create more subtle gradients with proper RGBA values
+        const [r, g, b] = shape.color
+        const alpha1 = Math.round(shape.opacity * 255)
+        const alpha2 = Math.round(shape.opacity * 0.3 * 255)
+
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${shape.opacity})`)
+        gradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.3)`)
         gradient.addColorStop(1, "transparent")
 
         ctx.fillStyle = gradient
         ctx.beginPath()
-        ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2)
+        ctx.arc(shape.x, shape.y, shape.r, 0, Math.PI * 2)
         ctx.fill()
       })
+
+      // Add a subtle overlay for depth
+      ctx.globalCompositeOperation = "soft-light"
+      const overlayGradient = ctx.createLinearGradient(0, 0, width, height)
+      overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.1)")
+      overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.05)")
+
+      ctx.fillStyle = overlayGradient
+      ctx.fillRect(0, 0, width, height)
 
       ctx.globalCompositeOperation = "source-over"
     }
@@ -85,50 +160,65 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
     let angle = 0
 
     const animate = () => {
-      if (!isHovering) {
+      if (!isHovering)
+      {
         cancelAnimationFrame(animationFrame)
         return
       }
 
-      angle += 0.01
-      const circles = [
+      angle += 0.008 // Slower animation
+      const shapes = [
         {
-          x: width * (0.3 + Math.sin(angle) * 0.05),
-          y: height * (0.3 + Math.cos(angle) * 0.05),
-          r: width * 0.5,
-          color: colors[0],
-        },
-        {
-          x: width * (0.7 + Math.cos(angle) * 0.05),
-          y: height * (0.6 + Math.sin(angle) * 0.05),
-          r: width * 0.4,
-          color: colors[1],
-        },
-        {
-          x: width * (0.5 + Math.sin(angle * 1.5) * 0.05),
-          y: height * (0.5 + Math.cos(angle * 1.5) * 0.05),
+          x: width * (0.25 + Math.sin(angle) * 0.03),
+          y: height * (0.25 + Math.cos(angle) * 0.03),
           r: width * 0.6,
+          color: colors[0],
+          opacity: 0.7
+        },
+        {
+          x: width * (0.75 + Math.cos(angle * 1.2) * 0.03),
+          y: height * (0.65 + Math.sin(angle * 1.2) * 0.03),
+          r: width * 0.5,
+          color: colors[1],
+          opacity: 0.6
+        },
+        {
+          x: width * (0.5 + Math.sin(angle * 0.8) * 0.03),
+          y: height * (0.5 + Math.cos(angle * 0.8) * 0.03),
+          r: width * 0.7,
           color: colors[2],
+          opacity: 0.5
         },
       ]
 
       ctx.clearRect(0, 0, width, height)
-      ctx.fillStyle = "#f8f8f8"
+      ctx.fillStyle = "#fafafa"
       ctx.fillRect(0, 0, width, height)
 
       ctx.globalCompositeOperation = "multiply"
 
-      circles.forEach((circle) => {
-        const gradient = ctx.createRadialGradient(circle.x, circle.y, 0, circle.x, circle.y, circle.r)
+      shapes.forEach((shape) => {
+        const gradient = ctx.createRadialGradient(shape.x, shape.y, 0, shape.x, shape.y, shape.r)
 
-        gradient.addColorStop(0, circle.color)
+        const [r, g, b] = shape.color
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${shape.opacity})`)
+        gradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.3)`)
         gradient.addColorStop(1, "transparent")
 
         ctx.fillStyle = gradient
         ctx.beginPath()
-        ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2)
+        ctx.arc(shape.x, shape.y, shape.r, 0, Math.PI * 2)
         ctx.fill()
       })
+
+      // Add overlay
+      ctx.globalCompositeOperation = "soft-light"
+      const overlayGradient = ctx.createLinearGradient(0, 0, width, height)
+      overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.1)")
+      overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.05)")
+
+      ctx.fillStyle = overlayGradient
+      ctx.fillRect(0, 0, width, height)
 
       ctx.globalCompositeOperation = "source-over"
 
@@ -160,28 +250,39 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
       const colors = getColors(seed)
 
       ctx.clearRect(0, 0, width, height)
-      ctx.fillStyle = "#f8f8f8"
+      ctx.fillStyle = "#fafafa"
       ctx.fillRect(0, 0, width, height)
 
       ctx.globalCompositeOperation = "multiply"
 
-      const circles = [
-        { x: width * 0.3, y: height * 0.3, r: width * 0.5, color: colors[0] },
-        { x: width * 0.7, y: height * 0.6, r: width * 0.4, color: colors[1] },
-        { x: width * 0.5, y: height * 0.5, r: width * 0.6, color: colors[2] },
+      const shapes = [
+        { x: width * 0.25, y: height * 0.25, r: width * 0.6, color: colors[0], opacity: 0.7 },
+        { x: width * 0.75, y: height * 0.65, r: width * 0.5, color: colors[1], opacity: 0.6 },
+        { x: width * 0.5, y: height * 0.5, r: width * 0.7, color: colors[2], opacity: 0.5 },
       ]
 
-      circles.forEach((circle) => {
-        const gradient = ctx.createRadialGradient(circle.x, circle.y, 0, circle.x, circle.y, circle.r)
+      shapes.forEach((shape) => {
+        const gradient = ctx.createRadialGradient(shape.x, shape.y, 0, shape.x, shape.y, shape.r)
 
-        gradient.addColorStop(0, circle.color)
+        const [r, g, b] = shape.color
+        gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${shape.opacity})`)
+        gradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.3)`)
         gradient.addColorStop(1, "transparent")
 
         ctx.fillStyle = gradient
         ctx.beginPath()
-        ctx.arc(circle.x, circle.y, circle.r, 0, Math.PI * 2)
+        ctx.arc(shape.x, shape.y, shape.r, 0, Math.PI * 2)
         ctx.fill()
       })
+
+      // Add overlay
+      ctx.globalCompositeOperation = "soft-light"
+      const overlayGradient = ctx.createLinearGradient(0, 0, width, height)
+      overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.1)")
+      overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.05)")
+
+      ctx.fillStyle = overlayGradient
+      ctx.fillRect(0, 0, width, height)
 
       ctx.globalCompositeOperation = "source-over"
     }

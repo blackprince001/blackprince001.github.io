@@ -24,7 +24,7 @@ export const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project })
   return (
     <Card className="h-full border border-border bg-card transition-colors hover:bg-muted/50">
       <CardHeader>
-        <CardTitle className="text-lg font-medium">
+        <CardTitle className="text-xl font-medium">
           <a
             href={project.html_url}
             target="_blank"
@@ -36,9 +36,9 @@ export const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project })
         </CardTitle>
       </CardHeader>
       <CardContent>
-        <div className="space-y-4">
-          <p className="text-muted-foreground text-sm leading-relaxed line-clamp-3">{project.description}</p>
-          <div className="flex flex-wrap gap-4 text-sm">
+        <div className="space-y-6">
+          <p className="text-muted-foreground text-lg leading-relaxed line-clamp-3">{project.description}</p>
+          <div className="flex flex-wrap gap-6 text-lg">
             <div className="text-muted-foreground">
               <span className="text-foreground font-medium">Created:</span>{" "}
               {new Date(project.created_at).toLocaleDateString("en-US", {
@@ -47,15 +47,15 @@ export const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project })
                 day: "numeric",
               })}
             </div>
-            <div className="text-muted-foreground flex items-center gap-1">
-              <Star className="h-4 w-4" />
+            <div className="text-muted-foreground flex items-center gap-2">
+              <Star className="h-5 w-5" />
               <span>{project.stargazers_count}</span>
             </div>
           </div>
           {project.topics.length > 0 && (
-            <div className="flex flex-wrap gap-2">
+            <div className="flex flex-wrap gap-3">
               {project.topics.map((topic) => (
-                <span key={topic} className="px-2 py-1 text-xs rounded-full bg-primary/10 text-primary">
+                <span key={topic} className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary">
                   #{topic}
                 </span>
               ))}
@@ -77,21 +77,25 @@ const ProjectShowcase: React.FC = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       setIsLoading(true);
-      try {
+      try
+      {
         const response = await fetch(
           `https://api.github.com/users/blackprince001/repos?per_page=20&sort=created`
         );
-        if (!response.ok) {
+        if (!response.ok)
+        {
           throw new Error('Failed to fetch projects');
         }
         const data: GitHubRepo[] = await response.json();
         // Filter out forked repositories
         const nonForkedProjects = data.filter(project => !project.fork);
         setProjects(nonForkedProjects);
-      } catch (err) {
+      } catch (err)
+      {
         setError('An error occurred while fetching projects. Please try again later.');
         console.error(err);
-      } finally {
+      } finally
+      {
         setIsLoading(false);
       }
     };
@@ -101,9 +105,11 @@ const ProjectShowcase: React.FC = () => {
 
   useEffect(() => {
     const selected = pathname.split('#')[1];
-    if (selected) {
+    if (selected)
+    {
       setTimeout(() => {
-        if (pathname.split('#')[1] === selected) {
+        if (pathname.split('#')[1] === selected)
+        {
           document.getElementById(selected)?.scrollIntoView();
         }
       }, 500);
@@ -111,16 +117,19 @@ const ProjectShowcase: React.FC = () => {
   }, [pathname]);
 
   const sortedProjects = [...projects].sort((a, b) => {
-    if (sortOrder === 'date') {
+    if (sortOrder === 'date')
+    {
       return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    } else {
+    } else
+    {
       return b.stargazers_count - a.stargazers_count;
     }
   });
 
-  if (isLoading) {
+  if (isLoading)
+  {
     return (
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Skeleton className="h-8 w-48 mb-8" />
         <div className="space-y-8">
           {[...Array(3)].map((_, index) => (
@@ -140,23 +149,24 @@ const ProjectShowcase: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error)
+  {
     return (
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-red-600">{error}</div>
       </div>
     );
   }
 
   return (
-    <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold mb-8 text-foreground">Open Source Projects</h1>
-      <p className="text-muted-foreground">
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 className="text-4xl font-bold mb-8 text-foreground">Open Source Projects</h1>
+      <p className="text-lg text-muted-foreground leading-relaxed">
         I view building software in the open as a mode of{" "}
         <em className="font-serif text-[110%] leading-[100%]">creative exploration</em>. It lets me quickly act on
         inspiration, delve into new topics, and make tools that improve the lives of people.
       </p>
-      <p className="text-lg mt-4">
+      <p className="text-xl mt-6 leading-relaxed">
         If you find something interesting,{" "}
         <a
           className="text-primary hover:text-primary/80 transition-colors"
@@ -167,24 +177,24 @@ const ProjectShowcase: React.FC = () => {
         !
       </p>
 
-      <div className="mt-6 border-b border-gray-200 py-4 top-0 z-10">
-        <div className="flex justify-center space-x-6">
+      <div className="mt-8 border-b border-gray-200 py-6 top-0 z-10">
+        <div className="flex justify-center space-x-8">
           <button
-            className={`flex items-center ${sortOrder === 'date' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
+            className={`flex items-center text-lg ${sortOrder === 'date' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
             onClick={() => setSortOrder('date')}
           >
-            <CalendarDays size={18} strokeWidth={1.8} className="mr-1.5" /> by Date
+            <CalendarDays size={20} strokeWidth={1.8} className="mr-2" /> by Date
           </button>
           <button
-            className={`flex items-center ${sortOrder === 'stars' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
+            className={`flex items-center text-lg ${sortOrder === 'stars' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
             onClick={() => setSortOrder('stars')}
           >
-            <Star size={18} strokeWidth={1.8} className="mr-1.5" /> by Stars
+            <Star size={20} strokeWidth={1.8} className="mr-2" /> by Stars
           </button>
         </div>
       </div>
 
-      <section className="mx-auto py-12 space-y-8">
+      <section className="mx-auto py-12 space-y-10">
         {sortedProjects.map((project) => (
           <div key={project.id} id={project.name}>
             <ProjectComponent project={project} />
@@ -204,25 +214,30 @@ export const RecentProjects: React.FC = () => {
   useEffect(() => {
     const fetchProjects = async () => {
       setIsLoading(true)
-      try {
+      try
+      {
         const response = await fetch(`https://api.github.com/users/blackprince001/repos?per_page=5&sort=created`)
-        if (!response.ok) {
+        if (!response.ok)
+        {
           throw new Error("Failed to fetch projects")
         }
         const data: GitHubRepo[] = await response.json()
         const nonForkedProjects = data.filter((project) => !project.fork)
         setProjects(nonForkedProjects)
-      } catch (err) {
+      } catch (err)
+      {
         setError("An error occurred while fetching projects.")
         console.error(err)
-      } finally {
+      } finally
+      {
         setIsLoading(false)
       }
     }
     fetchProjects()
   }, [])
 
-  if (isLoading) {
+  if (isLoading)
+  {
     return (
       <section className="space-y-8">
         <div className="flex justify-between items-center">
@@ -242,7 +257,8 @@ export const RecentProjects: React.FC = () => {
     )
   }
 
-  if (error) {
+  if (error)
+  {
     return (
       <section className="space-y-8">
         <div className="flex justify-between items-center">

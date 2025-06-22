@@ -10,7 +10,7 @@
 
 /* Improved content width and readability */
 .content-container {
-  @apply max-w-2xl mx-auto px-4 sm:px-6 lg:px-8;
+  @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
   @apply relative;
   /* For sidenote positioning */
 }
@@ -89,27 +89,23 @@
 
   .dark {
     --background: 0 0% 0%;
-    /* Pure black */
     --foreground: 0 0% 98%;
-    /* Off-white for text */
-    --card: 0 0% 5%;
-    /* Very dark gray for cards */
+    --card: 0 0% 3%;
     --card-foreground: 0 0% 98%;
-    --popover: 0 0% 5%;
+    --popover: 0 0% 3%;
     --popover-foreground: 0 0% 98%;
     --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 5%;
-    --secondary: 0 0% 13%;
-    /* Slightly lighter than #333 for contrast */
+    --primary-foreground: 0 0% 3%;
+    --secondary: 0 0% 8%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 15%;
+    --muted: 0 0% 8%;
     --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 13%;
+    --accent: 0 0% 8%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 13%;
-    --input: 0 0% 13%;
+    --border: 0 0% 8%;
+    --input: 0 0% 8%;
     --ring: 0 0% 83.1%;
     --chart-1: 220 70% 50%;
     --chart-2: 160 60% 45%;
@@ -122,57 +118,119 @@
     @apply border-border;
   }
 
-  body {
-    /* @apply bg-[url('/noise.png')] bg-size-default; */
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
+  html {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
   }
 
-  /* Main content container */
+  body {
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "rlig" 1, "calt" 1;
+  }
+
+  /* Main content container - increased width for better use of space */
   .content-wrapper {
-    @apply max-w-3xl mx-auto px-6 lg:px-8;
+    @apply max-w-5xl mx-auto px-6 lg:px-8;
     @apply relative;
   }
 
-  /* Typography scale */
+  /* Professional typography scale */
   h1 {
-    @apply text-6xl sm:text-5xl md:text-6xl lg:text-7xl;
-    /* Adjust heading sizes */
-    @apply font-bold mb-8;
-    /* @apply text-[#F8D39C]; */
-    @apply py-4;
-    /* Updated header color */
+    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
+    @apply font-bold tracking-tight leading-tight;
+    @apply py-6;
   }
 
   h2 {
-    @apply text-2xl sm:text-xl md:text-2xl lg:text-3xl;
-    /* Adjust subheading sizes */
-    @apply font-semibold mb-6;
-    /* @apply text-[#F8D39C]; */
+    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
+    @apply font-semibold tracking-tight leading-tight;
     @apply py-4 hover:underline;
-    /* Updated header color */
   }
 
-  h3,
+  h3 {
+    @apply text-xl sm:text-2xl md:text-3xl;
+    @apply font-semibold tracking-tight;
+    @apply py-3;
+  }
+
   h4,
   h5,
   h6 {
-    @apply py-4 hover:underline;
-
+    @apply text-lg sm:text-xl;
+    @apply font-medium tracking-tight;
+    @apply py-2;
   }
 
+  /* Enhanced paragraph styling */
   p {
-    font-size: 0.875rem;
+    font-size: 1.125rem;
     @apply sm:text-lg md:text-xl;
+    @apply leading-relaxed;
+    @apply text-foreground/90;
   }
 
+  /* Enhanced link styling */
   a {
-    @apply transition-colors;
+    @apply transition-all duration-200;
+    @apply text-primary hover:text-primary/80;
+  }
+
+  /* Container system */
+  .container {
+    @apply max-w-7xl mx-auto px-6;
+  }
+
+  .container-sm {
+    @apply max-w-4xl mx-auto px-6;
+  }
+
+  .container-md {
+    @apply max-w-6xl mx-auto px-6;
+  }
+
+  .container-lg {
+    @apply max-w-7xl mx-auto px-6;
   }
 
   .Root {
     isolation: isolate;
+    background-color: hsl(var(--background));
+    min-height: 100vh;
   }
 }
 
-@layer components {}
+@layer components {
+
+  /* Enhanced prose styling for better readability */
+  .prose {
+    @apply text-foreground/90;
+  }
+
+  .prose h1,
+  .prose h2,
+  .prose h3,
+  .prose h4,
+  .prose h5,
+  .prose h6 {
+    @apply text-foreground font-semibold;
+  }
+
+  .prose a {
+    @apply text-primary hover:text-primary/80 underline-offset-4;
+  }
+
+  .prose code {
+    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
+  }
+
+  .prose pre {
+    @apply bg-muted border border-border/50 rounded-lg p-4 overflow-x-auto;
+  }
+
+  .prose blockquote {
+    @apply border-l-4 border-primary/20 bg-muted/50 pl-6 py-4 italic;
+  }
+}

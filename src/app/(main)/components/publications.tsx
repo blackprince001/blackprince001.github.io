@@ -26,16 +26,20 @@ export const RecentPublications: React.FC = () => {
 
   useEffect(() => {
     const fetchPublications = async () => {
-      try {
+      try
+      {
         const response = await fetch("/api/publications")
-        if (!response.ok) {
+        if (!response.ok)
+        {
           throw new Error(`Failed to fetch publications`)
         }
         const data = await response.json()
         setPublications(data.slice(0, 5))
-      } catch (err) {
+      } catch (err)
+      {
         setError("An error occurred while fetching publications.")
-      } finally {
+      } finally
+      {
         setLoading(false)
       }
     }
@@ -43,7 +47,8 @@ export const RecentPublications: React.FC = () => {
     fetchPublications()
   }, [])
 
-  if (loading) {
+  if (loading)
+  {
     return (
       <section className="space-y-8">
         <div className="flex justify-between items-center">
@@ -63,7 +68,8 @@ export const RecentPublications: React.FC = () => {
     )
   }
 
-  if (error) {
+  if (error)
+  {
     return (
       <section className="space-y-8">
         <div className="flex justify-between items-center">
@@ -117,20 +123,26 @@ export const PublicationShowcase: React.FC = () => {
 
   useEffect(() => {
     const fetchPublications = async () => {
-      try {
+      try
+      {
         const response = await fetch('/api/publications');
-        if (!response.ok) {
+        if (!response.ok)
+        {
           throw new Error(`Failed to fetch publications: ${response.statusText}`);
         }
         const data = await response.json();
         setPublications(data);
-      } catch (err) {
-        if (err instanceof Error) {
+      } catch (err)
+      {
+        if (err instanceof Error)
+        {
           setError(err.message);
-        } else {
+        } else
+        {
           setError('An unknown error occurred');
         }
-      } finally {
+      } finally
+      {
         setLoading(false);
       }
     };
@@ -138,9 +150,10 @@ export const PublicationShowcase: React.FC = () => {
     fetchPublications();
   }, []);
 
-  if (loading) {
+  if (loading)
+  {
     return (
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <Skeleton className="h-8 w-48 mb-8" />
         <div className="space-y-8">
           {[...Array(3)].map((_, index) => (
@@ -160,22 +173,23 @@ export const PublicationShowcase: React.FC = () => {
     );
   }
 
-  if (error) {
+  if (error)
+  {
     return (
-      <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="text-red-600">{error}</div>
       </div>
     );
   }
 
   return (
-    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-3xl font-bold mb-8 text-gray-500">Publications</h1>
-      <div className="space-y-8">
+    <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 className="text-4xl font-bold mb-8 text-gray-500">Publications</h1>
+      <div className="space-y-10">
         {publications.map((publication) => (
           <Card key={publication.id} className="h-full border border-border bg-card transition-colors hover:bg-muted/50">
             <CardHeader>
-              <CardTitle className="text-lg font-medium">
+              <CardTitle className="text-xl font-medium">
                 <a
                   href={publication.link}
                   target="_blank"
@@ -185,7 +199,7 @@ export const PublicationShowcase: React.FC = () => {
                   {publication.title}
                 </a>
               </CardTitle>
-              <CardDescription className="text-muted-foreground text-sm leading-relaxed line-clamp-3">
+              <CardDescription className="text-muted-foreground text-lg leading-relaxed line-clamp-3">
                 {publication.authors.join(', ')} - {publication.journal}, {publication.year}
               </CardDescription>
             </CardHeader>
@@ -195,7 +209,7 @@ export const PublicationShowcase: React.FC = () => {
                   href={publication.pdf}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="inline-flex items-center text-gray-500 hover:text-gray-400 transition-colors"
+                  className="inline-flex items-center text-gray-500 hover:text-gray-400 transition-colors text-lg"
                 >
                   <span>Read</span>
                   <svg

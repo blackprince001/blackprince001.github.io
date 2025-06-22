@@ -1,29 +1,37 @@
 "use client"
 
-import CodeEditor from '@uiw/react-textarea-code-editor'
+import { FileText } from 'lucide-react'
 
 interface CodeSnippetProps {
   code: string
   language: string
 }
 
-const CodeSnippet = async ({ code, language }: CodeSnippetProps) => {
+const CodeSnippet = ({ code, language }: CodeSnippetProps) => {
   return (
-    <div className="rounded-lg">
-      <div className="mb-6 border rounded-lg overflow-hidden">
-        <div className="px-4 py-3 border-b flex justify-between items-center">
-          <div>{language}</div>
+    <div className="group relative">
+      {/* Header */}
+      <div className="flex items-center justify-between px-4 py-3 bg-muted/80 border border-border/50 rounded-lg">
+        <div className="flex items-center space-x-2">
+          <FileText className="h-4 w-4 text-muted-foreground" />
+          <span className="text-sm font-medium text-foreground">{language}</span>
         </div>
-        <CodeEditor
-          value={code}
-          language={language}
-          className="w-full font-mono text-sm dark:bg-transparent dark:text-slate-100 m-4"
-          style={{
-            fontFamily: 'monospace',
-          }}
-          data-color-mode="light"
-        />
+        <div className="flex items-center space-x-2">
+          <div className="h-3 w-3 rounded-full bg-red-500"></div>
+          <div className="h-3 w-3 rounded-full bg-yellow-500"></div>
+          <div className="h-3 w-3 rounded-full bg-green-500"></div>
+        </div>
       </div>
+
+      <pre className="w-full font-mono text-sm text-foreground overflow-x-auto">
+        <code className="block whitespace-pre" style={{
+          fontFamily: 'JetBrains Mono, Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
+          fontSize: '14px',
+          lineHeight: '1.6',
+        }}>
+          {code}
+        </code>
+      </pre>
     </div>
   )
 }

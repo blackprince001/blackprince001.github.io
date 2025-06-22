@@ -31,15 +31,15 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
   }, []);
 
   return (
-    <div className="min-h-screen py-10">
-      <div className="container max-w-[1920px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8">
+    <div className="min-h-screen py-12">
+      <div className="container max-w-[1400px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-12">
           <main className="relative">
             <div className="overflow-visible">
               <div
                 className={cn(
                   styles.blogContent,
-                  "px-6 py-8 lg:px-10 prose prose-gray dark:prose-invert max-w-none",
+                  "px-6 py-10 lg:px-12 prose prose-gray dark:prose-invert max-w-none",
                   // Math equation styles
                   "prose-katex:overflow-x-auto prose-katex:overflow-y-hidden",
                   // Code block styles
@@ -54,29 +54,29 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
                 ref={contentRef}
               >
                 {/* Header */}
-                <header className="not-prose mb-10">
-                  <h1 className="text-2xl font-bold tracking-tight mb-4">
+                <header className="not-prose mb-12">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6">
                     {title}
                   </h1>
-                  <div className="flex flex-wrap items-center gap-3 text-muted-foreground">
+                  <div className="flex flex-wrap items-center gap-4 text-muted-foreground text-lg">
                     <time dateTime={publishDate}>
                       {formatDate(parseDate(publishDate))}
                     </time>
                     <span>•</span>
-                    <Badge>
+                    <Badge className="text-base px-3 py-1">
                       {tag}
                     </Badge>
                   </div>
                 </header>
 
-                <hr className="my-10 border-border text-sm" />
+                <hr className="my-12 border-border" />
 
                 {/* Content */}
                 {children}
               </div>
 
               {/* Comments */}
-              <div className="px-6 lg:px-10 pb-8">
+              <div className="px-6 lg:px-12 pb-12">
                 <Comments />
               </div>
             </div>
