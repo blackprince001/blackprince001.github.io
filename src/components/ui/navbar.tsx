@@ -32,7 +32,7 @@ function Navbar() {
             <NavLink href="/blog">Writing</NavLink>
             <NavLink href="/projects">Projects</NavLink>
             <NavLink href="/publications">Research</NavLink>
-            <NavLink href="https://read.cv/blackprince" external>Resume</NavLink>
+            <NavLink href="/resume">Resume</NavLink>
           </div>
 
           {/* Right side - Theme toggle */}

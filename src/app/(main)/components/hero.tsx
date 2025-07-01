@@ -22,8 +22,11 @@ function HeroSection() {
                 Computer Engineer & Systems Architect
               </p>
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
-                Building interactive software and systems that foster idea sharing and personal expression.
-                Bridging the gap between technical and non-technical domains.
+                An Engineer with a passion for software engineering and machine learning. Experienced in developing autonomous navigation systems, backend services, and machine learning models.
+              </p>
+
+              <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
+                Currently building interactive software and systems that enhance idea sharing and personal expression. Bridging the gap between technical and non-technical domains.
               </p>
             </div>
 
@@ -50,32 +53,10 @@ function HeroSection() {
         </div>
 
         {/* About Section */}
-        <div className="mt-24 lg:mt-32 space-y-8">
+        {/* <div className="mt-24 lg:mt-32 space-y-8">
           <div className="prose prose-lg dark:prose-invert max-w-none">
-            <p className="text-lg leading-relaxed">
-              I completed my undergraduate studies at{" "}
-              <Link
-                href="https://www.knust.edu.gh"
-                className={styles.Link}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Kwame Nkrumah University of Science and Technology
-              </Link>
-              , where I gained valuable experience in diverse contexts and political environments.
-              This exposure has equipped me to tackle challenges head-on and adapt to various work environments.
-            </p>
-
-            <br />
-
-            <p className="text-lg leading-relaxed">
-              My passion lies in creating interactive software and systems that foster idea sharing and personal
-              expression. As a generalist, I am deeply invested in both technical and non-technical fields,
-              hoping to bridge the gap between them. I believe that these fundamental aspects are crucial for
-              developing meaningful products and research.
-            </p>
           </div>
-        </div>
+        </div> */}
       </div>
     </section>
   )
