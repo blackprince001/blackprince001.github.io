@@ -21,7 +21,8 @@ const TOC: React.FC<TOCProps> = ({ content }) => {
   const [headings, setHeadings] = React.useState<Heading[]>([]);
 
   React.useEffect(() => {
-    if (content.current) {
+    if (content.current)
+    {
       const headingElements = Array.from(
         content.current.querySelectorAll('h1, h2, h3, h4, h5, h6')
       ) as HTMLElement[];
@@ -75,7 +76,7 @@ const TOC: React.FC<TOCProps> = ({ content }) => {
       </div>
 
       {/* Desktop TOC */}
-      <div className="hidden lg:block border rounded-lg p-6">
+      <div className="hidden lg:block border rounded-lg p-4 sticky top-20 max-h-[calc(100vh-6rem)] overflow-auto">
         <h6 className="text-sm font-bold mb-4">Table of Contents</h6>
         {renderTOCContent()}
       </div>

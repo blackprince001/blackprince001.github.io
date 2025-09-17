@@ -10,6 +10,7 @@ interface GradientPlaceholderProps {
 export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholderProps) {
   const canvasRef = useRef<HTMLCanvasElement>(null)
   const [isHovering, setIsHovering] = useState(false)
+  const [isDark, setIsDark] = useState<boolean>(false)
 
   // Convert HSL to RGB
   const hslToRgb = (h: number, s: number, l: number): [number, number, number] => {
@@ -21,7 +22,25 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
     return [255 * f(0), 255 * f(8), 255 * f(4)]
   }
 
-  // Generate consistent colors based on the seed string
+  // Detect theme (next-themes adds `dark` class on <html>)
+  useEffect(() => {
+    const updateTheme = () => {
+      const hasDarkClass = document.documentElement.classList.contains("dark")
+      const prefersDark = window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches
+      setIsDark(hasDarkClass || prefersDark)
+    }
+    updateTheme()
+    const mq = window.matchMedia("(prefers-color-scheme: dark)")
+    mq.addEventListener?.("change", updateTheme)
+    const observer = new MutationObserver(updateTheme)
+    observer.observe(document.documentElement, { attributes: true, attributeFilter: ["class"] })
+    return () => {
+      mq.removeEventListener?.("change", updateTheme)
+      observer.disconnect()
+    }
+  }, [])
+
+  // Generate consistent colors based on the seed string and theme
   const getColors = (seed: string) => {
     // Simple hash function to generate a number from a string
     const hashString = (str: string) => {
@@ -36,43 +55,25 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
 
     const hash = hashString(seed)
 
-    // Generate softer, more professional colors for light mode
-    // Using pastel and muted tones that work well together
+    // Generate vibrant yet tasteful palettes. Slightly more saturated for dark mode.
     const hue1 = hash % 360
     const hue2 = (hue1 + 120 + (hash % 60)) % 360  // Complementary with variation
     const hue3 = (hue1 + 240 + (hash % 60)) % 360  // Triadic with variation
 
-    // Softer, more professional color palette with RGB values
-    const colorPalettes = [
-      // Soft blues and purples
-      [
-        hslToRgb(hue1, 45, 85),
-        hslToRgb(hue2, 50, 80),
-        hslToRgb(hue3, 40, 90)
-      ],
-      // Warm pastels
-      [
-        hslToRgb(hue1, 40, 88),
-        hslToRgb(hue2, 45, 82),
-        hslToRgb(hue3, 35, 85)
-      ],
-      // Cool greens and teals
-      [
-        hslToRgb(hue1, 35, 87),
-        hslToRgb(hue2, 40, 83),
-        hslToRgb(hue3, 30, 89)
-      ],
-      // Soft pinks and corals
-      [
-        hslToRgb(hue1, 42, 86),
-        hslToRgb(hue2, 38, 84),
-        hslToRgb(hue3, 45, 88)
-      ],
+    const lightPalettes = [
+      [hslToRgb(hue1, 60, 72), hslToRgb(hue2, 62, 70), hslToRgb(hue3, 58, 75)],
+      [hslToRgb(hue1, 58, 74), hslToRgb(hue2, 64, 68), hslToRgb(hue3, 56, 76)],
+      [hslToRgb(hue1, 55, 73), hslToRgb(hue2, 60, 69), hslToRgb(hue3, 54, 77)],
     ]
 
-    // Select palette based on hash
-    const paletteIndex = hash % colorPalettes.length
-    return colorPalettes[paletteIndex]
+    const darkPalettes = [
+      [hslToRgb(hue1, 72, 55), hslToRgb(hue2, 70, 52), hslToRgb(hue3, 68, 58)],
+      [hslToRgb(hue1, 75, 53), hslToRgb(hue2, 72, 50), hslToRgb(hue3, 70, 56)],
+      [hslToRgb(hue1, 70, 54), hslToRgb(hue2, 68, 51), hslToRgb(hue3, 66, 57)],
+    ]
+
+    const paletteIndex = hash % (isDark ? darkPalettes.length : lightPalettes.length)
+    return (isDark ? darkPalettes : lightPalettes)[paletteIndex]
   }
 
   useEffect(() => {
@@ -115,23 +116,25 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
         },
       ]
 
-      // Fill background with a very light neutral color
-      ctx.fillStyle = "#fafafa"
+      // Transparent background to blend with parent card; subtle tint by theme
+      if (isDark)
+      {
+        ctx.fillStyle = "rgba(255,255,255,0.02)"
+      } else
+      {
+        ctx.fillStyle = "rgba(0,0,0,0.02)"
+      }
       ctx.fillRect(0, 0, width, height)
 
       // Draw gradient shapes with better blending
-      ctx.globalCompositeOperation = "multiply"
+      ctx.globalCompositeOperation = isDark ? "screen" : "multiply"
 
       shapes.forEach((shape, i) => {
         const gradient = ctx.createRadialGradient(shape.x, shape.y, 0, shape.x, shape.y, shape.r)
 
-        // Create more subtle gradients with proper RGBA values
         const [r, g, b] = shape.color
-        const alpha1 = Math.round(shape.opacity * 255)
-        const alpha2 = Math.round(shape.opacity * 0.3 * 255)
-
         gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${shape.opacity})`)
-        gradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.3)`)
+        gradient.addColorStop(0.55, `rgba(${r}, ${g}, ${b}, 0.35)`)
         gradient.addColorStop(1, "transparent")
 
         ctx.fillStyle = gradient
@@ -143,8 +146,15 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
       // Add a subtle overlay for depth
       ctx.globalCompositeOperation = "soft-light"
       const overlayGradient = ctx.createLinearGradient(0, 0, width, height)
-      overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.1)")
-      overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.05)")
+      if (isDark)
+      {
+        overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.08)")
+        overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.12)")
+      } else
+      {
+        overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.06)")
+        overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.08)")
+      }
 
       ctx.fillStyle = overlayGradient
       ctx.fillRect(0, 0, width, height)
@@ -228,7 +238,7 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
     return () => {
       cancelAnimationFrame(animationFrame)
     }
-  }, [seed, isHovering])
+  }, [seed, isHovering, isDark])
 
   // Handle resize to make canvas responsive
   useEffect(() => {
@@ -250,10 +260,16 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
       const colors = getColors(seed)
 
       ctx.clearRect(0, 0, width, height)
-      ctx.fillStyle = "#fafafa"
+      if (isDark)
+      {
+        ctx.fillStyle = "rgba(255,255,255,0.02)"
+      } else
+      {
+        ctx.fillStyle = "rgba(0,0,0,0.02)"
+      }
       ctx.fillRect(0, 0, width, height)
 
-      ctx.globalCompositeOperation = "multiply"
+      ctx.globalCompositeOperation = isDark ? "screen" : "multiply"
 
       const shapes = [
         { x: width * 0.25, y: height * 0.25, r: width * 0.6, color: colors[0], opacity: 0.7 },
@@ -266,7 +282,7 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
 
         const [r, g, b] = shape.color
         gradient.addColorStop(0, `rgba(${r}, ${g}, ${b}, ${shape.opacity})`)
-        gradient.addColorStop(0.6, `rgba(${r}, ${g}, ${b}, 0.3)`)
+        gradient.addColorStop(0.55, `rgba(${r}, ${g}, ${b}, 0.35)`)
         gradient.addColorStop(1, "transparent")
 
         ctx.fillStyle = gradient
@@ -278,8 +294,15 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
       // Add overlay
       ctx.globalCompositeOperation = "soft-light"
       const overlayGradient = ctx.createLinearGradient(0, 0, width, height)
-      overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.1)")
-      overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.05)")
+      if (isDark)
+      {
+        overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.08)")
+        overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.12)")
+      } else
+      {
+        overlayGradient.addColorStop(0, "rgba(255, 255, 255, 0.06)")
+        overlayGradient.addColorStop(1, "rgba(0, 0, 0, 0.08)")
+      }
 
       ctx.fillStyle = overlayGradient
       ctx.fillRect(0, 0, width, height)
@@ -296,7 +319,7 @@ export function GradientPlaceholder({ seed, className = "" }: GradientPlaceholde
     return () => {
       window.removeEventListener("resize", handleResize)
     }
-  }, [seed])
+  }, [seed, isDark])
 
   return (
     <div

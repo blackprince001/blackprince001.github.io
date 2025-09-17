@@ -14,7 +14,7 @@ const inter = local({
       style: "normal",
     },
     {
-      path: "../../public/fonts/Inter-Bold.ttf",
+      path: "../../public/fonts/source-sans-pro-semibold.ttf",
       weight: "600",
       style: "bold",
     },

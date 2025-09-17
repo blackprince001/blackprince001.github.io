@@ -31,15 +31,15 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
   }, []);
 
   return (
-    <div className="min-h-screen py-12">
-      <div className="container max-w-[1400px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_350px] gap-12">
+    <div className="min-h-screen py-8">
+      <div className="container max-w-[1200px] mx-auto">
+        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
           <main className="relative">
             <div className="overflow-visible">
               <div
                 className={cn(
                   styles.blogContent,
-                  "px-6 py-10 lg:px-12 prose prose-gray dark:prose-invert max-w-none",
+                  "px-5 py-8 lg:px-8 prose prose-gray dark:prose-invert max-w-none",
                   // Math equation styles
                   "prose-katex:overflow-x-auto prose-katex:overflow-y-hidden",
                   // Code block styles
@@ -49,27 +49,27 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
                   // Link styles
                   "prose-a:text-primary prose-a:no-underline hover:prose-a:underline",
                   // Heading styles
-                  "prose-headings:scroll-mt-20"
+                  "prose-headings:scroll-mt-24"
                 )}
                 ref={contentRef}
               >
                 {/* Header */}
-                <header className="not-prose mb-12">
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-6">
+                <header className="not-prose mb-8">
+                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3">
                     {title}
                   </h1>
-                  <div className="flex flex-wrap items-center gap-4 text-muted-foreground text-lg">
+                  <div className="flex flex-wrap items-center gap-3 text-muted-foreground text-base">
                     <time dateTime={publishDate}>
                       {formatDate(parseDate(publishDate))}
                     </time>
                     <span>•</span>
-                    <Badge className="text-base px-3 py-1">
+                    <Badge className="text-sm px-2.5 py-0.5">
                       {tag}
                     </Badge>
                   </div>
                 </header>
 
-                <hr className="my-12 border-border" />
+                <hr className="my-8 border-border" />
 
                 {/* Content */}
                 {children}

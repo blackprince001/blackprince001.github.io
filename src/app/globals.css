@@ -88,30 +88,32 @@
   }
 
   .dark {
-    --background: 0 0% 0%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 3%;
-    --secondary: 0 0% 8%;
-    --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 8%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 8%;
-    --accent-foreground: 0 0% 98%;
-    --destructive: 0 62.8% 30.6%;
+    /* Softer dark theme (not pitch black), improved surface separation */
+    --background: 240 6% 8%;
+    --foreground: 0 0% 96%;
+    --card: 240 6% 12%;
+    --card-foreground: 0 0% 96%;
+    --popover: 240 6% 12%;
+    --popover-foreground: 0 0% 96%;
+    --primary: 220 90% 65%;
+    --primary-foreground: 240 6% 8%;
+    --secondary: 240 5% 18%;
+    --secondary-foreground: 0 0% 96%;
+    --muted: 240 4% 20%;
+    --muted-foreground: 0 0% 72%;
+    --accent: 240 5% 16%;
+    --accent-foreground: 0 0% 96%;
+    --destructive: 0 65% 45%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 8%;
-    --input: 0 0% 8%;
-    --ring: 0 0% 83.1%;
-    --chart-1: 220 70% 50%;
-    --chart-2: 160 60% 45%;
-    --chart-3: 30 80% 55%;
-    --chart-4: 280 65% 60%;
-    --chart-5: 340 75% 55%;
+    --border: 240 5% 22%;
+    --input: 240 5% 22%;
+    --ring: 220 90% 60%;
+    /* Keep charts vivid but tuned for dark */
+    --chart-1: 220 70% 55%;
+    --chart-2: 160 60% 48%;
+    --chart-3: 30 80% 58%;
+    --chart-4: 280 65% 63%;
+    --chart-5: 340 75% 58%;
   }
 
   * {
@@ -131,45 +133,40 @@
     font-feature-settings: "rlig" 1, "calt" 1;
   }
 
-  /* Main content container - increased width for better use of space */
+  /* Main content container - balanced width and padding */
   .content-wrapper {
-    @apply max-w-5xl mx-auto px-6 lg:px-8;
+    @apply max-w-5xl mx-auto px-5 lg:px-6;
     @apply relative;
   }
 
-  /* Professional typography scale */
+  /* Standardized typography scale (Tailwind defaults, tighter spacing) */
   h1 {
-    @apply text-4xl sm:text-5xl md:text-6xl lg:text-7xl;
-    @apply font-bold tracking-tight leading-tight;
-    @apply py-6;
+    @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight;
+    @apply mt-6 mb-3;
   }
 
   h2 {
-    @apply text-2xl sm:text-3xl md:text-4xl lg:text-5xl;
-    @apply font-semibold tracking-tight leading-tight;
-    @apply py-4 hover:underline;
+    @apply text-2xl sm:text-3xl font-semibold tracking-tight leading-tight;
+    @apply mt-5 mb-2;
   }
 
   h3 {
-    @apply text-xl sm:text-2xl md:text-3xl;
-    @apply font-semibold tracking-tight;
-    @apply py-3;
+    @apply text-xl sm:text-2xl font-semibold tracking-tight;
+    @apply mt-4 mb-2;
   }
 
   h4,
   h5,
   h6 {
-    @apply text-lg sm:text-xl;
-    @apply font-medium tracking-tight;
-    @apply py-2;
+    @apply text-lg font-medium tracking-tight;
+    @apply mt-3 mb-1.5;
   }
 
-  /* Enhanced paragraph styling */
+  /* Standard body text size */
   p {
-    font-size: 1.125rem;
-    @apply sm:text-lg md:text-xl;
-    @apply leading-relaxed;
-    @apply text-foreground/90;
+    @apply text-base leading-relaxed text-foreground/90;
+    margin-top: 0.75rem;
+    margin-bottom: 0.75rem;
   }
 
   /* Enhanced link styling */
@@ -180,19 +177,19 @@
 
   /* Container system */
   .container {
-    @apply max-w-7xl mx-auto px-6;
+    @apply max-w-6xl mx-auto px-5;
   }
 
   .container-sm {
-    @apply max-w-4xl mx-auto px-6;
+    @apply max-w-4xl mx-auto px-5;
   }
 
   .container-md {
-    @apply max-w-6xl mx-auto px-6;
+    @apply max-w-5xl mx-auto px-5;
   }
 
   .container-lg {
-    @apply max-w-7xl mx-auto px-6;
+    @apply max-w-6xl mx-auto px-5;
   }
 
   .Root {
