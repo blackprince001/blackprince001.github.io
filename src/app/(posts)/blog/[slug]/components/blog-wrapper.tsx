@@ -33,7 +33,15 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
   return (
     <div className="min-h-screen py-8">
       <div className="container max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[1fr_320px] gap-10">
+        <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-10">
+          {/* Table of Contents */}
+          <aside className="hidden lg:block">
+            <div className="sticky top-28 space-y-10">
+              <TOC content={contentRef} />
+              <CicadaQuestion />
+            </div>
+          </aside>
+
           <main className="relative">
             <div className="overflow-visible">
               <div
@@ -79,15 +87,12 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
               <div className="px-6 lg:px-12 pb-12">
                 <Comments />
               </div>
+              <div className="px-6 lg:hidden">
+                <TOC content={contentRef} />
+                <CicadaQuestion />
+              </div>
             </div>
           </main>
-
-          {/* Table of Contents */}
-          <aside className="order-first lg:order-last">
-            <TOC content={contentRef} />
-
-            <CicadaQuestion />
-          </aside>
         </div>
       </div>
     </div>

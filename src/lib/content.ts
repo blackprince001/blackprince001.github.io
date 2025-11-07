@@ -38,7 +38,7 @@ export const intro: Intro = {
   name: "APPIAH BOADU PRINCE KWABENA",
   about:
     "A Computer Engineering student at KNUST with a passion for software engineering and machine learning. Experienced in developing autonomous navigation systems, backend services, and machine learning models.",
-  href: "https://blackprince.tech",
+  href: "https://blackprince001.github.io",
   github: "", // This information is not available in the provided CV
   linkedin: "", // This information is not available in the provided CV
   email: "appiahboaduprince@gmail.com",

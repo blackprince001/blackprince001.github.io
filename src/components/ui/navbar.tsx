@@ -30,6 +30,7 @@ function Navbar() {
           {/* Desktop Navigation */}
           <div className="hidden md:flex items-center space-x-8">
             <NavLink href="/blog">Writing</NavLink>
+            <NavLink href="/shorts">Shorts</NavLink>
             <NavLink href="/projects">Projects</NavLink>
             <NavLink href="/publications">Research</NavLink>
             <NavLink href="/resume">Resume</NavLink>
