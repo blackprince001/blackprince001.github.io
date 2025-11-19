@@ -1,20 +1,25 @@
+"use client"
+
 import ProudGhanaian from "@/components/ui/pg"
 import { Button } from "@/components/ui/button"
 import Link from "next/link"
 import { ArrowRight } from "lucide-react"
-import styles from '@/app/preview.module.css';
-// import GlobeWithLocation from "@/components/earth-globe-location";
-
+import { motion } from "framer-motion"
 
 function HeroSection() {
   return (
-    <section className="relative py-24 lg:py-32">
+    <section className="relative py-8 lg:py-12">
       <div className="container max-w-6xl mx-auto px-6">
         {/* Main Hero Content */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 items-center">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-8 items-center">
           {/* Text Content */}
           <div className="space-y-8">
-            <div className="space-y-6">
+            <motion.div
+              className="space-y-6"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5 }}
+            >
               <h1 className="text-5xl lg:text-7xl font-bold tracking-tight leading-tight">
                 blackprince
               </h1>
@@ -28,10 +33,15 @@ function HeroSection() {
               <p className="text-lg text-muted-foreground leading-relaxed max-w-2xl">
                 Currently building interactive software and systems that enhance idea sharing and personal expression. Bridging the gap between technical and non-technical domains.
               </p>
-            </div>
+            </motion.div>
 
             {/* CTA Buttons */}
-            <div className="flex flex-col sm:flex-row gap-4">
+            <motion.div
+              className="flex flex-col sm:flex-row gap-4"
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+            >
               <Button asChild size="lg" className="group">
                 <Link href="/blog">
                   Read Blog
@@ -41,15 +51,20 @@ function HeroSection() {
               <Button asChild variant="outline" size="lg">
                 <Link href="/projects">View Projects</Link>
               </Button>
-            </div>
+            </motion.div>
           </div>
 
           {/* Visual Element */}
-          <div className="flex justify-center lg:justify-end">
+          <motion.div
+            className="flex justify-center lg:justify-end"
+            initial={{ opacity: 0, scale: 0.9 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.5, delay: 0.4 }}
+          >
             <div className="relative">
               <ProudGhanaian />
             </div>
-          </div>
+          </motion.div>
         </div>
 
         {/* About Section */}

@@ -22,33 +22,49 @@ async function BlogPosts() {
         </Button>
       </div>
 
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+      <div className="flex flex-col gap-6">
         {recentBlogs.map((item) => (
-          <Link key={item.slug} href={`/blog/${item.slug}`} className="block h-full">
-            <Card className="hover:border-muted/50 h-full flex flex-col">
-              <div className="aspect-video w-full relative overflow-hidden">
-                {/* Abstract gradient placeholder based on blog slug */}
-                <GradientPlaceholder seed={item.frontmatter.tag} />
+          <Link key={item.slug} href={`/blog/${item.slug}`} className="group block">
+            <div className="flex flex-col md:flex-row gap-6 items-start p-4 rounded-lg transition-colors hover:bg-muted/40 border border-transparent hover:border-border/50">
+              {/* Image / Placeholder */}
+              <div className="w-full md:w-48 aspect-video md:aspect-[4/3] relative overflow-hidden rounded-md shrink-0">
+                <GradientPlaceholder seed={item.frontmatter.tag} className="w-full h-full" />
 
-                {/* Tag overlay */}
-                <div className="absolute bottom-3 right-3">
-                  <span className="inline-flex items-center rounded-full px-2.5 py-0.5 text-xs font-medium bg-background/80 backdrop-blur-sm text-foreground">
+                {/* Tag overlay - visible on mobile, hidden on desktop if preferred, or kept */}
+                <div className="absolute bottom-2 right-2 md:hidden">
+                  <span className="inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-background/80 backdrop-blur-sm text-foreground">
                     {item.frontmatter.tag}
                   </span>
                 </div>
               </div>
-              <CardHeader>
-                <CardTitle className="line-clamp-2 text-sm">{item.frontmatter.title}</CardTitle>
-              </CardHeader>
-              <CardContent className="flex-grow">
-              </CardContent>
-              <CardFooter className="border-t pt-4 flex items-center text-sm text-muted-foreground">
-                <div className="flex items-center gap-2">
-                  <Calendar className="h-4 w-4" />
-                  {formatDate(parseDate(item.frontmatter.publishDate))}
+
+              {/* Content */}
+              <div className="flex flex-col flex-1 space-y-3">
+                <div className="space-y-2">
+                  <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                    <Calendar className="h-3.5 w-3.5" />
+                    {formatDate(parseDate(item.frontmatter.publishDate))}
+                    <span className="hidden md:inline-block">•</span>
+                    <span className="hidden md:inline-flex items-center rounded-full px-2 py-0.5 text-xs font-medium bg-muted text-muted-foreground">
+                      {item.frontmatter.tag}
+                    </span>
+                  </div>
+
+                  <h3 className="text-xl font-semibold tracking-tight group-hover:text-primary transition-colors">
+                    {item.frontmatter.title}
+                  </h3>
+
+                  {/* Optional: Add description if available in frontmatter, or just keep it clean */}
+                  {/* <p className="text-muted-foreground line-clamp-2 text-sm">
+                    {item.frontmatter.description}
+                  </p> */}
                 </div>
-              </CardFooter>
-            </Card>
+
+                <div className="flex items-center text-sm font-medium text-primary opacity-0 -translate-x-2 group-hover:opacity-100 group-hover:translate-x-0 transition-all duration-300">
+                  Read article <ArrowRight className="ml-1 h-3.5 w-3.5" />
+                </div>
+              </div>
+            </div>
           </Link>
         ))}
       </div>
