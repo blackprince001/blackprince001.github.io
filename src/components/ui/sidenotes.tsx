@@ -21,7 +21,7 @@ const Sidenote: React.FC<SidenoteProps> = ({ children, number, className }) => {
       </span>
       <span
         className={cn(
-          "sidenote hidden lg:block",
+          "sidenote",
           "prose-sm text-sm",
           "transition-opacity duration-200 hover:opacity-100",
           className,
@@ -31,7 +31,7 @@ const Sidenote: React.FC<SidenoteProps> = ({ children, number, className }) => {
       </span>
       <span
         className={cn(
-          "sidenote-mobile lg:hidden text-sm",
+          "sidenote-mobile text-sm",
           "bg-muted",
           "px-3 py-2 rounded-md mt-2 block",
           className,

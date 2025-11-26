@@ -2,10 +2,7 @@
 
 import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
-import { ArrowRight, CalendarDays, Star } from 'lucide-react';
-import { Skeleton } from '@/components/ui/skeleton';
-import { Button } from "@/components/ui/button"
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from '@/components/ui/card';
+import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 
 interface GitHubRepo {
@@ -22,57 +19,43 @@ interface GitHubRepo {
 
 export const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project }) => {
   return (
-    <Card className="h-full border border-border bg-card transition-colors hover:bg-muted/50">
-      <CardHeader>
-        <CardTitle className="text-xl font-medium">
-          <a
-            href={project.html_url}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="hover:text-primary transition-colors"
-          >
-            {project.name}
-          </a>
-        </CardTitle>
-      </CardHeader>
-      <CardContent>
-        <div className="space-y-6">
-          <p className="text-muted-foreground text-lg leading-relaxed line-clamp-3">{project.description}</p>
-          <div className="flex flex-wrap gap-6 text-lg">
-            <div className="text-muted-foreground">
-              <span className="text-foreground font-medium">Created:</span>{" "}
-              {new Date(project.created_at).toLocaleDateString("en-US", {
-                year: "numeric",
-                month: "long",
-                day: "numeric",
-              })}
-            </div>
-            <div className="text-muted-foreground flex items-center gap-2">
-              <Star className="h-5 w-5" />
-              <span>{project.stargazers_count}</span>
-            </div>
-          </div>
-          {project.topics.length > 0 && (
-            <div className="flex flex-wrap gap-3">
-              {project.topics.map((topic) => (
-                <span key={topic} className="px-3 py-1 text-sm rounded-full bg-primary/10 text-primary">
-                  #{topic}
-                </span>
-              ))}
-            </div>
-          )}
+    <div className="py-4 border-b border-border/40 last:border-0">
+      <div className="flex justify-between items-baseline mb-2">
+        <a
+          href={project.html_url}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="text-lg font-serif font-medium text-primary hover:underline underline-offset-4"
+        >
+          {project.name}
+        </a>
+        <div className="flex items-center gap-1 text-sm text-muted-foreground">
+          <Star className="h-3 w-3" />
+          <span>{project.stargazers_count}</span>
         </div>
-      </CardContent>
-    </Card>
+      </div>
+      <p className="text-muted-foreground leading-relaxed font-serif text-sm max-w-2xl">
+        {project.description}
+      </p>
+      {project.topics.length > 0 && (
+        <div className="flex flex-wrap gap-2 mt-2">
+          {project.topics.slice(0, 3).map((topic) => (
+            <span key={topic} className="text-xs text-muted-foreground/70 font-mono">
+              #{topic}
+            </span>
+          ))}
+        </div>
+      )}
+    </div>
   )
 }
 
 const ProjectShowcase: React.FC = () => {
   const pathname = usePathname();
-  const [sortOrder, setSortOrder] = useState<'date' | 'stars'>('stars');
   const [projects, setProjects] = useState<GitHubRepo[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [sortBy, setSortBy] = useState<'stars' | 'recent'>('stars');
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -87,12 +70,11 @@ const ProjectShowcase: React.FC = () => {
           throw new Error('Failed to fetch projects');
         }
         const data: GitHubRepo[] = await response.json();
-        // Filter out forked repositories
         const nonForkedProjects = data.filter(project => !project.fork);
         setProjects(nonForkedProjects);
       } catch (err)
       {
-        setError('An error occurred while fetching projects. Please try again later.');
+        setError('An error occurred while fetching projects.');
         console.error(err);
       } finally
       {
@@ -103,110 +85,58 @@ const ProjectShowcase: React.FC = () => {
     fetchProjects();
   }, []);
 
-  useEffect(() => {
-    const selected = pathname.split('#')[1];
-    if (selected)
-    {
-      setTimeout(() => {
-        if (pathname.split('#')[1] === selected)
-        {
-          document.getElementById(selected)?.scrollIntoView();
-        }
-      }, 500);
-    }
-  }, [pathname]);
-
   const sortedProjects = [...projects].sort((a, b) => {
-    if (sortOrder === 'date')
-    {
-      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
-    } else
+    if (sortBy === 'stars')
     {
       return b.stargazers_count - a.stargazers_count;
+    } else
+    {
+      return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
     }
   });
 
-  if (isLoading)
-  {
-    return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <Skeleton className="h-8 w-48 mb-8" />
-        <div className="space-y-8">
-          {[...Array(3)].map((_, index) => (
-            <Card key={index} className="border rounded-lg">
-              <CardHeader>
-                <Skeleton className="h-6 w-3/4 mb-2 bg-gray-500" />
-                <Skeleton className="h-4 w-1/2 bg-gray-500" />
-              </CardHeader>
-              <CardContent>
-                <Skeleton className="h-4 w-full mb-2 bg-gray-500" />
-                <Skeleton className="h-4 w-3/4 bg-gray-500" />
-              </CardContent>
-            </Card>
-          ))}
-        </div>
-      </div>
-    );
-  }
-
-  if (error)
-  {
-    return (
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="text-red-600">{error}</div>
-      </div>
-    );
-  }
+  if (isLoading) return <div className="py-12 text-center text-muted-foreground font-serif">Loading projects...</div>;
+  if (error) return <div className="py-12 text-center text-red-500 font-serif">{error}</div>;
 
   return (
-    <main className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="text-4xl font-bold mb-8 text-foreground">Open Source Projects</h1>
-      <p className="text-lg text-muted-foreground leading-relaxed">
-        I view building software in the open as a mode of{" "}
-        <em className="font-serif text-[110%] leading-[100%]">creative exploration</em>. It lets me quickly act on
-        inspiration, delve into new topics, and make tools that improve the lives of people.
-      </p>
-      <p className="text-xl mt-6 leading-relaxed">
-        If you find something interesting,{" "}
-        <a
-          className="text-primary hover:text-primary/80 transition-colors"
-          href="mailto:appiahboaduprince@gmail.com?subject=Software%20Projects"
-        >
-          let me know
-        </a>
-        !
+    <main className="max-w-6xl mx-auto px-5 lg:px-6 py-12">
+      <h1 className="text-4xl font-serif font-bold mb-8 tracking-tight">Open Source Projects</h1>
+      <p className="text-lg font-serif leading-relaxed mb-8">
+        Building software in the open as a mode of creative exploration.
       </p>
 
-      <div className="mt-8 border-b border-gray-200 py-6 top-0 z-10">
-        <div className="flex justify-center space-x-8">
-          <button
-            className={`flex items-center text-lg ${sortOrder === 'date' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
-            onClick={() => setSortOrder('date')}
-          >
-            <CalendarDays size={20} strokeWidth={1.8} className="mr-2" /> by Date
-          </button>
-          <button
-            className={`flex items-center text-lg ${sortOrder === 'stars' ? 'text-gray-500' : 'text-gray-400'} transition-colors hover:text-black`}
-            onClick={() => setSortOrder('stars')}
-          >
-            <Star size={20} strokeWidth={1.8} className="mr-2" /> by Stars
-          </button>
-        </div>
+      {/* Sort Tabs */}
+      <div className="flex gap-4 mb-8 border-b border-border">
+        <button
+          onClick={() => setSortBy('stars')}
+          className={`pb-2 px-1 text-sm font-sans transition-colors ${sortBy === 'stars'
+              ? 'border-b-2 border-primary text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+            }`}
+        >
+          Most Stars
+        </button>
+        <button
+          onClick={() => setSortBy('recent')}
+          className={`pb-2 px-1 text-sm font-sans transition-colors ${sortBy === 'recent'
+              ? 'border-b-2 border-primary text-foreground'
+              : 'text-muted-foreground hover:text-foreground'
+            }`}
+        >
+          Recent
+        </button>
       </div>
 
-      <section className="mx-auto py-12 space-y-10">
+      <div className="space-y-6">
         {sortedProjects.map((project) => (
-          <div key={project.id} id={project.name}>
-            <ProjectComponent project={project} />
-          </div>
+          <ProjectComponent key={project.id} project={project} />
         ))}
-      </section>
+      </div>
     </main>
   );
 };
 
 export const RecentProjects: React.FC = () => {
-  const pathname = usePathname()
   const [projects, setProjects] = useState<GitHubRepo[]>([])
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
@@ -217,17 +147,13 @@ export const RecentProjects: React.FC = () => {
       try
       {
         const response = await fetch(`https://api.github.com/users/blackprince001/repos?per_page=5&sort=created`)
-        if (!response.ok)
-        {
-          throw new Error("Failed to fetch projects")
-        }
+        if (!response.ok) throw new Error("Failed to fetch projects")
         const data: GitHubRepo[] = await response.json()
         const nonForkedProjects = data.filter((project) => !project.fork)
         setProjects(nonForkedProjects)
       } catch (err)
       {
-        setError("An error occurred while fetching projects.")
-        console.error(err)
+        setError("An error occurred.")
       } finally
       {
         setIsLoading(false)
@@ -236,73 +162,35 @@ export const RecentProjects: React.FC = () => {
     fetchProjects()
   }, [])
 
-  if (isLoading)
-  {
-    return (
-      <section className="space-y-8">
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-semibold tracking-tight">Recent Projects</h2>
-        </div>
-        <div className="grid gap-4">
-          {[...Array(3)].map((_, i) => (
-            <Card key={i} className="animate-pulse">
-              <CardHeader>
-                <div className="h-6 bg-muted rounded w-2/3" />
-                <div className="h-4 bg-muted rounded w-1/3 mt-2" />
-              </CardHeader>
-            </Card>
-          ))}
-        </div>
-      </section>
-    )
-  }
-
-  if (error)
-  {
-    return (
-      <section className="space-y-8">
-        <div className="flex justify-between items-center">
-          <h2 className="text-2xl font-semibold tracking-tight">Recent Projects</h2>
-        </div>
-        <Card className="bg-destructive/10">
-          <CardHeader>
-            <CardDescription className="text-destructive">{error}</CardDescription>
-          </CardHeader>
-        </Card>
-      </section>
-    )
-  }
+  if (isLoading) return null;
+  if (error) return null;
 
   return (
-    <section className="space-y-8">
-      <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-semibold tracking-tight">Recent Projects</h2>
-        <Button asChild variant="ghost">
-          <Link href="/projects" className="group">
-            View all projects
-            <ArrowRight className="ml-2 h-4 w-4 transition-transform group-hover:translate-x-1" />
-          </Link>
-        </Button>
+    <section className="space-y-6">
+      <div className="flex justify-between items-baseline border-b border-border pb-2">
+        <h2 className="text-2xl font-serif font-bold tracking-tight">Recent Projects</h2>
+        <Link href="/projects" className="text-sm font-sans text-muted-foreground hover:text-foreground hover:underline underline-offset-4">
+          View all &rarr;
+        </Link>
       </div>
 
-      <div className="grid gap-4">
-        {projects.map((project) => (
-          <Link key={project.id} href={project.html_url} target="_blank" rel="noopener noreferrer">
-            <Card className="transition-colors hover:bg-muted/50">
-              <CardHeader>
-                <div className="flex justify-between items-start gap-4">
-                  <CardTitle className="text-lg">{project.name}</CardTitle>
-                  <CardDescription className="flex items-center gap-2 shrink-0">
-                    <Star className="h-4 w-4" />
-                    {project.stargazers_count}
-                  </CardDescription>
-                </div>
-                {project.description && (
-                  <CardDescription className="line-clamp-2">{project.description}</CardDescription>
-                )}
-              </CardHeader>
-            </Card>
-          </Link>
+      <div className="space-y-4">
+        {projects.slice(0, 3).map((project) => (
+          <div key={project.id} className="group">
+            <Link href={project.html_url} target="_blank" className="block">
+              <div className="flex justify-between items-baseline mb-1">
+                <h3 className="text-base font-serif font-medium text-primary group-hover:underline underline-offset-4">
+                  {project.name}
+                </h3>
+                <span className="text-xs text-muted-foreground flex items-center gap-1">
+                  <Star className="h-3 w-3" /> {project.stargazers_count}
+                </span>
+              </div>
+              <p className="text-sm text-muted-foreground line-clamp-2 font-serif">
+                {project.description}
+              </p>
+            </Link>
+          </div>
         ))}
       </div>
     </section>

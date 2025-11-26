@@ -33,7 +33,7 @@ async function Page() {
   const sortedCategories = Object.keys(groupedBlogs).sort()
 
   return (
-    <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
       <div className="mb-12">
         <h1 className="text-4xl font-bold tracking-tight mb-4">Writing</h1>
         <p className="text-lg text-muted-foreground">

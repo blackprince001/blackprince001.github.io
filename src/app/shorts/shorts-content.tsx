@@ -1,8 +1,6 @@
 import Link from "next/link"
 
 import { parseDate, formatDate } from "@/utils/date"
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
-import { Button } from "@/components/ui/button"
 import type { getShorts } from "@/utils/fetch-mdx"
 import { cn } from "@/lib/utils"
 import styles from "@/app/md.module.css"
@@ -22,12 +20,12 @@ export function ShortsContent({ shorts, availableTags, activeTag }: ShortsConten
 
   return (
     <main className="w-full py-16">
-      <div className="mx-auto grid max-w-6xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,280px)_1fr] lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,280px)_1fr] lg:px-8">
         <aside className="space-y-8">
           <header className="space-y-4">
             <span className="uppercase tracking-wide text-xs text-muted-foreground">short form</span>
-            <h1 className="text-4xl font-semibold tracking-tight">Shorts</h1>
-            <p className="text-muted-foreground text-base leading-relaxed">
+            <h1 className="text-4xl font-serif font-bold tracking-tight">Shorts</h1>
+            <p className="text-muted-foreground text-base leading-relaxed font-serif">
               Snapshots of ideas, course corrections, and mental models I want to share while they are still unfolding.
               They capture direction and intent without waiting for a full essay.
             </p>
@@ -37,22 +35,28 @@ export function ShortsContent({ shorts, availableTags, activeTag }: ShortsConten
             <div className="space-y-3">
               <p className="text-xs font-semibold uppercase tracking-wide text-muted-foreground">Filter</p>
               <div className="flex flex-wrap gap-2">
-                <Button asChild variant={!activeTag ? "default" : "outline"} size="sm">
-                  <Link href="/shorts">All</Link>
-                </Button>
+                <Link
+                  href="/shorts"
+                  className={cn(
+                    "text-sm hover:underline underline-offset-4",
+                    !activeTag ? "font-bold text-primary" : "text-muted-foreground"
+                  )}
+                >
+                  All
+                </Link>
                 {availableTags.map((tag) => {
                   const isActive = activeTag === tag
                   return (
-                    <Button
+                    <Link
                       key={tag}
-                      asChild
-                      variant={isActive ? "default" : "outline"}
-                      size="sm"
+                      href={isActive ? "/shorts" : `/shorts/tag/${encodeURIComponent(tag)}`}
+                      className={cn(
+                        "text-sm hover:underline underline-offset-4",
+                        isActive ? "font-bold text-primary" : "text-muted-foreground"
+                      )}
                     >
-                      <Link href={isActive ? "/shorts" : `/shorts/tag/${encodeURIComponent(tag)}`}>
-                        {tag}
-                      </Link>
-                    </Button>
+                      {tag}
+                    </Link>
                   )
                 })}
               </div>
@@ -60,78 +64,66 @@ export function ShortsContent({ shorts, availableTags, activeTag }: ShortsConten
           )}
         </aside>
 
-        <section className="space-y-6">
+        <section className="space-y-12">
           {filteredShorts.length === 0 ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="text-lg">Nothing here yet</CardTitle>
-                <CardDescription>
-                  Check back soon—more short-form notes are on the way.
-                </CardDescription>
-              </CardHeader>
-            </Card>
+            <div className="py-12 text-center text-muted-foreground font-serif italic">
+              Nothing here yet. Check back soon.
+            </div>
           ) : (
-            filteredShorts.map((item) => {
+            filteredShorts.map((item, index) => {
               const { frontmatter, content } = item
               const formattedDate = formatDate(parseDate(frontmatter.publishedAt))
 
               return (
-                <article key={item.slug}>
-                  <Card className="border-border/60">
-                    <CardHeader className="space-y-3">
-                      <div className="flex flex-wrap items-center justify-between gap-3">
-                        <CardTitle className="text-2xl font-semibold tracking-tight">
+                <article key={item.slug} className="group">
+                  <header className="mb-4 space-y-2">
+                    <div className="flex items-baseline justify-between gap-4">
+                      <Link href={`/shorts/${item.slug}`} className="hover:underline underline-offset-4 decoration-muted-foreground/50 hover:decoration-primary">
+                        <h2 className="text-2xl font-serif font-bold tracking-tight text-primary">
                           {frontmatter.title}
-                        </CardTitle>
-                        <span className="text-xs font-medium uppercase tracking-wide text-muted-foreground">
-                          {formattedDate}
-                        </span>
-                      </div>
-                      {frontmatter.summary && (
-                        <CardDescription className="text-sm leading-relaxed">
-                          {frontmatter.summary}
-                        </CardDescription>
-                      )}
-                    </CardHeader>
-                    <CardContent>
-                      <div
-                        className={cn(
-                          styles.blogContent,
-                          "prose prose-gray dark:prose-invert max-w-none text-base leading-7 text-foreground"
-                        )}
-                      >
-                        {content}
-                      </div>
-                    </CardContent>
-                    <CardFooter className="flex flex-wrap items-center justify-between gap-4">
-                      <div className="flex flex-wrap gap-2">
-                        {frontmatter.tags?.map((tag) => (
-                          <span
-                            key={tag}
-                            className="inline-flex items-center rounded-full border border-border/60 px-3 py-1 text-xs font-medium text-muted-foreground"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        <Button asChild variant="ghost" size="sm">
-                          <Link href={`/shorts/${item.slug}`}>Open thread</Link>
-                        </Button>
-                        {frontmatter.ctaHref && (
-                          <Button asChild variant="outline" size="sm">
-                            <Link
-                              href={frontmatter.ctaHref}
-                              target={frontmatter.ctaHref.startsWith("http") ? "_blank" : undefined}
-                              rel={frontmatter.ctaHref.startsWith("http") ? "noreferrer" : undefined}
-                            >
-                              {frontmatter.ctaLabel ?? "Explore"}
-                            </Link>
-                          </Button>
-                        )}
-                      </div>
-                    </CardFooter>
-                  </Card>
+                        </h2>
+                      </Link>
+                      <time dateTime={frontmatter.publishedAt} className="text-xs font-mono text-muted-foreground shrink-0">
+                        {formattedDate}
+                      </time>
+                    </div>
+                    {frontmatter.summary && (
+                      <p className="text-muted-foreground font-serif italic text-lg">
+                        {frontmatter.summary}
+                      </p>
+                    )}
+                  </header>
+
+                  <div
+                    className={cn(
+                      styles.blogContent,
+                      "prose prose-lg max-w-none font-serif text-foreground",
+                      // Minimalist prose styles
+                      "prose-headings:font-serif prose-headings:font-normal",
+                      "prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4",
+                      "prose-blockquote:border-l-2 prose-blockquote:border-primary/20 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground"
+                    )}
+                  >
+                    {content}
+                  </div>
+
+                  <footer className="mt-6 flex items-center justify-between">
+                    <div className="flex gap-3 text-xs font-mono text-muted-foreground">
+                      {frontmatter.tags?.map((tag) => (
+                        <span key={tag}>#{tag}</span>
+                      ))}
+                    </div>
+                    <Link
+                      href={`/shorts/${item.slug}`}
+                      className="text-xs font-sans uppercase tracking-wider text-muted-foreground hover:text-primary transition-colors"
+                    >
+                      Permalink
+                    </Link>
+                  </footer>
+
+                  {index < filteredShorts.length - 1 && (
+                    <div className="squiggly-separator opacity-30 mt-12" />
+                  )}
                 </article>
               )
             })

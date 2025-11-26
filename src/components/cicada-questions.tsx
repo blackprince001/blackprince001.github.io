@@ -1,7 +1,6 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 
 const questions = [
   {
@@ -128,35 +127,24 @@ export default function CicadaQuestion() {
   if (!currentQuestion) return null
 
   return (
-    <div className="mt-4">
-      <Card className="w-full">
-        <CardHeader>
-          <CardTitle className="text-lg font-semibold">Challenge No.{currentQuestion.id}</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <div className="space-y-4">
-            <p className="text-sm">{currentQuestion.question}</p>
-            <div className="text-xs text-muted-foreground mt-4">
-              You can share your answer in the comments section below by quoting the question number and providing your response.
-
-              <p className="mt-2 text-xs">
-                Response can have the form as below or in your words:
-
-                <ul>
-                  <li>True</li>
-                  <li>False</li>
-                  <li>Indeterminate</li>
-                  <li>Meaningless</li>
-                  <li>Self-Referential</li>
-                  <li>Game Rule</li>
-                  <li>Strange Loop</li>
-                  <li>None of the above</li>
-                </ul>
-              </p>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
+    <div className="mt-8 pt-8 border-t border-border">
+      <h3 className="text-xs font-bold uppercase tracking-widest mb-4 text-muted-foreground">Challenge No.{currentQuestion.id}</h3>
+      <div className="space-y-4">
+        <p className="text-sm font-serif leading-relaxed">{currentQuestion.question}</p>
+        <div className="text-xs text-muted-foreground mt-4 font-sans">
+          <p className="mb-2">Response options:</p>
+          <ul className="list-disc pl-4 space-y-1">
+            <li>True</li>
+            <li>False</li>
+            <li>Indeterminate</li>
+            <li>Meaningless</li>
+            <li>Self-Referential</li>
+            <li>Game Rule</li>
+            <li>Strange Loop</li>
+            <li>None of the above</li>
+          </ul>
+        </div>
+      </div>
     </div>
   )
 }

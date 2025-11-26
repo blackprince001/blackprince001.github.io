@@ -1,39 +1,29 @@
 'use client'
 
 import Link from "next/link";
-import { CenterUnderline, ComesInGoesOutUnderline, GoesOutComesInUnderline } from "@/components/ui/underline-animation";
-
 
 function Footer() {
   return (
-    <footer className="font-semibold flex justify-center items-center py-12 w-full border-t border-border/60">
-      <div className="flex flex-row font-overusedGrotesk items-start uppercase space-x-8 text-xs sm:text-sm md:text-base lg:text-lg">
-        <div>Contact</div>
-        <ul className="flex flex-col space-y-1 h-full">
-          <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank">
-            <CenterUnderline label="EMAIL" />
-          </Link>
-          <Link href={"https://x.com/0xed8"} target="_blank">
-            <ComesInGoesOutUnderline label="X (TWITTER)" direction="right" />
-          </Link>
-          <Link href={"https://github.com/blackprince001"} target="_blank">
-            <ComesInGoesOutUnderline label="GITHUB" direction="left" />
-          </Link>
-          <Link href={"https://www.linkedin.com/in/pkab23/"} target="_blank">
-            <ComesInGoesOutUnderline label="LINKEDIN" direction="right" />
-          </Link>
+    <footer className="w-full py-12 border-t border-border mt-12">
+      <div className="max-w-5xl mx-auto px-5 lg:px-6 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
+        <div className="text-sm text-muted-foreground font-serif">
+          &copy; {new Date().getFullYear()} blackprince. All rights reserved.
+        </div>
 
-          {/* <div className="pt-12">
-            <ul className="flex flex-col space-y-1 h-full">
-              <Link href={"mailto:appiahboaduprince@gmail.com"} target="_blank">
-                <GoesOutComesInUnderline
-                  label="APPIAHBOADUPRINCE@GMAIL.COM"
-                  direction="left"
-                />
-              </Link>
-            </ul>
-          </div> */}
-        </ul>
+        <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm font-sans">
+          <Link href="mailto:appiahboaduprince@gmail.com" className="hover:underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors">
+            Email
+          </Link>
+          <Link href="https://x.com/0xed8" target="_blank" className="hover:underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors">
+            X (Twitter)
+          </Link>
+          <Link href="https://github.com/blackprince001" target="_blank" className="hover:underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors">
+            GitHub
+          </Link>
+          <Link href="https://www.linkedin.com/in/pkab23/" target="_blank" className="hover:underline underline-offset-4 text-muted-foreground hover:text-foreground transition-colors">
+            LinkedIn
+          </Link>
+        </div>
       </div>
     </footer>
   );

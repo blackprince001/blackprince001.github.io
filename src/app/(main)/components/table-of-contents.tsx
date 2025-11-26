@@ -76,7 +76,7 @@ const TOC: React.FC<TOCProps> = ({ content }) => {
       </div>
 
       {/* Desktop TOC */}
-      <div className="hidden lg:block border rounded-lg p-4 sticky top-20 max-h-[calc(100vh-6rem)] overflow-auto">
+      <div className="hidden lg:block border rounded-lg p-4">
         <h6 className="text-sm font-bold mb-4">Table of Contents</h6>
         {renderTOCContent()}
       </div>

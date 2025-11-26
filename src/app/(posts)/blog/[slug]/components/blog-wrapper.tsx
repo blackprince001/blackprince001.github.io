@@ -8,8 +8,7 @@ import { resetSidenoteCounter } from "@/components/ui/sidenotes";
 import CicadaQuestion from "@/components/cicada-questions";
 import { formatDate, parseDate } from "@/utils/date";
 import { cn } from "@/lib/utils";
-import { Badge } from "lucide-react";
-
+import ImageLightbox from "@/components/ui/image-lightbox";
 
 interface BlogWrapperProps {
   title: string;
@@ -31,69 +30,66 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
   }, []);
 
   return (
-    <div className="min-h-screen py-8">
-      <div className="container max-w-[1200px] mx-auto">
-        <div className="grid grid-cols-1 lg:grid-cols-[280px_minmax(0,1fr)] gap-10">
-          {/* Table of Contents */}
-          <aside className="hidden lg:block">
-            <div className="sticky top-28 space-y-10">
-              <TOC content={contentRef} />
-              <CicadaQuestion />
-            </div>
-          </aside>
+    <div className="min-h-screen py-12">
+      <div className="max-w-5xl mx-auto px-5 lg:px-6 relative">
+        {/* Header */}
+        <header className="mb-10 border-b border-border pb-8">
+          <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight mb-4 leading-tight">
+            {title}
+          </h1>
+          <div className="flex items-center gap-4 text-muted-foreground font-mono text-sm">
+            <time dateTime={publishDate}>
+              {formatDate(parseDate(publishDate))}
+            </time>
+            <span>/</span>
+            <span className="uppercase tracking-wider">
+              {tag}
+            </span>
+          </div>
+        </header>
 
-          <main className="relative">
-            <div className="overflow-visible">
-              <div
-                className={cn(
-                  styles.blogContent,
-                  "px-5 py-8 lg:px-8 prose prose-gray dark:prose-invert max-w-none",
-                  // Math equation styles
-                  "prose-katex:overflow-x-auto prose-katex:overflow-y-hidden",
-                  // Code block styles
-                  "prose-pre:bg-muted prose-pre:border prose-pre:border-border",
-                  // Image styles
-                  "prose-img:rounded-lg prose-img:mx-auto",
-                  // Link styles
-                  "prose-a:text-primary prose-a:no-underline hover:prose-a:underline",
-                  // Heading styles
-                  "prose-headings:scroll-mt-24"
-                )}
-                ref={contentRef}
-              >
-                {/* Header */}
-                <header className="not-prose mb-8">
-                  <h1 className="text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight mb-3">
-                    {title}
-                  </h1>
-                  <div className="flex flex-wrap items-center gap-3 text-muted-foreground text-base">
-                    <time dateTime={publishDate}>
-                      {formatDate(parseDate(publishDate))}
-                    </time>
-                    <span>•</span>
-                    <Badge className="text-sm px-2.5 py-0.5">
-                      {tag}
-                    </Badge>
-                  </div>
-                </header>
+        {/* Sidebar / TOC Area */}
+        <div className="mb-10 p-6 bg-muted/30 rounded-sm border border-border/50">
+          <div className="mb-4">
+            <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Contents</h2>
+          </div>
+          <TOC content={contentRef} />
 
-                <hr className="my-8 border-border" />
-
-                {/* Content */}
-                {children}
-              </div>
-
-              {/* Comments */}
-              <div className="px-6 lg:px-12 pb-12">
-                <Comments />
-              </div>
-              <div className="px-6 lg:hidden">
-                <TOC content={contentRef} />
-                <CicadaQuestion />
-              </div>
-            </div>
-          </main>
+          <div className="mt-8">
+            <CicadaQuestion />
+          </div>
         </div>
+
+        <main className="relative">
+          <div
+            className={cn(
+              styles.blogContent,
+              "prose prose-lg max-w-none font-serif",
+              // Math equation styles
+              "prose-katex:overflow-x-auto prose-katex:overflow-y-hidden",
+              // Code block styles
+              "prose-pre:bg-muted/50 prose-pre:border prose-pre:border-border prose-pre:rounded-sm",
+              // Image styles
+              "prose-img:rounded-sm prose-img:mx-auto prose-img:border prose-img:border-border",
+              // Link styles
+              "prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4",
+              // Heading styles
+              "prose-headings:font-serif prose-headings:font-normal prose-headings:scroll-mt-24"
+            )}
+            ref={contentRef}
+          >
+            <ImageLightbox>
+              {children}
+            </ImageLightbox>
+          </div>
+
+          <hr className="my-12 border-border" />
+
+          {/* Comments */}
+          <div className="pb-12">
+            <Comments />
+          </div>
+        </main>
       </div>
     </div>
   );

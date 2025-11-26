@@ -8,6 +8,7 @@ import { Button } from "@/components/ui/button"
 import Comments from "@/app/(main)/components/comments"
 import styles from "@/app/md.module.css"
 import { cn } from "@/lib/utils"
+import ImageLightbox from "@/components/ui/image-lightbox"
 
 interface ShortPageProps {
   params: {
@@ -77,7 +78,7 @@ export default async function ShortPage({ params }: ShortPageProps) {
 
   return (
     <main className="w-full py-16">
-      <article className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8 space-y-10">
+      <article className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 space-y-10">
         <div className="flex items-center justify-between gap-3">
           <Button asChild variant="ghost" size="sm">
             <Link href="/shorts">← Back to all shorts</Link>
@@ -116,7 +117,9 @@ export default async function ShortPage({ params }: ShortPageProps) {
             "prose prose-lg prose-gray dark:prose-invert max-w-none"
           )}
         >
-          {content}
+          <ImageLightbox>
+            {content}
+          </ImageLightbox>
         </section>
 
         {frontmatter.ctaHref && (

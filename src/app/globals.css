@@ -2,58 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-::-webkit-scrollbar {
-  display: none;
-}
-
 @import "https://unpkg.com/mafs@0.5.0/build/index.css";
-
-/* Improved content width and readability */
-.content-container {
-  @apply max-w-4xl mx-auto px-4 sm:px-6 lg:px-8;
-  @apply relative;
-  /* For sidenote positioning */
-}
-
-/* Sidenote Styling */
-.sidenote-wrapper {
-  @apply inline relative;
-}
-
-.sidenote-number {
-  @apply align-super text-sm;
-  @apply text-[#a0a0a0];
-  margin: 0 1rem;
-}
-
-/* Desktop sidenotes */
-@media (min-width: 1024px) {
-  .sidenote {
-    @apply absolute text-base;
-    @apply text-[#a0a0a0];
-    width: 1024px;
-    left: calc(100% + 4rem);
-    top: 0;
-  }
-
-  /* Hide mobile version on desktop */
-  .sidenote-mobile {
-    @apply hidden;
-  }
-}
-
-/* Mobile sidenotes */
-@media (max-width: 1023px) {
-  .sidenote {
-    @apply hidden;
-  }
-
-  .sidenote-mobile {
-    @apply inline-block text-base;
-    @apply text-[#a0a0a0] italic;
-    margin-left: 0.5rem;
-  }
-}
 
 /* Base typography improvements */
 @layer base {
@@ -64,50 +13,80 @@
     --card-foreground: 0 0% 0%;
     --popover: 0 0% 100%;
     --popover-foreground: 0 0% 0%;
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 0 0% 0%;
+    --primary-foreground: 0 0% 100%;
     --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary-foreground: 0 0% 0%;
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
     --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent-foreground: 0 0% 0%;
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 82%;
-    --input: 0 0% 82%;
-    --ring: 0 0% 25%;
-    --radius: 0.5rem;
+    --border: 0 0% 90%;
+    --input: 0 0% 90%;
+    --ring: 0 0% 0%;
+    --radius: 0rem;
+  }
+
+  /* Responsive Math Styling */
+  .katex {
+    font-size: 1.1em !important;
+    max-width: 100%;
+  }
+
+  .katex-display {
+    display: block;
+    overflow-x: auto;
+    overflow-y: hidden;
+    max-width: 100%;
+    padding: 0.5em 0;
+    -webkit-overflow-scrolling: touch;
+    width: 100%;
+    /* Ensure scrollbar is visible on mobile */
+    scrollbar-width: thin;
+  }
+
+  .katex-display::-webkit-scrollbar {
+    height: 6px;
+  }
+
+  .katex-display::-webkit-scrollbar-track {
+    background: hsl(var(--muted));
+  }
+
+  .katex-display::-webkit-scrollbar-thumb {
+    background: hsl(var(--muted-foreground) / 0.3);
+    border-radius: 3px;
+  }
+
+  @media (max-width: 640px) {
+    .katex {
+      font-size: 1em !important;
+    }
   }
 
   .dark {
-    --background: 0 0% 3.9%;
-    --foreground: 0 0% 98%;
-    --card: 0 0% 3.9%;
-    --card-foreground: 0 0% 98%;
-    --popover: 0 0% 3.9%;
-    --popover-foreground: 0 0% 98%;
-    --primary: 0 0% 98%;
-    --primary-foreground: 0 0% 9%;
-    --secondary: 0 0% 14.9%;
+    /* Gwern.net doesn't really have a dark mode, but we'll provide a high contrast one just in case */
+    --background: 0 0% 5%;
+    --foreground: 0 0% 95%;
+    --card: 0 0% 5%;
+    --card-foreground: 0 0% 95%;
+    --popover: 0 0% 5%;
+    --popover-foreground: 0 0% 95%;
+    --primary: 0 0% 100%;
+    --primary-foreground: 0 0% 0%;
+    --secondary: 0 0% 15%;
     --secondary-foreground: 0 0% 98%;
-    --muted: 0 0% 14.9%;
-    --muted-foreground: 0 0% 63.9%;
-    --accent: 0 0% 14.9%;
+    --muted: 0 0% 15%;
+    --muted-foreground: 0 0% 65%;
+    --accent: 0 0% 15%;
     --accent-foreground: 0 0% 98%;
     --destructive: 0 62.8% 30.6%;
     --destructive-foreground: 0 0% 98%;
-    --border: 0 0% 14.9%;
-    --input: 0 0% 14.9%;
-    --ring: 0 0% 83.1%;
-  }
-
-  /* Technical Grid Background */
-  .bg-grid-pattern {
-    background-size: 40px 40px;
-    background-image: linear-gradient(to right, border-box 1px, transparent 1px),
-      linear-gradient(to bottom, border-box 1px, transparent 1px);
-    mask-image: linear-gradient(to bottom, black 40%, transparent 100%);
+    --border: 0 0% 20%;
+    --input: 0 0% 20%;
+    --ring: 0 0% 80%;
   }
 
   * {
@@ -117,6 +96,7 @@
   html {
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
+    font-family: var(--font-sans);
   }
 
   body {
@@ -124,104 +104,113 @@
     color: hsl(var(--foreground));
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    font-feature-settings: "rlig" 1, "calt" 1;
+    font-feature-settings: "rlig" 1, "calt" 1, "onum" 1;
+    line-height: 1.6;
+    text-rendering: optimizeLegibility;
+    font-weight: 400;
   }
 
-  /* Main content container - balanced width and padding */
-  .content-wrapper {
-    @apply max-w-5xl mx-auto px-5 lg:px-6;
-    @apply relative;
-  }
-
-  /* Standardized typography scale (Tailwind defaults, tighter spacing) */
-  h1 {
-    @apply text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight leading-tight;
-    @apply mt-6 mb-3;
-  }
-
-  h2 {
-    @apply text-2xl sm:text-3xl font-semibold tracking-tight leading-tight;
-    @apply mt-5 mb-2;
-  }
-
-  h3 {
-    @apply text-xl sm:text-2xl font-semibold tracking-tight;
-    @apply mt-4 mb-2;
-  }
-
+  /* Typography Scale */
+  h1,
+  h2,
+  h3,
   h4,
   h5,
   h6 {
-    @apply text-lg font-medium tracking-tight;
-    @apply mt-3 mb-1.5;
+    font-family: var(--font-serif);
+    font-weight: 600;
+    /* Heavier weight for headers */
+    letter-spacing: -0.02em;
   }
 
-  /* Standard body text size */
+  h1 {
+    @apply text-4xl sm:text-5xl mb-6 mt-8;
+  }
+
+  h2 {
+    @apply text-2xl sm:text-3xl mb-4 mt-8 border-b border-border pb-2;
+  }
+
+  h3 {
+    @apply text-xl sm:text-2xl mb-3 mt-6;
+  }
+
   p {
-    @apply text-base leading-relaxed text-foreground/90;
-    margin-top: 0.75rem;
-    margin-bottom: 0.75rem;
+    @apply mb-4 leading-7 text-[1.1rem];
   }
 
-  /* Enhanced link styling */
   a {
-    @apply transition-all duration-200;
-    @apply text-primary hover:text-primary/80;
+    @apply text-primary underline underline-offset-4 decoration-1 decoration-muted-foreground/50 hover:decoration-primary transition-colors;
   }
 
-  /* Container system */
-  .container {
-    @apply max-w-6xl mx-auto px-5;
+  /* Sidenote Styling - Gwern.net style */
+  .sidenote-wrapper {
+    @apply inline relative;
   }
 
-  .container-sm {
-    @apply max-w-4xl mx-auto px-5;
+  .sidenote-number {
+    @apply align-super text-xs text-muted-foreground font-sans cursor-pointer hover:text-primary transition-colors;
+    margin: 0 0.2rem;
   }
 
-  .container-md {
-    @apply max-w-5xl mx-auto px-5;
+  @media (min-width: 1280px) {
+    .sidenote {
+      @apply absolute text-[0.9rem] text-muted-foreground font-serif leading-snug;
+      width: 260px;
+      /* Calculate position: move to right margin */
+      right: -300px;
+      top: auto;
+      margin-top: 0;
+      text-align: left;
+      /* Ensure it doesn't overlap if multiple are close (this is hard with pure CSS, but we do our best) */
+    }
+
+    .sidenote:hover {
+      @apply text-foreground;
+    }
+
+    .sidenote-mobile {
+      @apply hidden;
+    }
   }
 
-  .container-lg {
-    @apply max-w-6xl mx-auto px-5;
-  }
+  @media (max-width: 1279px) {
+    .sidenote {
+      @apply hidden;
+    }
 
-  .Root {
-    isolation: isolate;
-    background-color: hsl(var(--background));
-    min-height: 100vh;
+    .sidenote-mobile {
+      @apply block my-4 p-4 bg-muted/30 text-sm border-l-2 border-primary/20 font-serif;
+    }
   }
 }
 
 @layer components {
-
-  /* Enhanced prose styling for better readability */
   .prose {
-    @apply text-foreground/90;
+    @apply max-w-none;
   }
 
-  .prose h1,
-  .prose h2,
-  .prose h3,
-  .prose h4,
-  .prose h5,
-  .prose h6 {
-    @apply text-foreground font-semibold;
+  /* Code blocks */
+  pre {
+    @apply bg-muted/50 p-4 overflow-x-auto text-sm font-mono my-6 border border-border;
   }
 
-  .prose a {
-    @apply text-primary hover:text-primary/80 underline-offset-4;
+  code {
+    @apply bg-muted/50 px-1 py-0.5 rounded-sm text-[0.9em] font-mono;
+  }
+}
+
+@layer utilities {
+  .squiggly-separator {
+    background-image: url("data:image/svg+xml,%3Csvg width='30' height='10' viewBox='0 0 30 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5 Q 7.5 0, 15 5 T 30 5' fill='none' stroke='%23ccc' stroke-width='1'/%3E%3C/svg%3E");
+    background-repeat: repeat-x;
+    background-position: center;
+    height: 10px;
+    width: 100%;
+    margin: 1rem 0;
   }
 
-  .prose code {
-    @apply bg-muted px-1.5 py-0.5 rounded text-sm font-mono;
-  }
-
-  .prose pre {
-    @apply bg-muted border border-border/50 rounded-lg p-4 overflow-x-auto;
-  }
-
-  .prose blockquote {
-    @apply border-l-4 border-primary/20 bg-muted/50 pl-6 py-4 italic;
+  .dark .squiggly-separator {
+    background-image: url("data:image/svg+xml,%3Csvg width='30' height='10' viewBox='0 0 30 10' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M0 5 Q 7.5 0, 15 5 T 30 5' fill='none' stroke='%23444' stroke-width='1'/%3E%3C/svg%3E");
   }
 }
