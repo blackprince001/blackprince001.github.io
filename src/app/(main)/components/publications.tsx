@@ -1,22 +1,18 @@
 'use client'
 
 import type React from "react"
-import { useEffect, useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import dynamic from "next/dynamic"
 import { ArrowRight, ExternalLink } from "lucide-react"
 import { cn } from "@/lib/utils"
+import publicationsData from "@/data/publications.json"
 
 // Dynamically import PDF viewer with SSR disabled since react-pdf requires browser APIs
 const PDFViewer = dynamic(
   () => import("@/components/ui/pdf-viewer"),
   {
     ssr: false,
-    loading: () => (
-      <div className="flex items-center justify-center h-full min-h-[400px] border border-border bg-muted/30 rounded-sm">
-        <p className="text-muted-foreground font-serif">Loading PDF viewer...</p>
-      </div>
-    ),
   }
 )
 
@@ -32,35 +28,8 @@ interface Publication {
 }
 
 export const RecentPublications: React.FC = () => {
-  const [publications, setPublications] = useState<Publication[]>([])
-  const [loading, setLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchPublications = async () => {
-      try
-      {
-        const response = await fetch("/api/publications")
-        if (!response.ok)
-        {
-          throw new Error(`Failed to fetch publications`)
-        }
-        const data = await response.json()
-        setPublications(data.slice(0, 5))
-      } catch (err)
-      {
-        setError("An error occurred.")
-      } finally
-      {
-        setLoading(false)
-      }
-    }
-
-    fetchPublications()
-  }, [])
-
-  if (loading) return null;
-  if (error) return null;
+  // Direct import for static export - no API needed
+  const publications = (publicationsData as Publication[]).slice(0, 5)
 
   return (
     <section className="space-y-6">
@@ -90,48 +59,12 @@ export const RecentPublications: React.FC = () => {
 }
 
 export const PublicationShowcase: React.FC = () => {
-  const [publications, setPublications] = useState<Publication[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-  const [selectedPublication, setSelectedPublication] = useState<Publication | null>(null);
+  // Direct import for static export - no API needed
+  const publications = publicationsData as Publication[]
+  // Auto-select first publication with PDF
+  const firstWithPDF = publications.find((pub: Publication) => pub.pdf) || null
+  const [selectedPublication, setSelectedPublication] = useState<Publication | null>(firstWithPDF);
 
-  useEffect(() => {
-    const fetchPublications = async () => {
-      try
-      {
-        const response = await fetch('/api/publications');
-        if (!response.ok)
-        {
-          throw new Error(`Failed to fetch publications: ${response.statusText}`);
-        }
-        const data = await response.json();
-        setPublications(data);
-        
-        // Auto-select first publication with PDF
-        const firstWithPDF = data.find((pub: Publication) => pub.pdf);
-        if (firstWithPDF) {
-          setSelectedPublication(firstWithPDF);
-        }
-      } catch (err)
-      {
-        if (err instanceof Error)
-        {
-          setError(err.message);
-        } else
-        {
-          setError('An unknown error occurred');
-        }
-      } finally
-      {
-        setLoading(false);
-      }
-    };
-
-    fetchPublications();
-  }, []);
-
-  if (loading) return <div className="py-12 text-center text-muted-foreground font-serif">Loading publications...</div>;
-  if (error) return <div className="py-12 text-center text-red-500 font-serif">{error}</div>;
 
   const handlePublicationClick = (publication: Publication) => {
     if (publication.pdf) {

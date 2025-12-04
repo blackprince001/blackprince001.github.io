@@ -10,8 +10,8 @@ const config: Config = {
 	theme: {
 		extend: {
 			fontFamily: {
-				serif: ["var(--font-sans)", "ET Book", "Source Serif Pro", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Garamond", "Georgia", "Palatino", "Book Antiqua", "serif", "Noto Emoji", "Quivira"],
-				sans: ["var(--font-sans)", "ET Book", "Source Serif Pro", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Garamond", "Georgia", "Palatino", "Book Antiqua", "serif", "Noto Emoji", "Quivira"],
+				serif: ["var(--font-sans)", "TeX Gyre Pagella", "Pagella", "ET Book", "Source Serif Pro", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Garamond", "Georgia", "Palatino", "Book Antiqua", "serif", "Noto Emoji", "Quivira"],
+				sans: ["var(--font-sans)", "TeX Gyre Pagella", "Pagella", "ET Book", "Source Serif Pro", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Garamond", "Georgia", "Palatino", "Book Antiqua", "serif", "Noto Emoji", "Quivira"],
 				mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
 			},
 			colors: {

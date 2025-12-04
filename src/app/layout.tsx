@@ -7,17 +7,27 @@ import Footer from "@/components/ui/footer"
 import { ThemeProvider } from "@/components/theme-provider"
 import { cn } from "@/lib/utils";
 
-const etBook = localFont({
+const pagella = localFont({
   src: [
     {
-      path: "../fonts/et-book-roman-line-figures.ttf",
+      path: "../fonts/texgyrepagella-regular.otf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../fonts/et-book-semi-bold-old-style-figures.ttf",
-      weight: "600",
+      path: "../fonts/texgyrepagella-italic.otf",
+      weight: "400",
+      style: "italic",
+    },
+    {
+      path: "../fonts/texgyrepagella-bold.otf",
+      weight: "700",
       style: "normal",
+    },
+    {
+      path: "../fonts/texgyrepagella-bolditalic.otf",
+      weight: "700",
+      style: "italic",
     },
   ],
   variable: "--font-sans",
@@ -54,8 +64,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={etBook.variable}>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", etBook.variable)}>
+    <html lang="en" suppressHydrationWarning className={pagella.variable}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", pagella.variable)}>
         <div className="Root flex min-h-screen flex-col">
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <script async src="https://0.observe.so/script.js" data-app="cm1ox74dc01sga2mnzpda7460"></script>
