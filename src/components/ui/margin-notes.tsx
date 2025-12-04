@@ -85,14 +85,15 @@ export const MarginNoteMarker: React.FC<MarginNoteMarkerProps> = ({ id, number, 
   }, [number])
 
   useEffect(() => {
+    const currentNoteId = noteId.current
     if (markerRef.current)
     {
-      registerNote(noteId.current, noteNumber, children, markerRef as React.RefObject<HTMLElement>)
+      registerNote(currentNoteId, noteNumber, children, markerRef as React.RefObject<HTMLElement>)
     }
     return () => {
-      unregisterNote(noteId.current)
+      unregisterNote(currentNoteId)
     }
-  }, [noteId.current, noteNumber, children, registerNote, unregisterNote])
+  }, [noteNumber, children, registerNote, unregisterNote])
 
   return (
     <>
@@ -119,7 +120,11 @@ export const MarginNoteMarker: React.FC<MarginNoteMarkerProps> = ({ id, number, 
 
 export const AutoNumberedMarginNote: React.FC<Omit<MarginNoteMarkerProps, "number">> = ({ id, children, className }) => {
   const uniqueId = id || `auto-${++noteIdCounter}`
-  return <MarginNoteMarker id={uniqueId} children={children} className={className} />
+  return (
+    <MarginNoteMarker id={uniqueId} className={className}>
+      {children}
+    </MarginNoteMarker>
+  )
 }
 
 interface MarginNotesContainerProps {

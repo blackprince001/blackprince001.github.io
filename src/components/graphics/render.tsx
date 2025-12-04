@@ -28,11 +28,10 @@ function STLRender(prop: RenderProp) {
         orbitControls
         shadows
         url={prop.url}
-        groundColor="#2a2a2a"
-        gridLineColor="#888888"
-        showGrid
-        modelColor="#aaaaaa"
-        backgroundColor="transparent"
+        modelProps={{
+          color: "#aaaaaa"
+        }}
+        showAxes
       />
     </div>
   );
