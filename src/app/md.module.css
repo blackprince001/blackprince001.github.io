@@ -67,20 +67,19 @@
     text-align: center;
   }
 
-  & img {
-    /* Moderate breakout effect: extend slightly beyond container */
+  /* & img {
     width: 120%;
     max-width: 52rem;
     height: 32rem;
     border-radius: 0.25rem;
     margin-top: 2rem;
     margin-bottom: 2rem;
-  }
+  } */
 
   & video {
     /* Moderate breakout effect: extend slightly beyond container */
     max-width: 84rem;
-    margin-left: -20%;
+    margin-left: -10%;
     height: 42rem;
     border-radius: 0.25rem;
     margin-top: 2rem;

@@ -16,7 +16,14 @@ Odometry comes from the Greek words öðóç [odos] (route) and μsτpov [metron
 
 The odometry problem can be formulated as: given an initial pose $q$ of $t_0$ at some initial time, find the pose at any future time $t_0+\Delta t.$
 
-<center><img className="rounded-lg" src="../robotics/odom.webp" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+    src="../robotics/odom.webp" 
+    alt="Odometry problem visualization"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 Given:
 
@@ -42,7 +49,14 @@ Imagine a robot with two wheels driven independently by motors, like a different
 
 Although there are various implementations, the operation principle of wheel encoders is simple. We can utilize markers on the wheels to work it out. Knowing how many markers there are in a whole circumference, we can derive how much each wheel rotated by just counting the pulses in each of the k-th time interval.
 
-<center><img className="rounded-lg" src="../robotics/odom_wheel.webp" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+    src="../robotics/odom_wheel.webp" 
+    alt="Wheel encoder visualization"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 This means Wheel rotation (in $\Delta t_k){:}\Delta\phi_k=N_k\cdot\boldsymbol{\alpha}$ where $\alpha=\frac{2\pi}{N_{tot}}$ radians for one pulse.
 

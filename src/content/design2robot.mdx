@@ -38,13 +38,34 @@ Transforming your static CAD models into dynamic, simulatable robots isn't just 
 CAD Design Design the robot in Fusion 360, ensuring the orientation is set up correctly (x-axis forward, y-axis to the side, and z-axis up) so the robot moves as expected. The design process involves:
 
     *   Creating a base for the robot (e.g., a square).
-    <center><img className="rounded-lg" src="../robotics/base_link.png" width="500" height="600"/></center>
+    <div className="flex justify-center my-8">
+      <img 
+        className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+        src="../robotics/base_link.png" 
+        alt="Robot base link"
+        style={{ height: 'auto' }}
+      />
+    </div>
     *   Designing and positioning the wheels.
     <ImageGrid srcs={["../robotics/wheels.png", "../robotics/wheels-2.png"]} />
     *   Adding caster wheels to prevent the robot from falling.
-    <center><img className="rounded-lg" src="../robotics/caster.png" width="500" height="600"/></center>
+    <div className="flex justify-center my-8">
+      <img 
+        className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+        src="../robotics/caster.png" 
+        alt="Caster wheel"
+        style={{ height: 'auto' }}
+      />
+    </div>
     *   Incorporating sensors like a LIDAR unit.
-    <center><img className="rounded-lg" src="../robotics/lidar.png" width="500" height="600"/></center>
+    <div className="flex justify-center my-8">
+      <img 
+        className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+        src="../robotics/lidar.png" 
+        alt="LIDAR sensor"
+        style={{ height: 'auto' }}
+      />
+    </div>
 
 
 ### Export Preparation
@@ -53,7 +74,14 @@ To prepare your model for export, start by organizing and naming each component 
 
 Next, assign realistic materials to each part. Using ABS plastic or a similar material for the body mimics the rigidity and appearance typical of plastic components, while assigning rubber to the wheels gives them realistic friction properties. These materials not only give your model a realistic look but also affect physical behavior in simulations, contributing to more accurate results. Once the materials are set, convert your parts into components in Fusion 360. Structuring the model into components enables each part to be transformed and joined individually, which is essential when defining the robot's movement and interactions.
 
-<center><img className="rounded-lg" src="../robotics/material.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+    src="../robotics/material.png" 
+    alt="Material assignment"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 
 Defining joints is the next step. For wheels, use revolute joints, allowing them to rotate around a fixed axis. This is critical for simulating wheel motion and enabling the robot to move. For components like the lidar, a rigid joint is appropriate since it should remain fixed relative to the body. Make sure the joints are oriented correctly, as this directly influences the realism and accuracy of your simulation in Gazebo.

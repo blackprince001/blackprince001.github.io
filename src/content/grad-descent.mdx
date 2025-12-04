@@ -17,17 +17,45 @@ Here's how it works in the context of linear regression, which is the focus of t
 - 3. **Update the parameters:** Adjust the parameters (θ) by taking a small step in the direction opposite to the gradient. The size of this step is determined by the **learning rate (η)**.
 - 4. **Repeat until convergence:** Continue steps 2 and 3 until the parameters converge to a minimum of the cost function. This is usually when further updates result in negligible improvement in the model's performance.
 
-<center><img src="../grad/grad-1.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../grad/grad-1.png" 
+    alt="Gradient descent concept"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 > Learning Rate
 > An important parameter in gradient descent is the size of the steps, determined by the learning rate hyperparameter. If the learning rate is too small, then the algorithm will have to go through many iterations to converge, which will take a long time
 > 
-> <center><img src="../grad/grad-2.png" width="500" height="600"/></center>
-> <center><img src="../grad/grad-3.png" width="500" height="600"/></center>
+> <div className="flex justify-center my-8">
+>   <img 
+>     src="../grad/grad-2.png" 
+>     alt="Learning rate too small"
+>     className="max-w-full h-auto object-contain rounded-lg shadow-md"
+>     style={{ height: 'auto' }}
+>   />
+> </div>
+> <div className="flex justify-center my-8">
+>   <img 
+>     src="../grad/grad-3.png" 
+>     alt="Learning rate too large"
+>     className="max-w-full h-auto object-contain rounded-lg shadow-md"
+>     style={{ height: 'auto' }}
+>   />
+> </div>
 
 **Not all cost functions are simple**: Instead of resembling a smooth bowl, some cost functions can have irregular landscapes with holes, ridges, and plateaus. This irregularity can lead to challenges in converging to the global minimum.
 
-<center><img src="../grad/grad-4.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../grad/grad-4.png" 
+    alt="Irregular cost function landscape"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 Image Alt<Sidenote number={1}>gradient descent algorithms can face when trying to reach the global minimum of a cost function.</Sidenote>
 
 **Local Minimum Trap:** A key challenge arises when the cost function has local minima. A local minimum is a point where the function is lower than its immediate surroundings but not necessarily the lowest point overall. If the algorithm starts at or near a local minimum, it might converge there and get stuck, failing to find the global minimum.
@@ -98,7 +126,14 @@ This type calculates the gradient of the cost function using the entire training
 
 In contrast to batch gradient descent, SGD randomly selects a single instance from the training set in each iteration and computes the gradient based on that single instance. While this makes SGD much faster, especially for large datasets, the updates to the parameter values become noisy and the path toward the minimum less stable. Despite not converging as smoothly as batch gradient descent, SGD might be better at escaping local minima due to its stochastic nature.
  
-<center><img src="../grad/grad-5.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../grad/grad-5.png" 
+    alt="Stochastic Gradient Descent"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 
 Stochastic Gradient Descent Implementation python
@@ -140,7 +175,14 @@ This approach combines aspects of both batch and stochastic gradient descent. In
 
 - **Disadvantages:** May not find the exact minimum, but might settle in a region close to it. The choice of mini-batch size can impact performance.
 
-<center><img src="../grad/grad-6.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../grad/grad-6.png" 
+    alt="Mini-batch Gradient Descent"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 ## Choosing the Right Gradient Descent Algorithm
 

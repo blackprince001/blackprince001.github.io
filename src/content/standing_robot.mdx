@@ -1,0 +1,237 @@
+---
+title: "A Deep Dive into mjlab and GPU-Accelerated RL"
+publishDate: "November 25, 2025"
+tag: "Robotics"
+---
+
+I recently went down a technical rabbit hole exploring **mjlab**, a new open-source framework that is quietly solving one of the biggest headaches in robotics reinforcement learning (RL): the trade-off between performance and usability.<AutoNumberedSidenote>Software reference: <a href="https://github.com/mujocolab/mjlab">MJLab: Isaac Lab API, powered by MuJoCo-Warp</a> by Kevin Zakka, Brent Yi, Qiayuan Liao, and Louis Le Lay (2025).</AutoNumberedSidenote>Existing tools often force a choice. You can have excellent RL abstractions (like Isaac Lab) but suffer through heavy, monolithic installations. Or, you can have raw speed (like MJX) but deal with steep learning curves and collision scaling issues.<AutoNumberedSidenote>Comparative frameworks: <a href="https://github.com/isaac-sim/IsaacLab">Isaac Lab</a> by NVIDIA and <a href="https://github.com/google-deepmind/mujoco/tree/main/mjx">MJX</a> by Google DeepMind.</AutoNumberedSidenote>
+
+`mjlab` attempts to hit the sweet spot. It combines **Isaac Lab's proven manager-based API** with **MuJoCo Warp**, a GPU-accelerated physics engine. The result is "bare metal" performance with a developer experience that actually feels modern.
+
+I wanted to test if this promise held up. My goal was to take a Unitree G1 humanoid and train a custom policy to stand still—building the task, training the network, and deploying the result entirely within this new ecosystem.
+
+## The Architecture: Why mjlab is Different
+
+Before writing code, I dug into how `mjlab` is structured. It's not just a wrapper; it's a re-architecture of the simulation loop.
+
+*   **The Physics:** It uses MuJoCo Warp to run thousands of environments in parallel on the GPU. Unlike standard MuJoCo (CPU-bound), this allows for massive throughput without the overhead of USD-based pipelines.
+*   **The Abstraction:** It adopts a "Manager-Based" architecture. Instead of writing a monolithic environment class, you compose tasks using Managers (Observation, Reward, Action).
+*   **The Tooling:** It relies on `uv` for package management. This might seem minor, but installing the entire stack takes seconds, not hours.<AutoNumberedSidenote>Package management provided by <a href="https://github.com/astral-sh/uv">uv</a>, an extremely fast Python package installer and resolver.</AutoNumberedSidenote>
+
+## The Baseline: When Gravity Wins
+
+I started by establishing a baseline. I wanted to see the Unitree G1's default behavior in the physics engine without any neural network stabilizing it.<AutoNumberedSidenote>Robot specifications available at <a href="https://www.unitree.com/g1">Unitree Robotics G1 Humanoid</a>.</AutoNumberedSidenote>
+
+Using the `play` script with a `random` agent, I launched the native viewer:
+
+```bash
+uv run play Mjlab-Velocity-Flat-Unitree-G1 --agent random --viewer native
+```
+
+<div>
+    <video
+        controls
+        autoplay
+        loop
+        muted
+    >
+        <source src="../robotics/no_policy.mp4" type="video/webm" />
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+This visual confirms the challenge. The G1 has 29 degrees of freedom. Without a control policy, gravity takes over instantly. The simulation is running at 60FPS in the viewer, but under the hood, the physics stepper is handling contact dynamics that make "just standing up" a complex control problem.
+
+## Engineering the Task
+
+To solve this, I didn't want to write a new environment from scratch. I leveraged the modular nature of `mjlab`.
+
+The framework already has a `Velocity` task designed to make robots walk. I realized I could "hack" this task. By overriding the command generator to essentially request a velocity of `0.0 m/s` across all axes, I could repurpose the walking logic into a balancing logic.
+
+I created a custom configuration file `src/mjlab/tasks/velocity/config/g1/standing.py`. Here is the implementation:
+
+```python
+from mjlab.tasks.velocity.config.g1.env_cfgs import unitree_g1_flat_env_cfg
+from mjlab.tasks.velocity.rl import VelocityOnPolicyRunner
+from mjlab.tasks.registry import register_mjlab_task
+
+def unitree_g1_standing_env_cfg(play: bool = False):
+    # 1. Inherit the base configuration
+    cfg = unitree_g1_flat_env_cfg(play=play)
+    
+    # 2. Constrain the Command Manager
+    # We override the velocity ranges to be strictly zero.
+    cfg.commands["twist"].ranges.lin_vel_x = (0.0, 0.0)
+    cfg.commands["twist"].ranges.lin_vel_y = (0.0, 0.0)
+    cfg.commands["twist"].ranges.ang_vel_z = (0.0, 0.0)
+    
+    # 3. Force the "Standing" flag
+    # This ensures the reward manager prioritizes posture over movement.
+    cfg.commands["twist"].rel_standing_envs = 1.0 
+    
+    return cfg
+
+# 4. Register the task via the Plugin System
+register_mjlab_task(
+    task_id="Mjlab-Standing-Flat-Unitree-G1",
+    env_cfg=unitree_g1_standing_env_cfg(),
+    play_env_cfg=unitree_g1_standing_env_cfg(play=True),
+    rl_cfg=unitree_g1_ppo_runner_cfg(),
+    runner_cls=VelocityOnPolicyRunner,
+)
+```
+
+This snippet highlights the elegance of the system. I didn't touch C++ code or raw physics arrays. I simply configured the **Command Manager** to align with my goal.
+
+Under the hood, this configuration shifts the optimization landscape of the Reinforcement Learning agent. By setting the command $\mathbf{v}_{cmd} = \mathbf{0}$, the tracking reward simplifies to a penalty on *any* movement:
+
+<center>$$ r_{track} = \exp\left(-\frac{\lVert\mathbf{v}_{t}\rVert^2}{\sigma_{vel}^2}\right) $$</center>
+
+Simultaneously, setting `rel_standing_envs = 1.0` tightens the tolerance on the posture reward. In walking tasks, the robot is allowed to deviate from its default joint angles $q_{default}$ to achieve gait. In standing mode, the standard deviation $\sigma_{stand}$ is significantly reduced, forcing the policy to adhere strictly to the reference pose:<AutoNumberedSidenote>This exponential reward formulation is adapted from the <strong>Legged Gym</strong> framework. See: Rudin et al. (2021), <a href="https://arxiv.org/abs/2109.11978">"Learning to Walk in Minutes Using Massively Parallel Deep Reinforcement Learning"</a>.</AutoNumberedSidenote>
+
+<center>$$ r_{pose} = \exp\left(-\frac{\sum_{j} (q_{j,t} - q_{j,default})^2}{\sigma_{stand}^2}\right) \quad \text{where } \sigma_{stand} \ll \sigma_{walk}$$</center>
+
+The combination of these two terms forces the policy into a "minimum energy" basin: it must stop moving ($r_{track}$) while maintaining a rigid structure ($r_{pose}$) to maximize the cumulative reward.
+
+## The Training Stack (PPO on GPU)
+
+With the task registered, I initiated the training loop. This is where `mjlab` flexes its muscle.
+
+```bash
+uv run train Mjlab-Standing-Flat-Unitree-G1 --env.scene.num-envs 4096
+```
+
+Under the hood, `mjlab` spins up **4,096 parallel environments** on the GPU. It initializes a PPO (Proximal Policy Optimization) agent with an Actor-Critic network architecture (Layer sizes: 512 -> 256 -> 128).<AutoNumberedSidenote>Algorithm reference: <a href="https://arxiv.org/abs/1707.06347">Proximal Policy Optimization Algorithms</a> by Schulman et al. (2017).</AutoNumberedSidenote>
+
+Because the data never leaves the GPU (thanks to MuJoCo Warp), the iteration speed is blistering. The graph below shows the training progress.
+
+We can clearly see the difference between a successful run (Blue) and a failed/early run (Pink) in the metrics:
+
+<div className="flex flex-col items-center">
+  <img 
+    src="../robotics/comp-train-mean.png" 
+    alt="Mean Reward Comparison"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Total Reward:</strong> The Blue line shows steady learning. The Pink line shows the policy collapsing.
+  </div>
+</div>
+<div className="flex flex-col items-center">
+  <img 
+    src="../robotics/comp-reward-standing.png" 
+    alt="Upright Reward Comparison"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Upright Reward:</strong> The specific signal for "keeping the torso vertical."
+    <AutoNumberedSidenote>
+      <strong>Interpreting the Graphs:</strong> The "Mean Reward" (Left) is the aggregate. The "Upright" component (Right) specifically tracks torso orientation. Notice how the Blue line (Training Policy) grows linearly as the robot learns to fight gravity.
+    </AutoNumberedSidenote>
+  </div>
+</div>
+
+
+We can also look at the hardware utilization to verify the "bare metal" performance claims. The GPU memory allocation plateaus instantly, indicating efficient pre-allocation.
+
+<div className="flex justify-center my-12">
+    <img 
+      className="rounded-lg shadow-md max-w-full h-auto object-contain" 
+      src="../robotics/comp-gpu-standing.png" 
+      alt="GPU Utilization Stats"
+      style={{ height: 'auto' }}
+    />
+</div>
+
+*Analysis: You can see the distinct "knee" in the curve where the policy discovers the stable region. The reward signal transitions from minimizing falling penalties to maximizing posture rewards.*
+
+## Intermediate Results: The "Wobbly" Phase
+
+I interrupted the training early to inspect a checkpoint. I wanted to see what a "partially learned" policy looked like.
+
+<div>
+    <video
+        controls
+        autoplay
+        loop
+        muted
+    >
+        <source src="../robotics/wobbly.mp4" type="video/webm" />
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+This state is fascinating. The robot has learned that "falling is bad," but it hasn't mastered the fine-grained motor control. We can actually see this failure mode in the telemetry of the **Initial Standing Policy**: 
+
+
+<div className="flex flex-col items-center">
+  <img 
+    className="rounded-lg border border-gray-200 shadow-md max-w-full h-auto object-contain" 
+    src="../robotics/woobly-train.png" 
+    alt="Episode Length Dropping"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Episode Length:</strong> The robot stays alive for shorter periods over time.
+  </div>
+</div>
+<div className="flex flex-col items-center">
+  <img 
+    className="rounded-lg border border-gray-200 shadow-md max-w-full h-auto object-contain" 
+    src="../robotics/loss-woobly.png" 
+    alt="Entropy/Loss Dropping"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Entropy Loss:</strong> The policy is becoming confident in the <em>wrong</em> strategy.
+    <AutoNumberedSidenote>
+    <strong>Why did it get worse?</strong> The graph on the left shows "Episode Length." Ideally, this should stay at the maximum. Here, it drops sharply. This implies the policy found a local minimum where it was confident (Low Entropy, right graph) in a strategy that actually caused it to fall over.
+    </AutoNumberedSidenote>
+  </div>
+</div>
+
+
+## Final Deployment: A Stable Policy
+
+After letting the training converge (150 iterations), I deployed the final policy using the native viewer.
+
+```bash
+uv run play Mjlab-Standing-Flat-Unitree-G1 \
+  --checkpoint_file logs/rsl_rl/g1_velocity/.../model_150.pt \
+  --viewer native
+```
+
+<div>
+    <video
+        controls
+        autoplay
+        loop
+        muted
+    >
+        <source src="../robotics/standing_policy.mp4" type="video/webm" />
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+The difference is night and day. The policy has learned to effectively fight gravity with minimal joint movement. The `native` viewer allows us to visualize the contacts and forces in real-time, confirming that the robot is actively balancing, not just frozen in place.
+
+## Advanced Engineering Features
+
+Beyond this specific task, my exploration revealed several advanced features that make `mjlab` production-ready for researchers:
+
+### The NaN Guard
+One of the most frustrating parts of RL is numerical instability. `mjlab` includes a specialized NaN Guard that buffers simulation states. If a `NaN` or `Inf` is detected in `qpos` or `qvel`, it dumps the state to disk *without* pausing the simulation flow (to avoid spamming logs). You can then inspect the exact frame where the physics broke using `uv run viz-nan`.
+
+### Sim-to-Real: Domain Randomization
+For a policy to work on a real robot, it needs robustness. `mjlab` supports domain randomization out of the box via `EventTerm` configurations. You can randomize parameters like `geom_friction`, `body_mass`, and actuator gains (`kp`, `kd`) directly in the config, ensuring the policy doesn't overfit to the simulation.
+
+### Custom Robot Support
+While the framework comes with Unitree robots, importing custom hardware is straightforward provided you use the MJCF format. If you are coming from ROS/URDF, you will need to convert your models first.<AutoNumberedSidenote>For model conversion, <a href="https://github.com/google-deepmind/mujoco_menagerie">MuJoCo Menagerie</a> is the recommended resource for high-quality, pre-converted assets.</AutoNumberedSidenote>
+
+## Conclusion
+
+`mjlab` represents a shift in how we approach sim-to-real workflows. By stripping away the bloat and focusing on the intersection of modern RL APIs and fast physics, it allows researchers to iterate in minutes rather than hours.
+
+From a raw "Hello World" to a fully trained, stable humanoid policy, the friction was minimal—and the performance was undeniable.

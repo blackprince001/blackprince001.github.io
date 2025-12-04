@@ -33,13 +33,27 @@ One approach to addressing the curse of dimensionality is **dimensionality reduc
 
 PCA seeks to identify a lower-dimensional subspace that captures the maximum variance in the original high-dimensional data.
 <AutoNumberedSidenote>Image reference from <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/">Hands On Machine Learning Book by Aurélien Géron</a></AutoNumberedSidenote>
-<center><img className="rounded-lg" src="../pca/pca-initial.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+    src="../pca/pca-initial.png" 
+    alt="PCA initial data"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 This is done by finding the eigenvectors of the data covariance matrix. The eigenvectors corresponding to the largest eigenvalues capture the dimensions of greatest variance, and these eigenvectors form the principal components.
 
 Projecting the data onto the principal components results in a lower-dimensional representation of the data that retains as much variance as possible.
 <AutoNumberedSidenote>Image reference from <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/">Hands On Machine Learning Book by Aurélien Géron</a></AutoNumberedSidenote>
-<center><img className="rounded-lg" src="../pca/pca-final.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+    src="../pca/pca-final.png" 
+    alt="PCA final projection"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 ### Mathematical Formulation
 
@@ -83,7 +97,14 @@ For instance:
 - After fitting the PCA transformer, the explained variance ratios for the first two components are 0.76 and 0.15, respectively.
 - This output means that 76% of the dataset's variance lies along the first PC, and 15% lies along the second PC.
 
-<center><img className="rounded-lg" src="../pca/pca-preserve.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+    src="../pca/pca-preserve.png" 
+    alt="PCA variance preservation"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 This leaves about 9% for the third PC. This information can be used to decide whether to drop the third PC as it carries little information.<AutoNumberedSidenote>It seems reasonable to select the axis that preserves the maximum amount of variance.</AutoNumberedSidenote>
 
@@ -98,7 +119,14 @@ After dimensionality reduction, the training set takes up much less space. For e
 
 **It is also possible to decompress the reduced dataset back to 784 dimensions by applying the inverse transformation of the PCA projection.** This will not give you back the original data, since the projection lost a bit of information (within the 5% variance that was dropped), but it will likely be close to the original data.
 <AutoNumberedSidenote>Image reference from <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/">Hands On Machine Learning Book by Aurélien Géron</a></AutoNumberedSidenote>
-<center><img className="rounded-lg" src="../pca/pca-compression.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    className="max-w-full h-auto object-contain rounded-lg shadow-md" 
+    src="../pca/pca-compression.png" 
+    alt="PCA compression example"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 **The mean squared distance between the original data and the reconstructed data (compressed and then decompressed) is called the reconstruction error.**
 

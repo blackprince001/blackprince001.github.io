@@ -18,7 +18,14 @@ The collection of all instructions that a computer can execute is known as its *
 
 Every instruction consists of several key elements:
 
-<center><img src="../isa/instruction.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../isa/instruction.png" 
+    alt="Instruction anatomy"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 - **Opcode (Operation Code):** Specifies the operation to be performed (e.g., add, subtract, load, store).
 - **Source Operand(s):** The input(s) for the operation. An instruction can have one or more source operands.
@@ -52,7 +59,14 @@ In this example, `a`, `b`, and `c` are operands. The `add` instruction tells the
 
 The MIPS architecture uses 32 registers, collectively known as the **register file**. Registers are incredibly fast, but they are limited in number. This is why programs also use memory to store data. By combining registers and memory, a program can access a large amount of data relatively quickly.
 
-<center><img src="../isa/register-file.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../isa/register-file.png" 
+    alt="MIPS Register File"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 ### Memory: The Larger Storage
 
@@ -62,11 +76,25 @@ While registers are fast, they are limited in number. Memory, on the other hand,
 
 - **Word Addressable Memory:** In this model, each word (typically 32 bits) has a unique address. For example, the word `0xF2F1AC07` might be stored at address `00000001`.
   
-  <center><img src="../isa/word-addr.png" width="500" height="600"/></center>
+  <div className="flex justify-center my-8">
+    <img 
+      src="../isa/word-addr.png" 
+      alt="Word Addressable Memory"
+      className="max-w-full h-auto object-contain rounded-lg shadow-md"
+      style={{ height: 'auto' }}
+    />
+  </div>
 
 - **Byte Addressable Memory:** In MIPS, memory is byte-addressable, meaning each byte has a unique address. Words are typically 4 bytes long, so the address of a word is four times its word number.
 
-  <center><img src="../isa/byte-addr.png" width="500" height="600"/></center>
+  <div className="flex justify-center my-8">
+    <img 
+      src="../isa/byte-addr.png" 
+      alt="Byte Addressable Memory"
+      className="max-w-full h-auto object-contain rounded-lg shadow-md"
+      style={{ height: 'auto' }}
+    />
+  </div>
 
 For example, the following MIPS assembly code reads and writes words from memory:
 
@@ -91,29 +119,64 @@ MIPS instructions come in three formats, each designed for different types of op
 
 1. **R-type (Register-type):** Used for operations that involve three registers. The instruction format includes fields for the opcode, source registers, destination register, and a shift amount.
 
-   <center><img src="../isa/r-type.png" width="500" height="600"/></center>
+   <div className="flex justify-center my-8">
+     <img 
+       src="../isa/r-type.png" 
+       alt="R-type instruction format"
+       className="max-w-full h-auto object-contain rounded-lg shadow-md"
+       style={{ height: 'auto' }}
+     />
+   </div>
 
    - **Opcode:** Determines the operation (e.g., add, subtract).
    - **Source Registers (rs, rt):** The registers containing the operands.
    - **Destination Register (rd):** The register where the result will be stored.
    - **Shift Amount (shamt):** Used in shift operations to specify the number of bits to shift.
 
-   <center><img src="../isa/r-type mips.png" width="500" height="600"/></center>
+   <div className="flex justify-center my-8">
+     <img 
+       src="../isa/r-type mips.png" 
+       alt="R-type MIPS example"
+       className="max-w-full h-auto object-contain rounded-lg shadow-md"
+       style={{ height: 'auto' }}
+     />
+   </div>
 
 2. **I-type (Immediate-type):** Used for operations that involve two registers and an immediate value. The immediate value is a 16-bit constant embedded in the instruction.
 
-   <center><img src="../isa/i-type.png" width="500" height="600"/></center>
+   <div className="flex justify-center my-8">
+     <img 
+       src="../isa/i-type.png" 
+       alt="I-type instruction format"
+       className="max-w-full h-auto object-contain rounded-lg shadow-md"
+       style={{ height: 'auto' }}
+     />
+   </div>
 
    - **Opcode:** Determines the operation (e.g., add immediate, load word).
    - **Source Register (rs):** The register containing the first operand.
    - **Destination Register (rt):** The register where the result will be stored.
    - **Immediate (imm):** A 16-bit constant used in the operation.
 
-   <center><img src="../isa/i-types mips.png" width="500" height="600"/></center>
+   <div className="flex justify-center my-8">
+     <img 
+       src="../isa/i-types mips.png" 
+       alt="I-type MIPS examples"
+       className="max-w-full h-auto object-contain rounded-lg shadow-md"
+       style={{ height: 'auto' }}
+     />
+   </div>
 
 3. **J-type (Jump-type):** Used for jump instructions that change the program counter to a new address. The instruction contains a 26-bit address field.
 
-   <center><img src="../isa/j-type.png" width="500" height="600"/></center>
+   <div className="flex justify-center my-8">
+     <img 
+       src="../isa/j-type.png" 
+       alt="J-type instruction format"
+       className="max-w-full h-auto object-contain rounded-lg shadow-md"
+       style={{ height: 'auto' }}
+     />
+   </div>
 
 ### Connecting the Dots: How It All Fits Together
 

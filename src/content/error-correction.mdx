@@ -8,7 +8,14 @@ Error detection and correction techniques in the link layer involve augmenting d
 
 The receiver's challenge is to determine whether D' is the same as the original D given that it has received D' and EDC'. Error detection and correction techniques allow the receiver to sometimes detect that bit errors have occurred. Even with the use of error-detection bits, there still may be undetected bit errors. The link layer also involves a combination of hardware and software, where software meets hardware, to implement error detection and correction services.
 
-<center><img src="../edc/EDC.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../edc/EDC.png" 
+    alt="Error Detection and Correction overview"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 ## Techniques
 
@@ -18,11 +25,25 @@ Parity checks are a simple form of error detection used in data transmission. In
 
 At the receiver's end, the number of 1s in the received data plus the parity bit is counted. If the count does not match the expected parity (even or odd), it indicates that at least one bit error has occurred. However, it's important to note that parity checks are not effective under burst error conditions, where errors are clustered together, as the probability of undetected errors can be high.
 
-<center><img src="../edc/single-parity.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../edc/single-parity.png" 
+    alt="Single parity check"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 In a more advanced application, a **two-dimensional parity scheme** can be used. This involves dividing the data into rows and columns, and computing a parity value for each row and column. This allows for the detection and correction of single bit errors and the detection (but not correction) of any combination of two errors in the data packet.
 
-<center><img src="../edc/multi-parity.png" width="500" height="600"/></center>
+<div className="flex justify-center my-8">
+  <img 
+    src="../edc/multi-parity.png" 
+    alt="Two-dimensional parity scheme"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 In summary, parity checks are a basic error detection technique used in data transmission to identify errors in the transmitted data by adding a single bit for even or odd parity and checking for consistency at the receiver's end.
 
