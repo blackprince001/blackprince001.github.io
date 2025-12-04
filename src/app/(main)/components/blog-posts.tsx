@@ -9,7 +9,7 @@ async function BlogPosts() {
   return (
     <section className="space-y-6">
       <div className="flex justify-between items-baseline border-b border-border pb-2">
-        <h2 className="text-2xl font-serif font-bold tracking-tight">Recent Writing</h2>
+        <h2>Recent Writing</h2>
         <Link href="/blog" className="text-sm font-sans text-muted-foreground hover:text-foreground hover:underline underline-offset-4">
           View all &rarr;
         </Link>

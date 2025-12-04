@@ -22,7 +22,7 @@ interface CollapsibleCategoryProps {
 export function CollapsibleCategory({ title, items }: CollapsibleCategoryProps) {
   return (
     <div className="mb-8">
-      <h3 className="text-xl font-serif font-bold mb-4 border-b border-border pb-1">
+      <h3 className="mb-4 border-b border-border pb-1">
         {title} <span className="text-sm font-normal text-muted-foreground ml-2">({items.length})</span>
       </h3>
 

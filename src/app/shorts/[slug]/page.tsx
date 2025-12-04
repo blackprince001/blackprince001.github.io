@@ -89,7 +89,7 @@ export default async function ShortPage({ params }: ShortPageProps) {
         </div>
 
         <header className="space-y-4">
-          <h1 className="text-3xl font-semibold tracking-tight sm:text-4xl">
+          <h1>
             {frontmatter.title}
           </h1>
           {frontmatter.summary && (
@@ -137,7 +137,7 @@ export default async function ShortPage({ params }: ShortPageProps) {
         )}
 
         <section className="pt-10 border-t border-border/60">
-          <h2 className="text-lg font-semibold tracking-tight mb-4">Comments</h2>
+          <h2 className="mb-4">Comments</h2>
           <Comments />
         </section>
       </article>

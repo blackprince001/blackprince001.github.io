@@ -20,11 +20,11 @@ export function ShortsContent({ shorts, availableTags, activeTag }: ShortsConten
 
   return (
     <main className="w-full py-16">
-      <div className="mx-auto grid max-w-7xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,280px)_1fr] lg:px-8">
+      <div className="mx-auto grid max-w-5xl gap-12 px-4 sm:px-6 lg:grid-cols-[minmax(0,280px)_1fr] lg:px-8">
         <aside className="space-y-8">
           <header className="space-y-4">
             <span className="uppercase tracking-wide text-xs text-muted-foreground">short form</span>
-            <h1 className="text-4xl font-serif font-bold tracking-tight">Shorts</h1>
+            <h1>Shorts</h1>
             <p className="text-muted-foreground text-base leading-relaxed font-serif">
               Snapshots of ideas, course corrections, and mental models I want to share while they are still unfolding.
               They capture direction and intent without waiting for a full essay.
@@ -79,7 +79,7 @@ export function ShortsContent({ shorts, availableTags, activeTag }: ShortsConten
                   <header className="mb-4 space-y-2">
                     <div className="flex items-baseline justify-between gap-4">
                       <Link href={`/shorts/${item.slug}`} className="hover:underline underline-offset-4 decoration-muted-foreground/50 hover:decoration-primary">
-                        <h2 className="text-2xl font-serif font-bold tracking-tight text-primary">
+                        <h2 className="text-primary">
                           {frontmatter.title}
                         </h2>
                       </Link>
@@ -99,7 +99,7 @@ export function ShortsContent({ shorts, availableTags, activeTag }: ShortsConten
                       styles.blogContent,
                       "prose prose-lg max-w-none font-serif text-foreground",
                       // Minimalist prose styles
-                      "prose-headings:font-serif prose-headings:font-normal",
+                      "prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight",
                       "prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4",
                       "prose-blockquote:border-l-2 prose-blockquote:border-primary/20 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-muted-foreground"
                     )}

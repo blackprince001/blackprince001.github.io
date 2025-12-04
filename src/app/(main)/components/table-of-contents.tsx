@@ -44,14 +44,14 @@ const TOC: React.FC<TOCProps> = ({ content }) => {
 
   const renderTOCContent = () => (
     <nav>
-      <ol className={`${styles.markdown} space-y-2`}>
+      <ol className={`${styles.markdown} space-y-1.5`}>
         {headings.map((heading) => (
           <li
             key={heading.id}
-            style={{ marginLeft: `${(heading.level - 1) * 1}rem` }}
-            className="text-sm"
+            style={{ marginLeft: `${(heading.level - 1) * 0.75}rem` }}
+            className="text-sm leading-relaxed"
           >
-            <a href={`#${heading.id}`} className="hover:text-gray-300 transition-colors">
+            <a href={`#${heading.id}`} className="hover:text-primary transition-colors text-muted-foreground">
               {heading.text}
             </a>
           </li>
@@ -65,19 +65,18 @@ const TOC: React.FC<TOCProps> = ({ content }) => {
       {/* Mobile TOC */}
       <div className="lg:hidden w-full border rounded-lg mb-6">
         <details className="group w-full">
-          <summary className="list-none flex justify-between items-center cursor-pointer p-4">
+          <summary className="list-none flex justify-between items-center cursor-pointer p-3">
             <h6 className="text-sm font-bold">Table of Contents</h6>
-            <span className="transition-transform duration-200 group-open:rotate-180">▼</span>
+            <span className="transition-transform duration-200 group-open:rotate-180 text-sm">▼</span>
           </summary>
-          <div className="px-4 pb-4">
+          <div className="px-3 pb-3">
             {renderTOCContent()}
           </div>
         </details>
       </div>
 
       {/* Desktop TOC */}
-      <div className="hidden lg:block border rounded-lg p-4">
-        <h6 className="text-sm font-bold mb-4">Table of Contents</h6>
+      <div className="hidden lg:block">
         {renderTOCContent()}
       </div>
     </>

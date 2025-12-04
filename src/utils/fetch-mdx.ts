@@ -9,7 +9,7 @@ import MeshRenderSwitch from "@/components/graphics/render"
 import ImageGrid from "@/components/ui/image-grid"
 import { HelloFx, InequalitiesExample, Sigmoid } from "@/components/maths/graphing"
 import BlogSuggestion from "@/components/ui/blog-suggested"
-import Sidenote, { AutoNumberedSidenote } from "@/components/ui/sidenotes"
+import { MarginNoteMarker, AutoNumberedMarginNote } from "@/components/ui/margin-notes"
 import Quiz from "@/components/quiz/quiz"
 import PreviewLink from "@/components/ui/linked-previews"
 import LinkEmbed from "@/components/ui/link-embed"
@@ -54,8 +54,10 @@ const customComponents = {
   HelloFx,
   InequalitiesExample,
   Sigmoid,
-  Sidenote,
-  AutoNumberedSidenote,
+  Sidenote: MarginNoteMarker,
+  AutoNumberedSidenote: AutoNumberedMarginNote,
+  MarginNoteMarker,
+  AutoNumberedMarginNote,
   PreviewLink,
   LinkEmbed,
   RustRunner,

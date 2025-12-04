@@ -4,7 +4,7 @@ import MeshRenderSwitch from './components/graphics/render'
 import { HelloFx, InequalitiesExample, Sigmoid } from './components/maths/graphing'
 import ImageGrid from './components/ui/image-grid'
 import BlogSuggestion from './components/ui/blog-suggested'
-import Sidenote, { AutoNumberedSidenote } from './components/ui/sidenotes'
+import { MarginNoteMarker, AutoNumberedMarginNote } from './components/ui/margin-notes'
 import 'katex/dist/katex.css'
 import Quiz from './components/quiz/quiz'
 import PreviewLink from "./components/ui/linked-previews"
@@ -22,8 +22,10 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
         {...(props as ImageProps)}
       />
     ),
-    Sidenote,
-    AutoNumberedSidenote,
+    Sidenote: MarginNoteMarker,
+    AutoNumberedSidenote: AutoNumberedMarginNote,
+    MarginNoteMarker,
+    AutoNumberedMarginNote,
     MeshRenderSwitch,
     BlogSuggestion,
     ImageGrid,

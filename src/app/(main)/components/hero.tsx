@@ -6,9 +6,9 @@ function HeroSection() {
   return (
     <section className="py-12">
       <div className="max-w-5xl">
-        <h1 className="text-5xl font-serif font-bold mb-8 tracking-tight">
-          blackprince
-        </h1>
+        <h2 className="mb-8">
+          Prince Kwabena Appiah Boadu
+        </h2>
 
         <div className="prose prose-lg text-foreground">
           <p className="font-serif text-xl leading-relaxed mb-6">

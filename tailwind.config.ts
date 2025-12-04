@@ -10,8 +10,9 @@ const config: Config = {
 	theme: {
 		extend: {
 			fontFamily: {
-				serif: ["var(--font-serif)", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Droid Serif", "Times New Roman", "Times", "serif", "Noto Emoji", "Quivira"],
-				sans: ["var(--font-sans)", "Source Sans 3", "Lucida Sans Unicode", "Helvetica", "Trebuchet MS", "sans-serif", "Noto Emoji", "Quivira"],
+				serif: ["var(--font-sans)", "ET Book", "Source Serif Pro", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Garamond", "Georgia", "Palatino", "Book Antiqua", "serif", "Noto Emoji", "Quivira"],
+				sans: ["var(--font-sans)", "ET Book", "Source Serif Pro", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Garamond", "Georgia", "Palatino", "Book Antiqua", "serif", "Noto Emoji", "Quivira"],
+				mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
 			},
 			colors: {
 				background: 'hsl(var(--background))',

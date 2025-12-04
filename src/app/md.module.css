@@ -2,23 +2,46 @@
 
 .blogContent {
   position: relative;
+  overflow: visible;
 
   /* Math equation handling */
   & .katex-display {
     padding: 1rem 0;
     overflow-x: auto;
     overflow-y: hidden;
+    max-width: 100%;
+    width: 100%;
+    box-sizing: border-box;
   }
 
-  /* Paragraph spacing - increased text size and improved spacing */
+  /* Prevent equations from causing page overflow on mobile */
+  @media (max-width: 640px) {
+    & .katex-display {
+      max-width: calc(100vw - 2rem);
+      margin-left: auto;
+      margin-right: auto;
+      padding-left: 0.5rem;
+      padding-right: 0.5rem;
+    }
+  }
+
+  /* Paragraph spacing - moderate text size increase */
   & p {
     margin: 1.5rem 0;
     /* Increased from 1rem */
-    line-height: 1.7;
-    /* Increased from 1.6 for better readability */
+    line-height: 1.65;
+    /* Balanced line height similar to gwern.net */
     font-size: 1.125rem;
-    /* Increased from 0.9rem */
-    /* Equivalent to text-lg in Tailwind */
+    /* Moderate increase: 1.125rem (19px at 17px base) */
+  }
+
+  /* Slightly larger text on desktop screens */
+  @media (min-width: 1280px) {
+    & p {
+      font-size: 1.1875rem;
+      /* Moderate increase: 1.1875rem (~20px at 17px base) */
+      line-height: 1.7;
+    }
   }
 
   /* Code block improvements */
@@ -33,9 +56,8 @@
 
   & code {
     font-size: 1rem;
-    /* Increased from 0.875rem */
+    /* Base code size */
     line-height: 1.6;
-    /* Increased from 1.5 */
   }
 
   /* Image container */
@@ -46,9 +68,44 @@
   }
 
   & img {
-    max-width: 100%;
-    height: auto;
-    border-radius: 0.5rem;
+    /* Moderate breakout effect: extend slightly beyond container */
+    width: 120%;
+    max-width: 52rem;
+    height: 32rem;
+    border-radius: 0.25rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  & video {
+    /* Moderate breakout effect: extend slightly beyond container */
+    max-width: 84rem;
+    margin-left: -20%;
+    height: 42rem;
+    border-radius: 0.25rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  /* Quiz component - fixed size and centered */
+  & .quiz {
+    max-width: 42rem;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+  }
+
+
+  /* Prevent overflow on smaller screens */
+  @media (max-width: 768px) {
+
+    & img,
+    & video {
+      width: 100%;
+      margin-left: 0;
+      max-width: 100%;
+    }
   }
 
   /* Table styles */
@@ -64,20 +121,24 @@
     padding: 0.75rem;
     /* Increased from 0.5rem */
     border: 1px solid var(--border);
+    font-size: 1.0625rem;
+    /* Moderate size matching body text */
   }
 
   & th {
     background: var(--muted);
     font-weight: 600;
+    font-size: 1.0625rem;
+    /* Moderate size matching body text */
   }
 
-  /* List styles - increased text size and spacing */
+  /* List styles - moderate text size increase */
   & ul {
     padding-left: 1.5rem;
     margin: 1.5rem 0;
     /* Increased from 1rem */
     font-size: 1.125rem;
-    /* Increased from 0.875rem */
+    /* Moderate increase matching paragraph size */
     /* list-style-type: disc; */
   }
 
@@ -86,7 +147,7 @@
     margin: 1.5rem 0;
     /* Increased from 1rem */
     font-size: 1.125rem;
-    /* Increased from 0.875rem */
+    /* Moderate increase matching paragraph size */
   }
 
   & li {
@@ -95,8 +156,9 @@
     padding-left: 0.5rem;
     position: relative;
     font-size: 1.125rem;
-    /* Increased from 0.875rem */
-    line-height: 1.6;
+    /* Moderate increase matching paragraph size */
+    line-height: 1.65;
+    /* Balanced line height */
     /* Added for better readability */
   }
 
@@ -111,13 +173,6 @@
     top: 0.1rem;
   }
 
-  & h3,
-  & h4,
-  & h5,
-  &h6 {
-    color: #F8D39C;
-    /* Updated header color */
-  }
 
   /* Custom number styling for ordered lists */
   & ol li::before {
@@ -137,7 +192,7 @@
     transition: background 0.2s ease;
   }
 
-  /* Blockquote styles - improved spacing and text size */
+  /* Blockquote styles - moderate spacing and text size */
   & blockquote {
     margin: 1.5rem 0;
     /* Increased from 1rem */
@@ -147,8 +202,8 @@
     background: var(--muted);
     border-radius: 0.5rem;
     font-size: 1.125rem;
-    /* Increased text size */
-    line-height: 1.6;
-    /* Better line height */
+    /* Moderate size matching paragraph text */
+    line-height: 1.65;
+    /* Balanced line height */
   }
 }

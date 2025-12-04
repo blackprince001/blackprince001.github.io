@@ -4,7 +4,7 @@ import { ReactNode, useRef, useEffect } from "react";
 import styles from '../../../../md.module.css';
 import TOC from "@/app/(main)/components/table-of-contents";
 import Comments from "@/app/(main)/components/comments";
-import { resetSidenoteCounter } from "@/components/ui/sidenotes";
+import { resetMarginNoteCounter, MarginNotesProvider, MarginNotesContainer } from "@/components/ui/margin-notes";
 import CicadaQuestion from "@/components/cicada-questions";
 import { formatDate, parseDate } from "@/utils/date";
 import { cn } from "@/lib/utils";
@@ -26,72 +26,80 @@ const BlogWrapper: React.FC<BlogWrapperProps> = ({
   const contentRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
-    resetSidenoteCounter();
+    resetMarginNoteCounter();
   }, []);
 
   return (
-    <div className="min-h-screen py-12">
-      <div className="max-w-5xl mx-auto px-5 lg:px-6 relative">
-        {/* Header */}
-        <header className="mb-10 border-b border-border pb-8">
-          <h1 className="text-4xl sm:text-5xl font-serif font-bold tracking-tight mb-4 leading-tight">
-            {title}
-          </h1>
-          <div className="flex items-center gap-4 text-muted-foreground font-mono text-sm">
-            <time dateTime={publishDate}>
-              {formatDate(parseDate(publishDate))}
-            </time>
-            <span>/</span>
-            <span className="uppercase tracking-wider">
-              {tag}
-            </span>
-          </div>
-        </header>
+    <MarginNotesProvider>
+      <div className="min-h-screen py-12">
+        <div className="w-full max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 relative">
+          {/* Header */}
+          <header className="mb-10 border-b border-border pb-8">
+            <h1>
+              {title}
+            </h1>
+            <div className="flex items-center gap-4 text-muted-foreground font-mono text-sm">
+              <time dateTime={publishDate}>
+                {formatDate(parseDate(publishDate))}
+              </time>
+              <span>/</span>
+              <span className="uppercase tracking-wider">
+                {tag}
+              </span>
+            </div>
+          </header>
 
-        {/* Sidebar / TOC Area */}
-        <div className="mb-10 p-6 bg-muted/30 rounded-sm border border-border/50">
-          <div className="mb-4">
-            <h2 className="text-sm font-bold uppercase tracking-widest text-muted-foreground">Contents</h2>
-          </div>
-          <TOC content={contentRef} />
+          {/* Sidebar / TOC Area */}
+          <div className="mb-10 p-4 bg-muted/30 rounded-sm border border-border/50">
+            <div className="mb-3">
+              <h2 className="text-xs font-bold uppercase tracking-widest text-muted-foreground">Contents</h2>
+            </div>
+            <TOC content={contentRef} />
 
-          <div className="mt-8">
-            <CicadaQuestion />
+            <div className="mt-6">
+              <CicadaQuestion />
+            </div>
           </div>
+
+          <main className="relative">
+            {/* Main content column - simplified, no grid needed */}
+            <div
+              className={cn(
+                styles.blogContent,
+                "prose prose-lg xl:prose-xl max-w-none font-serif",
+                // Allow carousel to break out - only hide overflow for mobile math
+                "xl:overflow-x-visible",
+                // Math equation styles
+                "prose-katex:overflow-x-auto prose-katex:overflow-y-hidden",
+                // Code block styles
+                "prose-pre:bg-muted/50 prose-pre:border prose-pre:border-border prose-pre:rounded-sm",
+                // Image styles
+                "prose-img:rounded-sm prose-img:mx-auto prose-img:border prose-img:border-border",
+                // Link styles
+                "prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4",
+                // Heading styles - use consistent global heading styles
+                "prose-headings:font-serif prose-headings:font-semibold prose-headings:tracking-tight prose-headings:scroll-mt-24"
+              )}
+              ref={contentRef}
+            >
+              <ImageLightbox>
+                {children}
+              </ImageLightbox>
+            </div>
+
+            <hr className="my-12 border-border" />
+
+            {/* Comments */}
+            <div className="pb-12">
+              <Comments />
+            </div>
+          </main>
         </div>
 
-        <main className="relative">
-          <div
-            className={cn(
-              styles.blogContent,
-              "prose prose-lg max-w-none font-serif",
-              // Math equation styles
-              "prose-katex:overflow-x-auto prose-katex:overflow-y-hidden",
-              // Code block styles
-              "prose-pre:bg-muted/50 prose-pre:border prose-pre:border-border prose-pre:rounded-sm",
-              // Image styles
-              "prose-img:rounded-sm prose-img:mx-auto prose-img:border prose-img:border-border",
-              // Link styles
-              "prose-a:text-primary prose-a:no-underline hover:prose-a:underline prose-a:underline-offset-4",
-              // Heading styles
-              "prose-headings:font-serif prose-headings:font-normal prose-headings:scroll-mt-24"
-            )}
-            ref={contentRef}
-          >
-            <ImageLightbox>
-              {children}
-            </ImageLightbox>
-          </div>
-
-          <hr className="my-12 border-border" />
-
-          {/* Comments */}
-          <div className="pb-12">
-            <Comments />
-          </div>
-        </main>
+        {/* Fixed margin notes container on the right */}
+        <MarginNotesContainer />
       </div>
-    </div>
+    </MarginNotesProvider>
   );
 };
 

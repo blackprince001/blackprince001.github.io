@@ -10,7 +10,7 @@ import {
 export default function Home() {
   return (
     <main className="min-h-screen w-full bg-background">
-      <div className="mx-auto flex w-full max-w-6xl flex-col gap-14 px-6 py-16 sm:px-10">
+      <div className="mx-auto flex w-full max-w-5xl flex-col gap-14 px-4 sm:px-6 lg:px-8 py-16">
         <ResumeSection
           title="Education"
           items={education}

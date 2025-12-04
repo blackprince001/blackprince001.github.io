@@ -99,8 +99,8 @@ const ProjectShowcase: React.FC = () => {
   if (error) return <div className="py-12 text-center text-red-500 font-serif">{error}</div>;
 
   return (
-    <main className="max-w-6xl mx-auto px-5 lg:px-6 py-12">
-      <h1 className="text-4xl font-serif font-bold mb-8 tracking-tight">Open Source Projects</h1>
+    <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <h1 className="mb-8">Open Source Projects</h1>
       <p className="text-lg font-serif leading-relaxed mb-8">
         Building software in the open as a mode of creative exploration.
       </p>
@@ -110,8 +110,8 @@ const ProjectShowcase: React.FC = () => {
         <button
           onClick={() => setSortBy('stars')}
           className={`pb-2 px-1 text-sm font-sans transition-colors ${sortBy === 'stars'
-              ? 'border-b-2 border-primary text-foreground'
-              : 'text-muted-foreground hover:text-foreground'
+            ? 'border-b-2 border-primary text-foreground'
+            : 'text-muted-foreground hover:text-foreground'
             }`}
         >
           Most Stars
@@ -119,8 +119,8 @@ const ProjectShowcase: React.FC = () => {
         <button
           onClick={() => setSortBy('recent')}
           className={`pb-2 px-1 text-sm font-sans transition-colors ${sortBy === 'recent'
-              ? 'border-b-2 border-primary text-foreground'
-              : 'text-muted-foreground hover:text-foreground'
+            ? 'border-b-2 border-primary text-foreground'
+            : 'text-muted-foreground hover:text-foreground'
             }`}
         >
           Recent
@@ -168,7 +168,7 @@ export const RecentProjects: React.FC = () => {
   return (
     <section className="space-y-6">
       <div className="flex justify-between items-baseline border-b border-border pb-2">
-        <h2 className="text-2xl font-serif font-bold tracking-tight">Recent Projects</h2>
+        <h2>Recent Projects</h2>
         <Link href="/projects" className="text-sm font-sans text-muted-foreground hover:text-foreground hover:underline underline-offset-4">
           View all &rarr;
         </Link>

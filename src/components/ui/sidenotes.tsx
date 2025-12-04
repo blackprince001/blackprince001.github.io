@@ -1,62 +1,10 @@
-import type React from "react"
-import { cn } from "@/lib/utils"
+// Legacy sidenotes - redirecting to new margin notes system
+// This file maintains backward compatibility
 
-interface SidenoteProps {
-  children: React.ReactNode
-  number?: number
-  className?: string
-}
+import { MarginNoteMarker, AutoNumberedMarginNote, resetMarginNoteCounter } from "./margin-notes"
 
-const Sidenote: React.FC<SidenoteProps> = ({ children, number, className }) => {
-  return (
-    <span className="sidenote-wrapper inline-block relative">
-      <span
-        className={cn(
-          "sidenote-number align-super text-xs cursor-pointer",
-          "text-primary hover:text-primary/80 transition-colors",
-          className,
-        )}
-      >
-        {number || "*"}
-      </span>
-      <span
-        className={cn(
-          "sidenote",
-          "prose-sm text-sm",
-          "transition-opacity duration-200 hover:opacity-100",
-          className,
-        )}
-      >
-        {children}
-      </span>
-      <span
-        className={cn(
-          "sidenote-mobile text-sm",
-          "bg-muted",
-          "px-3 py-2 rounded-md mt-2 block",
-          className,
-        )}
-      >
-        ({children})
-      </span>
-    </span>
-  )
-}
-
-let sidenoteCounter = 0
-
-export const resetSidenoteCounter = () => {
-  sidenoteCounter = 0
-}
-
-export const AutoNumberedSidenote: React.FC<Omit<SidenoteProps, "number">> = ({ children, className }) => {
-  sidenoteCounter += 1
-  return (
-    <Sidenote number={sidenoteCounter} className={className}>
-      {children}
-    </Sidenote>
-  )
-}
+export const resetSidenoteCounter = resetMarginNoteCounter
+export const Sidenote = MarginNoteMarker
+export const AutoNumberedSidenote = AutoNumberedMarginNote
 
 export default Sidenote
-
