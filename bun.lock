@@ -32,7 +32,7 @@
         "pdfjs-dist": "^5.4.449",
         "prismjs": "^1.30.0",
         "react": "^18.3.1",
-        "react-dom": "^18",
+        "react-dom": "^18.3.1",
         "react-icons": "^5.0.1",
         "react-pdf": "^10.2.0",
         "react-responsive": "^10.0.0",
@@ -61,6 +61,10 @@
         "typescript": "^5",
       },
     },
+  },
+  "overrides": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
   },
   "packages": {
     "@alloc/quick-lru": ["@alloc/quick-lru@5.2.0", "", {}, "sha512-UrcABB+4bUrFABwbluTIBErXwvbsU/V7TZWfmbgJfbkwiBuziS9gxdODUyuiecfdGQ85jglMW6juS3+z5TsKLw=="],
