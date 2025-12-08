@@ -1,0 +1,338 @@
+---
+title: "Building a Competitive AI for Flood-It: Deep Q-Learning Meets Real-Time Strategy"
+publishDate: "December 5, 2025"
+tag: "Machine Learning"
+---
+
+Being an absolute undefeated master of Filler, I recently built a complete end-to-end system that trains a Deep Q-Network (DQN) to play **Flood-It/Filler**, a territory-capture puzzle game, and deployed it as an interactive web application with real-time AI decision visualization.<AutoNumberedSidenote>Algorithm reference: <a href="https://arxiv.org/abs/1312.5602">"Playing Atari with Deep Reinforcement Learning"</a> by Mnih et al. (2013), which introduced DQN for discrete action spaces.</AutoNumberedSidenote> The project demonstrates how modern reinforcement learning can be applied to strategic games, with full transparency into the AI's decision-making process.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../rl-filler/imessage.png" 
+    alt="System Architecture Diagram"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    46 wins in Filler built brick by brick.
+  </div>
+</div>
+
+Flood-It presents an interesting challenge for RL: it combines discrete action selection with strategic territory planning. Unlike pure reflex games (like Atari), success requires understanding spatial relationships and opponent behavior. Unlike pure strategy games (like Chess), the state space is manageable enough for deep learning to excel.
+
+## The Game: Flood-It as an RL Problem
+
+Flood-It is played on an $H \times W$ grid where each cell contains one of $C$ colors. Two players start from opposite corners—Player 1 from $(0,0)$ (top-left) and Player 2 from $(W-1, H-1)$ (bottom-right). On each turn, a player selects a color $c \in \{0, 1, \ldots, C-1\}$, and all cells connected to their current territory that match color $c$ become theirs.
+
+The game terminates when all cells are claimed: $\sum_{i} |T_i| = H \times W$, where $T_i$ is the territory of player $i$. The winner is the player with more cells: $\arg\max_i |T_i|$.
+
+For this implementation, I used $H=8$, $W=7$, and $C=6$, creating a state space of $6^{56}$ possible board configurations. While this is intractable for tabular methods, it's well-suited for function approximation via deep neural networks.
+
+## Architecture: A Modular RL System
+
+The system is architected in three layers, each with clear responsibilities:
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../rl-filler/architecture.png" 
+    alt="System Architecture Diagram"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>System Architecture:</strong> The three-layer design separates game logic, RL training, and web interface for modularity and maintainability.
+  </div>
+</div>
+
+### 1. Core Game Engine
+
+The foundation is a pure Python game engine (`core_game.py`) that implements the flood-fill algorithm. Given a starting position $(x_0, y_0)$ and a target color $c$, the algorithm computes the connected component:
+
+<center>$$T(x_0, y_0, c) = \{ (x, y) : \text{path exists from } (x_0, y_0) \text{ to } (x, y) \text{ with color } c \}$$</center>
+
+This is implemented via a breadth-first search, ensuring $O(HW)$ complexity per move. The engine also enforces game rules: players cannot select their current color or the opponent's last move, preventing trivial strategies.
+
+### 2. Gymnasium Environment Wrapper
+
+To integrate with RL frameworks, I wrapped the game in a Gymnasium environment (`gym_env.py`).<AutoNumberedSidenote>Framework reference: <a href="https://gymnasium.farama.org/">Gymnasium</a>, the maintained fork of OpenAI Gym.</AutoNumberedSidenote>
+
+**Observation Space**: The state is encoded as a one-hot tensor $\mathbf{s} \in \{0,1\}^{H \times W \times C}$ where:
+
+<center>$$s_{h,w,c} = \begin{cases} 1 & \text{if cell } (h,w) \text{ has color } c \\ 0 & \text{otherwise} \end{cases}$$</center>
+
+This encoding is crucial—it tells the neural network that colors are categorical, not numerical values. The difference between "red" and "blue" is fundamental, not just "1" and "2".
+
+**Action Space**: Discrete actions $a \in \{0, 1, \ldots, C-1\}$, where $a$ represents selecting color $a$.
+
+**Reward Function**: The reward signal combines immediate gains with terminal bonuses:
+
+<center>$$r_t = \begin{cases} 
+\Delta |T_1| & \text{if valid move} \\
+-10 & \text{if invalid move} \\
+\Delta |T_1| + 50 & \text{if game won} \\
+\Delta |T_1| - 50 & \text{if game lost}
+\end{cases}$$</center>
+
+where $\Delta |T_1| = |T_1(t)| - |T_1(t-1)|$ is the change in territory size. The heavy penalty for invalid moves ($-10$) encourages the policy to learn valid action selection, while the terminal bonuses ($\pm 50$) provide clear signal for winning vs. losing.
+
+**Training Opponent**: During training, the AI (Player 1) faces a random opponent (Player 2). This stochasticity prevents overfitting to deterministic strategies and encourages robust play.
+
+{/* <div>
+  <video
+    controls
+    autoplay
+    loop
+    muted
+  >
+    <source src="../rl-filler/training-demo.mp4" type="video/webm" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<div className="text-sm text-gray-500 mt-2 text-center italic">
+  <strong>Training Visualization:</strong> The AI learns to capture territory strategically against a random opponent during training.
+</div> */}
+
+### 3. Deep Q-Network Training
+
+I implemented the training pipeline using Stable Baselines3's DQN.<AutoNumberedSidenote>Framework reference: <a href="https://stable-baselines3.readthedocs.io/">Stable Baselines3</a> by Raffin et al. (2021), providing reliable implementations of RL algorithms.</AutoNumberedSidenote>
+
+DQN learns an action-value function $Q^*(\mathbf{s}, a)$ that estimates the expected return:
+
+<center>$$Q^*(\mathbf{s}, a) = \mathbb{E}\left[ \sum_{k=0}^{\infty} \gamma^k r_{t+k+1} \mid \mathbf{s}_t = \mathbf{s}, a_t = a \right]$$</center>
+
+where $\gamma \in [0,1]$ is the discount factor. The optimal policy selects actions greedily:
+
+<center>$$\pi^*(\mathbf{s}) = \arg\max_a Q^*(\mathbf{s}, a)$$</center>
+
+The network architecture uses a Multi-Layer Perceptron (MLP) policy since the observation is already a structured tensor. The input shape is $(H \times W \times C,)$ after flattening, with hidden layers of sizes $[256, 128]$ and ReLU activations.
+
+**Training Configuration**:
+- **Algorithm**: DQN with experience replay and target network
+- **Learning Rate**: $\alpha = 10^{-4}$
+- **Discount Factor**: $\gamma = 0.99$
+- **Timesteps**: $5 \times 10^5$
+- **Batch Size**: $32$
+- **Replay Buffer**: $10^5$ transitions
+
+The training loop follows the standard DQN algorithm:<AutoNumberedSidenote>Algorithm details from <a href="https://arxiv.org/abs/1312.5602">Mnih et al. (2013)</a> and <a href="https://arxiv.org/abs/1509.06461">"Human-level control through deep reinforcement learning"</a> by Mnih et al. (2015).</AutoNumberedSidenote>
+
+1. Collect transition $(\mathbf{s}_t, a_t, r_t, \mathbf{s}_{t+1})$ in replay buffer
+2. Sample minibatch $\mathcal{B}$ from buffer
+3. Compute target: $y_i = r_i + \gamma \max_{a'} Q(\mathbf{s}_{i+1}, a'; \theta^-)$
+4. Update: $\theta \leftarrow \theta - \alpha \nabla_\theta \mathcal{L}(\theta)$ where $\mathcal{L} = \mathbb{E}_{(\mathbf{s},a,r,\mathbf{s}') \sim \mathcal{B}}[(y - Q(\mathbf{s},a;\theta))^2]$
+
+The target network $\theta^-$ is updated periodically to stabilize learning.
+
+## The Challenge: Player Perspective Mismatch
+
+A critical architectural challenge emerged: the model trains as Player 1 (starting from top-left) but must play as Player 2 (starting from bottom-right) in the deployed game. I solved this by flipping the board horizontally and vertically before feeding it to the model, then using the action directly.
+
+<center>$$\mathbf{s}' = \text{flip}_{h}(\text{flip}_{w}(\mathbf{s}))$$</center>
+
+where $\text{flip}_{h}$ and $\text{flip}_{w}$ are horizontal and vertical flips, respectively. This transforms the bottom-right corner to top-left, allowing the model to see the board from its training perspective.
+
+The transformation is applied before inference:
+```python
+def flip_board_for_p2(board):
+    """Transform board so P2 perspective becomes P1 perspective"""
+    return np.flip(np.flip(board, axis=0), axis=1)
+```
+
+This elegant solution avoids retraining and maintains the model's learned strategies.
+
+## Real-Time Inference: Q-Value Extraction
+
+To provide transparency into the AI's decision-making, I extract Q-values for all actions. Stable Baselines3 doesn't expose this directly, so I access the underlying Q-network:
+
+```python
+obs_tensor = model.policy.obs_to_tensor(obs)[0]
+model.policy.q_net.eval()
+with torch.no_grad():
+    q_values = model.policy.q_net(obs_tensor).cpu().numpy()[0]
+```
+
+This gives us the vector $\mathbf{q} = [Q(\mathbf{s}, 0), Q(\mathbf{s}, 1), \ldots, Q(\mathbf{s}, C-1)]$, which we visualize in the frontend.
+
+**Invalid Action Filtering**: The raw Q-values may suggest invalid actions (current color or opponent's last move). I filter the action space:
+
+<center>$$\mathcal{A}_{valid}(\mathbf{s}) = \{a : a \neq c_{current} \land a \neq c_{opponent}\}$$</center>
+
+Then select: $a^* = \arg\max_{a \in \mathcal{A}_{valid}} Q(\mathbf{s}, a)$
+
+This ensures the AI never makes illegal moves while still leveraging its learned value estimates.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../rl-filler/q-value.png" 
+    alt="Q-Value Visualization in Frontend"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Q-Value Transparency:</strong> The frontend displays Q-values for all actions, showing the AI's evaluation of each color choice. The chosen action (highlighted in green) typically has the highest Q-value among valid options.
+  </div>
+</div>
+
+## Web Interface: Real-Time Decision Visualization
+
+The frontend (React) provides an immersive experience with several key features:
+
+**Territory Visualization**: Each cell displays its owner via colored borders:
+- Blue border: Player 1 territory
+- Red border: Player 2 (AI) territory
+
+The visualization uses CSS `::after` pseudo-elements with subtle animations to indicate ownership without cluttering the board.
+
+**Q-Value Display**: For each AI move, the interface shows:
+- A bar chart of Q-values for all 6 colors
+- The chosen action highlighted
+- Invalid actions grayed out
+- Numerical Q-values for transparency
+
+This transparency is crucial for understanding and trusting the AI's decisions. Users can see, for example, that the AI might prefer color 3 (Q-value: 12.4) over color 1 (Q-value: 8.2), providing insight into its strategic reasoning.
+
+**Move History**: A collapsible log maintains a complete record of all AI decisions, allowing users to analyze patterns in the AI's play over the course of a game.
+
+<div>
+  <video
+    controls
+    autoplay
+    loop
+    muted
+  >
+    <source src="../rl-filler/gameplay.mp4" type="video/webm" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<div className="text-sm text-gray-500 mt-2 text-center italic">
+  <strong>Gameplay Demo:</strong> Real-time gameplay showing territory expansion, Q-value visualization, and AI decision-making in action.
+</div>
+
+## Training Results and Analysis
+
+After training for 500,000 timesteps, the AI demonstrates several learned behaviors:
+
+**Strategic Play**: The policy learns to prioritize moves that maximize immediate territory gain. The Q-function develops clear preferences, with some colors consistently valued higher than others based on board state.
+
+**Invalid Move Avoidance**: The heavy penalty ($-10$) for invalid moves causes the policy to learn valid action selection early in training. The network learns to recognize its current color and avoid selecting it.
+
+**Adaptability**: The model generalizes to different board configurations. Since training uses random board generation, the policy must learn robust strategies that work across varied initial states.
+
+**Q-Value Patterns**: Analysis of extracted Q-values reveals:
+- Clear separation between high-value and low-value actions
+- Consistent preferences for certain colors in similar board states
+- Adaptation to opponent behavior (though opponent is random during training)
+
+The learning curve shows steady improvement in mean episode reward, with the policy transitioning from random play to strategic territory capture.
+
+## Technical Implementation Details
+
+### Backend Architecture
+
+The API (`api.py`) uses FastAPI with WebSocket support for real-time communication:<AutoNumberedSidenote>Framework reference: <a href="https://fastapi.tiangolo.com/">FastAPI</a>, a modern Python web framework.</AutoNumberedSidenote>
+
+- **Model Loading**: The trained DQN is loaded once at startup, avoiding repeated disk I/O
+- **State Management**: Each WebSocket connection maintains its own game instance
+- **Message Protocol**: JSON messages with types `INIT`, `MOVE`, `UPDATE`, and `GAME_OVER`
+
+The WebSocket protocol enables low-latency updates, with the entire game loop (player move → AI inference → state update) completing in milliseconds.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../rl-filler/screenshot.png" 
+    alt="Frontend Interface Screenshot"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md border border-gray-200"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>User Interface:</strong> The polished dark-mode interface with territory visualization, Q-value displays, and collapsible AI move history.
+  </div>
+</div>
+
+### Frontend Design
+
+The React frontend follows a minimalistic dark-mode design philosophy:
+
+- **Responsive Layout**: Uses CSS `clamp()` for fluid typography and spacing
+- **Smooth Interactions**: All transitions use cubic-bezier easing functions
+- **Custom Scrollbars**: Styled scrollbars for the AI log panel
+- **Territory Animations**: Subtle pulse animations for territory indicators
+
+The design prioritizes clarity and user experience, with every visual element serving a purpose.
+
+## Mathematical Formulation of the Reward
+
+The reward function can be expressed more formally. Let $T_1(t)$ and $T_2(t)$ be the territories at time $t$, and let $\Delta T_1 = |T_1(t)| - |T_1(t-1)|$ be the change in territory size.
+
+The reward for a valid move is:
+
+<center>$$r_{valid} = \Delta T_1 + \lambda_{win} \mathbb{1}[\text{game won}] - \lambda_{loss} \mathbb{1}[\text{game lost}]$$</center>
+
+where $\lambda_{win} = 50$ and $\lambda_{loss} = 50$ are terminal bonuses, and $\mathbb{1}[\cdot]$ is the indicator function.
+
+For invalid moves:
+
+<center>$$r_{invalid} = -\lambda_{penalty}$$</center>
+
+where $\lambda_{penalty} = 10$ is the penalty magnitude.
+
+The total return for an episode is:
+
+<center>$$R = \sum_{t=0}^{T} \gamma^t r_t$$</center>
+
+where $T$ is the episode length. The discount factor $\gamma = 0.99$ ensures the agent values both immediate gains and long-term strategic positioning.
+
+## Comparison with Alternative Approaches
+
+**Tabular Q-Learning**: The state space $6^{56}$ is intractable for tabular methods. Even with state abstraction, the number of states exceeds $10^{40}$, making function approximation necessary.
+
+**Policy Gradient Methods**: While PPO could work,<AutoNumberedSidenote>Algorithm reference: <a href="https://arxiv.org/abs/1707.06347">"Proximal Policy Optimization Algorithms"</a> by Schulman et al. (2017).</AutoNumberedSidenote> DQN's value-based approach provides interpretable Q-values, which are crucial for the transparency features in the web interface.
+
+**Monte Carlo Tree Search (MCTS)**: MCTS could provide strong play,<AutoNumberedSidenote>Algorithm reference: <a href="https://www.science.org/doi/10.1126/science.aar6404">"Mastering the game of Go without human knowledge"</a> by Silver et al. (2017).</AutoNumberedSidenote> but requires significant computational resources per move. DQN's feedforward inference is orders of magnitude faster, enabling real-time gameplay.
+
+## Future Enhancements
+
+Several directions could improve the system:
+
+**Self-Play Training**: Training the AI against itself (rather than a random opponent) could lead to stronger play through iterative improvement, similar to AlphaZero.<AutoNumberedSidenote>Algorithm reference: <a href="https://arxiv.org/abs/1712.01815">"Mastering Chess and Shogi by Self-Play with a General Reinforcement Learning Algorithm"</a> by Silver et al. (2017).</AutoNumberedSidenote>
+
+**Longer Training**: Increasing timesteps to $10^6$ or more could improve performance, though diminishing returns are expected.
+
+**Architecture Improvements**: Using a CNN policy (treating the board as an image) might capture spatial patterns better, though the current MLP performs adequately.
+
+<div>
+  <video
+    controls
+    autoplay
+    loop
+    muted
+  >
+    <source src="../rl-filler/ai.mp4" type="video/webm" />
+    Your browser does not support the video tag.
+  </video>
+</div>
+
+<div className="text-sm text-gray-500 mt-2 text-center italic">
+  <strong>AI vs Human Gameplay:</strong> A complete game showing the trained AI competing against a human player, demonstrating learned strategic behavior.
+</div>
+
+**Multi-Agent RL**: Training multiple agents with different strategies could create a more diverse and challenging opponent pool.
+
+## Conclusion
+
+Beyond the architecture and the math, this project was simply a blast to build. There is something uniquely satisfying about watching an agent—which started out making completely random moves—slowly derive a winning strategy that eventually rivals your own. It bridges the gap between abstract RL theory and a tangible, playable experience.
+
+The combination of deep reinforcement learning, real-time visualization, and thoughtful design creates an application that is both technically impressive and genuinely engaging. The AI's learned strategies, visible through Q-value analysis, reveal the power of modern RL for strategic game playing. Hopefully we see more of this in the wild to help inspire and educate more experiments.
+
+---
+
+**Technical Stack**: Python 3.13+, Stable Baselines3, Gymnasium, FastAPI, React, PyTorch
+
+**Code Repository**: Available with complete documentation and setup instructions
+
+<BlogSuggestion link="https://github.com/blackprince001/rl-filler" title="Project Repo" />
+
+
+
