@@ -77,21 +77,21 @@ where $\Delta |T_1| = |T_1(t)| - |T_1(t-1)|$ is the change in territory size. Th
 
 **Training Opponent**: During training, the AI (Player 1) faces a random opponent (Player 2). This stochasticity prevents overfitting to deterministic strategies and encourages robust play.
 
-{/* <div>
+<div>
   <video
     controls
     autoPlay
     loop
     muted
   >
-    <source src="../rl-filler/training-demo.mp4" type="video/webm" />
+    <source src="../rl-filler/training.mp4" type="video/webm" />
     Your browser does not support the video tag.
   </video>
 </div>
 
 <div className="text-sm text-gray-500 mt-2 text-center italic">
   <strong>Training Visualization:</strong> The AI learns to capture territory strategically against a random opponent during training.
-</div> */}
+</div>
 
 ### 3. Deep Q-Network Training
 
@@ -226,6 +226,15 @@ After training for 500,000 timesteps, the AI demonstrates several learned behavi
 - Adaptation to opponent behavior (though opponent is random during training)
 
 The learning curve shows steady improvement in mean episode reward, with the policy transitioning from random play to strategic territory capture.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../rl-filler/reward.png" 
+    alt="Episode Reward Graph"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
 
 ## Technical Implementation Details
 
