@@ -1,8 +1,19 @@
 "use client"
 
-import type React from "react"
-import { createContext, useContext, useState, useRef, useEffect, useCallback } from "react"
+import React, { createContext, useContext, useState, useRef, useEffect, useCallback, useMemo, Children } from "react"
 import { cn } from "@/lib/utils"
+
+// Simple hash function to generate deterministic IDs from content
+function hashString(str: string): number {
+  let hash = 0
+  for (let i = 0; i < str.length; i++)
+  {
+    const char = str.charCodeAt(i)
+    hash = ((hash << 5) - hash) + char
+    hash = hash & hash // Convert to 32-bit integer
+  }
+  return Math.abs(hash)
+}
 
 // Generate unique IDs for margin notes
 let noteIdCounter = 0
@@ -74,7 +85,25 @@ export const MarginNoteMarker: React.FC<MarginNoteMarkerProps> = ({ id, number, 
   const { registerNote, unregisterNote } = useMarginNotes()
   const markerRef = useRef<HTMLSpanElement>(null)
   const [noteNumber, setNoteNumber] = useState<number | string>(number ?? "*")
-  const noteId = useRef(`margin-note-${id || `auto-${Date.now()}-${Math.random()}`}`)
+
+  // Generate deterministic ID based on content hash
+  const stableId = useMemo(() => {
+    if (id) return id
+    // Create a stable hash from children content
+    const contentStr = typeof children === 'string'
+      ? children
+      : Children.toArray(children).join('')
+    const contentHash = hashString(contentStr)
+    return `auto-${contentHash}`
+  }, [id, children])
+
+  const noteIdString = useMemo(() => `margin-note-${stableId}`, [stableId])
+  const noteId = useRef(noteIdString)
+
+  // Update ref if stableId changes (shouldn't happen, but for safety)
+  useEffect(() => {
+    noteId.current = noteIdString
+  }, [noteIdString])
 
   useEffect(() => {
     if (!number)
@@ -85,15 +114,14 @@ export const MarginNoteMarker: React.FC<MarginNoteMarkerProps> = ({ id, number, 
   }, [number])
 
   useEffect(() => {
-    const currentNoteId = noteId.current
     if (markerRef.current)
     {
-      registerNote(currentNoteId, noteNumber, children, markerRef as React.RefObject<HTMLElement>)
+      registerNote(noteIdString, noteNumber, children, markerRef as React.RefObject<HTMLElement>)
     }
     return () => {
-      unregisterNote(currentNoteId)
+      unregisterNote(noteIdString)
     }
-  }, [noteNumber, children, registerNote, unregisterNote])
+  }, [noteIdString, noteNumber, children, registerNote, unregisterNote])
 
   return (
     <>
@@ -106,7 +134,7 @@ export const MarginNoteMarker: React.FC<MarginNoteMarkerProps> = ({ id, number, 
           "align-super mx-0.5",
           className
         )}
-        data-note-id={noteId.current}
+        data-note-id={noteIdString}
       >
         [{noteNumber}]
       </span>
@@ -119,7 +147,17 @@ export const MarginNoteMarker: React.FC<MarginNoteMarkerProps> = ({ id, number, 
 }
 
 export const AutoNumberedMarginNote: React.FC<Omit<MarginNoteMarkerProps, "number">> = ({ id, children, className }) => {
-  const uniqueId = id || `auto-${++noteIdCounter}`
+  // Generate deterministic ID based on content if no ID provided
+  const uniqueId = useMemo(() => {
+    if (id) return id
+    // Create a stable hash from children content
+    const contentStr = typeof children === 'string'
+      ? children
+      : Children.toArray(children).join('')
+    const contentHash = hashString(contentStr)
+    return `auto-${contentHash}`
+  }, [id, children])
+
   return (
     <MarginNoteMarker id={uniqueId} className={className}>
       {children}

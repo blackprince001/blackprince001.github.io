@@ -1,0 +1,227 @@
+---
+title: "ATSCS: Engineering a Self-Learning Traffic Grid with Deep Reinforcement Learning"
+publishDate: "December 11, 2025"
+tag: "Machine Learning"
+---
+
+Traffic signal control is, at its core, a stochastic optimization problem that we are currently solving with very blunt tools.
+
+The objective is theoretically simple: minimize the total travel time $\sum T_{travel}$ for a set of agents navigating a graph, subject to hard safety constraints. Yet, traditional solutions still rely on fixed-time cycle lengths or simple heuristic actuation (e.g., "if sensor A is triggered, extend Green by $t$ seconds"). These rigid rule-sets fail because they treat traffic as linear, ignoring the complex, non-linear dynamics of how queues form and dissipate.
+
+For the **Adaptive Traffic Signal Control System (ATSCS)**, I wanted to move away from heuristics. I wanted to treat the intersection as a Markov Decision Process (MDP) and solve it using Proximal Policy Optimization (PPO). <AutoNumberedSidenote> <a href="https://en.wikipedia.org/wiki/Markov_decision_process">Markov decision process</a></AutoNumberedSidenote>
+
+While many studies rely on heavy, black-box simulators like SUMO, I adopted a streamlined methodology inspired by recent work on unified vehicular control. The goal wasn't just to make cars move; it was to build a lightweight, reproducible environment where I could mathematically derive the reward functions necessary for complex behavior to emerge.<AutoNumberedSidenote>Methodology inspired by Yan et al. (2022), <a href="https://arxiv.org/abs/2208.00268">"Unified Automatic Control of Vehicular Systems with Reinforcement Learning"</a>, which demonstrates that model-free DRL can generalize across diverse traffic topologies without extensive hand-tuning.</AutoNumberedSidenote>
+
+Here is the engineering behind the custom physics engine, the MDP formulation, and the curriculum learning strategy used to scale from a single node to a coordinated grid.
+
+## The Physics: Deriving Realistic Driver Behavior
+
+To train a robust agent, the simulation needs to respect the laws of physics. If vehicles stop and start instantly, the RL agent learns to "flicker" lights in unrealistic ways.
+
+I implemented a custom physics engine based on the **Intelligent Driver Model (IDM)**. IDM is a continuous-time car-following model that calculates acceleration $\dot{v}$ based on the vehicle's current speed $v$, the gap to the leader $s$, and the speed difference $\Delta v$.
+
+The governing equation for the desired gap $s^*$ is:
+
+<center>$$ s^*(v, \Delta v) = s_0 + v T + \frac{v \Delta v}{2\sqrt{ab}} $$</center>
+
+Where:
+*   $s_0$: Minimum jam distance (2.0m)
+*   $T$: Safe time headway (1.0s)
+*   $a$: Max acceleration ($1.5 m/s^2$)
+*   $b$: Comfortable deceleration ($2.5 m/s^2$)
+
+The acceleration command sent to the physics stepper at every timestep $t$ is:
+
+<center>$$ \dot{v}(s, v, \Delta v) = a \left[ 1 - \left(\frac{v}{v_0}\right)^\delta - \left(\frac{s^*(v, \Delta v)}{s}\right)^2 \right] $$</center>
+
+<div>
+    <video controls autoPlay loop muted>
+        <source src="../atscs/idm-sim.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+    <div className="text-sm text-gray-500 mt-2 text-center italic">
+        <strong>Figure 1: Vehicle Dynamics.</strong> Note the "accordion effect" as cars decelerate. This latency forces the agent to learn predictive behavior rather than reactive switching.
+    </div>
+</div>
+
+This math is critical for the RL agent. Because the IDM includes a braking term, vehicles have "inertia." If the agent switches the light to Red too late, the queue length doesn't just increase linearly; a deceleration shockwave propagates backward. The agent has to learn that clearing a queue takes time due to startup transients ($a$), penalizing it for letting lines get too long.
+
+## The MDP Formulation
+
+We modeled the traffic control problem as a tuple $\langle \mathcal{S}, \mathcal{A}, \mathcal{P}, \mathcal{R}, \gamma \rangle$.
+
+### The State Space ($\mathcal{S}$) and Partial Observability
+Real-world intersections don't have access to the global state of the city. Following the principles of **partial observability**, I restricted the agent's view to local sensors. Local observations—specifically the queue lengths and phase data of the immediate intersection—are typically sufficient for optimal control.<AutoNumberedSidenote>See Section V-B of Yan et al. (2022), discussing how Partial Observability is natural in real-world decision processes and often simplifies the learning landscape.</AutoNumberedSidenote>
+
+We constructed a fixed-size 20-dimensional vector. For an intersection $i$, the local state $s_i$ is:
+
+<center>$$ s_i = [ \hat{q}_N, \hat{q}_S, \hat{q}_E, \hat{q}_W, \hat{\phi}_{current} ] $$</center>
+
+Where $\hat{q}$ is the normalized queue length, clipped to a maximum observable horizon $Q_{max}$. This constraint forces the agent to generalize: it doesn't matter if there are 20 cars or 50 cars; if the sensor is saturated, the action should be the same.
+
+### The Action Space ($\mathcal{A}$)
+The action space is discrete: $a_t \in \{0, 1\}$.
+*   $a_t=0$: Keep current phase.
+*   $a_t=1$: Switch phase.
+
+Crucially, the transition function $\mathcal{P}(s'|s,a)$ enforces a **Yellow Phase** ($\Delta t_{yellow} = 3s$) and an **All-Red Clearance** ($\Delta t_{red} = 2s$). This introduces a latency $\tau = 5s$ between the agent's decision and the actual flow of traffic. This delay creates a temporal credit assignment problem that the PPO algorithm must solve.
+
+## Shaping the Reward Function
+
+The standard objective in traffic RL is to minimize Cumulative Waiting Time. However, optimizing purely for throughput leads to "starvation," where the agent ignores a single car on a side road forever because it's mathematically efficient to keep the main artery open.
+
+To address this, I derived a **Hybrid Reward Function** that explicitly balances three competing objectives: efficiency, congestion management, and fairness.
+
+<center>$$ R_t = \underbrace{\lambda_1 F_{out}}_{\text{Efficiency}} - \underbrace{\lambda_2 \sum Q_i}_{\text{Congestion}} - \underbrace{\lambda_3 \sum D_{j}(t)}_{\text{Fairness}} - \Omega(a_t) $$</center>
+
+Let's break down the engineering decisions here:
+
+1.  **Efficiency ($F_{out}$):** A positive reward for every vehicle that successfully exits.
+2.  **Congestion ($\sum Q_i$):** A penalty proportional to the *squared* queue length. By squaring the term, we punish large outliers (gridlock) significantly more than small, distributed queues.
+3.  **Fairness ($\sum D_{j}(t)$):** This term tracks the cumulative delay of specific vehicles. It acts as a "pressure valve," ensuring the agent cannot sacrifice a low-density lane indefinitely.
+4.  **Action Penalty ($\Omega(a_t)$):** A regularization term that penalizes rapid phase flickering.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../atscs/policy.png" 
+    alt="Reward Components over Time"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Figure 2: Reward Component Analysis (Scenario A).</strong> Notice how the Fairness penalty spikes early in training but forces the policy to stabilize, eventually leading to a higher Total Reward.
+  </div>
+</div>
+
+## Training and Curriculum Learning
+
+We employed a curriculum learning strategy, slowly increasing the entropy of the environment.
+
+**Phase 1: Single Node**
+The goal here was simple mapping: $Queue \rightarrow Green$. The agent quickly learned to minimize the "all-red" dead time by grouping vehicles into platoons.
+
+<div>
+    <video controls autoPlay loop muted>
+        <source src="../atscs/scenario-a.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+    <div className="text-sm text-gray-500 mt-2 text-center italic">
+        <strong>Figure 3:</strong> Models behaviour is almost similar to when there is no traffic lights under the heavy traffic evaluation run.
+    </div>
+</div>
+
+**Phase 2: Arterial Coordination**
+Here, I introduced a second intersection 200m downstream. The challenge is the Green Wave. The agent controlling Intersection 1 must learn that its actions affect the input state of Intersection 2.
+
+<div>
+    <video controls autoPlay loop muted>
+        <source src="../atscs/scenario-b.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+    <div className="text-sm text-gray-500 mt-2 text-center italic">
+        <strong>Figure 4: Emergent Coordination.</strong> Intersection 2 (Right) learns to turn green exactly 10 seconds after Intersection 1 releases traffic, matching the travel time $t = d/v_{max}$.
+    </div>
+</div>
+
+**Phase 3: The 2x2 Grid**
+This tested the system's resistance to deadlock. We trained for 200,000 timesteps. We observed that the agent effectively learned a switching threshold function, holding the phase until the ratio of queue lengths $\frac{q_{green}}{q_{red}}$ dropped below a learned threshold $\beta$.
+
+## Experimental Results
+
+To rigorously evaluate the trained PPO agent, I compared it against a standard baseline: a Fixed-Time Controller with a cycle length of 60 seconds. We ran 100 evaluation episodes with stochastic inflow rates varying between 400 and 1000 vehicles/hour.
+
+### Scenario A: The Baseline Comparison
+
+<table className="min-w-full text-left text-sm">
+  <thead className="bg-gray-100 border-b border-gray-200">
+    <tr>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Metric</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Fixed-Time Controller</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">ATSCS (PPO Agent)</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Improvement</th>
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-gray-100">
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900">Avg Waiting Time</td>
+      <td className="px-6 py-4 text-gray-500">$6.5 \pm 1.3$ s</td>
+      <td className="px-6 py-4 text-gray-500">$0.3 \pm 0.0$ s</td>
+      <td className="px-6 py-4 font-bold text-green-600">96.1%</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900">Max Queue Length</td>
+      <td className="px-6 py-4 text-gray-500">18 vehicles</td>
+      <td className="px-6 py-4 text-gray-500">6 vehicles</td>
+      <td className="px-6 py-4 font-bold text-green-600">67.4%</td>
+    </tr>
+  </tbody>
+</table>
+
+The crucial insight here is **adaptability**. The Fixed-Time controller incurs a "penalty of rigidity"—it holds a green light for empty lanes. The PPO agent, observing the state vector $s_t$, performs "gap-seeking," switching phases immediately when a platoon clears.
+
+### Scenario B: Emergence of the "Green Wave"
+In the arterial scenario, we tracked the **Stop Probability** ($P_{stop}$) for a vehicle entering the second intersection.
+*   **Random Policy:** $P_{stop} \approx 0.65$
+*   **Trained PPO Agent:** $P_{stop} \approx 0.12$
+
+Without explicit communication channels, the agent learned to synchronize phase switching. Intersection 2 learned to switch to Green exactly $\Delta t = d / v_{avg} \approx 10s$ after Intersection 1. This behavior wasn't hard-coded; it emerged because the *Delay Derivative* reward component ($r_{\Delta delay}$) is maximized when vehicles maintain momentum.
+
+### Scenario C: Stability at Saturation
+The 2x2 Grid represents the most chaotic system. We stress-tested the system by injecting traffic beyond the theoretical capacity ($>1200$ veh/hr).
+
+<div className="flex justify-center my-12">
+    <img 
+      className="rounded-lg shadow-md max-w-full h-auto object-contain" 
+      src="../atscs/flow.png" 
+      alt="Throughput vs Inflow"
+    />
+
+    <img 
+      className="rounded-lg shadow-md max-w-full h-auto object-contain" 
+      src="../atscs/image.png" 
+      alt="Throughput vs Inflow"
+    />
+</div>
+
+<div>
+    <video controls>
+        <source src="../atscs/scenario-c.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+    <div className="text-sm text-gray-500 mt-2 text-center italic">
+        <strong>Figure 5:</strong> Gating behaviour exhibited by model in moderating traffic.
+    </div>
+</div>
+
+
+The results revealed a sophisticated strategy known in traffic engineering as **Gating**. When the internal links of the grid approached saturation, the agent learned to artificially throttle the *inflow* lights at the perimeter. By holding cars outside the grid, it maintained free-flow conditions within the center. A naive greedy strategy would have filled the grid, dropping throughput to zero.
+
+## Future Directions: From Simulation to the Street
+
+While the results from ATSCS validate the efficiency of the Deep RL approach, the jump from a controlled Python simulation to the chaotic reality of a physical intersection involves bridging a significant "Sim2Real" gap.
+
+There are three primary engineering challenges we must solve to scale this system:
+
+### The Sensor Noise Problem
+Our current agent operates with "God-view" privileges within its observation radius. In the real world, state estimation is noisy. To make the policy robust, we need to introduce **Domain Randomization** during training. By intentionally corrupting the state vector with Gaussian noise:
+
+<center>$$ s_{noisy} = s_{true} + \mathcal{N}(0, \sigma_{sensor}) $$</center>
+
+We force the agent to learn a policy that doesn't fail when a camera misses a car due to glare or heavy rain.<AutoNumberedSidenote>For a deeper dive on this technique, see "Bridging the Reality Gap of Reinforcement Learning based Traffic Signal Control using Domain Randomization and Meta Learning" (Zhu et al., 2023), which tests how noise injection prevents overfitting to perfect simulator data.</AutoNumberedSidenote>
+
+### Scalability via Multi-Agent RL
+Currently, our grid is controlled by a centralized policy. This scales poorly ($O(n^2)$ complexity) as the city grid grows. The solution is **Decentralized Multi-Agent RL (MARL)** with communication.
+
+The architecture would shift from a standard MLP to a **Graph Neural Network (GNN)**. In this setup, intersections act as nodes that exchange compressed "pressure" embeddings with their neighbors, allowing for coordination without a central server.<AutoNumberedSidenote>This shift to graph-based control is detailed in "Learning Decentralized Traffic Signal Controllers with Multi-Agent Graph Reinforcement Learning" (Chen et al., 2023).</AutoNumberedSidenote>
+
+### Handling Multi-Modal Traffic
+The IDM physics engine currently models homogenous vehicle traffic. Real intersections are a messy interplay of pedestrians, cyclists, and emergency vehicles.
+
+To handle this, we need to move to **Constrained Reinforcement Learning (CMDPs)**. This involves introducing "safety masks" to the action space—hard barriers that prevent the agent from switching phases while pedestrians are in the crosswalk, effectively overriding the throughput reward to prioritize safety.<AutoNumberedSidenote>Zhou et al. (2024) explore this in "Multimodal Traffic Signal Control via Constrained Deep Reinforcement Learning," introducing specific constraints for bus and pedestrian priority.</AutoNumberedSidenote>
+
+## Conclusion
+
+This project was about exploring the viability of Reinforcement Learning as a tool for civil infrastructure. However, we need to be realistic: we won't be replacing every traffic light tomorrow. For a system like this to actually work in the real world—where milliseconds matter—we would likely need a fleet of fully automated vehicles communicating directly with the infrastructure. Until every car can talk to the traffic light, we are likely stuck with the timers.
+
+ATSCS demonstrates that a physics-grounded simulation combined with a carefully engineered reward function can yield impressive baseline behaviors—reducing waiting times and preventing deadlock without being explicitly programmed to do so.
+
+More importantly, it highlighted that specific behaviors—like Green Waves or Gating—don't always require central planning. Given the right incentives (rewards) and the right physics (IDM), the grid can learn to think for itself.
