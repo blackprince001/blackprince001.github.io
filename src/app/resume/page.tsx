@@ -4,6 +4,7 @@ import {
   work,
   projects,
   writing,
+  skills,
   type ResumeItem,
 } from "../../lib/content"
 
@@ -24,6 +25,7 @@ export default function Home() {
           note="Explore detailed write-ups on the dedicated projects page."
         />
         <ResumeSection title="Writing" items={writing} />
+        <ResumeSection title="Skills" items={skills} />
       </div>
     </main>
   );

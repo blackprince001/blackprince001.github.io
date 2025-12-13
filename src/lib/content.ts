@@ -49,10 +49,10 @@ export const intro: Intro = {
 export const education: EducationItem[] = [
   {
     title: "Kwame Nkrumah University of Science & Technology",
-    date: "2020 – 2024",
+    date: "Jan 2021 – Nov 2024",
     location: "Kumasi, Ghana",
     description: [
-      "BSc Computer Engineering — First Class Honors (GPA 3.7/4.0).",
+      "BSc in Computer Engineering — First Class Honors (GPA 3.7/4.0).",
       "Relevant coursework: Data Structures and Algorithms, Operating Systems, Computer Networking, Distributed Systems, Computer Architecture, Digital Signal Processing, Robotics and Computer Vision, Artificial Intelligence and Machine Learning.",
     ],
   },
@@ -60,7 +60,9 @@ export const education: EducationItem[] = [
 
 export const research: ResumeItem[] = [
   {
-    title: "Research Assistant, AI45D",
+    title: "Research Assistant, AI4SD",
+    date: "Jan 2025 – Oct 2025",
+    location: "Kumasi, Ghana",
     description: [
       "Medical Image Diagnostics: built PyTorch/FastAI/TensorFlow pipelines for brain tumor (ResNet18 + SwinUNet), breast cancer (BI-RADS + pathological), and stroke (Keras CNN) detection with sub-second MRI/histology inference, segmentation masks, and clinical heatmaps. Engineered hybrid ML workflows across dual-mode breast cancer analysis, brain tumor classification and segmentation, stroke triage, and document RAG with cross-encoder reranking, semantic chunking, and SSE streaming for instant, traceable responses.",
       "Zebra Chat — Rare Disease AI Assistant for Health Professionals: designed a RAG-powered dysmorphology expert using Gemini 1.5 Flash, FAISS, and all-MiniLM-L6-v2 to enable real-time, citation-grounded chat with Smith's Recognizable Patterns textbooks. Built scalable, secure backends with JWT auth, PostgreSQL, Cloudinary, automated preprocessing, and modular services supporting user uploads, persistent sessions, saved queries, and seamless model extension.",
@@ -69,11 +71,12 @@ export const research: ResumeItem[] = [
   {
     title:
       "Research Assistant & National Service Personnel, Connected Devices Lab & RAIL Lab",
+    date: "Oct 2024 – Sept 2025",
     location: "Kumasi, Ghana",
     description: [
-      "Developed a FastAPI backend with Google Cloud-powered ML inference to automate sentiment analysis on student feedback, enabling real-time trend detection and actionable insights for universities.",
+      "Developed a FastAPI (Python) backend with Google Cloud-powered ML inference to automate sentiment analysis on student feedback (professor ratings, hostel reviews, etc.), enabling real-time trend detection and actionable insights for universities.",
       "Engineered scalable data pipelines to process user-generated content, driving a student-first community where 80% of early adopters reported improved campus engagement.",
-      "Assisted in architecting a medical imaging pipeline using PyTorch, deploying an ensemble of CNN and U-Net models for CT scan analysis with 92% diagnostic accuracy supporting clinical decisions.",
+      "Assisted in architecting a medical imaging pipeline using PyTorch, deploying an ensemble of CNN and U-Net models for CT scan analysis with 92% diagnostic accuracy aiding medical decisions.",
     ],
   },
 ];
@@ -81,35 +84,40 @@ export const research: ResumeItem[] = [
 export const work: ResumeItem[] = [
   {
     title: "Navigation Intern, 3Farmate Robotics",
+    date: "Oct 2024 – Dec 2024",
+    location: "Remote",
     description: [
-      "Engineered an autonomous navigation system using ROS/ROS2, implementing A* and Dynamic Window Approach algorithms for precision agriculture and reducing navigation errors across custom-written controllers.",
-      "Built differential drive and keyboard-controlled teleoperation controllers alongside a custom model-based farmland environment to validate navigation behaviours before field deployment.",
-      "Developed high-fidelity agricultural simulation environments in Gazebo with custom crop models, achieving strong correlation with real-world robot behaviour for vision-based detection systems.",
+      "Engineered autonomous navigation system using ROS/ROS2, implementing A* and Dynamic Window Approach algorithms for precision agriculture, reducing navigation errors on custom-written navigation controllers.",
+      "Built a Differential Drive Controller, a keyboard-controlled Teleop controller, and a custom model-based Farmland environment for navigation.",
+      "Developed high-fidelity agricultural simulation environments in Gazebo with custom crop models, achieving high correlation with real-world robot behaviour for Vision-Based Detection Systems.",
     ],
   },
   {
     title: "Club Lead, Google Developer Student Clubs (GDSC) KNUST",
+    date: "Aug 2022 – Aug 2023",
     location: "Kumasi, Ghana",
     description: [
       "Led technical community of 400+ developers, organizing 15+ workshops on cloud computing, machine learning, and mobile development with significant participant satisfaction.",
-      "Orchestrated 3 major hackathons with 200+ participants and established partnerships with 5 leading Ghanaian technology companies.",
-      "Coordinated weekly two-hour sessions exposing 400+ students to programming through in-person events, study jams, and hackathons.",
+      "Orchestrated 3 major hackathons with 200+ participants, and established partnerships with 5 major Tech Ghanaian companies.",
+      "Organized and led 2-hour weekly sessions for 400+ (and growing) college students that focused on exposure to programming through in-person events, study jams, and hackathons.",
     ],
   },
   {
     title: "Machine Learning Intern, Omdena Inc",
-    location: "Remote",
+    date: "May 2021 – Jan 2022",
+    location: "Kumasi, Ghana",
     description: [
-      "Joined the Omdena Ghana Chapter to collaborate with ML engineers on AI-driven social impact projects.",
-      "Developed an ML pipeline for credit risk assessment using ensemble methods (Random Forest, XGBoost), achieving 82% prediction accuracy for unbanked populations.",
+      "Interned and became a member of the Ghana Chapter which houses a couple of ML engineers across the Country and beyond, who collaborate on projects to solve problems using AI and Machine Learning.",
+      "Developed ML pipeline for credit risk assessment using ensemble methods (Random Forest, XGBoost), achieving 82% prediction accuracy for unbanked populations.",
       "Implemented feature engineering and optimization techniques that improved model performance by 25% while reducing computational overhead.",
     ],
   },
   {
     title: "Interim Student Lead, KNUST College of Engineering",
+    date: "July 2023 – Oct 2023",
     location: "Kumasi, Ghana",
     description: [
-      "Coordinated science and technology workshops plus hands-on projects, empowering students to apply their skills in real-world scenarios, foster innovation, and build professional networks.",
+      "Coordinated science and technology workshops, and hands-on projects to empowering students apply their skills in real-world scenarios, fostering innovation, and building professional networks.",
     ],
   },
 ];
@@ -118,52 +126,58 @@ export const projects: ProjectItem[] = [
   {
     title: "TaxFlow — Revenue Mobilization System (Capstone Project)",
     description: [
-      "Engineered a full-stack system with a microservices architecture using React and Go, delivering GIS integration for geospatial mapping and automated SMS/email payment notifications to enhance revenue tracking processes.",
+      "Engineered a full-stack system with a microservices architecture, using React and Go, featuring GIS-integration for geospatial mapping and automated SMS/email payment notifications to enhance revenue tracking processes.",
     ],
   },
   {
     title: "AWS Inferentia ML Inference Platform",
     description: [
-      "Architected and deployed a high-performance Kubernetes cluster on AWS Inferentia instances using Terraform to automate provisioning of EKS node groups, IAM roles, and security policies.",
-      "Containerized a YOLOv8 inference application with a custom Dockerfile optimized for the Neuron SDK, reducing image size and streamlining builds for specialised ML workloads.",
-      "Implemented Kubernetes deployment strategies with resource limits, node affinity, tolerations, and health checks to guarantee reliable scheduling and operation of inference pods on specialised hardware.",
+      "Architected and deployed a high-performance Kubernetes cluster on AWS Inferentia instances using Terraform to automate the provisioning of EKS node groups, IAM roles, and security policies, ensuring a reproducible and secure infrastructure foundation.",
+      "Containerized a YOLOv8 inference application using a custom Dockerfile optimized for the Neuron SDK, reducing image size and streamlining the build process for machine learning workloads.",
+      "Implemented a robust Kubernetes deployment strategy with resource limits, node affinity, tolerations, and health checks (livenessProbe, readinessProbe) to guarantee reliable scheduling and operation of inference pods on specialized hardware.",
     ],
   },
   {
     title: "Troy — NLP Teaching Assistant",
+    href: "https://github.com/blackprince001/troy-virtual-assistant",
     description: [
-      "Designed and engineered a web-based virtual teaching assistant that leverages NLP to provide personalised responses to student queries, enhancing learning experiences through fine-tuned transformer models.",
+      "Designed and engineered web-based virtual teaching assistant that facilitates interactive learning for students in specific courses. It leverages natural language processing to provide personalized responses to student queries, enhance learning experiences, and support academic interactions using state of the art finetuning for transformers models.",
     ],
   },
   {
     title: "Embeddings Inference Microservice",
+    href: "https://github.com/blackprince001/embedding-inference",
     description: [
-      "Designed a Dockerised Go microservice with gRPC and HTTP interfaces orchestrated via Docker Compose to deliver distributed embedding inference for AI RAG workloads.",
+      "Designed a Dockerized Go microservice infrastructure featuring gRPC and HTTP interfaces managed through Docker Compose for orchestration for distributed AI RAG workloads useful for embedding inference.",
     ],
   },
   {
     title: "PolyglotRAG — Multi-Source Knowledge Retrieval Engine",
+    href: "https://github.com/blackprince001/PolyglotRAG",
     description: [
-      "Built a high-performance Rust-based RAG system to ingest and unify unstructured data from websites, YouTube, PDFs, and audio into a semantically searchable vector database.",
-      "Architected a modular, multi-threaded pipeline using channels and shared memory, implemented chunking and embedding workflows with external APIs, and stored vectors in PGVector with a low-latency cosine similarity query API.",
+      "Designed and engineered a high-performance RAG system in Rust to ingest, process, and unify unstructured data from diverse sources (websites, YouTube, PDFs, audio) into a single, semantically searchable vector database.",
+      "Architected a modular, multi-threaded pipeline using system channels and shared memory for synchronization, ensuring efficient and scalable processing. Implemented chunking and embedding via external APIs, storing vectors in PGVector, and exposed a low-latency query API using cosine similarity for retrieval.",
     ],
   },
   {
     title: "Patio",
+    href: "https://github.com/blackprince001/patio",
     description: [
-      "Implemented a high-performance, lightweight reverse proxy gateway in Go featuring concurrent request handling, token-bucket rate limiting, a configurable middleware chain, circuit breaker pattern, response caching, and fair rate limiting.",
+      "High-performance, lightweight reverse proxy gateway in Go featuring concurrent request handling, token-bucket rate limiting, and customizable middleware chain. Implements circuit breaker pattern, response caching and fair rate limiting.",
     ],
   },
   {
     title: "Octopush",
+    href: "https://github.com/blackprince001/octopush",
     description: [
-      "Built a concurrent HTTP file server in Go leveraging goroutines and channels for parallel uploads and downloads, with chunked transfer encoding and a custom memory pool optimised for large files.",
+      "Concurrent HTTP file server in Go utilizing goroutines and channels for parallel file uploads and downloads using HTTP. Implements chunked transfer encoding and custom memory pool for optimized large file handling.",
     ],
   },
   {
-    title: "Latticeq (WIP)",
+    title: "Latticelq (WIP)",
+    href: "https://github.com/blackprince001/latticelq",
     description: [
-      "Developing a distributed P2P database implementing the Raft consensus protocol and event-driven replication via RabbitMQ with eventual consistency and configurable quorum-based writes.",
+      "Distributed P2P database implementing Raft consensus protocol and event-driven replication via RabbitMQ. Features eventual consistency model and configurable quorum-based writes.",
     ],
   },
 ];
@@ -174,13 +188,39 @@ export const writing: ResumeItem[] = [
   {
     title:
       "A Comprehensive Survey of Side-Channel Attacks in IoT Devices: Techniques and Countermeasures (unpublished)",
+    href: "https://blackprince001.github.io/publications/sns.pdf",
     description: [
-      "Surveyed timing, power, and electromagnetic side-channel attack vectors affecting constrained IoT devices, evaluated algorithmic and hardware countermeasures, and outlined research directions that balance security with performance in pervasive deployments.",
+      "This paper presents a comprehensive survey of side-channel attacks (SCAs) targeting Internet of Things (IoT) devices, a growing area of concern as these devices become increasingly prevalent in critical applications. SCAs exploit unintended information leakage from physical implementations of cryptographic algorithms, threatening the security of IoT devices. We categorize and analyze various SCA techniques, including timing attacks, power analysis, and electromagnetic attacks, highlighting their relevance to IoT devices due to resource constraints and physical accessibility. Furthermore, we review existing countermeasures, both algorithmic and hardware-based, that aim to mitigate these risks. We also discuss the challenges in balancing security with performance and propose future research directions to enhance IoT security against evolving threats.",
     ],
   },
 ];
 
 export const skills: ResumeItem[] = [
+  {
+    title: "Languages",
+    description: [
+      "C/C++, Python, Golang, Java, Rust, Bash, SQL, MATLAB, Verilog",
+    ],
+  },
+  {
+    title: "Technologies/Frameworks",
+    description: [
+      "FastAPI, SciKit-Learn, PyTorch, TensorFlow, GIS, Docker, Kubernetes, Linux, Databases, FPGAs, Xilinx, Computer Vision, ROS1/ROS2",
+    ],
+  },
 ];
 
-export const certifications: ResumeItem[] = [];
+export const certifications: ResumeItem[] = [
+  {
+    title: "Certifications",
+    description: [
+      "Cisco Networking Technician, AWS Fundamentals",
+    ],
+  },
+  {
+    title: "Conferences",
+    description: [
+      "Ghana Digital and Innovation Week 2024, Ghana Data Science Summit (IndabaX Ghana) 2024",
+    ],
+  },
+];
