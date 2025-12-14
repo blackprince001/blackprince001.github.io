@@ -5,6 +5,7 @@ import "./globals.css"
 import Navbar from "@/components/ui/navbar"
 import Footer from "@/components/ui/footer"
 import { ThemeProvider } from "@/components/theme-provider"
+import UmamiAnalytics from "@/components/umami-analytics"
 import { cn } from "@/lib/utils";
 
 const pagella = localFont({
@@ -68,7 +69,7 @@ export default function RootLayout({
       <body className={cn("min-h-screen bg-background font-sans antialiased", pagella.variable)}>
         <div className="Root flex min-h-screen flex-col">
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <script async src="https://0.observe.so/script.js" data-app="cm1ox74dc01sga2mnzpda7460"></script>
+            <UmamiAnalytics />
             <Navbar />
             <main className="flex-1">
               {children}
