@@ -1,0 +1,261 @@
+---
+title: "Support Vector Machines: Maximum Margin Classifiers from Theory to Practice"
+publishDate: "December 16, 2024"
+tag: "Machine Learning"
+---
+
+Support Vector Machines (SVMs) are versatile machine learning models capable of handling various tasks, including classification, regression, and novelty detection.<AutoNumberedSidenote>Primary reference: <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/">Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</a> by Aurélien Géron (3rd edition, 2022).</AutoNumberedSidenote> **What makes SVMs particularly powerful is their ability to find optimal decision boundaries by maximizing the margin between classes**, making them robust and effective for both linear and nonlinear problems. This margin-maximization principle, combined with the elegant kernel trick for handling nonlinear data, has made SVMs one of the most influential **algorithms** in machine learning.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../ml-book-assets/Screenshot 2024-11-03 at 5.59.08 PM.png" 
+    alt="Support Vector Machine decision boundary with maximum margin"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Maximum Margin Classification:</strong> An SVM finds the optimal decision boundary that maximizes the margin between classes, with support vectors defining the margin.
+  </div>
+</div>
+
+## Mathematical Foundations
+
+### Decision Function
+
+At their core, SVMs make predictions using a **decision function**. For a linear SVM, the decision function takes the form:
+
+<center>$$f(\mathbf{x}) = \mathbf{w}^T \mathbf{x} + b = w_1x_1 + w_2x_2 + \ldots + w_nx_n + b$$</center>
+
+where:
+
+- **$\mathbf{w}$** is the weight vector
+- **$\mathbf{x}$** is the input feature vector
+- **$b$** is the bias term
+
+If the decision function output is positive, the instance is classified as belonging to the positive class; otherwise, it belongs to the negative class. The magnitude of the output also indicates the confidence of the prediction—instances farther from the decision boundary are classified with higher confidence.
+
+### Training and Optimization
+
+Training an SVM involves finding the optimal values for the weight vector **$\mathbf{w}$** and the bias term **$b$**. The objective is to **maximize the margin** between the classes while **minimizing margin violations**. This can be formulated as a constrained optimization problem that seeks the hyperplane with the largest possible margin.
+
+### Hard Margin vs. Soft Margin Classification
+
+**Hard Margin Classification** assumes data is perfectly linearly separable, which is rarely the case in real-world scenarios. It is sensitive to outliers and can fail when the data contains noise or mislabeled instances.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../ml-book-assets/Screenshot 2024-11-03 at 6.01.51 PM.png" 
+    alt="Hard margin SVM classification"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Hard Margin Classification:</strong> Assumes perfect linear separability, making it sensitive to outliers and noise in the data.
+  </div>
+</div>
+
+**Soft Margin Classification** allows for some misclassifications (margin violations) by introducing **slack variables** that are penalized in the optimization objective. The regularization parameter **$C$** controls the trade-off between a large margin and minimizing margin violations.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../ml-book-assets/Screenshot 2024-11-03 at 6.03.17 PM.png" 
+    alt="Soft margin SVM with different C values"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Soft Margin Classification:</strong> Allows margin violations controlled by the regularization parameter C. Lower C values create wider margins but more violations, while higher C values create narrower margins with fewer violations.
+  </div>
+</div>
+
+The regularization hyperparameter **$C$** plays a crucial role in controlling the model's behavior. When creating an SVM model using Scikit-Learn, setting **$C$** to a low value results in a wider margin but more margin violations, effectively regularizing the model and reducing the risk of overfitting. With a high **$C$** value, the margin becomes narrower, and the model becomes more sensitive to individual data points, potentially leading to overfitting. **The key is finding the right balance: reducing $C$ makes the margin larger and the model more robust, but reducing it too much can lead to underfitting**.
+
+## Comparing SVM Algorithms in Scikit-Learn
+
+Scikit-Learn provides several SVM implementations, each optimized for different use cases:
+
+<table className="min-w-full text-left text-sm">
+  <thead className="bg-gray-100 border-b border-gray-200">
+    <tr>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Algorithm</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Advantages</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Disadvantages</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Kernel Functions</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Suitable for...</th>
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-gray-100">
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900"><strong>LinearSVC</strong></td>
+      <td className="px-6 py-4 text-gray-500">Fast and efficient, especially for large datasets</td>
+      <td className="px-6 py-4 text-gray-500">Does not support kernel functions</td>
+      <td className="px-6 py-4 text-gray-500">No</td>
+      <td className="px-6 py-4 text-gray-500">Linearly separable data</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900"><strong>SVC</strong></td>
+      <td className="px-6 py-4 text-gray-500">Handles both linear and nonlinear classification</td>
+      <td className="px-6 py-4 text-gray-500">Slower than LinearSVC, particularly for large datasets</td>
+      <td className="px-6 py-4 text-gray-500">Yes</td>
+      <td className="px-6 py-4 text-gray-500">Small to medium-sized datasets, especially for nonlinear classification</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900"><strong>SGDClassifier</strong></td>
+      <td className="px-6 py-4 text-gray-500">Suitable for online learning and very large datasets due to stochastic gradient descent</td>
+      <td className="px-6 py-4 text-gray-500">Does not support kernel functions</td>
+      <td className="px-6 py-4 text-gray-500">No</td>
+      <td className="px-6 py-4 text-gray-500">Large datasets that may not fit in memory (out-of-core learning)</td>
+    </tr>
+  </tbody>
+</table>
+
+## Nonlinear SVM Classification
+
+While linear SVMs excel at classifying linearly separable data, real-world datasets often exhibit intricate, **nonlinear** relationships that defy separation by a simple straight line. **Nonlinear SVMs** rise to this challenge by employing ingenious techniques that empower them to craft more sophisticated, nonlinear decision boundaries.
+
+### Augmenting Feature Space with Polynomial Features
+
+This method enhances the original feature set by introducing **polynomial features**. For instance, if the original features are $x_1$ and $x_2$, we might add $x_1^2$, $x_2^2$, and $x_1 x_2$ as new features. This transformation allows linear SVM algorithms to discern nonlinear relationships between features.
+
+**Illustrative Example:** Incorporating a squared feature ($x_2 = (x_1)^2$) can transform a non-linearly separable 1D dataset into a linearly separable 2D dataset.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../ml-book-assets/Screenshot 2024-11-03 at 6.24.11 PM.png" 
+    alt="Polynomial feature transformation for nonlinear classification"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Polynomial Feature Transformation:</strong> Adding polynomial features transforms nonlinear data into a higher-dimensional space where it becomes linearly separable.
+  </div>
+</div>
+
+**Implementation:** The `PolynomialFeatures` transformer in Scikit-Learn can be integrated into a machine learning pipeline to achieve this.<AutoNumberedSidenote>Scikit-Learn documentation: <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html">PolynomialFeatures</a>.</AutoNumberedSidenote>
+
+**Drawbacks:** This approach can lead to a **combinatorial explosion of features** as the polynomial degree increases, potentially hindering computational efficiency. For a dataset with $n$ features and polynomial degree $d$, the number of features grows as $\binom{n+d}{d}$, which can become prohibitively large.
+
+### The Kernel Trick: Navigating High Dimensions
+
+The **kernel trick** provides an elegant solution to the computational hurdle posed by high-degree polynomial features.<AutoNumberedSidenote>For more on kernel methods, see <a href="https://en.wikipedia.org/wiki/Kernel_method">Wikipedia: Kernel Method</a>.</AutoNumberedSidenote> It grants SVMs the ability to operate in a high-dimensional feature space **implicitly**, without explicitly calculating all the transformed features.
+
+**Mathematical Intuition:** The kernel trick capitalizes on the fact that numerous SVM algorithms depend solely on the dot product between data points. Certain **kernel functions**, like the polynomial kernel, can compute the dot product of transformed vectors in a high-dimensional space using only the original vectors.
+
+**Illustrative Example:** Consider a second-degree polynomial kernel: $K(\mathbf{a}, \mathbf{b}) = (\mathbf{a}^T\mathbf{b})^2$. This kernel computes the dot product of vectors transformed by a second-degree polynomial mapping function $\phi(\mathbf{x}) = \begin{bmatrix} x_1^2 \\ \sqrt{2}x_1 x_2 \\ x_2^2 \end{bmatrix}$ without explicitly performing the transformation. Notice that this mapping function $\phi$ transforms the original 2D vectors into 3D vectors.
+
+The dot product of these transformed vectors, $\phi(\mathbf{a})^T \phi(\mathbf{b})$, can be calculated directly using the original vectors as follows:
+
+<center>$$\phi(\mathbf{a})^T \phi(\mathbf{b}) = \begin{bmatrix} a_1^2 \\ \sqrt{2} a_1 a_2 \\ a_2^2 \end{bmatrix}^T \begin{bmatrix} b_1^2 \\ \sqrt{2} b_1 b_2 \\ b_2^2 \end{bmatrix} = (a_1 b_1 + a_2 b_2)^2 = (\mathbf{a}^T\mathbf{b})^2 = K(\mathbf{a}, \mathbf{b})$$</center>
+
+This demonstrates that the kernel function $K(\mathbf{a}, \mathbf{b})$ effectively computes the dot product in the higher-dimensional space without requiring the explicit calculation of the transformed vectors.
+
+### Popular Kernels
+
+**Polynomial Kernel:**
+
+<center>$$K(\mathbf{a}, \mathbf{b}) = (\gamma \mathbf{a}^T\mathbf{b} + r)^d$$</center>
+
+where:
+- $d$ is the degree of the polynomial
+- $\gamma$ (gamma) controls the influence of each training example
+- $r$ (coef0) is an independent term
+
+**Gaussian Radial Basis Function (RBF) Kernel:**
+
+<center>$$K(\mathbf{a}, \mathbf{b}) = \exp(-\gamma ||\mathbf{a} - \mathbf{b}||^2)$$</center>
+
+where:
+- $\gamma$ controls the influence of each training example (larger $\gamma$ means closer examples have more influence)
+- The RBF kernel maps data to an infinite-dimensional space
+
+**Mercer's Theorem:** This theorem establishes the theoretical basis for the kernel trick, guaranteeing the existence of a valid mapping function $\phi$ for kernel functions that meet specific mathematical criteria.<AutoNumberedSidenote>For more on Mercer's theorem, see <a href="https://en.wikipedia.org/wiki/Mercer%27s_theorem">Wikipedia: Mercer's Theorem</a>.</AutoNumberedSidenote> This assures us that the kernel function computes a dot product in a legitimate higher-dimensional space.
+
+**Implementation:** The `SVC` class in Scikit-Learn facilitates the use of various kernels.<AutoNumberedSidenote>Scikit-Learn documentation: <a href="https://scikit-learn.org/stable/modules/svm.html">Support Vector Machines</a>.</AutoNumberedSidenote> Set `kernel="poly"` for the polynomial kernel or `kernel="rbf"` for the Gaussian RBF kernel.
+
+**Hyperparameters:** Kernels typically have hyperparameters that require tuning for optimal performance. For example, the polynomial kernel utilizes the degree (`degree`) and coefficient (`coef0`) hyperparameters, while the RBF kernel has the gamma (`gamma`) hyperparameter. These hyperparameters significantly impact model performance and should be carefully tuned using techniques like grid search or randomized search.
+
+## Kernel Selection Guide for SVMs
+
+Choosing the right kernel is crucial for SVM performance. Here's a guide to help you select the appropriate kernel for your problem:
+
+<table className="min-w-full text-left text-sm">
+  <thead className="bg-gray-100 border-b border-gray-200">
+    <tr>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Kernel</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Advantages</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Considerations</th>
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-gray-100">
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900"><strong>Linear</strong></td>
+      <td className="px-6 py-4 text-gray-500">Computational efficiency: LinearSVC scales efficiently for large datasets</td>
+      <td className="px-6 py-4 text-gray-500">Suitable for linearly separable data; may underperform on nonlinear datasets</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900"><strong>Gaussian RBF</strong></td>
+      <td className="px-6 py-4 text-gray-500">Excellent for nonlinear data; often performs well in nonlinear scenarios</td>
+      <td className="px-6 py-4 text-gray-500">Computational cost can be slow for very large datasets; requires careful tuning of gamma parameter</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900"><strong>Polynomial</strong></td>
+      <td className="px-6 py-4 text-gray-500">Good for capturing polynomial relationships in data</td>
+      <td className="px-6 py-4 text-gray-500">Hyperparameter tuning required (degree, gamma, coef0); can be computationally expensive for high degrees</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900"><strong>Other Kernels</strong></td>
+      <td className="px-6 py-4 text-gray-500">Specialized kernels: Consider kernels designed for specific data structures (e.g., string kernels for text)</td>
+      <td className="px-6 py-4 text-gray-500">Hyperparameter tuning may require experimentation to find optimal hyperparameters</td>
+    </tr>
+  </tbody>
+</table>
+
+## SVM Regression
+
+Instead of striving to find the widest "street" separating different classes, **SVM Regression aims to fit a hyperplane that encompasses as many data points as possible within a defined margin of error**. 
+
+This margin of error is determined by the hyperparameter **epsilon ($\varepsilon$)**. The figure below illustrates how different epsilon values influence the width of the margin and the number of support vectors.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../ml-book-assets/Screenshot 2024-11-03 at 6.34.09 PM.png" 
+    alt="SVM regression with different epsilon values"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>SVM Regression:</strong> Different epsilon ($\varepsilon$) values control the width of the margin and the number of support vectors in SVM regression.
+  </div>
+</div>
+
+### Key Concepts in SVM Regression
+
+- **Goal:** The primary goal is to fit as many data points as possible within the margin defined by epsilon ($\varepsilon$) while minimizing the instances that fall outside this margin.
+
+- **Epsilon-Insensitivity:** A crucial characteristic of SVM Regression is **epsilon-insensitivity**.<AutoNumberedSidenote>Original SVM regression paper: <a href="https://www.svm-regression.com/">Support Vector Regression</a> by Drucker et al. (1996).</AutoNumberedSidenote> This implies that predictions remain unaffected by data points situated within the margin. This property contributes to the robustness of SVM Regression, as it is less susceptible to minor fluctuations in the data.
+
+- **Regularization with Epsilon:** The epsilon value acts as a regularization parameter. **Decreasing epsilon leads to a narrower margin, increasing the number of support vectors and regularizing the model**. This helps prevent overfitting. Conversely, increasing epsilon creates a wider margin with fewer support vectors, potentially leading to underfitting if set too high.
+
+The optimization problem for SVM regression seeks to minimize:
+
+<center>$$\frac{1}{2}||\mathbf{w}||^2 + C \sum_{i=1}^{m} (\xi_i + \xi_i^*)$$</center>
+
+subject to constraints that ensure most points fall within the $\varepsilon$-tube, where $\xi_i$ and $\xi_i^*$ are slack variables for points above and below the margin, respectively.
+
+## Conclusion
+
+Support Vector Machines represent a powerful and theoretically grounded approach to machine learning that has stood the test of time. **Their ability to find optimal decision boundaries through margin maximization, combined with the elegant kernel trick for handling nonlinear data, makes them versatile tools for both classification and regression tasks**.
+
+The key to successfully applying SVMs lies in understanding the trade-offs:
+
+- **Linear vs. Nonlinear:** Choose `LinearSVC` for large, linearly separable datasets, and `SVC` with appropriate kernels for nonlinear problems.
+
+- **Regularization:** The $C$ parameter controls the balance between margin width and classification accuracy. Lower values provide more regularization, while higher values can lead to overfitting.
+
+- **Kernel Selection:** The Gaussian RBF kernel is often a good default for nonlinear problems, but polynomial kernels can be effective when polynomial relationships are expected. Always tune kernel hyperparameters carefully.
+
+- **Scalability:** For very large datasets, consider `LinearSVC` or `SGDClassifier` with linear kernels, as they scale better than kernelized SVMs.
+
+While modern deep learning has overshadowed SVMs in some domains, they remain valuable tools, especially when interpretability, robustness, and theoretical guarantees are important. **The margin-maximization principle and kernel trick continue to influence modern machine learning, appearing in various forms in neural networks and other advanced algorithms**.
+
+<BlogSuggestion link="https://scikit-learn.org/stable/modules/svm.html" title="Scikit-Learn SVM Documentation" />
