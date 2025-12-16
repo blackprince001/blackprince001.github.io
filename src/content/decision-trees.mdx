@@ -326,7 +326,7 @@ Let's break down the reasons for this instability:
     
 - **Greedy Splitting**: The CART algorithm, a greedy approach, aims to find the best split at each node without considering the potential impact on future splits. **It focuses on minimizing the impurity (for classification) or mean squared error (for regression) at the current node, without looking ahead to optimize the overall tree structure.** This greedy behavior can lead to instability, as a slightly different split at a node might trigger a completely different set of splits in the subsequent levels.
     
-- **Stochastic Nature of Feature Selection**: In some implementations, such as Scikit-Learn's `DecisionTreeClassifier`, the algorithm randomly selects a subset of features to evaluate at each node. **This randomness introduces another layer of variability, as retraining the same decision tree on the same data might result in a different set of features being chosen at each node, leading to a distinct tree structure.** To ensure reproducibility, you can set the `random_state` hyperparameter.
+- **Stochastic Nature of Feature Selection**: When the `max_features` hyperparameter is explicitly set in Scikit-Learn's `DecisionTreeClassifier`, the algorithm randomly selects a subset of features to evaluate at each node. By default, all features are considered at each split with no randomness. However, when `max_features` is set, this randomness introduces another layer of variability as retraining the same decision tree on the same data might result in a different set of features being chosen at each node, leading to a distinct tree structure. To ensure reproducibility, you can set the `random_state` hyperparameter.
 
 ### Visualizing Instability: An Example with the Iris Dataset
 
