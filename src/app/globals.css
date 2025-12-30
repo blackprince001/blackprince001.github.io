@@ -31,8 +31,8 @@
 
   /* Responsive Math Styling - Fixed sizes to prevent scaling with base font */
   .katex {
-    font-size: 17.6px !important;
-    /* Fixed size: equivalent to 1.1em at 16px base */
+    font-size: 15.84px !important;
+    /* Reduced by 10% from 17.6px */
     max-width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
@@ -76,8 +76,8 @@
 
   @media (max-width: 640px) {
     .katex {
-      font-size: 14.4px !important;
-      /* Fixed size: equivalent to 0.9em at 16px base */
+      font-size: 12.96px !important;
+      /* Reduced by 10% from 14.4px */
       max-width: 100vw;
     }
 
@@ -128,15 +128,15 @@
     background-color: hsl(var(--background));
     color: hsl(var(--foreground));
     font-family: var(--font-sans);
-    font-size: 17px;
-    /* Moderate increase for ET Book readability */
+    font-size: 15.3px;
+    /* Reduced by 10% from 17px */
   }
 
   /* Slightly larger base font on desktop */
   @media (min-width: 1024px) {
     html {
-      font-size: 17.5px;
-      /* Subtle increase on desktop */
+      font-size: 15.75px;
+      /* Reduced by 10% from 17.5px */
     }
   }
 

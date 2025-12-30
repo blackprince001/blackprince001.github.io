@@ -39,7 +39,6 @@ function Navbar() {
             <NavLink href="/shorts">Shorts</NavLink>
             <NavLink href="/projects">Projects</NavLink>
             <NavLink href="/publications">Research</NavLink>
-            <NavLink href="/resume">Resume</NavLink>
             <div className="pl-2 border-l border-border/50 ml-2">
               <ThemeToggle />
             </div>
@@ -66,7 +65,6 @@ function Navbar() {
               <NavLink href="/shorts" onClick={() => setIsOpen(false)}>Shorts</NavLink>
               <NavLink href="/projects" onClick={() => setIsOpen(false)}>Projects</NavLink>
               <NavLink href="/publications" onClick={() => setIsOpen(false)}>Research</NavLink>
-              <NavLink href="/resume" onClick={() => setIsOpen(false)}>Resume</NavLink>
             </div>
           </div>
         )}

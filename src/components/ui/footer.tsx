@@ -7,7 +7,7 @@ function Footer() {
     <footer className="w-full py-12 border-t border-border mt-12">
       <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col md:flex-row justify-between items-start md:items-center gap-6">
         <div className="text-sm text-muted-foreground font-serif">
-          &copy; {new Date().getFullYear()} blackprince. All rights reserved.
+          &copy; {new Date().getFullYear()} Prince Kwabena Appiah Boadu. All rights reserved.
         </div>
 
         <div className="flex flex-col sm:flex-row gap-4 sm:gap-8 text-sm font-sans">
