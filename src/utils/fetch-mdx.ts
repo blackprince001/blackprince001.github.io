@@ -1,7 +1,10 @@
 import fs from "fs"
 import path from "path"
 import remarkMath from "remark-math"
+import remarkGfm from "remark-gfm"
 import rehypeKatex from "rehype-katex"
+import rehypeRaw from "rehype-raw"
+import rehypeHighlight from "rehype-highlight"
 import { compileMDX } from "next-mdx-remote/rsc"
 import type { MDXRemoteProps } from "next-mdx-remote/rsc"
 import { parseDate, sortByDate } from "./date"
@@ -75,8 +78,8 @@ export async function getBlogBySlug(slug: string) {
     options: {
       parseFrontmatter: true,
       mdxOptions: {
-        remarkPlugins: [remarkMath],
-        rehypePlugins: [rehypeKatex],
+        remarkPlugins: [remarkMath, remarkGfm],
+        rehypePlugins: [rehypeKatex, rehypeHighlight],
       },
     },
     components: customComponents,
@@ -128,8 +131,8 @@ export async function getShortBySlug(slug: string) {
     options: {
       parseFrontmatter: true,
       mdxOptions: {
-        remarkPlugins: [remarkMath],
-        rehypePlugins: [rehypeKatex],
+        remarkPlugins: [remarkMath, remarkGfm],
+        rehypePlugins: [rehypeKatex, rehypeHighlight],
       },
     },
     components: customComponents,

@@ -55,9 +55,9 @@
   }
 
   & code {
-    font-size: 1rem;
-    /* Base code size */
-    line-height: 1.6;
+    font-size: 0.8125rem;
+    /* 13px - smaller, more compact */
+    line-height: 1.5;
   }
 
   /* Image container */
@@ -107,28 +107,91 @@
     }
   }
 
-  /* Table styles */
+  /* Enhanced table styles */
   & table {
     width: 100%;
     border-collapse: collapse;
     margin: 2rem 0;
-    /* Increased from 1.5rem */
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    font-size: 0.875rem; /* Smaller, more compact */
+  }
+
+  /* Table wrapper for responsive scrolling */
+  & > div:has(table) {
+    overflow-x: auto;
+    margin: 2rem 0;
+    border-radius: 0.5rem;
   }
 
   & th,
   & td {
-    padding: 0.75rem;
-    /* Increased from 0.5rem */
+    padding: 0.75rem 1rem;
     border: 1px solid var(--border);
-    font-size: 1.0625rem;
-    /* Moderate size matching body text */
+    text-align: left;
+    font-size: 0.875rem; /* Compact size */
+    line-height: 1.5;
   }
 
   & th {
-    background: var(--muted);
+    background: hsl(var(--muted) / 0.8);
     font-weight: 600;
-    font-size: 1.0625rem;
-    /* Moderate size matching body text */
+    font-size: 0.875rem;
+    color: var(--foreground);
+    text-transform: uppercase;
+    letter-spacing: 0.025em;
+    border-bottom: 2px solid var(--border);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  /* Striped rows for better readability */
+  & tbody tr:nth-child(odd) {
+    background: hsl(var(--muted) / 0.3);
+  }
+
+  & tbody tr:nth-child(even) {
+    background: transparent;
+  }
+
+  /* Row hover effect */
+  & tbody tr {
+    transition: background-color 0.15s ease, transform 0.15s ease;
+  }
+
+  & tbody tr:hover {
+    background: hsl(var(--muted) / 0.5);
+    transform: scale(1.001);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+  }
+
+  /* First column styling (usually labels/names) */
+  & td:first-child {
+    font-weight: 500;
+  }
+
+  /* Numeric column alignment */
+  & td:not(:first-child) {
+    text-align: center;
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Responsive table on mobile */
+  @media (max-width: 768px) {
+    & table {
+      font-size: 0.75rem;
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    & th,
+    & td {
+      padding: 0.5rem 0.75rem;
+      font-size: 0.75rem;
+    }
   }
 
   /* List styles - moderate text size increase */
