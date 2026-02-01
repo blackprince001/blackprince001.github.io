@@ -1,0 +1,93 @@
+---
+title: "You have a lot of potential"
+publishDate: "Feb 1, 2026"
+tag: "Science"
+---
+
+One of the most profound questions you can ask about the universe is also one of the simplest: *If I point to a specific coordinate in empty space, a perfect vacuum with no matter and no charge, is there anything there?* Does that specific spot possess a "quantity" that governs it? Or is it truly null?
+
+My attempt to address this question took me from the foundations of Classical Field Theory, through the strange reality of Quantum Mechanics, and ultimately landed me in the architecture of modern Deep Learning. It turns out that the mathematics governing the vacuum of space is nearly identical to the mathematics machines use to "think," and here is what I learned.
+
+### The Reality of "Empty" Space
+
+*"Does a position have a quantity that governs it, even when no matter is present?"* The short answer is **Yes.**
+
+To understand this, we must distinguish between the **Actor** and the **Stage**. In physics, this is the distinction between *Potential Energy* ($U$) and *Potential* ($V$). Potential Energy requires an object; a rock has potential energy because of its mass and its height. Potential, however, is a property of the *location itself*. It exists whether the rock is there or not.<AutoNumberedSidenote>For a deeper dive into field theory concepts, see <a href="https://www.feynmanlectures.caltech.edu/II_15.html">The Feynman Lectures on Physics, Vol. II</a> by Richard Feynman.</AutoNumberedSidenote>
+
+<div>
+    <video controls autoPlay loop muted>
+        <source src="../ActorVsStage.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+Imagine the universe not as a container, but as a massive, infinite 3D data structure, or a tensor of coordinates. Even if the data at coordinate `[x,y,z]` reads `Matter = NULL`, the coordinate still holds metadata. The **Potential** is that metadata. It is a scalar value (a single number) assigned to every point in space. It acts as an **instruction set** or a "propensity." It tells the universe: *"If a particle were to spontaneously appear at this coordinate, this is the energy debt it must immediately accept."* In General Relativity, this "quantity" becomes literal geometry. A gravitational potential isn't just a number hovering in the void; it is the **curvature of spacetime** at that point. The "emptiness" is bent, and that curvature dictates how matter must move.
+
+### The Gap Between Map and Slope
+
+*If the reality of space is a Potential then what is a “Field” (like an Electric Field or Gravitational Field)? Why do we use two terms for this idea?*
+
+The distinction fundamentally concerns the **Density and Dimension of Information**. Potential is a scalar and a map of conditions, like altitude on a topographic map. A Field is a Vector; it is an Actions Map representing the incline of the mountain at that height. The Field is derived from the Potential as the **negative gradient** (the 3D slope) of the potential map.
+
+<center>$$\vec{F} = -\nabla V$$</center>
+
+This equation reveals the relationship: **Force is the mechanism by which Nature restores equilibrium.** The "Field" is simply the universe calculating the steepest descent from high potential to low potential. In Classical Physics, we often treat the Field as "real" because we can feel the force. However, in Quantum Mechanics (specifically the **Aharonov-Bohm effect**), we discovered that particles can be affected by the Potential even in regions where the Field is zero. This suggests the **Potential (the scalar value)** is the primary layer of reality, and the Field is just a derivative.<AutoNumberedSidenote>Original discovery: <a href="https://journals.aps.org/pr/abstract/10.1103/PhysRev.115.485">Significance of Electromagnetic Potentials in the Quantum Theory</a> by Y. Aharonov and D. Bohm (1959).</AutoNumberedSidenote>
+
+<div>
+    <video controls autoPlay loop muted>
+        <source src="../PotentialFieldScene.mp4" type="video/mp4" />
+        Your browser does not support the video tag.
+    </video>
+</div>
+
+### The Dynamics of the Void
+
+*"What governs the local state? Is it inherent, or does it change over time?"* If the potential is a property of empty space, what updates it? The local state of empty space is governed by **Causality**. The potential at any empty point is actually a "memory" of an event that happened elsewhere.
+
+If nothing is moving, the potential is governed by the **Laplace Equation**:
+
+<center>$$\nabla^2 V = 0$$</center>
+
+Translated into algorithms, this says: **"The value at this empty pixel must be the average of its surrounding pixels."** Space constantly tries to smooth itself out. However, if a source (like a star or electron) moves, the potential at a distant point doesn't update instantly; the update propagates at the speed of light ($c$) according to the **Wave Equation**:
+
+<center>$$\frac{\partial^2 V}{\partial t^2} = c^2 \nabla^2 V$$</center>
+
+This tells us that empty space has **elasticity**. If you "pluck" the potential at point A, the grid oscillates, sending a ripple to point B. The "quantity" governing the space is dynamic; it is a living history of the forces that created it.
+
+### The Equilibrium of Nothing
+
+*"What would be the equilibrium state if everything is empty?"* If we deleted every particle in the universe, what happens to the grid?
+
+In classical mechanics, if you remove all sources ($mass = 0, charge = 0$), the potential settles to a constant (usually 0). The universe becomes a perfectly flat, silent sheet. But in Quantum Field Theory (QFT), a value of exactly "0" is impossible due to the **Heisenberg Uncertainty Principle**. Even in a perfect vacuum, the field fluctuates. The "equilibrium" is a noisy ground state called the **Vacuum State**. Empty space is seething with virtual particles popping in and out of existence.
+
+There is one exception where the "default" setting for empty space is **NOT** zero: **The Higgs Field.** The equilibrium state of the Higgs field is a high energy value (approx 246 GeV). If the Higgs field ever relaxed to "true zero" (the classical idea of emptiness), the laws of physics would collapse, and atoms would cease to exist.<AutoNumberedSidenote>See <a href="https://home.cern/science/physics/higgs-boson">The Higgs Boson</a> via CERN (accessed 2026).</AutoNumberedSidenote>
+
+## The Algorithm of Reality
+
+### Nature's Gradient: The Principle of Least Action
+
+We have established that Nature acts as an optimizer, constantly seeking the minimum potential through the **Principle of Least Action**. In physical systems, this is often expressed through the Lagrangian, defined as $L = T - V$, where the path taken is the one that minimizes the integral of this quantity over time. This exact principle is the foundation of **Energy-Based Models (EBMs)** in Deep Learning. We are effectively building "artificial physics" inside a GPU.<AutoNumberedSidenote>Primary reference: <a href="http://yann.lecun.com/exdb/publis/pdf/lecun-06.pdf">A Tutorial on Energy-Based Learning</a> by Yann LeCun et al. (2006).</AutoNumberedSidenote>
+
+### Learning the Landscape (Training)
+
+In a standard neural network (Classifier), we map Input $\rightarrow$ Output. In an **EBM**, we map Input $\rightarrow$ Energy. The goal is for the neural network to learn to create a "Potential Field" where realistic data (a clear image) sits in a low-energy valley, and noise sits on a high-energy peak. The training process essentially "terraforms" the mathematical landscape; we dig holes for real data and build walls for fake data.
+
+### Inference as Physics Simulation
+
+To generate an image (like in Stable Diffusion), we don't just "calculate" the answer. We simulate a particle rolling down a hill. The process starts with random noise (High Potential). We then calculate the Gradient (The Field) of the Energy with respect to the input: $\nabla_x E(x)$. Finally, we update the pixels to move "downhill."
+
+<center>$$x_{t+1} = x_t - \eta \nabla_x E(x_t)$$</center>
+
+The AI is not guessing; it is following the **path of least resistance** defined by the potential it learned.
+
+### Langevin Dynamics: The "Temperature" of Thought
+
+In physics, a ball might get stuck in a small pothole (local minimum) instead of rolling to the bottom of the valley. Nature solves this with **Heat** (thermal noise). In AI, we use **Langevin Dynamics**. We inject random noise into the generation process.
+
+<center>$$x_{t+1} = x_t - \frac{\epsilon}{2} \nabla_x E(x_t) + \sqrt{\epsilon} z_t$$</center>
+
+This noise allows the system to escape bad ideas (local minima) and settle into the true global minimum (the optimal image).<AutoNumberedSidenote>Modern application: <a href="https://arxiv.org/abs/2006.11239">Denoising Diffusion Probabilistic Models</a> by Jonathan Ho et al. (2020).</AutoNumberedSidenote>
+
+## Conclusion
+
+The "quantity", the invisible potential governing empty space, is the fundamental source code of reality. It dictates the orbit of planets via General Relativity, and it dictates the creativity of machines via Energy-Based Models. Whether in the vacuum of space or the silicon of a processor, the rule is the same: **Everything flows toward equilibrium along the curve of the potential.**
