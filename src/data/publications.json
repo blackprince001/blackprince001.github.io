@@ -2,10 +2,24 @@
   {
     "id": 1,
     "title": "A Comprehensive Survey of Side-Channel Attacks in IoT Devices: Techniques and Countermeasures",
-    "authors": ["Prince Kwabena Appiah Boadu", "et AL"],
+    "authors": [
+      "Prince Kwabena Appiah Boadu",
+      "et AL"
+    ],
     "journal": "MDPI - Unpublished",
     "year": 2024,
-    "link": "https://compeng.knust.com",
+    "link": "Term Paper",
     "pdf": "/publications/sns.pdf"
+  },
+  {
+    "id": 1,
+    "title": "The Evolution of xDSL Technologies: Broadband Demands, Technical Principles, and Copper Limitations",
+    "authors": [
+      "Prince Kwabena Appiah Boadu"
+    ],
+    "journal": "Term Paper",
+    "year": 2026,
+    "link": "https://compeng.knust.com",
+    "pdf": "/publications/adsl.pdf"
   }
 ]
