@@ -1,0 +1,236 @@
+---
+title: "Dynamic Traffic Shaping by Reinforcement Learning Agents"
+publishDate: "March 23, 2026"
+tag: "Machine Learning"
+---
+
+Quality of Service (QoS) is the set of mechanisms by which a network makes deliberate decisions about how to treat different kinds of traffic. At a high level, it encompasses three distinct but interrelated tools. **Traffic Contracts** define the agreed-upon rate boundaries between a customer and their provider, usually expressed as a Committed Information Rate (CIR) and a Burst Rate. **Traffic Policing** is a monitoring function: it measures flows against these contracted rates, and when a flow exceeds its limit, the policer can drop the excess packets, re-mark them with a lower priority (e.g., setting the DSCP field from AF11 to AF12), or forward them into a best-effort class (none of which involve any buffering). **Traffic Shaping**, meanwhile, is the complementary mechanism: instead of monitoring and reacting harshly, it absorbs excess packets into a buffer and drains them at the contracted rate, smoothing bursts into steady streams at the cost of additional latency. Together, policing and shaping form the scaffolding on which real QoS guarantees are built.
+
+I recently built an end-to-end system that questions the premise of traffic shaping: *statically*. By training a **Proximal Policy Optimization (PPO)** agent to dynamically adjust Token Bucket Filter (TBF) parameters inside the **ns-3 network simulator**, I created a shaper with no fixed rate, only a continuously learned policy for keeping the network fast and the buffers quiet.<AutoNumberedSidenote>Algorithm reference: <a href="https://arxiv.org/abs/1707.06347">"Proximal Policy Optimization Algorithms"</a> by Schulman et al. (2017).</AutoNumberedSidenote>
+
+
+## The Problem: When the Valve Is Set in Stone
+
+A static TBF shaper is, by design, a committed guess. You pick a rate (say, 50 Mbps) and the shaper enforces it unconditionally. Setting that number has consequences in both directions, and neither is safe.
+
+Set it too low and you cause **queue starvation and real-time service collapse**. When demand surges above the rate limit, incoming packets pile into the TBF bucket faster than it drains. The bucket overflows, and the shaper starts dropping. For TCP flows this triggers retransmissions, which add more load on an already overloaded pipe, compounding congestion into a spiral. For latency-sensitive traffic like VoIP or video conferencing, the damage is even more direct: a sustained 200 ms queue delay turns a crisp call into a garbled conversation, and no amount of application-layer buffering can hide a shaper that has been locked below what the moment demands. This is a QoS contract failure in the most literal sense: if a customer's SLA guarantees a committed bit rate and you have shaped them below it, you have voided that agreement at the bottleneck.
+
+Set it too high and you create a different kind of problem: **uncontrolled bursts and downstream congestion**. A rate limit only shapes traffic if traffic actually approaches it. When you set 80 Mbps on a link that averages 30 Mbps with occasional 90 Mbps spikes, the shaper is absent for most of the day, and during spikes the bursts pass through largely unsmoothed. Those bursts hit downstream queues that have no visibility into the upstream shaper's configuration, causing drops and delay in routers and switches further along the path. You have preserved throughput at the expense of control, and in a network where QoS depends on predictable traffic profiles, that unpredictability is itself a problem.
+
+Between these two failure modes sits a narrow band of "acceptable" static rates that shifts constantly as traffic patterns change throughout the day. Real internet traffic is deeply non-stationary. Cloudflare's Radar data shows that backbone demand swings between 30% and 100% of daily peak within a single 24-hour cycle. Locking a shaper to a single point on that curve means it is wrong for most of the day, either throttling legitimate traffic or passing through bursts it should have smoothed. Our goal was to build an agent that continuously reads the network's state and answers a single question adaptively: *what is the right rate limit right now?*
+
+## Architecture: Bridging Python Policy and C++ Physics
+
+The system is architected as a tight feedback loop between a high-level Python policy and a low-level C++ network simulator.
+
+### The Gymnasium Environment
+
+`Ns3Env` is the beating heart of the system, a custom Gymnasium wrapper that manages the entire simulation lifecycle. On every timestep it normalizes three raw ns-3 telemetry signals (queue occupancy, throughput, drop count) plus the current Cloudflare demand into a compact four-dimensional observation vector in $[0, 1]^4$. The agent never sees raw bytes or raw Mbps; it sees normalized pressure signals, which keeps gradients stable regardless of the physical scale of the network.
+
+The action space is a single continuous value: `rate_mbps` ∈ [1, 100] Mbps. The burst parameter is automatically derived as a fixed multiple of the chosen rate, keeping the bucket window at a sensible 100 ms of the controlled rate without adding a second dimension of uncertainty.
+
+### Learning Stability via PPO
+
+**Stable Baselines3's PPO** is the policy optimizer. PPO's surrogate objective with clipped probability ratios is a deliberate safeguard: it prevents the agent from making policy updates so large that the rate jumps from 90 Mbps to 10 Mbps in a single step; exactly the kind of instability that would cascade into TCP timeout storms.
+
+### The Simulator Bridge
+
+Communication with ns-3 uses a one-shot subprocess model. At each step, Python spawns the ns-3 binary with rate, burst, and demand as CLI arguments:
+
+```bash
+./ns3-simulation --rate=52.5Mbps --burst=6500000 --source=80.0Mbps --duration=1.0
+```
+
+The simulator runs one second of simulated time, prints a single CSV line of metrics to stdout, and exits. This means every simulation step is a fully isolated process with zero shared state between steps and zero port-binding conflicts between parallel training workers.
+
+### Rapid Experimentation via the Mock Simulator
+
+Compiling and running ns-3 for every experiment is prohibitively slow during development. The `MockNs3Process` generates synthetic demand using an **Ornstein-Uhlenbeck (OU) process**:
+
+<center>$$dx_t = \theta(\mu - x_t)dt + \sigma dW_t$$</center>
+
+The OU process is the standard physics model for a system subject to random perturbations but anchored to a long-term equilibrium. Here, $\mu = 70$ Mbps is the mean demand, $\theta = 0.10$ controls how fast demand snaps back after a deviation, and $\sigma = 20$ Mbps drives the volatility. On top of the OU dynamics, there is a 20% probability per step of a burst spike: a random additive surge of 20–50 Mbps. This combination ensures the agent is trained on demand trajectories that drift, spike, and recover in patterns that are genuinely difficult to memorize, forcing it to learn a robust control policy rather than a lookup table.
+
+## The Reward Function: Normalizing Competing Objectives
+
+An agent that maximizes throughput alone will set the rate to 100 Mbps and flood the buffer. An agent that minimizes drops alone will set it to 1 Mbps and starve the network. The reward function is the formal specification of what "good" means:
+
+<center>$$R = \alpha T_{norm} - \beta Q_{norm} - \gamma D_{norm}$$</center>
+
+Each term is independently normalized before weighting:
+
+- **Throughput ($T_{norm}$)**: Min-max scaled to $[0, 1]$ relative to the 100 Mbps link capacity. Encourages the agent to keep the pipe full.
+- **Queue Depth ($Q_{norm}$)**: Min-max scaled against the 5 MB buffer ceiling. High queue depth is a leading indicator of latency, far more actionable than measuring delay directly.
+- **Packet Loss ($D_{norm}$)**: Normalized with `tanh` rather than linear scaling. The `tanh` behaves linearly near zero (keeping gradients sharp when drops are rare) and saturates near one (preventing catastrophic reward explosions when the buffer overflows during early training).
+
+Dividing the entire expression by the sum of weights ensures the reward is always bounded within $[-1.0, +1.0]$, decoupling the PPO value function's learning rate from the experimenter's choice of weight ratios.
+
+## Curriculum Training: A Staircase to Reality
+
+The agent is trained across four progressively harder environments, carrying its learned weights from one level to the next:
+
+- **Basic**: Constant CBR traffic at 60 Mbps. The agent learns the fundamental rate-demand relationship.
+- **Bursty**: On-Off traffic patterns. The agent develops temporal awareness and learns to react to sudden drops in demand.
+- **Chaotic**: A mixed-flow environment with long-lived TCP elephant flows and short-lived UDP mice. The agent must remain stable under measurement noise and flow interference.
+- **Real-World**: 168 hours of Cloudflare Radar traffic scaled to the simulation rate, complete with the full diurnal rhythm of actual internet demand.
+
+The action space is deliberately constrained to [40, 90] Mbps rather than the full [1, 100] range. This narrows the exploration problem to the operationally relevant region, dramatically accelerating convergence without sacrificing coverage of any rate that would actually be deployed.
+
+## Evaluation: A/B Testing Against Static Baselines
+
+### How Static Limits Fail
+
+Before introducing the AI, we mapped the failure modes of static rate limiting across the 30–80 Mbps range using real Cloudflare traffic.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/combined_baselines_30mbps_40mbps.png" 
+    alt="30 and 40 Mbps static baselines"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Low-rate starvation (30/40 Mbps):</strong> Throughout the daily demand cycle, the shaper consistently caps throughput well below available demand. Queue occupancy spikes sharply during peak hours (the buffer absorbs what the rate doesn't pass) and drop counts climb as the buffer eventually saturates.
+  </div>
+</div>
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/combined_baselines_50mbps_60mbps.png" 
+    alt="50 and 60 Mbps static baselines"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>The "middle ground" trap (50/60 Mbps):</strong> These rates are the ones operators typically deploy as a compromise. They eliminate the worst overflows but introduce a different failure mode: significant idle capacity during off-peak hours when demand sits below the rate limit, and still-occasional buffer events when demand surges unexpectedly beyond the cap.
+  </div>
+</div>
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/combined_baselines_70mbps_80mbps.png" 
+    alt="70 and 80 Mbps static baselines"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>High-rate permissiveness (70/80 Mbps):</strong> Drop counts essentially disappear, but the shaper has ceded any control over burst behavior. During heavy-hitter periods the queue still builds, just more slowly, and the effective throughput gain over lower rates is surprisingly marginal, because bursts now arrive earlier and queue longer.
+  </div>
+</div>
+
+### The AI Steps In: Wide vs. Narrow Action Shapes
+
+With the baselines characterized, we evaluated two variants of the trained agent. The **Wide Shape** agent uses the full [1, 100] Mbps action range. The **Narrow Shape** agent restricts itself to a tighter window, trading some flexibility for faster convergence and more predictable control.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/ab_ai_wide_detail_timeseries.png" 
+    alt="Wide agent time series A/B test"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Wide Agent, Time Series:</strong> The agent's chosen rate tracks the demand signal closely, rising during peak traffic windows and pulling back during off-peak periods. Notice that it periodically sets rates slightly below current demand: an intentional strategy to flush queue buildup before it becomes a drop event.
+  </div>
+</div>
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/ab_ai_wide_summary_summary.png" 
+    alt="Wide agent summary comparison"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Wide Agent, Summary:</strong> Aggregated across the full evaluation window, the wide-shape agent achieves competitive throughput with all baselines while driving queue occupancy and drop counts to near-zero. The tradeoff is visible in the rate oscillation metric; the agent is active and exploratory.
+  </div>
+</div>
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/ab_ai_narrow_detail_timeseries.png" 
+    alt="Narrow agent time series A/B test"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Narrow Agent, Time Series:</strong> The narrow action space produces noticeably smoother rate curves. The agent makes fewer large corrections and instead maintains a tighter orbit around the demand signal. This results in lower peak queue occupancy at the expense of slightly slower reaction to sudden demand spikes.
+  </div>
+</div>
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/ab_ai_narrow_summary_summary.png" 
+    alt="Narrow agent summary comparison"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Narrow Agent, Summary:</strong> The narrow agent's aggregate profile shows the best queue depth numbers across all configurations. Throughput is maintained, drop rates are minimal, and the stability penalty score (our proxy for control smoothness) is the lowest of any variant tested.
+  </div>
+</div>
+
+### Stress Testing: Pushing Past the Training Distribution
+
+The final question is generalization. Traffic can exceed normal demand, and a deployed shaper needs to hold up under conditions it has never seen. We scaled the traffic input by 100% and 200% beyond the training distribution.
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/ab_ai_wide-intense100_detail_timeseries.png" 
+    alt="Wide agent under 100% intense traffic"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Wide Agent at 100% Intensity:</strong> At double the nominal demand, the agent's rate responses become more aggressive. It pushes toward the upper boundary of its action space far more frequently, and momentary buffer builds are visible in the queue trace, but the shaper recovers within a few steps without cascading into sustained packet loss.
+  </div>
+</div>
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/ab_ai_wide-intense200_detail_timeseries.png" 
+    alt="Wide agent under 200% intense traffic"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Wide Agent at 200% Intensity:</strong> At triple demand, physics wins some battles. The link is genuinely saturated during peak windows, and the agent can do little more than hold the rate at its ceiling and wait for the surge to pass. Drops occur, but they are concentrated in narrow windows rather than spread uniformly; the agent has learned to minimize loss even when it cannot eliminate it.
+  </div>
+</div>
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/ab_ai_narrow-intense100_detail_timeseries.png" 
+    alt="Narrow agent under 100% intense traffic"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Narrow Agent at 100% Intensity:</strong> The narrow shaper responds to overload with its characteristic smooth adjustments. Queue occupancy climbs but does not spike the way it does under static limits. The agent appears to anticipate demand by treating the current queue depth as a leading signal, starting to back off before the buffer is actually full.
+  </div>
+</div>
+
+<div className="flex flex-col items-center my-12">
+  <img 
+    src="../traffic-shaper/ab_ai_narrow-intense200_detail_timeseries.png" 
+    alt="Narrow agent under 200% intense traffic"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-sm text-gray-500 mt-4 text-center italic">
+    <strong>Narrow Agent at 200% Intensity:</strong> Under extreme overload, the narrow agent's constrained action space becomes a liability: it cannot reach high enough rates fast enough to match sudden surges. This is the honest limit of the design: the action space constraint that accelerates convergence during training introduces a response ceiling during out-of-distribution stress.
+  </div>
+</div>
+
+## Conclusion
+
+RL-based traffic shaping is not just a novelty; it is a meaningful rethinking of what a shaper is allowed to do. Traditional TBF's guarantee is essentially a contract with the past: a rate limit set under the assumption that yesterday's traffic profile is a reliable predictor of today's. An RL shaper's guarantee is different: it has internalized the relationship between queue state, throughput, and drop risk well enough to navigate traffic dynamics it has never explicitly seen.
+
+At the heart of this project was a quieter goal: demonstrating that an agent operating on an extremely compact observation (just four normalized scalars representing queue pressure, throughput, drop intensity, and current demand) can learn a policy rich enough to make meaningful network control decisions. There are no raw packet traces, no flow tables, no topology maps. The agent distills an entire network bottleneck down to four numbers and acts on them. That minimal-representation learning is the result we set out to validate, and the A/B results suggest it holds.
+
+The results show it earns that trust on normal traffic. The honest story on extreme overload is more nuanced: both the wide and narrow agents degrade gracefully, concentrating loss into burst windows rather than spreading it continuously, but the narrow agent's action ceiling becomes a real constraint at 200% intensity. That is the next problem worth solving: recurrent policies, latency-aware reward signals, and action spaces that grow dynamically with demand. Under those optimizations, a fully adaptive agent that responds not just to what the network *is doing* but to what it *is about to do* becomes a realistic target, and that is an open problem worth collaborating on. Contributions are very welcome.
+
+---
+
+
+<BlogSuggestion link="https://github.com/blackprince001/network-shaping" title="Explore the Source Code" />
