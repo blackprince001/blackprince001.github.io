@@ -294,7 +294,7 @@
   }
 
   h2 {
-    @apply text-2xl sm:text-3xl mb-4 mt-8 font-serif font-semibold tracking-tight border-b border-border pb-2;
+    @apply text-2xl sm:text-3xl mb-4 mt-8 font-serif font-semibold tracking-tight;
   }
 
   h3 {
@@ -319,7 +319,7 @@
   }
 
   a {
-    @apply text-primary underline underline-offset-4 decoration-1 decoration-muted-foreground/50 hover:decoration-primary transition-colors;
+    @apply text-primary transition-colors hover:text-primary/80;
   }
 
   /* Margin Notes Styling - Color coded for visibility */

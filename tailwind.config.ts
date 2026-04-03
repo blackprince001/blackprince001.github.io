@@ -10,9 +10,9 @@ const config: Config = {
 	theme: {
 		extend: {
 			fontFamily: {
-				serif: ["var(--font-sans)", "TeX Gyre Pagella", "Pagella", "ET Book", "Source Serif Pro", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Garamond", "Georgia", "Palatino", "Book Antiqua", "serif", "Noto Emoji", "Quivira"],
-				sans: ["var(--font-sans)", "TeX Gyre Pagella", "Pagella", "ET Book", "Source Serif Pro", "Source Serif 4", "Apple Garamond", "Baskerville", "Libre Baskerville", "Garamond", "Georgia", "Palatino", "Book Antiqua", "serif", "Noto Emoji", "Quivira"],
-				mono: ["ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
+				serif: ["var(--font-sans)", "ui-serif", "Georgia", "Cambria", "Times New Roman", "Times", "serif"],
+				sans: ["var(--font-sans)", "ui-sans-serif", "system-ui", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Roboto", "Helvetica Neue", "Arial", "sans-serif"],
+				mono: ["var(--font-mono)", "ui-monospace", "SFMono-Regular", "Menlo", "Monaco", "Consolas", "Liberation Mono", "Courier New", "monospace"],
 			},
 			colors: {
 				background: 'hsl(var(--background))',

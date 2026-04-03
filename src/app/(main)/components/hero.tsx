@@ -6,21 +6,21 @@ function HeroSection() {
   return (
     <section className="py-12">
       <div className="max-w-5xl">
-        <h2 className="mb-8">
+        <h2 className="mb-4">
           Prince Kwabena Appiah Boadu
         </h2>
 
         <div className="prose prose-lg text-foreground">
-          <p className="font-serif text-xl leading-relaxed mb-6">
-            Computer Engineer & Systems Architect.
+          <p className="font-serif text-sm leading-relaxed text-muted-foreground mb-6">
+            Systems Engineer & Robotics Researcher
           </p>
 
           <p className="font-serif leading-relaxed mb-6">
-            An Engineer with a passion for software engineering and machine learning. Experienced in developing autonomous navigation systems, backend services, and machine learning models.
+            I build autonomous robotic systems and explore the intersection of machine learning, software engineering, and design.
           </p>
 
           <p className="font-serif leading-relaxed mb-8">
-            Currently building interactive software and systems that enhance idea sharing and personal expression. Bridging the gap between technical and non-technical domains.
+            This site is my digital garden, a living archive of ideas in motion. It houses everything from raw working notes and open-source projects to structured essays and formal manuscripts.
           </p>
 
           <div className="flex gap-6 font-sans text-sm">

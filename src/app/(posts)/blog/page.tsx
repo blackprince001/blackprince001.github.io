@@ -1,36 +1,8 @@
 import { getBlogs } from "@/utils/fetch-mdx"
-import { CollapsibleCategory } from "./components/collapsible-category"
-
-interface BlogPost {
-  slug: string
-  frontmatter: {
-    title: string
-    publishDate: string
-    tag?: string
-    description?: string
-    readingTime?: string
-  }
-}
-
-interface GroupedBlogs {
-  [key: string]: BlogPost[]
-}
+import { BlogList } from "./components/blog-list"
 
 async function Page() {
   const blogs = await getBlogs()
-
-  const groupedBlogs = blogs.reduce<GroupedBlogs>((acc, blog) => {
-    const tag = blog.frontmatter.tag || "Randoms"
-    if (!acc[tag])
-    {
-      acc[tag] = []
-    }
-    acc[tag].push(blog)
-    return acc
-  }, {})
-
-  // Sort categories alphabetically or by some other logic if needed
-  const sortedCategories = Object.keys(groupedBlogs).sort()
 
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -41,18 +13,9 @@ async function Page() {
         </p>
       </div>
 
-      <div className="space-y-2">
-        {sortedCategories.map((tag) => (
-          <CollapsibleCategory
-            key={tag}
-            title={tag}
-            items={groupedBlogs[tag]}
-          />
-        ))}
-      </div>
+      <BlogList blogs={blogs} />
     </div>
   )
 }
 
 export default Page
-

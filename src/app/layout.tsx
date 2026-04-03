@@ -1,5 +1,6 @@
 import type React from "react"
 import type { Metadata } from "next"
+import { JetBrains_Mono } from "next/font/google";
 import localFont from "next/font/local";
 import "./globals.css"
 import Navbar from "@/components/ui/navbar"
@@ -8,32 +9,28 @@ import { ThemeProvider } from "@/components/theme-provider"
 import UmamiAnalytics from "@/components/umami-analytics"
 import { cn } from "@/lib/utils";
 
-const pagella = localFont({
+const fontPrimary = localFont({
   src: [
     {
-      path: "../fonts/texgyrepagella-regular.otf",
+      path: "../../public/fonts/Inter-Regular.ttf",
       weight: "400",
       style: "normal",
     },
     {
-      path: "../fonts/texgyrepagella-italic.otf",
-      weight: "400",
-      style: "italic",
-    },
-    {
-      path: "../fonts/texgyrepagella-bold.otf",
+      path: "../../public/fonts/Inter-Bold.ttf",
       weight: "700",
       style: "normal",
-    },
-    {
-      path: "../fonts/texgyrepagella-bolditalic.otf",
-      weight: "700",
-      style: "italic",
     },
   ],
   variable: "--font-sans",
   display: "swap",
   preload: true,
+});
+
+const fontMono = JetBrains_Mono({
+  subsets: ["latin"],
+  variable: "--font-mono",
+  display: "swap",
 });
 
 export const metadata: Metadata = {
@@ -65,8 +62,8 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en" suppressHydrationWarning className={pagella.variable}>
-      <body className={cn("min-h-screen bg-background font-sans antialiased", pagella.variable)}>
+    <html lang="en" suppressHydrationWarning className={cn(fontPrimary.variable, fontMono.variable)}>
+      <body className={cn("min-h-screen bg-background font-sans antialiased", fontPrimary.variable, fontMono.variable)}>
         <div className="Root flex min-h-screen flex-col">
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <UmamiAnalytics />

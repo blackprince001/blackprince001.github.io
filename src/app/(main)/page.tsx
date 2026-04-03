@@ -7,7 +7,7 @@ function HomePage() {
   return (
     <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 pb-10">
       <HeroSection />
-      <div className="space-y-24">
+      <div className="space-y-8">
         <BlogPosts />
         <RecentProjects />
         <RecentPublications />
