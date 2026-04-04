@@ -322,69 +322,94 @@
     @apply text-primary transition-colors hover:text-primary/80;
   }
 
-  /* Margin Notes Styling - Color coded for visibility */
+  /* ── Margin note marker (inline superscript) ── */
   .margin-note-marker {
     @apply inline-block relative;
     user-select: none;
-    color: hsl(220, 70%, 50%);
-    background-color: hsl(220, 70%, 95%);
-    padding: 2px 6px;
-    border-radius: 4px;
-    font-weight: 600;
-    transition: all 0.2s ease;
+    color: hsl(var(--foreground));
+    font-feature-settings: "tnum";
+    font-weight: 500;
+    letter-spacing: -0.01em;
+    opacity: 0.6;
+    transition: opacity 0.15s ease;
   }
 
   .margin-note-marker:hover {
-    background-color: hsl(220, 70%, 85%);
-    color: hsl(220, 80%, 40%);
-    transform: scale(1.05);
+    opacity: 1;
   }
 
+  /* ── Note card in the margin panel ── */
   .margin-note-item {
     @apply block;
+    font-family: var(--font-serif);
+    font-size: 0.74rem;
+    line-height: 1.55;
+    color: hsl(var(--muted-foreground));
+    border-left: 1px solid hsl(var(--border));
+    padding: 0 0 0 0.65rem;
     word-wrap: break-word;
-    background-color: hsl(220, 30%, 98%);
-    border-left: 3px solid hsl(220, 70%, 50%);
-    padding: 0.75rem 1rem;
-    border-radius: 4px;
-    transition: all 0.2s ease;
-    color: hsl(220, 30%, 25%);
+    transition: color 0.15s ease, border-color 0.15s ease;
   }
 
   .margin-note-item:hover {
-    background-color: hsl(220, 30%, 96%);
-    border-left-color: hsl(220, 70%, 45%);
+    color: hsl(var(--foreground));
+    border-left-color: hsl(var(--foreground) / 0.4);
   }
 
+  /* ── Left-panel card (mirrored) ── */
+  .margin-note-item-left {
+    border-left: none;
+    border-right: 1px solid hsl(var(--border));
+    padding: 0 0.65rem 0 0;
+    text-align: right;
+  }
+
+  .margin-note-item-left:hover {
+    border-right-color: hsl(var(--foreground) / 0.4);
+  }
+
+  /* ── Note number badge ── */
   .margin-note-item-number {
-    color: hsl(220, 70%, 50%);
+    font-family: var(--font-mono, monospace);
+    font-size: 0.65rem;
     font-weight: 600;
+    color: hsl(var(--foreground));
+    opacity: 0.5;
+    letter-spacing: 0;
+    margin-right: 0.3rem;
   }
 
-  /* Dark mode styles for margin notes */
+  /* ── Dark mode ── */
   .dark .margin-note-marker {
-    color: hsl(220, 70%, 65%);
-    background-color: hsl(220, 30%, 20%);
+    color: hsl(var(--foreground));
+    opacity: 0.5;
   }
 
   .dark .margin-note-marker:hover {
-    background-color: hsl(220, 30%, 25%);
-    color: hsl(220, 70%, 75%);
+    opacity: 1;
   }
 
   .dark .margin-note-item {
-    background-color: hsl(220, 20%, 12%);
-    border-left-color: hsl(220, 70%, 55%);
-    color: hsl(220, 30%, 75%);
+    color: hsl(var(--muted-foreground));
+    border-left-color: hsl(var(--border));
   }
 
   .dark .margin-note-item:hover {
-    background-color: hsl(220, 20%, 15%);
-    border-left-color: hsl(220, 70%, 60%);
+    color: hsl(var(--foreground));
+    border-left-color: hsl(var(--foreground) / 0.35);
+  }
+
+  .dark .margin-note-item-left {
+    border-right-color: hsl(var(--border));
+  }
+
+  .dark .margin-note-item-left:hover {
+    border-right-color: hsl(var(--foreground) / 0.35);
   }
 
   .dark .margin-note-item-number {
-    color: hsl(220, 70%, 65%);
+    color: hsl(var(--foreground));
+    opacity: 0.45;
   }
 }
 
