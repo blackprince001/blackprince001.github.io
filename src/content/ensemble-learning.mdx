@@ -24,7 +24,9 @@ where:
 
 This equation demonstrates how the ensemble model combines the predictions of individual base models. For regression tasks, the predictions are typically averaged. For classification tasks, a majority vote scheme can be used, where the class with the most votes from the base models is selected as the ensemble's prediction.
 
-### Illustrative Example: Ensemble of Binary Classifiers
+<Example title="Ensemble of Binary Classifiers">
+Suppose you build an ensemble containing 1,000 classifiers that are each correct only 51% of the time (barely better than random guessing). If you predict the majority class, you can hope for up to 75% accuracy! However, this is only true if all classifiers are perfectly independent, making uncorrelated errors, which is clearly not the case since they are trained on the same data. They are likely to make the same types of errors, so there will be many majority votes for the wrong class, reducing the ensemble’s accuracy.
+</Example>
 
 To understand the effectiveness of ensemble learning, consider an ensemble of $M$ binary classifiers, each with an accuracy of $\theta$. Assuming the correct class is 1, let:
 

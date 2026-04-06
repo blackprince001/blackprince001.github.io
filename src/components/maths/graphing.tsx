@@ -7,7 +7,7 @@ export function InequalitiesExample() {
   const a = useMovablePoint([0, -1])
 
   return (
-    <div className="rounded-lg border-solid border-4 border-gray-500">
+    <div className="rounded-xl border border-zinc-200/50 bg-zinc-50/50 dark:border-zinc-800/50 dark:bg-zinc-900/40 overflow-hidden my-8">
     <Mafs height={320}>
       <Coordinates.Cartesian />
 
@@ -35,7 +35,7 @@ export function InequalitiesExample() {
 
 export function HelloFx() {
   return (
-    <div className="rounded-lg border-solid border-4 border-gray-500">
+    <div className="rounded-xl border border-zinc-200/50 bg-zinc-50/50 dark:border-zinc-800/50 dark:bg-zinc-900/40 overflow-hidden my-8">
     <Mafs height={320}>
         <Coordinates.Cartesian subdivisions={4} />
         <Plot.OfX y={(x) => 2 * Math.tan(x)} />
@@ -46,7 +46,7 @@ export function HelloFx() {
 
 export function Sigmoid() {
   return (
-    <div className="rounded-lg border-solid border-4 border-gray-500">
+    <div className="rounded-xl border border-zinc-200/50 bg-zinc-50/50 dark:border-zinc-800/50 dark:bg-zinc-900/40 overflow-hidden my-8">
     <Mafs height={300} viewBox={{ x: [-1, 1], y: [-1, 1], padding: 0.5, }}>
       <Coordinates.Cartesian subdivisions={4}/>
         <Plot.OfX y={(x) => 1 / (1 + Math.exp(-x))} />

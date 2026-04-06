@@ -117,7 +117,9 @@ While linear SVMs excel at classifying linearly separable data, real-world datas
 
 This method enhances the original feature set by introducing **polynomial features**. For instance, if the original features are $x_1$ and $x_2$, we might add $x_1^2$, $x_2^2$, and $x_1 x_2$ as new features. This transformation allows linear SVM algorithms to discern nonlinear relationships between features.
 
+<Example title="Polynomial Feature Transformation">
 **Illustrative Example:** Incorporating a squared feature ($x_2 = (x_1)^2$) can transform a non-linearly separable 1D dataset into a linearly separable 2D dataset.
+
 
 <div className="flex flex-col items-center my-12">
   <img 
@@ -130,6 +132,7 @@ This method enhances the original feature set by introducing **polynomial featur
     <strong>Polynomial Feature Transformation:</strong> Adding polynomial features transforms nonlinear data into a higher-dimensional space where it becomes linearly separable.
   </div>
 </div>
+</Example>
 
 **Implementation:** The `PolynomialFeatures` transformer in Scikit-Learn can be integrated into a machine learning pipeline to achieve this.<AutoNumberedSidenote>Scikit-Learn documentation: <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html">PolynomialFeatures</a>.</AutoNumberedSidenote>
 
@@ -141,7 +144,9 @@ The **kernel trick** provides an elegant solution to the computational hurdle po
 
 **Mathematical Intuition:** The kernel trick capitalizes on the fact that numerous SVM algorithms depend solely on the dot product between data points. Certain **kernel functions**, like the polynomial kernel, can compute the dot product of transformed vectors in a high-dimensional space using only the original vectors.
 
+<Example title="Polynomial Kernel Trick">
 **Illustrative Example:** Consider a second-degree polynomial kernel: $K(\mathbf{a}, \mathbf{b}) = (\mathbf{a}^T\mathbf{b})^2$. This kernel computes the dot product of vectors transformed by a second-degree polynomial mapping function $\phi(\mathbf{x}) = \begin{bmatrix} x_1^2 \\ \sqrt{2}x_1 x_2 \\ x_2^2 \end{bmatrix}$ without explicitly performing the transformation. Notice that this mapping function $\phi$ transforms the original 2D vectors into 3D vectors.
+</Example>
 
 The dot product of these transformed vectors, $\phi(\mathbf{a})^T \phi(\mathbf{b})$, can be calculated directly using the original vectors as follows:
 

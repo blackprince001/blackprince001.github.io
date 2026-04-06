@@ -1,6 +1,6 @@
 .MafsView {
     display: block;
-    background: var(--mafs-bg);
+    background: transparent;
     overflow: hidden;
     -webkit-user-select: none;
     user-select: none;
@@ -10,14 +10,14 @@
     touch-action: none;
     outline: 0;
   
-    --mafs-bg: black;
-    --mafs-fg: white;
+    --mafs-bg: hsl(var(--background));
+    --mafs-fg: hsl(var(--foreground));
   
     --mafs-origin-color: var(--mafs-fg);
-    --mafs-line-color: #555;
+    --mafs-line-color: hsl(var(--border) / 0.5);
     --mafs-line-stroke-dash-style: 4, 3;
     --mafs-axis-stroke-width: 1px;
-    --grid-line-subdivision-color: #222;
+    --grid-line-subdivision-color: hsl(var(--border) / 0.2);
   
     --mafs-red: #f11d0e;
     --mafs-orange: #f14e0e;

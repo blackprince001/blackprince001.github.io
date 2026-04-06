@@ -91,11 +91,12 @@ The explained variance ratio for each principal component indicates the proporti
 
 The **explained variance ratio** of a principal component (PC) indicates **the proportion of the dataset's variance that lies along the principal component**. The explained variance ratio is available in the `explained_variance_ratio_` variable after fitting the PCA transformer to the dataset.
 
+<Example title="Variance Preservation in 3D to 2D">
 For instance:
-
 - A 3D dataset is projected onto the 2D plane defined by the first two principal components.
 - After fitting the PCA transformer, the explained variance ratios for the first two components are 0.76 and 0.15, respectively.
 - This output means that 76% of the dataset's variance lies along the first PC, and 15% lies along the second PC.
+</Example>
 
 <div className="flex justify-center my-8">
   <img 
@@ -113,11 +114,11 @@ This leaves about 9% for the third PC. This information can be used to decide wh
 
 The number of principal components, **$L$**, determines the dimensionality of the reduced data. This can be chosen by setting a threshold for the **cumulative explained variance ratio** (e.g., 95%) or by examining a plot of the explained variance as a function of the number of dimensions and identifying an elbow where the explained variance stops growing rapidly.
 
-### Reconstruction
-
+<Example title="MNIST Compression and Reconstruction">
 After dimensionality reduction, the training set takes up much less space. For example, applying PCA to the MNIST dataset while preserving 95% of its variance results in 154 features instead of the original 784. This means the dataset is now less than 20% of its original size, and only 5% of variance was lost!
 
-**It is also possible to decompress the reduced dataset back to 784 dimensions by applying the inverse transformation of the PCA projection.** This will not give you back the original data, since the projection lost a bit of information (within the 5% variance that was dropped), but it will likely be close to the original data.
+It is also possible to decompress the reduced dataset back to 784 dimensions by applying the inverse transformation of the PCA projection. This will not give you back the original data, since the projection lost a bit of information, but it will likely be close to the original data.
+</Example>
 <AutoNumberedSidenote>Image reference from <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/">Hands On Machine Learning Book by Aurélien Géron</a></AutoNumberedSidenote>
 <div className="flex justify-center my-8">
   <img 

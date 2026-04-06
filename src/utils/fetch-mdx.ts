@@ -19,6 +19,7 @@ import LinkEmbed from "@/components/ui/link-embed"
 import RustRunner from "@/components/code-runner/rust"
 import GoRunner from "@/components/code-runner/golang"
 import CodeSnippet from "@/components/code-runner/code-snippet"
+import { BlogExample } from "@/components/ui/blog-example"
 
 const contentDir = path.join(process.cwd(), "/src/content/")
 const shortsContentDir = path.join(process.cwd(), "/src/content/shorts/")
@@ -65,7 +66,8 @@ const customComponents = {
   LinkEmbed,
   RustRunner,
   GoRunner,
-  CodeSnippet
+  CodeSnippet,
+  Example: BlogExample
 }
 
 export async function getBlogBySlug(slug: string) {
@@ -85,9 +87,11 @@ export async function getBlogBySlug(slug: string) {
     components: customComponents,
   } as CustomMDXRemoteProps)
 
-  try {
+  try
+  {
     parseDate(frontmatter.publishDate)
-  } catch (error) {
+  } catch (error)
+  {
     console.error(`Invalid date in ${fileName}: ${frontmatter.publishDate}`)
     frontmatter.publishDate = new Date().toISOString()
   }
@@ -120,7 +124,8 @@ export async function getShortBySlug(slug: string) {
   const fileName = slug + ".mdx"
   const filePath = path.join(shortsContentDir, fileName)
 
-  if (!fs.existsSync(filePath)) {
+  if (!fs.existsSync(filePath))
+  {
     throw new Error(`Short not found: ${slug}`)
   }
 
@@ -138,9 +143,11 @@ export async function getShortBySlug(slug: string) {
     components: customComponents,
   } as CustomMDXRemoteProps)
 
-  try {
+  try
+  {
     parseDate(frontmatter.publishedAt)
-  } catch (error) {
+  } catch (error)
+  {
     console.error(`Invalid date in ${fileName}: ${frontmatter.publishedAt}`)
     frontmatter.publishedAt = new Date().toISOString()
   }
@@ -155,7 +162,8 @@ export async function getShortBySlug(slug: string) {
 }
 
 export async function getShorts() {
-  if (!fs.existsSync(shortsContentDir)) {
+  if (!fs.existsSync(shortsContentDir))
+  {
     return []
   }
 

@@ -33,6 +33,7 @@ int execve(const char *pathname, char *const argv[], char *const envp[]);
 
 These are all essentially to help run the new process we are going to specify.
 
+<Example title="Basic execve Usage">
 Here's a simple example:
 
 ```c
@@ -64,6 +65,7 @@ int main(int argc, char* argv[])
   return EXIT_SUCCESS;
 }
 ```
+</Example>
 
 This code demonstrates the use of the `execve` system call in C. Let's break it down step by step:
 
@@ -116,10 +118,12 @@ But wait a minute, what if from the code sample I showed, we could somehow perfo
 
 I am going to modify our initial snippet for creating running ls command through `execve` syscall. First point of edit: the binary we are going to be running.
 
+<Example title="Einstein's Eureka: Recursive execve">
 ```c
   int exec_return = execve(
       "./execve", exec_argv, exec_envp);
 ```
+</Example>
 
 By changing the binary path from `"/usr/bin/ls"` to `"./execve"` which in this case would be the compiled source of our code, you could see what I am attempting here. Our caterpillar never gets to be transformed into a butterfly. We get stuck in this infinite of recursion and this basically resembles a `fork`.
 

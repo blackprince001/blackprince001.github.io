@@ -60,31 +60,22 @@ Image Alt<Sidenote number={1}>gradient descent algorithms can face when trying t
 
 **Local Minimum Trap:** A key challenge arises when the cost function has local minima. A local minimum is a point where the function is lower than its immediate surroundings but not necessarily the lowest point overall. If the algorithm starts at or near a local minimum, it might converge there and get stuck, failing to find the global minimum.
 
-## Mathematical Representation of Gradient Descent
-
-The gradient descent update rule is given by:
-
-<center>$$\theta_{N+1} = \theta_{N} - \alpha \nabla_{\mathbf{\theta}}\operatorname{MSE}(\mathbf{\theta})$$</center>
-
-where:
-
-- **$\theta_{N+1}$** represents the updated parameter vector.
-- **$\theta$** is the current parameter vector.
-- **$\alpha$** is the learning rate (a hyperparameter that controls the step size).
-- **$\nabla_{\mathbf{\theta}}\operatorname{MSE}(\mathbf{\theta})$** is the gradient vector of the Mean Squared Error (MSE) cost function with respect to the parameter vector $\theta$.
-
+<Example title="Gradient Descent Update Rule">
 The gradient vector points in the direction of the steepest ascent of the cost function. By subtracting it from the current parameter vector, we move the parameters in the direction that decreases the cost function (downhill in our valley analogy).
 
-<CodeSnippet code={`
+<center>$$\theta_{N+1} = \theta_{N} - \alpha \nabla_{\mathbf{\theta}}\operatorname{MSE}(\mathbf{\theta})$$</center>
+</Example>
+
+<Example title="Batch Gradient Descent Implementation">
+```python
 import numpy as np
 
 np.random.seed(42)
 
 m = 100
 X = np.random.rand(m, 1)
-y = 4 + 3 * X + np.random.rand(m, 1)`} language="python"/>
+y = 4 + 3 * X + np.random.rand(m, 1)
 
-<CodeSnippet code={`
 eta = .271828 # learning rate
 n_epochs = 1000
 m = len(X_b) # number of instances
@@ -95,14 +86,14 @@ theta = np.random.randn(2, 1) # our initial guess for theta
 for epoch in range(n_epochs):
     gradients = 2 / m * X_b.T @ (X_b @ theta - y) # MSE value
     theta = theta - eta * gradients
-`} language="python"/>
+```
 
-Values for theta as computed would be: 
-
-<CodeSnippet code={`
+Expected output for $\theta$:
+```bash
 array([[4.51359766],
        [2.96646836]])
-`} language="bash"/>
+```
+</Example>
 
 <br/>
 
@@ -138,7 +129,8 @@ In contrast to batch gradient descent, SGD randomly selects a single instance fr
 
 Stochastic Gradient Descent Implementation python
 
-<CodeSnippet code={`
+<Example title="Stochastic Gradient Descent Implementation">
+```python
 n_epochs = 50
 t0, t1 = 5, 50
 
@@ -157,7 +149,8 @@ for epoch in range(n_epochs):
 
         eta = learning_schedule(epoch * m + iteration)
         theta = theta - eta * gradients
-`} language="python"/>
+```
+</Example>
 
 <br/>
 

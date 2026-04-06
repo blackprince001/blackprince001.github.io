@@ -11,6 +11,7 @@ import PreviewLink from "./components/ui/linked-previews"
 import RustRunner from './components/code-runner/rust'
 import GoRunner from './components/code-runner/golang'
 import CodeSnippet from './components/code-runner/code-snippet'
+import { BlogExample } from './components/ui/blog-example'
 
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -37,6 +38,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     RustRunner,
     GoRunner,
     CodeSnippet,
+    Example: BlogExample,
     ...components,
   }
 }
