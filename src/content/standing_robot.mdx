@@ -127,9 +127,7 @@ We can clearly see the difference between a successful run (Blue) and a failed/e
   />
   <div className="text-sm text-gray-500 mt-4 text-center italic">
     <strong>Upright Reward:</strong> The specific signal for "keeping the torso vertical."
-    <AutoNumberedSidenote>
-      <strong>Interpreting the Graphs:</strong> The "Mean Reward" (Left) is the aggregate. The "Upright" component (Right) specifically tracks torso orientation. Notice how the Blue line (Training Policy) grows linearly as the robot learns to fight gravity.
-    </AutoNumberedSidenote>
+    <strong>Interpreting the Graphs:</strong> The "Mean Reward" (Left) is the aggregate. The "Upright" component (Right) specifically tracks torso orientation. Notice how the Blue line (Training Policy) grows linearly as the robot learns to fight gravity.
   </div>
 </div>
 
@@ -186,9 +184,7 @@ This state is fascinating. The robot has learned that "falling is bad," but it h
   />
   <div className="text-sm text-gray-500 mt-4 text-center italic">
     <strong>Entropy Loss:</strong> The policy is becoming confident in the <em>wrong</em> strategy.
-    <AutoNumberedSidenote>
     <strong>Why did it get worse?</strong> The graph on the left shows "Episode Length." Ideally, this should stay at the maximum. Here, it drops sharply. This implies the policy found a local minimum where it was confident (Low Entropy, right graph) in a strategy that actually caused it to fall over.
-    </AutoNumberedSidenote>
   </div>
 </div>
 
