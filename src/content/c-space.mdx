@@ -1,0 +1,364 @@
+---
+title: "Configuration Space of Robots"
+publishDate: "April 6, 2026"
+tag: "Robotics"
+---
+
+The configuration of a robot is a complete specification of the position of every point of the robot. The minimum number $n$ of real-valued coordinates needed to represent the configuration is the number of **degrees of freedom (dof)** of the robot.<AutoNumberedSidenote>Primary reference: <a href="https://modernrobotics.northwestern.edu">Modern Robotics: Mechanics, Planning, and Control</a> by Lynch &amp; Park (2017). Northwestern University &amp; Cambridge University Press.</AutoNumberedSidenote> The mathematical formalization of **configuration space** was first introduced by Lozano-Pérez in the context of robot motion planning (1983).<AutoNumberedSidenote>Historical context: T. Lozano-Pérez, <a href="https://ieeexplore.ieee.org/document/1087196">"Spatial planning: a configuration space approach,"</a> IEEE Transactions on Computers (1983).</AutoNumberedSidenote>
+
+The core relationship that allows us to use a minimal set of real-valued numbers is that <strong>rigid bodies have a fixed, known shape that never deforms</strong>. Because the object is rigid, the distance between any two points on its body remains absolutely constant regardless of where the object moves. If you were dealing with a soft or deformable object, like a pillow, the shape could change, and you would need an enormous number of variables to track the position of every shifting point to fully describe its state.
+
+The **$n$-dimensional space** containing all possible configurations of the robot is called the **configuration space (C-space)**. At any given moment, the entire configuration of a robot can be represented simply as a single point within its C-space.
+
+Consider a few concrete examples:
+
+<Example title="Examples of C-spaces">
+
+<div className="flex flex-col items-center my-12">
+  <img
+    src="../c-space/c-space.png"
+    alt="An abstract depiction of a robot's configuration space, showing a high-dimensional space with a single point representing the robot's current configuration"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
+
+- **A door:** The physical configuration of a door requires only a single number to describe it: the angle $\theta$ about its hinge. Its C-space is 1-dimensional.
+- **A point on a plane:** A point moving on a flat surface needs two coordinates, $(x, y)$. Its C-space is a 2-dimensional plane.
+- **A coin lying flat on a table:** Described by three coordinates: $(x, y)$ for position and $\theta$ for orientation. Its C-space is 3-dimensional.
+- **A rigid body in 3D space:** Requires six independent numbers ($(x, y, z)$ position and three angles). Its C-space is 6-dimensional.
+</Example>
+
+In essence, **C-space allows us to translate the complicated physical motion of a multi-part robot into the simple mathematical motion of a single point moving through a high-dimensional space.**
+
+## Robot Links
+
+Robots are typically constructed from rigid bodies, called **links**, that are connected by various joints. Common joint types include **revolute** (hinge), **prismatic** (sliding), and **spherical** (ball-and-socket) joints, and each joint type provides specific freedoms while imposing constraints on the rigid bodies it connects.
+
+<div className="flex flex-col items-center my-12">
+  <img
+    src="../c-space/Pasted image 20260406105817.png"
+    alt="Diagrams showing common robot joint types: revolute (R), prismatic (P), helical (H), cylindrical (C), universal (U), and spherical (S) joints"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-[10px] text-zinc-500/50 mt-4 text-center italic">
+    Robot Joint Types: Each joint type provides a specific number of freedoms while constraining all other relative motion.
+  </div>
+</div>
+
+**Robot joints serve a dual purpose in defining a robot's configuration space: they provide specific freedoms of motion between rigid bodies while simultaneously acting as mathematical constraints that limit their overall movement**. When two rigid bodies are connected by a joint, the total degrees of freedom of the system is reduced. The number of constraints a joint imposes, subtracted from the rigid body's inherent dof (three for a planar body and six for a spatial body), equals the exact number of freedoms that specific joint provides. This relationship is foundational for determining the dimension of a robot's overall C-space.
+
+The following table identifies several typical robot joints, categorized by the number of freedoms they provide:
+
+<table className="min-w-full text-left text-sm my-8">
+  <thead className="bg-gray-100 border-b border-gray-200">
+    <tr>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">DoF</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Joint Name</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Symbol</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Motion Type</th>
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-gray-100">
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900" rowSpan={3}>1-DoF</td>
+      <td className="px-6 py-4 text-gray-700">Revolute (Hinge)</td>
+      <td className="px-6 py-4 font-mono text-gray-500">R</td>
+      <td className="px-6 py-4 text-gray-500">Pure rotation about a fixed axis.</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 text-gray-700">Prismatic (Sliding)</td>
+      <td className="px-6 py-4 font-mono text-gray-500">P</td>
+      <td className="px-6 py-4 text-gray-500">Pure translation along a fixed axis.</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 text-gray-700">Helical (Screw)</td>
+      <td className="px-6 py-4 font-mono text-gray-500">H</td>
+      <td className="px-6 py-4 text-gray-500">Coupled rotation and translation along a screw axis.</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900" rowSpan={2}>2-DoF</td>
+      <td className="px-6 py-4 text-gray-700">Cylindrical</td>
+      <td className="px-6 py-4 font-mono text-gray-500">C</td>
+      <td className="px-6 py-4 text-gray-500">Independent translation and rotation about a single axis.</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 text-gray-700">Universal</td>
+      <td className="px-6 py-4 font-mono text-gray-500">U</td>
+      <td className="px-6 py-4 text-gray-500">Pair of orthogonal revolute joints.</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900">3-DoF</td>
+      <td className="px-6 py-4 text-gray-700">Spherical (Ball-and-Socket)</td>
+      <td className="px-6 py-4 font-mono text-gray-500">S</td>
+      <td className="px-6 py-4 text-gray-500">Three independent rotations, like a human shoulder.</td>
+    </tr>
+  </tbody>
+</table>
+
+In the larger context of Configuration Space analysis, **the specific types and quantities of joints are used to mathematically calculate the overall degrees of freedom of a robotic system using Grübler's formula**.
+
+## Grübler's Formula
+
+**Grübler's formula is a mathematical tool used to precisely calculate the degrees of freedom (dof) of a robot, which directly defines the dimension of its configuration space (C-space)**.<AutoNumberedSidenote>Grübler's formula is also sometimes called the Chebychev–Grübler–Kutzbach criterion in the mechanism design literature.</AutoNumberedSidenote> In the broader kinematics literature, these systems are often referred to as **mechanisms** or **linkages**, and their mobility is a central subject of study.<AutoNumberedSidenote>Foundational mechanism analysis can be found in Erdman &amp; Sandor (1996) and McCarthy &amp; Soh (2011).</AutoNumberedSidenote> It formalizes the concept that a robot's overall C-space dimension equals the sum of the unconstrained freedoms of all its individual rigid bodies, minus the total independent constraints imposed by all connecting joints.
+
+The formula uses the following variables:
+
+- $N$: Total number of links, counting the stationary ground as one link.
+- $J$: Total number of joints.
+- $m$: Baseline dof of a single rigid body ($m=3$ for planar, $m=6$ for spatial mechanisms).
+- $f_i$: Number of independent freedoms provided by joint $i$.
+
+<center>$$\text{dof} = m(N - 1 - J) + \sum_{i=1}^J f_i$$</center>
+
+This equation works for both **open-chain mechanisms** (serial robotic arms) and **closed-chain mechanisms** (mechanisms with closed loops). However, there is a critical caveat: **Grübler's formula strictly requires that all joint constraints within the system be completely independent**. When redundant constraints are present, **Grübler's formula only provides a lower bound on the actual number of degrees of freedom**.
+
+### Short Quiz
+
+<Quiz quizData={[
+  {
+    question: "A four-bar linkage has 4 links (including ground) and 4 revolute joints. Using Grübler's formula for a planar mechanism (m=3), what is its degree of freedom?",
+    image: "../c-space/Pasted image 20260406110037.png",
+    answers: [
+      { text: "dof = 3(4 - 1 - 4) + 4(1) = 1", correct: true },
+      { text: "dof = 3(4 - 1 - 4) + 4(1) = 0", correct: false },
+      { text: "dof = 6(4 - 1 - 4) + 4(1) = -2", correct: false },
+      { text: "dof = 3(4 - 1) + 4(1) = 13", correct: false },
+    ],
+    explanation: "With m=3, N=4, J=4, and f_i=1 for all revolute joints: dof = 3(4 - 1 - 4) + 4 = 3(-1) + 4 = 1. The four-bar linkage has exactly 1 degree of freedom, meaning one input controls the entire mechanism.",
+  },
+  {
+    question: "A slider-crank has 4 links (including ground), 3 revolute joints (f=1 each), and 1 prismatic joint (f=1). What is its dof?",
+    image: "../c-space/Pasted image 20260406110055.png",
+    answers: [
+      { text: "dof = 3(4 - 1 - 4) + 4(1) = 1", correct: true },
+      { text: "dof = 3(4 - 1 - 4) + 3(1) + 1(2) = 2", correct: false },
+      { text: "dof = 3(4 - 1) + 4 = 13", correct: false },
+      { text: "dof = 3(4 - 1 - 4) + 4(1) = 0", correct: false },
+    ],
+    explanation: "With m=3, N=4, J=4, and Σf_i = 3(1) + 1(1) = 4: dof = 3(4-1-4) + 4 = 1. Despite having a different joint mix than the four-bar linkage, the slider-crank also has exactly 1 dof.",
+  },
+  {
+    question: "Both Stephenson and Watt six-bar linkages have 6 links and 7 revolute joints (f=1 each). What is the dof?",
+    image: "../c-space/Pasted image 20260406110126.png",
+    answers: [
+      { text: "dof = 3(6 - 1 - 7) + 7(1) = 1", correct: true },
+      { text: "dof = 3(6 - 1 - 7) + 7(1) = 2", correct: false },
+      { text: "dof = 6(6 - 1 - 7) + 7(1) = -5", correct: false },
+      { text: "dof = 3(6 - 1) + 7 = 22", correct: false },
+    ],
+    explanation: "With m=3, N=6, J=7, f_i=1: dof = 3(6-1-7) + 7 = 3(-2) + 7 = 1. Despite having two different topological configurations, both the Stephenson and Watt linkages produce the same result of 1 dof.",
+  },
+  {
+    question: "A mechanism has 3 links meeting at a single point (modeled as 2 joints there). Total: 8 links, 9 joints (8 revolute + 1 prismatic, all f=1). What is the dof?",
+    image: "../c-space/Pasted image 20260406110351.png",
+    answers: [
+      { text: "dof = 3(8 - 1 - 9) + 9(1) = 3", correct: true },
+      { text: "dof = 3(8 - 1 - 9) + 9(1) = 1", correct: false },
+      { text: "dof = 3(8 - 1 - 9) + 9(1) = 0", correct: false },
+      { text: "dof = 3(7 - 1 - 9) + 9(1) = -9", correct: false },
+    ],
+    explanation: "With m=3, N=8, J=9, Σf_i=9: dof = 3(8-1-9) + 9 = 3(-2) + 9 = 3. The key insight is that when three links meet at a point, you cannot model it as one joint — a joint can only connect exactly two bodies. Modeling it correctly as two overlapping joints changes the count.",
+  },
+  {
+    question: "A parallelogram linkage has 5 links and 6 revolute joints (f=1 each). Grübler's formula gives dof = 3(5-1-6) + 6 = 0. But the mechanism actually moves. Why?",
+    image: "../c-space/Pasted image 20260406110422.png",
+    answers: [
+      { text: "One of the six constraints is redundant (not independent), so the true dof is 1.", correct: true },
+      { text: "The formula uses m=6 for parallel links, giving a different result.", correct: false },
+      { text: "Grübler's formula is simply wrong for planar mechanisms.", correct: false },
+      { text: "A result of 0 is correct — the parallelogram linkage is indeed rigid.", correct: false },
+    ],
+    explanation: "Grübler's formula strictly assumes all constraints are independent. In the parallelogram linkage, one of the parallel links provides a constraint that is already provided by the other — it is redundant. When redundant constraints exist, the formula only yields a lower bound on the true dof. The linkage actually has 1 dof because the effective number of independent constraints is one fewer than counted.",
+  },
+  {
+    question: "A Delta robot is a spatial mechanism ($m=6$) with a fixed platform, a moving platform, and three legs. If $N=17$ and $J=21$ (9 revolute joints $f_i=1$, 12 spherical joints $f_i=3$), what is the calculated dof using Grübler's formula?",
+    image: "../c-space/Pasted image 20260406110319.png",
+    answers: [
+      { text: "dof = 6(17 - 1 - 21) + 9(1) + 12(3) = 15", correct: true },
+      { text: "dof = 6(17 - 1 - 21) + 9(1) + 12(3) = 3", correct: false },
+      { text: "dof = 3(17 - 1 - 21) + 9(1) + 12(3) = 30", correct: false },
+      { text: "dof = 6(17 - 1 - 21) + 21(1) = -9", correct: false },
+    ],
+    explanation: "Using Grübler's: dof = 6(17 - 1 - 21) + 9(1) + 12(3) = 6(-5) + 9 + 36 = -30 + 45 = 15. Interestingly, only 3 of these freedoms are visible at the end-effector; the other 12 are internal torsion of the parallelogram links.",
+  },
+  {
+    question: "A Stewart-Gough platform ($m=6$) has two plates connected by 6 UPS (universal-prismatic-spherical) legs. With $N=14$ and $J=18$ (6 universal $f_i=2$, 6 prismatic $f_i=1$, 6 spherical $f_i=3$), what is the dof?",
+    image: "../c-space/Pasted image 20260406110248.png",
+    answers: [
+      { text: "dof = 6(14 - 1 - 18) + 6(2) + 6(1) + 6(3) = 6", correct: true },
+      { text: "dof = 6(14 - 1 - 18) + 18(1) = -12", correct: false },
+      { text: "dof = 3(14 - 1 - 18) + 18(1) = 3", correct: false },
+      { text: "dof = 6(14 - 1 - 18) + 6(3) + 6(3) + 6(3) = 24", correct: false },
+    ],
+    explanation: "Using Grübler's: dof = 6(14 - 1 - 18) + 12 + 6 + 18 = 6(-5) + 36 = 6. This confirms the Stewart-Gough platform has the full 6 degrees of freedom required for arbitrary spatial positioning and orientation.",
+  },
+]} />
+
+
+## Topology and Representation
+
+While degrees of freedom (dof) define the dimension of a robot's configuration space, the **topology describes the fundamental shape of that space**. Many robot C-spaces have the mathematical structure of a **differentiable manifold**, requiring tools from differential geometry to analyze correctly.<AutoNumberedSidenote>Accessible introductions to differential geometry for robotics include works by Millman &amp; Parker (1977), do Carmo (1976), and Boothby (2002).</AutoNumberedSidenote> Two spaces are considered **topologically equivalent if one can be continuously deformed into the other without any cutting or gluing**. 
+
+<Example title="Topologically Equivalent Spaces">
+For example, the surface of a sphere and a football are topologically equivalent because one can be stretched into the other, but a sphere cannot be deformed into a flat plane without being cut.
+
+<div className="flex flex-col items-center my-12">
+  <img
+    src="../c-space/Pasted image 20260406110542.png"
+    alt="Visual showing topologically equivalent spaces (sphere and football) contrasted with non-equivalent spaces (sphere and plane)"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+</div>
+</Example>
+
+The topology of a complex robotic system can often be understood by expressing its C-space as the **Cartesian product of simpler, lower-dimensional spaces**:
+
+- **$\mathbb{R}^n$**: $n$-dimensional Euclidean space (e.g., a line $\mathbb{R}^1$ or a plane $\mathbb{R}^2$).
+- **$S^n$**: The $n$-dimensional surface of a sphere in an $(n+1)$-dimensional space (e.g., $S^1$ is a 1D circle).
+- **$T^n$**: An $n$-dimensional torus, which is the product of $n$ circles ($S^1 \times S^1 \times \dots \times S^1$).
+
+Using these building blocks, the C-space of a **2R robot arm** (two revolute joints) is written as $S^1 \times S^1$, which forms a torus ($T^2$). Similarly, the C-space of a **planar rigid body** is $\mathbb{R}^2 \times S^1$, combining its 2D Euclidean translation with its 1D circular rotation.
+
+<div className="flex flex-col items-center my-12">
+  <img
+    src="../c-space/Pasted image 20260406110653.png"
+    alt="Visualization of the C-space of a 2R robot arm as a torus formed by the product of two circles S1 x S1"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-[10px] text-zinc-500/50 mt-4 text-center italic">
+    2R Robot C-space: The configuration space of a two-revolute-joint robot arm is topologically a torus $T^2 = S^1 \times S^1$.
+  </div>
+</div>
+
+Understanding topology is critical because if we ignore it and force a curved topological space into a flat grid of minimal coordinates (an <em>explicit parameterization</em>), we create <strong>mathematical singularities</strong>. A classic example is using latitude and longitude to map a sphere; this representation breaks down at the North and South Poles, causing velocity calculations to blow up toward infinity even when the robot's physical motion is smooth.
+
+While topology is an inherent property of the space, **representation is the subjective choice of numerical coordinates used to perform actual computations**. This distinction is critical. If you use an **explicit parameterization** the absolute minimum number of coordinates $n$ to represent an $n$-dimensional curved space, you will inevitably create **singularities**.
+
+A classic example is using latitude and longitude (two coordinates) to represent a sphere (a 2D space). At the North and South Poles, the representation breaks down; taking a tiny physical step can result in an infinite rate of change in the longitude coordinate.
+
+To overcome singularities, there are two representational strategies:
+
+1. **An Atlas of Coordinate Charts:** Uses multiple overlapping, explicitly parameterized "maps" that together cover the whole space. As the robot approaches a singularity on one chart, the system switches to an overlapping chart where the singularity does not exist. While this maintains the minimum number of coordinates, it requires complex bookkeeping.
+2. **Implicit Representation:** Views the $n$-dimensional C-space as embedded inside a larger Euclidean space with $m$ dimensions (where $m \ge n$). It uses all $m$ coordinates, but restricts them using $m - n$ constraint equations. 
+
+<Example title="Implicit Representation">
+For example, the 2D surface of a sphere ($S^2$) can be implicitly represented in 3D Euclidean space ($\mathbb{R}^3$) using coordinates $(x,y,z)$, subject to the constraint $x^2 + y^2 + z^2 = 1$.
+</Example>
+
+In the larger context of C-space analysis, **implicit representation is overwhelmingly preferred despite using more numbers, because it completely eliminates singularities**.<AutoNumberedSidenote>This is also why 3D rotation is standardly represented by a 9-number rotation matrix (subject to 6 constraints) rather than 3 Euler angles — it avoids singularities and easily supports standard linear algebra operations.</AutoNumberedSidenote> Furthermore, implicit representations are the natural mathematical framework for handling closed-chain robots, where the physical closed loops are modeled directly as implicit "loop-closure" constraint equations.
+
+## Constraints
+
+**Constraints are mathematical limitations placed on a system's motion, and they play a fundamental role in defining the dimension, representation, and behavior of a robot's C-space.**
+
+At the most basic level, the very definition of a rigid body relies on constraints: the distances between any points on the body must remain constant. When multiple rigid bodies are connected to build a robot, **the joints act as physical constraints that restrict the independent movement of the connected links, thereby reducing the system's overall degrees of freedom**. However, **if a system possesses redundant constraints, Grübler's formula will only yield a lower bound on the true dimension of the C-space**.
+
+Constraints are divided into two major mathematical categories: **configuration space constraints** and **velocity constraints**. How these behave mathematically determines whether they fall into the category of **holonomic** or **nonholonomic** constraints.
+
+### Configuration Space Constraints (Holonomic)
+
+Configuration constraints are physical restrictions that permanently tie the positions of a robot's links together. Because they directly limit where the robot can be, **these constraints strictly reduce the dimension of the robot's C-space**.
+
+These constraints are expressed purely as position-level equations of the form:
+
+<center>$$g(\theta) = 0$$</center>
+
+where $\theta = [\theta_1 \dots \theta_n]^T \in \mathbb{R}^n$ represents the configuration variables, and $g(\theta)$ is a set of $k$ independent equations. Because they can be written as $g(\theta) = 0$, **all configuration constraints are inherently holonomic constraints**.
+
+<Example title="A point on a sphere">
+When describing a point moving on the surface of a 3D sphere, we use an implicit representation by embedding the space into a higher-dimensional Euclidean space.
+
+- **Initial Coordinates ($n$):** We parameterize the point using 3 coordinates $(x, y, z)$ in $\mathbb{R}^3$, so $n = 3$.
+- **Constraints ($k$):** We apply a single distance constraint to ensure the point stays on the unit sphere: $x^2 + y^2 + z^2 = 1$. Thus $k = 1$.
+- **Resulting C-space ($n-k$):** Applying this constraint restricts the valid configurations to a 2-dimensional surface ($3 - 1 = 2$) embedded in the 3D space. You have (r, $\theta$) to represent the space.
+</Example>
+
+### Velocity Constraints
+
+Velocity constraints restrict the instantaneous directions a system can move, rather than tying its permanent coordinates together. They are mathematically referred to as **Pfaffian constraints**.
+
+Velocity constraints are expressed as a matrix equation:
+
+<center>$$A(\theta)\dot{\theta} = 0$$</center>
+
+where $\dot{\theta} \in \mathbb{R}^n$ is the joint-velocity vector, and $A(\theta)$ is a $k \times n$ matrix. Velocity constraints are subdivided into two kinds based entirely on whether they can be mathematically "integrated" into configuration constraints.
+
+#### A. Integrable Velocity Constraints (Holonomic)
+
+If a velocity constraint can be integrated to give an equivalent configuration constraint $g(\theta) = 0$, it is considered **holonomic**. This means the velocity constraint is just a configuration constraint in disguise, and it successfully reduces the dimension of the C-space.
+
+To see how this connects, suppose a robot follows a time trajectory $\theta(t)$ subject to a configuration constraint $g(\theta(t)) = 0$. By differentiating both sides with respect to time, you get a velocity constraint: **$\frac{d}{dt}g(\theta(t)) = 0$**
+
+Using the chain rule, this expands into a matrix multiplying the velocity vector:
+
+<center>$$\begin{bmatrix} \frac{\partial g_1}{\partial \theta_1}(\theta) & \cdots & \frac{\partial g_1}{\partial \theta_n}(\theta) \\ \vdots & \ddots & \vdots \\ \frac{\partial g_k}{\partial \theta_1}(\theta) & \cdots & \frac{\partial g_k}{\partial \theta_n}(\theta) \end{bmatrix} \begin{bmatrix} \dot{\theta}_1 \\ \vdots \\ \dot{\theta}_n \end{bmatrix} = 0$$</center>
+
+This can be written compactly as: **$\frac{\partial g}{\partial \theta}(\theta)\dot{\theta} = 0$**
+
+Therefore, a Pfaffian constraint $A(\theta)\dot{\theta} = 0$ is holonomic if the matrix $A(\theta)$ perfectly equals the partial derivative matrix $\frac{\partial g(\theta)}{\partial \theta}$ for some function $g(\theta)$. In this case, $g(\theta)$ is regarded as the integral of $A(\theta)$.
+
+<Example title="A Concrete Example: A Robot on a Circular Track">
+Imagine a tiny robot moving on a flat 2D floor with configuration variables $\theta = [x, y]^T$. Tie the robot to a post at the origin with a rigid string of length $r$.
+
+The robot is forced to stay on a circle of radius $r$, giving the **configuration constraint**:
+
+<center>$$g(x, y) = x^2 + y^2 - r^2 = 0$$</center>
+
+Differentiating with respect to time gives the **velocity constraint**:
+
+<center>$$2x\dot{x} + 2y\dot{y} = 0$$</center>
+
+Putting this into matrix form $A(\theta)\dot{\theta} = 0$:
+
+<center>$$\begin{bmatrix} 2x & 2y \end{bmatrix} \begin{bmatrix} \dot{x} \\ \dot{y} \end{bmatrix} = 0$$</center>
+
+To verify this is holonomic, we check whether $A(\theta) = \frac{\partial g}{\partial \theta}$. The partial derivatives of $g(x,y)$ are exactly $\frac{\partial g}{\partial x} = 2x$ and $\frac{\partial g}{\partial y} = 2y$ — they match perfectly. Because we can mathematically "integrate" the velocity constraint back to the position constraint, the constraint is holonomic. The robot's C-space is permanently reduced from a 2D flat plane to a 1D circular line.
+</Example>
+
+#### B. Nonintegrable Velocity Constraints (Nonholonomic)
+
+If a velocity constraint cannot be integrated into a position-level equation, it is a **nonholonomic constraint**.<AutoNumberedSidenote>Nonholonomic constraints are central to mobile robotics. The kinematic constraints of wheeled vehicles and grasp contact kinematics both fall into this category.</AutoNumberedSidenote>
+
+For a Pfaffian constraint $A(\theta)\dot{\theta} = 0$, if there does not exist any differentiable function $g(\theta)$ such that $\frac{\partial g(\theta)}{\partial \theta} = A(\theta)$, the constraint is nonintegrable. Because they cannot be turned into $g(\theta) = 0$ equations, **nonholonomic constraints strictly reduce the dimension of the system's feasible velocities, but they do not reduce the dimension of the reachable C-space**.
+
+<Example title="A Coin Rolling Upright on a Plane Without Slipping">
+A coin rolling upright on a plane without slipping. The "no-slip" velocity constraint restricts its instantaneous movement direction, but through maneuvering, the coin can still reach any configuration within its full 4-dimensional C-space.
+
+<div className="flex flex-col items-center my-12">
+  <img
+    src="../c-space/Pasted image 20260406110817.png"
+    alt="A coin rolling on a flat plane illustrating a nonholonomic no-slip constraint: despite the velocity constraint the coin can reach any (x, y, theta, phi) in its 4D C-space through maneuvering"
+    className="max-w-full h-auto object-contain rounded-lg shadow-md"
+    style={{ height: 'auto' }}
+  />
+  <div className="text-[10px] text-zinc-500/50 mt-4 text-center italic">
+    Nonholonomic Constraint: A rolling coin cannot slip sideways instantaneously, yet it can maneuver to reach any $(x, y, \theta, \phi)$ in its 4D C-space.
+  </div>
+</div>
+</Example>
+
+## Task Space and Workspace
+
+**Configuration space (C-space)** represents the complete mathematical posture of every single joint and link of a robot. However, when analyzing what a robot is actually doing, engineers often utilize the concepts of **task space** and **workspace**, which both relate strictly to the configuration of the robot's end-effector rather than the entire machine.
+
+**Task Space** is the space in which the robot's specific task can be naturally expressed.
+
+- **Driven by the Task:** The mathematical definition of the task space is dictated entirely by the task itself, completely independent of the physical robot being used.
+- **Examples:** If a robot's job is to plot with a pen on a flat piece of paper, its task space is a 2D plane ($\mathbb{R}^2$). If the task is to manipulate a rigid body in 3D space, the task space represents the 3D position and orientation of the end-effector. If the task is pointing a laser, the task space might simply be the spherical directions the laser can point ($S^2$), because twisting the laser around its own beam axis does not change where the beam lands.
+
+**Workspace** is a specification of the exact configurations that the robot's end-effector can physically reach.
+
+- **Driven by the Robot:** Unlike task space, the workspace is dictated primarily by the robot's mechanical structure (its link lengths, joint limits, etc.), independently of whatever task it is assigned.
+
+## Summary
+
+**The configuration space (C-space) of a robot represents the set of all its possible physical postures, and its dimension is defined strictly by the robot's degrees of freedom (dof)**. Because a robot is constructed from rigid links connected by joints, its overall dof can be systematically computed using **Grübler's formula**, which balances the free mobility of the individual links against the mathematical constraints imposed by the joints.
+
+To calculate movements safely, engineers must choose how to mathematically represent this C-space. Because curved topological spaces cause mathematical singularities when forced into flat, minimum-coordinate grids (explicit parameterization), it is standard to use an **implicit representation**. This method avoids singularities by using extra coordinates and restricting them with **holonomic constraints** — position-level equations that permanently tie variables together and successfully reduce the dimension of the actual reachable C-space. These are fundamentally different from **nonholonomic constraints**, which are velocity-level restrictions (like a wheel rolling without slipping) that limit instantaneous movement but do not shrink the robot's overall reachable space.
+
+Finally, while C-space tracks the entire machine, a robot's practical application is evaluated using two end-effector concepts: the **task space** (the mathematical space naturally required to express a specific job) and the **workspace** (the physical space the robot's structure actually allows it to reach).
+
