@@ -21,5 +21,16 @@
     "year": 2026,
     "link": "https://compeng.knust.com",
     "pdf": "/publications/adsl.pdf"
+  },
+  {
+    "id": 1,
+    "title": "Adaptive Network Traffic Shaping with Deep Reinforcement Learning: A PPO-Driven Token Bucket on ns-3",
+    "authors": [
+      "Prince Kwabena Appiah Boadu"
+    ],
+    "journal": "Term Paper",
+    "year": 2026,
+    "link": "https://compeng.knust.com",
+    "pdf": "/publications/adaptive-traffic-shaper.pdf"
   }
 ]

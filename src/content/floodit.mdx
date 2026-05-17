@@ -6,6 +6,21 @@ tag: "Machine Learning"
 
 Being an absolute undefeated master of Filler, I recently built a complete end-to-end system that trains a Deep Q-Network (DQN) to play **Flood-It/Filler**, a territory-capture puzzle game, and deployed it as an interactive web application with real-time AI decision visualization.<AutoNumberedSidenote>Algorithm reference: <a href="https://arxiv.org/abs/1312.5602">"Playing Atari with Deep Reinforcement Learning"</a> by Mnih et al. (2013), which introduced DQN for discrete action spaces.</AutoNumberedSidenote> The project demonstrates how modern reinforcement learning can be applied to strategic games, with full transparency into the AI's decision-making process.
 
+You can play against it right here — Q-values for every move are shown live in the right panel:
+
+<div className="my-10">
+  <iframe
+    src="https://floodit-ai.vercel.app/"
+    title="Play Flood-It against the DQN agent"
+    className="w-full rounded-lg shadow-md border border-gray-200"
+    style={{ height: '760px' }}
+    loading="lazy"
+  />
+</div>
+<div className="text-sm text-gray-500 mt-2 text-center italic">
+  <strong>Live deployment:</strong> You play the blue corner; the trained DQN plays red. The bar chart on the right shows the Q-values the agent computed for each color choice on its last move — the green-highlighted bar is the action it actually took.
+</div>
+
 <div className="flex flex-col items-center my-12">
   <img 
     src="../rl-filler/imessage.png" 
@@ -334,14 +349,6 @@ Several directions could improve the system:
 Beyond the architecture and the math, this project was simply a blast to build. There is something uniquely satisfying about watching an agent—which started out making completely random moves—slowly derive a winning strategy that eventually rivals your own. It bridges the gap between abstract RL theory and a tangible, playable experience.
 
 The combination of deep reinforcement learning, real-time visualization, and thoughtful design creates an application that is both technically impressive and genuinely engaging. The AI's learned strategies, visible through Q-value analysis, reveal the power of modern RL for strategic game playing. Hopefully we see more of this in the wild to help inspire and educate more experiments.
-
----
-
-**Technical Stack**: Python 3.13+, Stable Baselines3, Gymnasium, FastAPI, React, PyTorch
-
-**Code Repository**: Available with complete documentation and setup instructions
-
-<BlogSuggestion link="https://github.com/blackprince001/rl-filler" title="Project Repo" />
 
 
 
