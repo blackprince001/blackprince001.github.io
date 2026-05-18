@@ -6,7 +6,7 @@ tag: "Machine Learning"
 
 Oware<AutoNumberedSidenote>The variant we implement is **Abapa**, the tournament ruleset standardized across West Africa and the Caribbean. It is also called Ayoayo, Awale, Warri, Adji-Boto, or Awele depending on where you grew up.</AutoNumberedSidenote> is an ancient, two-player abstract strategy game belonging to the Mancala family, widely played across West Africa and the Caribbean. Two rows of six pits, forty-eight seeds, anti-clockwise sowing, first to twenty-five captured seeds wins. The branching factor never exceeds six, games end in a few hundred plies, and the state space is well within reach of a laptop. That smallness is what makes it a good target: you can stand up an engine, a search baseline, and three learned agents on a single machine, and watch each one fail in its own family-specific way.
 
-This post is the engineering story behind that ladder: a pure-Python engine for the Abapa ruleset, Minimax with iterative deepening as the search baseline, then DQN, PPO, and a deliberately compute-starved AlphaZero-lite. A round-robin tournament scores all seven (three search depths + three learned + Random) on Elo, and a FastAPI + React deployment makes them playable in the browser.
+This post is the engineering story behind that ladder: a pure-Python engine for the Abapa ruleset, Minimax with iterative deepening as the search baseline, then DQN, PPO, and an AlphaZero-lite run that was cut short by limited compute. A round-robin tournament scores all seven (three search depths + three learned + Random) on Elo, and a FastAPI + React deployment makes them playable in the browser.
 
 You can play any of them right here:
 
@@ -48,7 +48,7 @@ The observation is small enough to write out in one line. Twelve pit counts plus
 
 The action space is $\mathcal{A} = \{0, 1, 2, 3, 4, 5\}$, indexing the six houses on the side-to-move's row. Illegal actions are masked to $-\infty$ on the policy side and excluded from the argmax on the value side.<AutoNumberedSidenote>"Masked on the policy side" means **before** the softmax, not after. Zeroing out illegal probabilities post-softmax leaves gradient leaking into the masked logits, and the policy quietly learns to push probability mass toward moves it can never play. The PPO loss curves look fine and the agent gets weaker. It is the single easiest bug to ship in board-game RL.</AutoNumberedSidenote>
 
-## Architecture: One Engine, Many Brains
+## Architecture
 
 The system is layered so that the agents share absolutely everything except their decision logic.
 
@@ -96,7 +96,7 @@ FastAPI<AutoNumberedSidenote>Framework reference: <a href="https://fastapi.tiang
 
 Frontend is React + Vite + TypeScript. State management is `useReducer` for local game state plus a small Zustand store for the WebSocket connection. No Redux on a single-page game.
 
-## Search Baseline: Minimax
+## Minimax
 
 Before any learned agent, three Minimax variants at depths 2, 4, and 6. Alpha-beta pruning, a transposition table keyed on the canonical position hash, iterative deepening so the agent can always return a move within budget. The leaf evaluator is intentionally crude:
 
@@ -106,33 +106,21 @@ The first term rewards captured seeds, which is what wins the game. The second t
 
 These are not strong opponents in any absolute sense. Oware is *weakly solved* by retrograde analysis<AutoNumberedSidenote>Romein and Bal (2002), <a href="https://www.scientificamerican.com/article/computer-program-can-win/">"Solving Awari"</a>; they showed the game is a draw under perfect play, using a complete endgame database.</AutoNumberedSidenote> and a real engine like Awari is exact. But Minimax-d2/d4/d6 are *calibrated*, *deterministic*, and *cheap to run*, which is exactly what we want as a yardstick. The whole training protocol hangs off these three opponents: every learned-agent checkpoint is evaluated against d2, d4, and d6, and promotion to `latest.pt` requires winning at least 55% of a 400-game head-to-head against the previous best.
 
-## Agent 1: DQN as a Sanity Check
+## Agent 1: DQN
 
-DQN exists in this project mainly to confirm the engine and the reward are wired correctly. An off-policy value method on a 15-vector input is not where the interesting research lives; it's where you find out whether your environment is broken.
+DQN earns its place in this project mostly by being unfussy. An off-policy value method on a 15-vector input is not where the interesting research lives, but it is cheap to stand up and forgiving to tune, which is what you want from the first learned agent on a new environment.
 
-The network is a three-layer MLP with 128 hidden units and ReLU activations, with a dueling head that decomposes the value:<AutoNumberedSidenote>Algorithm reference: Wang et al. (2016), <a href="https://arxiv.org/abs/1511.06581">"Dueling Network Architectures for Deep Reinforcement Learning"</a>.</AutoNumberedSidenote>
+The network is a three-layer MLP, 128 hidden units, ReLU, with a dueling head<AutoNumberedSidenote>Algorithm reference: Wang et al. (2016), <a href="https://arxiv.org/abs/1511.06581">"Dueling Network Architectures for Deep Reinforcement Learning"</a>.</AutoNumberedSidenote> that splits the position value from the per-action advantages:
 
 <center>$$ Q(s, a) = V(s) + \left( A(s, a) - \tfrac{1}{|\mathcal{A}|} \sum_{a'} A(s, a') \right) $$</center>
 
-This is almost free on a six-action problem and helps the agent learn the position value $V(s)$ independently from the action-advantages, which matters when most actions are equally good in early-game positions.
-
-The training loop is **Double DQN** (target network refreshed every 2k env steps), with **prioritized experience replay** (PER, $\alpha = 0.6$, $\beta$ annealed $0.4 \to 1.0$).<AutoNumberedSidenote>Algorithm references: van Hasselt et al. (2016), <a href="https://arxiv.org/abs/1509.06461">"Deep Reinforcement Learning with Double Q-learning"</a>, and Schaul et al. (2016), <a href="https://arxiv.org/abs/1511.05952">"Prioritized Experience Replay"</a>.</AutoNumberedSidenote> Epsilon decays from 1.0 to 0.05 over 200k steps. The loss is Huber on the TD error, with illegal-action $Q$-values masked out of the target's $\max$:
+The split is almost free on six actions and matters in early-game positions where most moves are equally fine. The trunk is Double DQN<AutoNumberedSidenote>Algorithm references: van Hasselt et al. (2016), <a href="https://arxiv.org/abs/1509.06461">"Deep Reinforcement Learning with Double Q-learning"</a>, and Schaul et al. (2016), <a href="https://arxiv.org/abs/1511.05952">"Prioritized Experience Replay"</a>.</AutoNumberedSidenote> with a target net refreshed every 2k steps, prioritized replay ($\alpha = 0.6$, $\beta: 0.4 \to 1.0$), and epsilon decayed from 1.0 to 0.05 over 200k steps. The loss is Huber on the TD error with illegal actions masked out of the target's $\max$:
 
 <center>$$ \mathcal{L}(\theta) = \mathbb{E}_{(s, a, r, s') \sim \mathcal{B}} \left[ \rho \cdot \mathcal{H}_\delta \!\left( r + \gamma \max_{a' \in \mathcal{A}_{\text{legal}}(s')} Q_{\theta^-}(s', a') - Q_\theta(s, a) \right) \right] $$</center>
 
-where $\mathcal{H}_\delta$ is the Huber loss with threshold $\delta = 1$ and $\rho$ is the PER importance-sampling weight. The masking in the target's $\max$ is non-optional. If you forget it, the agent learns to value illegal moves (because the target network thinks they exist) and saturates around Minimax-d2.
+That masking is non-optional. Forget it, and the target net keeps quietly assigning value to moves the agent can never play; the policy drifts toward them and saturates somewhere around Minimax-d2.
 
-**Training configuration:**
-
-- **Algorithm**: Double DQN with dueling head and prioritized replay
-- **Learning rate**: $\alpha = 10^{-4}$ (Adam)
-- **Discount factor**: $\gamma = 0.99$
-- **Timesteps**: $1.3 \times 10^{6}$ env steps
-- **Batch size**: 256
-- **Replay buffer**: $2 \times 10^{5}$ transitions
-- **Opponent schedule**: Random (0–50k) → 50/50 Random + Minimax-d2 (50k–150k) → snapshot pool + Minimax-d4 anchor (150k+)
-
-After 1.3M env steps:
+Trained for $1.3 \times 10^6$ env steps with Adam at $10^{-4}$, batch 256, $\gamma = 0.99$, replay buffer of 200k transitions. Opponents rotate on a schedule: Random up to 50k, a 50/50 Random + Minimax-d2 mix from 50k to 150k, then a snapshot pool with a Minimax-d4 anchor after that.
 
 <div className="flex flex-col items-center my-12">
   <img
@@ -146,39 +134,29 @@ After 1.3M env steps:
   </div>
 </div>
 
-The Random curve hitting $\sim 1.0$ is the sanity check passing: masking is correct, reward direction is correct, the engine is not lying to the agent. The flat $\sim 0$ line against Minimax-d2 is the more interesting artifact. Minimax-d2 is not a brick wall (it plays a thin two-ply lookahead), and yet our DQN climbs to ~50% against d4 while staying at zero against d2.
+The Random curve pinned at $\sim 1.0$ is the sanity check passing: masking works, reward direction is correct, the engine is not lying to the agent. The flat zero line against Minimax-d2 is the more interesting artifact, because d2 is not a brick wall and the same agent climbs to ~50% against the strictly deeper d4.
 
-The likely explanation: the curriculum **forgets** d2. The schedule rotates Minimax-d2 out of training at 150k steps, and from that point on the agent only practices against snapshot pool opponents and the d4 anchor. By 1.3M steps, the policy has specialized against the kind of mistakes d4's deeper but greedier search makes, and has lost the ability to handle d2's shallower, more stylistically varied moves. The fix is mechanical (keep d2 in the eval-time opponent rotation, and ideally in the training pool with a small weight) but I'd rather flag the failure mode honestly than re-run training to make the curve look monotonic.
+The most likely cause is that the curriculum **forgets** d2. The schedule rotates it out at 150k steps, and from then on the agent only sees snapshot opponents and the d4 anchor. By 1.3M steps the policy has specialized against the mistakes d4's deeper-but-greedier search makes, and has lost the ability to handle d2's shallower, more varied play. The fix is mechanical: leave d2 in the late-curriculum opponent mix at a small weight. I'd rather flag the failure mode honestly than re-run training to make the curve look monotonic.
 
-## Agent 2: PPO with League Play
+## Agent 2: PPO
 
-PPO is the agent I expected to be useful, and broadly it is, though not as strong as I expected.
+PPO was the agent I expected to be broadly useful, and broadly it is. Just not as strong as I'd hoped.
 
-The network has a shared MLP trunk (two hidden layers of 256, ReLU) with separate policy and value heads. The PPO objective<AutoNumberedSidenote>Algorithm reference: Schulman et al. (2017), <a href="https://arxiv.org/abs/1707.06347">"Proximal Policy Optimization Algorithms"</a>.</AutoNumberedSidenote> with GAE<AutoNumberedSidenote>Algorithm reference: Schulman et al. (2016), <a href="https://arxiv.org/abs/1506.02438">"High-Dimensional Continuous Control Using Generalized Advantage Estimation"</a>.</AutoNumberedSidenote> is:
+The network is a shared MLP trunk (two hidden layers of 256, ReLU) with separate policy and value heads. The objective<AutoNumberedSidenote>Algorithm reference: Schulman et al. (2017), <a href="https://arxiv.org/abs/1707.06347">"Proximal Policy Optimization Algorithms"</a>.</AutoNumberedSidenote> is the standard clipped surrogate with GAE<AutoNumberedSidenote>Algorithm reference: Schulman et al. (2016), <a href="https://arxiv.org/abs/1506.02438">"High-Dimensional Continuous Control Using Generalized Advantage Estimation"</a>.</AutoNumberedSidenote>:
 
 <center>$$ \mathcal{L}^{\text{CLIP}}(\theta) = \mathbb{E}_t \!\left[ \min\!\left( \rho_t(\theta) \hat{A}_t, \; \text{clip}(\rho_t(\theta), 1 - \varepsilon, 1 + \varepsilon) \hat{A}_t \right) \right] $$</center>
 
-with $\rho_t(\theta) = \pi_\theta(a_t | s_t) / \pi_{\theta_{\text{old}}}(a_t | s_t)$, clip $\varepsilon = 0.2$, GAE $\lambda = 0.95$, value coefficient $0.5$, and entropy coefficient annealed from 0.05 down to 0.005 over training.
+with $\rho_t(\theta) = \pi_\theta(a_t | s_t) / \pi_{\theta_{\text{old}}}(a_t | s_t)$, clip $\varepsilon = 0.2$, GAE $\lambda = 0.95$, value coef 0.5, and entropy coef annealed from 0.05 to 0.005.
 
-The entropy bonus is the part you cannot get wrong on board games. Action collapse (the policy converging to a single opening for every position) is the canonical PPO failure mode, and the symptom is the entropy diving below ~0.3 nats early. So entropy gets its own dedicated logging axis and the anneal schedule is slow on purpose.
+That entropy term is the piece you cannot get wrong on a board game. Action collapse, where the policy converges to one opening for every position, is the canonical PPO failure mode, and the symptom is entropy nosediving below ~0.3 nats early. So entropy gets its own logging axis and a deliberately slow anneal.
 
-The **league** is the structural piece I care most about. Each of the 8 parallel self-play envs picks an opponent at the start of every game from a mixture:
+The other structural piece is the **league**. Each of the 8 parallel self-play envs picks an opponent at the start of every game from a mixture:
 
 <center>$$ \pi_{\text{opp}} = 0.6 \cdot \pi_{\text{latest}} + 0.3 \cdot \text{Uniform}(\{\pi_{t-k}\}_{k=1}^{10}) + 0.1 \cdot \pi_{\text{Minimax-d4}} $$</center>
 
-The snapshot pool prevents the policy from forgetting how to beat its earlier selves (the rock-paper-scissors collapse that pure self-play is famous for), and the Minimax anchor pins the league to an *external* opponent so it can't drift into a closed cycle.
+The snapshot pool keeps the policy from forgetting how to beat its earlier selves (the rock-paper-scissors collapse that pure self-play is famous for), and the Minimax anchor pins the league to an *external* opponent so it cannot drift into a closed cycle.
 
-**Training configuration:**
-
-- **Algorithm**: PPO with shared trunk, separate policy + value heads, GAE
-- **Learning rate**: $\alpha = 3 \times 10^{-4}$ (Adam)
-- **Discount factor / GAE**: $\gamma = 0.99$, $\lambda = 0.95$
-- **Rollout**: 2048 steps × 8 parallel envs
-- **Timesteps**: $5 \times 10^{6}$ env steps
-- **PPO epochs / minibatch**: 4 epochs, minibatch 256
-- **Clip**: $\varepsilon = 0.2$; value coef 0.5; entropy coef $0.05 \to 0.005$
-
-Five million env steps:
+Trained for $5 \times 10^6$ env steps with Adam at $3 \times 10^{-4}$, rollouts of 2048 steps across 8 envs, 4 PPO epochs per update, minibatch 256, $\gamma = 0.99$.
 
 <div className="flex flex-col items-center my-12">
   <img
@@ -192,45 +170,33 @@ Five million env steps:
   </div>
 </div>
 
-The entropy curve is the success story. The EMA stays comfortably above 0.7 nats, the annealing coefficient does its job, and the policy keeps exploring across all six houses. No action collapse.
+The entropy curve is the success story. The EMA stays comfortably above 0.7 nats, the anneal does its job, and the policy keeps exploring across all six houses. No action collapse.
 
-The not-success story is the winrate against Minimax-d4, which never leaves zero. PPO posted five promotion events (the faint purple verticals on the right panel) but each one was based on head-to-head improvement against *prior snapshots*, not against the d4 anchor. The agent gets better at beating versions of itself; it does not get measurably better at beating two-ply-deeper search.
+The not-success story is the winrate against Minimax-d4, which never leaves zero. PPO posted five promotion events (the faint purple verticals) but each one was head-to-head improvement against *prior snapshots*, not against the d4 anchor. The agent gets better at beating versions of itself and does not get measurably better at beating two-ply-deeper search.
 
-Two things are likely going on:
+Two things are likely in play. The league is too inward-facing: Minimax-d4 is one opponent out of eleven in the mixture, so the policy gets little gradient signal from games against it. The cheapest experiment is raising the d4 anchor weight from 10% to ~30% and adding a low-weight d6 anchor. The second is structural: terminal-only reward on a 300-ply game is a brutally sparse signal for a policy gradient method, and PPO is doing well to discover anything coherent at all. DQN's off-policy bootstrap from a replay buffer happens to be a more sample-efficient way to propagate terminal credit backwards in this specific setting.
 
-1. **The league is too inward-facing.** Minimax-d4 is one opponent out of eleven in the mixture (ten snapshots plus the anchor), so the policy gets relatively little gradient signal from games against it. Raising the d4 anchor weight from 10% to ~30%, and adding a low-weight d6 anchor, is the cheapest experiment that might unstick this.
-2. **Terminal-only reward on a 300-ply game is a brutally sparse signal for a policy gradient method.** PPO is doing well to discover anything coherent here at all. DQN's off-policy bootstrap from the replay buffer is, in this specific setting, a more sample-efficient way to propagate terminal credit backwards.
+The Elo confirms both stories. PPO lands 245 points below DQN in the tournament.
 
-The Elo confirms both stories: PPO lands 245 points below DQN in the tournament.
+## Agent 3: AlphaZero-lite
 
-## Agent 3: AlphaZero-lite, or What Compute Starvation Looks Like
+This was supposed to be the headline act. AlphaZero<AutoNumberedSidenote>Algorithm reference: Silver et al. (2018), <a href="https://www.science.org/doi/10.1126/science.aar6404">"A general reinforcement learning algorithm that masters chess, shogi, and Go through self-play"</a>.</AutoNumberedSidenote> on a board this small ought to demolish a depth-6 minimax. Instead it finished dead last, below Random.
 
-AlphaZero<AutoNumberedSidenote>Algorithm reference: Silver et al. (2018), <a href="https://www.science.org/doi/10.1126/science.aar6404">"A general reinforcement learning algorithm that masters chess, shogi, and Go through self-play"</a>.</AutoNumberedSidenote> is the agent I expected to be strongest. It is the weakest. Worth being precise about *why*.
+The setup is the canonical recipe at laptop scale: a 150k-parameter ResNet (four residual blocks, 64 channels) reading the 2×6 board, with a six-logit policy head $\pi(a \vert s)$ and a scalar value head $v(s) \in [-1, 1]$.
 
-The architecture is the canonical recipe in miniature:
-
-- **Body**: a small ResNet (4 residual blocks of (Conv-BN-ReLU)×2, 64 channels) on the 2×6 board.
-- **Policy head**: 6 logits, $\pi(a | s)$.
-- **Value head**: scalar $v(s) \in [-1, 1]$.
-
-Total parameters ~150k. An MLP would work on a board this small, but the ResNet keeps the code reusable for larger boards.
-
-MCTS at inference uses the PUCT formula:
+At move time the net feeds MCTS, which picks children by PUCT:
 
 <center>$$ a^* = \arg\max_{a} \left( Q(s, a) + c_{\text{puct}} \cdot \pi(a | s) \cdot \frac{\sqrt{\sum_b N(s, b)}}{1 + N(s, a)} \right) $$</center>
 
-with $c_{\text{puct}} = 1.5$. During self-play, the root prior is perturbed with Dirichlet noise, $\pi'(a | s_0) = 0.75 \cdot \pi(a | s_0) + 0.25 \cdot \eta_a$ with $\eta \sim \text{Dir}(0.5)$, to ensure the search explores moves the current policy thinks are bad. Default 200 simulations per move at training time; 400 at served inference.
+$c_{\text{puct}} = 1.5$, 200 simulations per move in training, 400 at serve time. The root prior is roughed up with Dirichlet noise, $\pi'(a \vert s_0) = 0.75 \cdot \pi(a \vert s_0) + 0.25 \cdot \eta_a$, $\eta \sim \text{Dir}(0.5)$, so the search keeps probing moves the current policy dismisses.
 
-The self-play loop is the standard three-actor setup:
-
-1. **Self-play workers** (CPU) play games using MCTS + current net and write $(s, \pi, z)$ tuples to a shared FIFO buffer, where $\pi$ is the visit-count distribution at the root and $z$ is the final outcome from that state's perspective.
-2. **Trainer** (GPU) samples minibatches and minimizes the AlphaZero loss:
+The loop is the textbook three-actor split. CPU workers self-play with the current net and stream $(s, \pi, z)$ tuples into a shared FIFO buffer. The trainer pulls minibatches off it and descends the AlphaZero loss,
 
 <center>$$ \mathcal{L}(\theta) = (z - v_\theta(s))^2 - \boldsymbol{\pi}^\top \log \mathbf{p}_\theta(s) + c \, \|\theta\|^2 $$</center>
 
-3. **Evaluator** plays the candidate against the current best every $N$ trainer steps and promotes if winrate $\geq 55\%$ over 100 games.
+so the policy mimics MCTS visit counts and the value head predicts the outcome. An evaluator periodically promotes the candidate past a 55% bar over 100 games.
 
-The training metrics, such as they are:
+What those three actors actually produced:
 
 <div className="flex flex-col items-center my-12">
   <img
@@ -244,9 +210,9 @@ The training metrics, such as they are:
   </div>
 </div>
 
-The honest read of these curves is that this run **never finished its warmup**. The replay buffer never hit its 500k cap. The policy loss moved 12% in absolute terms, non-trivial but nowhere near the plateau where a learned prior starts to make MCTS dramatically more sample-efficient. The value loss is flat at 0.14, which means the value head has not yet learned to discriminate winning positions from losing ones beyond what you'd get from a near-constant predictor. With terminal-only reward and a tiny labelled buffer, that's exactly where you'd expect it to be after 13k trainer steps.
+These curves say the run **never finished its warmup**. The buffer filled to a tenth of its 500k cap, policy loss moved 12%, and the value head sat flat at 0.14, which is what a predictor looks like before it learns to tell winning positions from losing ones. With terminal-only reward on a 300-ply game, 13k steps lands you exactly there.
 
-The tournament result reflects this:
+The tournament hands in the verdict:
 
 <div className="flex flex-col items-center my-12">
   <img
@@ -260,13 +226,9 @@ The tournament result reflects this:
   </div>
 </div>
 
-It is tempting to call this a bug. It is not. It is the predictable behaviour of an under-trained policy. With 13k trainer steps and a buffer that filled to a tenth of capacity, the network's prior $\pi(a | s)$ is roughly uniform-with-noise, and MCTS at 200 simulations on top of a uniform prior is *not meaningfully better than picking moves at random*. The reason it ranks **below** Random in the round-robin is that its move distribution, while close to uniform, is *biased* toward specific pits by the noise in the small training set, and those biases happen to be exploitable by everything in the tournament, including Random's lack of bias.
+There is no bug to chase. This is what an under-trained AlphaZero looks like. The prior is essentially uniform-with-noise, and 200 MCTS sims on a uniform prior is not meaningfully better than a coin flip. The reason it lands *below* Random is the twist: the policy is *almost* uniform but slightly biased toward specific pits by noise in the tiny training set, and every other agent in the tournament happily exploits a consistent bias that a true random opponent does not have.
 
-The plan document for this project, written before training started, predicted this almost word for word:
-
-> AlphaZero will look weak for the first 100k self-play games then suddenly improve; this is normal. Don't kill the run too early.
-
-This run killed too early, by a wide margin. The fix is not algorithmic; it is **compute**. AlphaZero is a method that pays back generously once the value head crosses a competence threshold, and gives you almost nothing before that. The threshold is somewhere between 100k and 500k self-play games on a board this size, and at the rate this run was generating data on CPU, that's days to a week of wall clock. I stopped at the first run because the other two agents had hit their interesting bits and I wanted to ship the tournament. But the AlphaZero number on the chart is *"what an under-trained AlphaZero looks like,"* not *"what AlphaZero on Oware looks like."* Calling the difference would require another order of magnitude of compute, on a GPU, with the trainer and self-play workers properly scaled.
+The fix is not algorithmic. It is **compute**. AlphaZero gives you almost nothing until the value head crosses a competence threshold, and pays back generously on the other side. On this board that threshold sits between 100k and 500k self-play games, which at CPU-worker rates was days-to-a-week of uninterrupted wall clock I did not have. I stopped at the first run because DQN and PPO had already produced something worth writing about and I wanted the tournament shipped. So the AlphaZero bar is *"what an under-trained AlphaZero looks like,"* not *"what AlphaZero on Oware looks like."* Closing that gap is a GPU and a long weekend, not a redesign.
 
 ## The Tournament
 
@@ -282,15 +244,15 @@ Round-robin, 100 games per pair, fixed time budgets per agent. The final Elo tab
 | Random             | 777  |
 | AlphaZero-lite     | 602  |
 
-Three things in there are worth not glossing over.
+Three rows in that table are worth not glossing over.
 
-**Minimax-d2 and Minimax-d4 are tied.** That is suspicious on the face of it: d4 sees two plies further. But the leaf evaluator is the same crude $(\text{store delta}) + 0.1 \cdot (\text{seed delta})$ for both, and on Oware the marginal value of two extra plies is small when the *judgment* is this crude. d4 sees further but doesn't *judge* better; the extra search depth amplifies noise in the leaf evaluator as often as it sharpens the choice. A real strength gap between d2 and d4 would require either a better evaluator or much deeper search (d8+).
+The first is that **Minimax-d2 and Minimax-d4 land at the same Elo**. On the face of it that should not happen: d4 sees two plies further. But both depths share the same crude $(\text{store delta}) + 0.1 \cdot (\text{seed delta})$ leaf, and on Oware the marginal value of two extra plies is small when the *judgment* underneath is this rough. d4 sees further; it does not judge better, and the deeper search amplifies noise in the evaluator as often as it sharpens the choice. A real strength gap between the two would need either a better leaf eval or much deeper search (d8+).
 
-**DQN sits between Minimax-d4 and Minimax-d6.** That is the most surprising number in the table. A 15-vector MLP trained on terminal-only reward should not be beating two-ply-deeper alpha-beta. The most plausible explanation (and the first thing I'd test with a controlled rerun) is that DQN has learned to exploit the same evaluator-shaped blindspots that pin Minimax-d4 to a fixed Elo. The d4 search is greedy on a crude leaf signal; a value function that learned the *distribution* of outcomes, not just the immediate seed delta, will systematically beat a search that doesn't. This also explains why DQN's winrate against d4 climbs while its winrate against d2 stays at zero: d2's shallow search is more stylistically varied move-to-move and harder to model as a fixed exploitable opponent.
+The second is **DQN sitting between Minimax-d4 and Minimax-d6**, which is the most surprising number in the table. The honest answer is that I don't have a controlled experiment isolating why, only the observation that DQN's eval-time winrate climbs against d4 while staying flat at zero against d2. One reading is that d4, with its deeper but still crude leaf eval, ends up more predictable than d2's shallower play, and a learned value function can converge on whatever shape "predictable" takes. Confirming that would need a rerun against a stronger leaf evaluator on the Minimax side; until then the gap is interesting more than explained.
 
-**PPO underperforms DQN by 245 Elo.** Annoying but consistent with the entropy/league diagnosis above: PPO got good at beating its league and never punched up against the external d4 anchor.
+The third is **PPO trailing DQN by 245 Elo**. Annoying but consistent with the entropy and league diagnosis above. PPO got good at beating its league and never punched up against the external d4 anchor.
 
-## Inference Latency: The UX Knob
+## Inference Latency
 
 This is the table that determines what is actually playable in a browser:
 
@@ -308,20 +270,17 @@ These numbers double as a UX pacing knob. Too fast and the player feels the agen
 
 ## What I'd Do Next
 
-The postmortem, in order of expected payoff:
+A short postmortem, ordered by expected payoff.
 
-1. **Train AlphaZero properly.** This is the single highest-value next step and the only one that requires real compute. A 500k-self-play-game run on a GPU, with the trainer and self-play workers properly parallelized and the buffer allowed to actually fill, is the difference between *"AlphaZero on Oware"* and *"AlphaZero with the trainer turned off early."* This was a deliberate scope cut for v1, not a design flaw. But the chart needs the asterisk until that compute is spent.
-2. **Reweight the PPO league.** Keep the snapshot pool but raise the Minimax-d4 anchor weight from 10% to ~30%, and add a Minimax-d6 anchor at low weight (5–10%). The policy needs gradient signal from opponents it actually has to beat, not opponents it can already dominate.
-3. **Keep Minimax-d2 in the DQN curriculum past 150k steps.** The current schedule rotates it out early; the eval-time winrate-vs-d2 staying at zero suggests the agent stops practicing against the d2 distribution and never recovers. Add d2 to the late-curriculum opponent mix with a small weight (~10%) and re-run.
-4. **Replace the Minimax leaf evaluator.** The d2/d4 Elo tie in the tournament is a leaf-evaluator artifact. A better static evaluator (even just the DQN's value head used heuristically) would unstick those two from each other and give every learned agent a less flat ceiling to push against.
+The highest-leverage move is to **train AlphaZero properly**. A 500k-self-play-game run on a GPU, with the trainer and workers actually parallelized and the buffer allowed to fill, is the difference between *"AlphaZero on Oware"* and *"AlphaZero with the trainer turned off early."* It was a scope cut for v1, not a design flaw, but the chart needs the asterisk until that compute is spent.
+
+After that, **reweight the PPO league**. Keep the snapshot pool, raise the d4 anchor from 10% to ~30%, and add a d6 anchor at 5–10%. The policy needs gradient signal from opponents it actually has to beat, not opponents it already dominates. In the same spirit, **keep Minimax-d2 in the DQN curriculum past 150k steps**. The zero winrate against d2 is the agent forgetting a distribution it stopped seeing, and a small (~10%) weight in the late-curriculum mix should be enough to fix it.
+
+Finally, **replace the Minimax leaf evaluator**. The d2/d4 Elo tie in the tournament is a leaf-evaluator artifact, not a search-depth one. A better static eval (even the DQN's value head used heuristically) would unstick those two and give every learned agent a less flat ceiling to push against.
 
 ## Closing
 
-The point of building three agent families on the same engine was never to pick a winner. It was to see what each method's failure mode looks like when you give it a small board, a terminal-only reward, and modest single-machine compute. What we got:
+The point of building three agent families on the same engine was never to pick a winner. It was to see what each method's failure mode looks like on a small board, a terminal-only reward, and modest single-machine compute. What I got was three completely different shapes on the same axes: DQN held up as a sanity check and turned out surprisingly competitive against a crude search, PPO stayed stable and well-behaved on entropy but got trapped inside a league it could already dominate, and AlphaZero-lite did exactly what an under-trained AlphaZero does, which is sit at the bottom of the chart until the compute arrives.
 
-- **DQN**: works as a sanity check; surprisingly competitive when paired against a crude search, with a curriculum bug that's easy to fix.
-- **PPO**: stable, well-behaved entropy, but bottlenecked by a league it dominates without learning to beat the anchor.
-- **AlphaZero-lite**: predictably weak before the compute threshold, and we stopped before that threshold. The chart is the chart.
-
-Watching three different families of RL agent grow up against the same game, fail in three completely different ways, and produce three completely different shaped curves on the same axes. That was the actual joy of this project. The tournament numbers are interesting; the *shape* of how each one got there is more so.
+Watching three families of RL agent grow up against the same game and fail in three completely different ways was the actual joy of this project. The tournament numbers are interesting. The *shape* of how each one got there is more so.
 
