@@ -6,17 +6,7 @@ tag: "Machine Learning"
 
 Support Vector Machines (SVMs) are versatile machine learning models capable of handling various tasks, including classification, regression, and novelty detection.<AutoNumberedSidenote>Primary reference: <a href="https://www.oreilly.com/library/view/hands-on-machine-learning/9781098125967/">Hands-On Machine Learning with Scikit-Learn, Keras, and TensorFlow</a> by Aurélien Géron (3rd edition, 2022).</AutoNumberedSidenote> **What makes SVMs particularly powerful is their ability to find optimal decision boundaries by maximizing the margin between classes**, making them robust and effective for both linear and nonlinear problems. This margin-maximization principle, combined with the elegant kernel trick for handling nonlinear data, has made SVMs one of the most influential **algorithms** in machine learning.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-03 at 5.59.08 PM.png" 
-    alt="Support Vector Machine decision boundary with maximum margin"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Maximum Margin Classification:</strong> An SVM finds the optimal decision boundary that maximizes the margin between classes, with support vectors defining the margin.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-03 at 5.59.08 PM.png" alt="Support Vector Machine decision boundary with maximum margin" caption={<><strong>Maximum Margin Classification:</strong> An SVM finds the optimal decision boundary that maximizes the margin between classes, with support vectors defining the margin.</>} />
 
 ## Mathematical Foundations
 
@@ -42,31 +32,11 @@ Training an SVM involves finding the optimal values for the weight vector **$\ma
 
 **Hard Margin Classification** assumes data is perfectly linearly separable, which is rarely the case in real-world scenarios. It is sensitive to outliers and can fail when the data contains noise or mislabeled instances.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-03 at 6.01.51 PM.png" 
-    alt="Hard margin SVM classification"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Hard Margin Classification:</strong> Assumes perfect linear separability, making it sensitive to outliers and noise in the data.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-03 at 6.01.51 PM.png" alt="Hard margin SVM classification" caption={<><strong>Hard Margin Classification:</strong> Assumes perfect linear separability, making it sensitive to outliers and noise in the data.</>} />
 
 **Soft Margin Classification** allows for some misclassifications (margin violations) by introducing **slack variables** that are penalized in the optimization objective. The regularization parameter **$C$** controls the trade-off between a large margin and minimizing margin violations.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-03 at 6.03.17 PM.png" 
-    alt="Soft margin SVM with different C values"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Soft Margin Classification:</strong> Allows margin violations controlled by the regularization parameter C. Lower C values create wider margins but more violations, while higher C values create narrower margins with fewer violations.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-03 at 6.03.17 PM.png" alt="Soft margin SVM with different C values" caption={<><strong>Soft Margin Classification:</strong> Allows margin violations controlled by the regularization parameter C. Lower C values create wider margins but more violations, while higher C values create narrower margins with fewer violations.</>} />
 
 The regularization hyperparameter **$C$** plays a crucial role in controlling the model's behavior. When creating an SVM model using Scikit-Learn, setting **$C$** to a low value results in a wider margin but more margin violations, effectively regularizing the model and reducing the risk of overfitting. With a high **$C$** value, the margin becomes narrower, and the model becomes more sensitive to individual data points, potentially leading to overfitting. **The key is finding the right balance: reducing $C$ makes the margin larger and the model more robust, but reducing it too much can lead to underfitting**.
 
@@ -121,17 +91,7 @@ This method enhances the original feature set by introducing **polynomial featur
 **Illustrative Example:** Incorporating a squared feature ($x_2 = (x_1)^2$) can transform a non-linearly separable 1D dataset into a linearly separable 2D dataset.
 
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-03 at 6.24.11 PM.png" 
-    alt="Polynomial feature transformation for nonlinear classification"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Polynomial Feature Transformation:</strong> Adding polynomial features transforms nonlinear data into a higher-dimensional space where it becomes linearly separable.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-03 at 6.24.11 PM.png" alt="Polynomial feature transformation for nonlinear classification" caption={<><strong>Polynomial Feature Transformation:</strong> Adding polynomial features transforms nonlinear data into a higher-dimensional space where it becomes linearly separable.</>} />
 </Example>
 
 **Implementation:** The `PolynomialFeatures` transformer in Scikit-Learn can be integrated into a machine learning pipeline to achieve this.<AutoNumberedSidenote>Scikit-Learn documentation: <a href="https://scikit-learn.org/stable/modules/generated/sklearn.preprocessing.PolynomialFeatures.html">PolynomialFeatures</a>.</AutoNumberedSidenote>
@@ -221,17 +181,7 @@ Instead of striving to find the widest "street" separating different classes, **
 
 This margin of error is determined by the hyperparameter **epsilon ($\varepsilon$)**. The figure below illustrates how different epsilon values influence the width of the margin and the number of support vectors.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-03 at 6.34.09 PM.png" 
-    alt="SVM regression with different epsilon values"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>SVM Regression:</strong> Different epsilon ($\varepsilon$) values control the width of the margin and the number of support vectors in SVM regression.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-03 at 6.34.09 PM.png" alt="SVM regression with different epsilon values" caption={<><strong>SVM Regression:</strong> Different epsilon ($\varepsilon$) values control the width of the margin and the number of support vectors in SVM regression.</>} />
 
 ### Key Concepts in SVM Regression
 

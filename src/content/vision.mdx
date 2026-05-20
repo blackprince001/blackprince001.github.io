@@ -12,16 +12,7 @@ This is the gap I wanted to close for the **Real-Time Traffic Density Estimation
 
 What follows is the engineering behind a two-stage pipeline that does this: a perception stage that pairs detection with a **Spatial Logic Layer** to produce clean telemetry, and a temporal stage that forecasts short-horizon density from that telemetry, all under real-time constraints, across a hardware budget that ranges from embedded edge devices to GPU servers.
 
-<div className="flex justify-center my-10">
-  <img
-    src="../traffic-pipeline/infra.png"
-    alt="Pipeline architecture"
-    className="max-w-2xl w-full h-auto object-contain rounded-lg shadow-md"
-  />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 1: System architecture. Raw video flows left-to-right through detection, tracking, the spatial logic layer, feature extraction, and a temporal estimator. Each stage runs in its own thread, connected by bounded queues.
-</div>
+<Figure src="../traffic-pipeline/infra.png" alt="Pipeline architecture" caption={<>Figure 1: System architecture. Raw video flows left-to-right through detection, tracking, the spatial logic layer, feature extraction, and a temporal estimator. Each stage runs in its own thread, connected by bounded queues.</>} />
 
 ## Why Pixel Counts Lie About Density
 
@@ -45,16 +36,7 @@ I trained ten detector variants spanning six families, including YOLOv5 (n/s/m/l
 
 The point of this sweep wasn't to crown a winner. It was to test a hypothesis: **on this task, the choice of detector family is largely irrelevant.**
 
-<div className="flex justify-center my-10">
-  <img
-    src="../traffic-pipeline/training_results_grid.png"
-    alt="Training curves across all ten detector variants"
-    className="max-w-2xl w-full h-auto object-contain rounded-lg shadow-md"
-  />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 2: Training dynamics. All ten variants converge under the same recipe. Validation loss decreases monotonically through the first ~70% of training, then plateaus. Early stopping with patience 20 preserves the best checkpoint.
-</div>
+<Figure src="../traffic-pipeline/training_results_grid.png" alt="Training curves across all ten detector variants" caption={<>Figure 2: Training dynamics. All ten variants converge under the same recipe. Validation loss decreases monotonically through the first ~70% of training, then plateaus. Early stopping with patience 20 preserves the best checkpoint.</>} />
 
 The benchmark numbers bear this out. The spread between the best and worst mAP@50:95 across all ten models is only 0.043. A 21× increase in parameter count (from 2.5M to 53M) buys less than 9% relative accuracy.
 
@@ -80,43 +62,19 @@ The benchmark numbers bear this out. The spread between the best and worst mAP@5
   </tbody>
 </table>
 
-<div className="flex justify-center my-10">
-  <img
-    src="../traffic-pipeline/speed_vs_accuracy.png"
-    alt="Speed vs accuracy trade-off"
-    className="max-w-2xl w-full h-auto object-contain rounded-lg shadow-md"
-  />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 3: The Pareto frontier. YOLOv5n/8n at the embedded edge (250+ FPS, ~0.48 mAP); YOLOv8s/5s as the balanced mid-range (~180 FPS, ~0.51 mAP); YOLOv5l for accuracy-critical installs (56 FPS, 0.524 mAP). RT-DETR-l is Pareto-dominated: slower *and* less accurate than the YOLO mid-range on this dataset.
-</div>
+<Figure src="../traffic-pipeline/speed_vs_accuracy.png" alt="Speed vs accuracy trade-off" caption={<>Figure 3: The Pareto frontier. YOLOv5n/8n at the embedded edge (250+ FPS, ~0.48 mAP); YOLOv8s/5s as the balanced mid-range (~180 FPS, ~0.51 mAP); YOLOv5l for accuracy-critical installs (56 FPS, 0.524 mAP). RT-DETR-l is Pareto-dominated: slower *and* less accurate than the YOLO mid-range on this dataset.</>} />
 
-<div className="flex justify-center my-10">
-  <img
-    src="../traffic-pipeline/size_vs_accuracy.png"
-    alt="Model size vs accuracy"
-    className="max-w-2xl w-full h-auto object-contain rounded-lg shadow-md"
-  />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 4: Diminishing returns. Accuracy scales sub-linearly with parameter count. The largest model gains 0.043 mAP@50:95 over the smallest at 21× the parameters.
-</div>
+<Figure src="../traffic-pipeline/size_vs_accuracy.png" alt="Model size vs accuracy" caption={<>Figure 4: Diminishing returns. Accuracy scales sub-linearly with parameter count. The largest model gains 0.043 mAP@50:95 over the smallest at 21× the parameters.</>} />
 
 The frame-time distribution tells the more important deployment story. The YOLO variants exhibit *tight, low-variance* latency distributions, meaning frame-to-frame timing is predictable. That matters more than raw mean FPS for a multi-threaded pipeline with bounded queues. RT-DETR-l shows both higher median latency and visibly wider spread.
 
-<div className="grid grid-cols-2 gap-4 my-10 max-w-2xl mx-auto">
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/fps_bars.png" alt="FPS bars" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/latency_box.png" alt="Latency box plot" />
-</div>
+<Figure srcs={["../traffic-pipeline/fps_bars.png", "../traffic-pipeline/latency_box.png"]} cols={2} />
 
 ### When Bad Detection Metrics Don't Matter
 
 There's one quirk in the detection results worth flagging. The *vehicles* class achieves AP@50 between 0.94 and 0.96 across all models, so vehicle detection is essentially solved on this dataset. The *road* class achieves only 0.29 to 0.31.
 
-<div className="grid grid-cols-2 gap-4 my-10 max-w-2xl mx-auto">
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/per_class_ap50.png" alt="Per-class AP@50" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/confusion_matrix_best.png" alt="Confusion matrix" />
-</div>
+<Figure srcs={["../traffic-pipeline/per_class_ap50.png", "../traffic-pipeline/confusion_matrix_best.png"]} cols={2} />
 
 This looks bad until you realize it doesn't matter. Roads are large amorphous regions, not compact objects, so bounding-box representation is inherently a poor fit for them. Annotations are partial. The metric punishes any prediction that extends past the labeled extent, even when it's semantically correct. None of this affects the pipeline because **the road mask is precomputed once during data preparation** and used as a static binary filter at inference time. The detector's road-class output is never consulted online. The mask comes from accumulating per-frame road regions across the training set, then applying morphological closing and opening to clean up noise.
 
@@ -200,16 +158,7 @@ Telemetry came from running the YOLOv5l + BoT-SORT pipeline live for four hours 
 
 The three architectures fall within ~6% of one another on RMSE. The GRU edges out the others, primarily by virtue of a tighter T+1 forecast.
 
-<div className="flex justify-center my-10">
-  <img
-    src="../traffic-pipeline/rmse_per_horizon.png"
-    alt="RMSE per horizon step"
-    className="max-w-2xl w-full h-auto object-contain rounded-lg shadow-md"
-  />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 6: Horizon decomposition. RMSE rises from T+1 toward mid-horizon for all three models, confirming the estimators learn genuine temporal structure. A copy-last-frame baseline produces a flat or erratic profile, not this shape.
-</div>
+<Figure src="../traffic-pipeline/rmse_per_horizon.png" alt="RMSE per horizon step" caption={<>Figure 6: Horizon decomposition. RMSE rises from T+1 toward mid-horizon for all three models, confirming the estimators learn genuine temporal structure. A copy-last-frame baseline produces a flat or erratic profile, not this shape.</>} />
 
 This result inverts what we saw in earlier exploratory runs that used a *smaller* upstream detector (YOLOv8n). With the noisier YOLOv8n telemetry, the TCN's larger receptive field appeared to help, since its dilated convolutions could smooth across the noise floor. With YOLOv5l producing cleaner upstream telemetry, that advantage evaporated, and the recurrent gates pulled ahead on short windows. **The estimator architecture is, like the detector, a deployment-budget decision rather than an accuracy-driven one.** The spatial logic layer is what's actually carrying the work.
 
@@ -217,39 +166,17 @@ This result inverts what we saw in earlier exploratory runs that used a *smaller
 
 The aggregate R² of 0.858 hides something important.
 
-<div className="flex justify-center my-10">
-  <img
-    src="../traffic-pipeline/rmse_per_feature.png"
-    alt="Per-feature RMSE on log scale"
-    className="max-w-2xl w-full h-auto object-contain rounded-lg shadow-md"
-  />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 7: Per-feature RMSE (log scale). direction_variance dominates the absolute error budget by orders of magnitude. The aggregate R² is mostly a measure of how well the model tracks that one high-magnitude feature.
-</div>
+<Figure src="../traffic-pipeline/rmse_per_feature.png" alt="Per-feature RMSE on log scale" caption={<>Figure 7: Per-feature RMSE (log scale). direction_variance dominates the absolute error budget by orders of magnitude. The aggregate R² is mostly a measure of how well the model tracks that one high-magnitude feature.</>} />
 
 The features the actual users of this pipeline care about, namely `vehicle_count`, `occupancy_ratio`, and `congestion_index`, are all low-magnitude. They're swamped in any aggregate RMSE by `direction_variance`, which has a much larger numerical range. So a headline "R² = 0.86" overstates how well the system performs on the operationally interesting outputs.
 
 The predicted-vs-actual curves for those three features make the actual performance more honest:
 
-<div className="flex flex-col items-center my-10 gap-3 max-w-2xl mx-auto">
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/predicted_vs_actual_vehicle_count.png" alt="Predicted vs actual: vehicle_count" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/predicted_vs_actual_occupancy_ratio.png" alt="Predicted vs actual: occupancy_ratio" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/predicted_vs_actual_congestion_index.png" alt="Predicted vs actual: congestion_index" />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 8: Predicted vs. actual. All three estimators track the underlying mean and capture broad rises and falls on `vehicle_count`, but miss the high-frequency transients caused by individual vehicles entering or leaving the frame. `occupancy_ratio` and `congestion_index` track more tightly because their dynamic range is narrower.
-</div>
+<Figure srcs={["../traffic-pipeline/predicted_vs_actual_vehicle_count.png", "../traffic-pipeline/predicted_vs_actual_occupancy_ratio.png", "../traffic-pipeline/predicted_vs_actual_congestion_index.png"]} cols={1} caption={<>Figure 8: Predicted vs. actual. All three estimators track the underlying mean and capture broad rises and falls on `vehicle_count`, but miss the high-frequency transients caused by individual vehicles entering or leaving the frame. `occupancy_ratio` and `congestion_index` track more tightly because their dynamic range is narrower.</>} />
 
 The scatter plots tell the same story from another angle. Clustering along the diagonal for the slower-varying features, and visible under-prediction at the upper tail of each:
 
-<div className="flex flex-col items-center my-10 gap-3 max-w-2xl mx-auto">
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/scatter_vehicle_count.png" alt="Scatter: vehicle_count" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/scatter_occupancy_ratio.png" alt="Scatter: occupancy_ratio" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/scatter_congestion_index.png" alt="Scatter: congestion_index" />
-</div>
-
-## Six Stages, Six Threads, One Real-Time Loop
+<Figure srcs={["../traffic-pipeline/scatter_vehicle_count.png", "../traffic-pipeline/scatter_occupancy_ratio.png", "../traffic-pipeline/scatter_congestion_index.png"]} cols={1} />## Six Stages, Six Threads, One Real-Time Loop
 
 Putting all of this together at video frame rates required care. Each of the six stages (frame reader, detector, tracker, spatial filter, feature extractor, estimator) runs in its own daemon thread, connected by bounded queues with a `drop-oldest` overflow policy. The pipeline degrades gracefully under load: when the detector falls behind, frames get dropped instead of latency accumulating without bound.
 
@@ -271,25 +198,11 @@ The output is an annotated video (road mask overlay, tracked boxes with IDs and 
 
 Offline evaluation on a static CSV is one thing. The actual product is the multi-threaded pipeline running on a never-before-seen camera stream. We re-deployed each estimator into the live pipeline on a third Caltrans stream and logged predictions for horizons T+1 through T+5 alongside the realized features.
 
-<div className="flex flex-col items-center my-10 gap-3 max-w-2xl mx-auto">
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/prediction_error_vehicle_count.png" alt="Live rolling error: vehicle_count" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/prediction_error_occupancy_ratio.png" alt="Live rolling error: occupancy_ratio" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/prediction_error_congestion_index.png" alt="Live rolling error: congestion_index" />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 10: Live rolling T+1 RMSE (50-frame window). Error envelopes are stable rather than growing. No drift, no accumulation under the multi-threaded inference path. The LSTM/GRU/TCN traces remain close throughout, and brief excursions coincide with traffic-state transitions in the underlying stream rather than architecture-specific failures.
-</div>
+<Figure srcs={["../traffic-pipeline/prediction_error_vehicle_count.png", "../traffic-pipeline/prediction_error_occupancy_ratio.png", "../traffic-pipeline/prediction_error_congestion_index.png"]} cols={1} caption={<>Figure 10: Live rolling T+1 RMSE (50-frame window). Error envelopes are stable rather than growing. No drift, no accumulation under the multi-threaded inference path. The LSTM/GRU/TCN traces remain close throughout, and brief excursions coincide with traffic-state transitions in the underlying stream rather than architecture-specific failures.</>} />
 
 The horizon fans show the multi-step forecasts hugging the realized features frame-by-frame. The shaded band is the spread between actual and the T+1..T+5 predictions; tighter bands mean better calibration across the full horizon.
 
-<div className="flex flex-col items-center my-10 gap-3 max-w-2xl mx-auto">
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/horizon_fan_vehicle_count.png" alt="Live horizon fan: vehicle_count" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/horizon_fan_occupancy_ratio.png" alt="Live horizon fan: occupancy_ratio" />
-  <img className="rounded-lg shadow-md w-full h-auto object-contain" src="../traffic-pipeline/horizon_fan_congestion_index.png" alt="Live horizon fan: congestion_index" />
-</div>
-<div className="text-xs text-gray-400 -mt-6 mb-10 text-center italic max-w-2xl mx-auto">
-  Figure 11: Live horizon fans. GRU and LSTM bands track `occupancy_ratio` and `congestion_index` most tightly; all three widen on `vehicle_count` whenever the count spikes. Consistent with the offline per-feature analysis.
-</div>
+<Figure srcs={["../traffic-pipeline/horizon_fan_vehicle_count.png", "../traffic-pipeline/horizon_fan_occupancy_ratio.png", "../traffic-pipeline/horizon_fan_congestion_index.png"]} cols={1} caption={<>Figure 11: Live horizon fans. GRU and LSTM bands track `occupancy_ratio` and `congestion_index` most tightly; all three widen on `vehicle_count` whenever the count spikes. Consistent with the offline per-feature analysis.</>} />
 
 The most important read here is that the offline metrics generalize to the live path. Queue dynamics, frame drops, and the FPS controller don't introduce additional estimator-side error. What we measured on the static CSV is what we get end-to-end.
 

@@ -82,145 +82,35 @@ The action space is deliberately constrained to [40, 90] Mbps rather than the fu
 
 Before introducing the AI, we mapped the failure modes of static rate limiting across the 30–80 Mbps range using real Cloudflare traffic.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/combined_baselines_30mbps_40mbps.png" 
-    alt="30 and 40 Mbps static baselines"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Low-rate starvation (30/40 Mbps):</strong> Throughout the daily demand cycle, the shaper consistently caps throughput well below available demand. Queue occupancy spikes sharply during peak hours (the buffer absorbs what the rate doesn't pass) and drop counts climb as the buffer eventually saturates.
-  </div>
-</div>
+<Figure src="../traffic-shaper/combined_baselines_30mbps_40mbps.png" alt="30 and 40 Mbps static baselines" caption={<><strong>Low-rate starvation (30/40 Mbps):</strong> Throughout the daily demand cycle, the shaper consistently caps throughput well below available demand. Queue occupancy spikes sharply during peak hours (the buffer absorbs what the rate doesn't pass) and drop counts climb as the buffer eventually saturates.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/combined_baselines_50mbps_60mbps.png" 
-    alt="50 and 60 Mbps static baselines"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>The "middle ground" trap (50/60 Mbps):</strong> These rates are the ones operators typically deploy as a compromise. They eliminate the worst overflows but introduce a different failure mode: significant idle capacity during off-peak hours when demand sits below the rate limit, and still-occasional buffer events when demand surges unexpectedly beyond the cap.
-  </div>
-</div>
+<Figure src="../traffic-shaper/combined_baselines_50mbps_60mbps.png" alt="50 and 60 Mbps static baselines" caption={<><strong>The "middle ground" trap (50/60 Mbps):</strong> These rates are the ones operators typically deploy as a compromise. They eliminate the worst overflows but introduce a different failure mode: significant idle capacity during off-peak hours when demand sits below the rate limit, and still-occasional buffer events when demand surges unexpectedly beyond the cap.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/combined_baselines_70mbps_80mbps.png" 
-    alt="70 and 80 Mbps static baselines"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>High-rate permissiveness (70/80 Mbps):</strong> Drop counts essentially disappear, but the shaper has ceded any control over burst behavior. During heavy-hitter periods the queue still builds, just more slowly, and the effective throughput gain over lower rates is surprisingly marginal, because bursts now arrive earlier and queue longer.
-  </div>
-</div>
+<Figure src="../traffic-shaper/combined_baselines_70mbps_80mbps.png" alt="70 and 80 Mbps static baselines" caption={<><strong>High-rate permissiveness (70/80 Mbps):</strong> Drop counts essentially disappear, but the shaper has ceded any control over burst behavior. During heavy-hitter periods the queue still builds, just more slowly, and the effective throughput gain over lower rates is surprisingly marginal, because bursts now arrive earlier and queue longer.</>} />
 
 ### The AI Steps In: Wide vs. Narrow Action Shapes
 
 With the baselines characterized, we evaluated two variants of the trained agent. The **Wide Shape** agent uses the full [1, 100] Mbps action range. The **Narrow Shape** agent restricts itself to a tighter window, trading some flexibility for faster convergence and more predictable control.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/ab_ai_wide_detail_timeseries.png" 
-    alt="Wide agent time series A/B test"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Wide Agent, Time Series:</strong> The agent's chosen rate tracks the demand signal closely, rising during peak traffic windows and pulling back during off-peak periods. Notice that it periodically sets rates slightly below current demand: an intentional strategy to flush queue buildup before it becomes a drop event.
-  </div>
-</div>
+<Figure src="../traffic-shaper/ab_ai_wide_detail_timeseries.png" alt="Wide agent time series A/B test" caption={<><strong>Wide Agent, Time Series:</strong> The agent's chosen rate tracks the demand signal closely, rising during peak traffic windows and pulling back during off-peak periods. Notice that it periodically sets rates slightly below current demand: an intentional strategy to flush queue buildup before it becomes a drop event.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/ab_ai_wide_summary_summary.png" 
-    alt="Wide agent summary comparison"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Wide Agent, Summary:</strong> Aggregated across the full evaluation window, the wide-shape agent achieves competitive throughput with all baselines while driving queue occupancy and drop counts to near-zero. The tradeoff is visible in the rate oscillation metric; the agent is active and exploratory.
-  </div>
-</div>
+<Figure src="../traffic-shaper/ab_ai_wide_summary_summary.png" alt="Wide agent summary comparison" caption={<><strong>Wide Agent, Summary:</strong> Aggregated across the full evaluation window, the wide-shape agent achieves competitive throughput with all baselines while driving queue occupancy and drop counts to near-zero. The tradeoff is visible in the rate oscillation metric; the agent is active and exploratory.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/ab_ai_narrow_detail_timeseries.png" 
-    alt="Narrow agent time series A/B test"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Narrow Agent, Time Series:</strong> The narrow action space produces noticeably smoother rate curves. The agent makes fewer large corrections and instead maintains a tighter orbit around the demand signal. This results in lower peak queue occupancy at the expense of slightly slower reaction to sudden demand spikes.
-  </div>
-</div>
+<Figure src="../traffic-shaper/ab_ai_narrow_detail_timeseries.png" alt="Narrow agent time series A/B test" caption={<><strong>Narrow Agent, Time Series:</strong> The narrow action space produces noticeably smoother rate curves. The agent makes fewer large corrections and instead maintains a tighter orbit around the demand signal. This results in lower peak queue occupancy at the expense of slightly slower reaction to sudden demand spikes.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/ab_ai_narrow_summary_summary.png" 
-    alt="Narrow agent summary comparison"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Narrow Agent, Summary:</strong> The narrow agent's aggregate profile shows the best queue depth numbers across all configurations. Throughput is maintained, drop rates are minimal, and the stability penalty score (our proxy for control smoothness) is the lowest of any variant tested.
-  </div>
-</div>
+<Figure src="../traffic-shaper/ab_ai_narrow_summary_summary.png" alt="Narrow agent summary comparison" caption={<><strong>Narrow Agent, Summary:</strong> The narrow agent's aggregate profile shows the best queue depth numbers across all configurations. Throughput is maintained, drop rates are minimal, and the stability penalty score (our proxy for control smoothness) is the lowest of any variant tested.</>} />
 
 ### Stress Testing: Pushing Past the Training Distribution
 
 The final question is generalization. Traffic can exceed normal demand, and a deployed shaper needs to hold up under conditions it has never seen. We scaled the traffic input by 100% and 200% beyond the training distribution.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/ab_ai_wide-intense100_detail_timeseries.png" 
-    alt="Wide agent under 100% intense traffic"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Wide Agent at 100% Intensity:</strong> At double the nominal demand, the agent's rate responses become more aggressive. It pushes toward the upper boundary of its action space far more frequently, and momentary buffer builds are visible in the queue trace, but the shaper recovers within a few steps without cascading into sustained packet loss.
-  </div>
-</div>
+<Figure src="../traffic-shaper/ab_ai_wide-intense100_detail_timeseries.png" alt="Wide agent under 100% intense traffic" caption={<><strong>Wide Agent at 100% Intensity:</strong> At double the nominal demand, the agent's rate responses become more aggressive. It pushes toward the upper boundary of its action space far more frequently, and momentary buffer builds are visible in the queue trace, but the shaper recovers within a few steps without cascading into sustained packet loss.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/ab_ai_wide-intense200_detail_timeseries.png" 
-    alt="Wide agent under 200% intense traffic"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Wide Agent at 200% Intensity:</strong> At triple demand, physics wins some battles. The link is genuinely saturated during peak windows, and the agent can do little more than hold the rate at its ceiling and wait for the surge to pass. Drops occur, but they are concentrated in narrow windows rather than spread uniformly; the agent has learned to minimize loss even when it cannot eliminate it.
-  </div>
-</div>
+<Figure src="../traffic-shaper/ab_ai_wide-intense200_detail_timeseries.png" alt="Wide agent under 200% intense traffic" caption={<><strong>Wide Agent at 200% Intensity:</strong> At triple demand, physics wins some battles. The link is genuinely saturated during peak windows, and the agent can do little more than hold the rate at its ceiling and wait for the surge to pass. Drops occur, but they are concentrated in narrow windows rather than spread uniformly; the agent has learned to minimize loss even when it cannot eliminate it.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/ab_ai_narrow-intense100_detail_timeseries.png" 
-    alt="Narrow agent under 100% intense traffic"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Narrow Agent at 100% Intensity:</strong> The narrow shaper responds to overload with its characteristic smooth adjustments. Queue occupancy climbs but does not spike the way it does under static limits. The agent appears to anticipate demand by treating the current queue depth as a leading signal, starting to back off before the buffer is actually full.
-  </div>
-</div>
+<Figure src="../traffic-shaper/ab_ai_narrow-intense100_detail_timeseries.png" alt="Narrow agent under 100% intense traffic" caption={<><strong>Narrow Agent at 100% Intensity:</strong> The narrow shaper responds to overload with its characteristic smooth adjustments. Queue occupancy climbs but does not spike the way it does under static limits. The agent appears to anticipate demand by treating the current queue depth as a leading signal, starting to back off before the buffer is actually full.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../traffic-shaper/ab_ai_narrow-intense200_detail_timeseries.png" 
-    alt="Narrow agent under 200% intense traffic"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Narrow Agent at 200% Intensity:</strong> Under extreme overload, the narrow agent's constrained action space becomes a liability: it cannot reach high enough rates fast enough to match sudden surges. This is the honest limit of the design: the action space constraint that accelerates convergence during training introduces a response ceiling during out-of-distribution stress.
-  </div>
-</div>
+<Figure src="../traffic-shaper/ab_ai_narrow-intense200_detail_timeseries.png" alt="Narrow agent under 200% intense traffic" caption={<><strong>Narrow Agent at 200% Intensity:</strong> Under extreme overload, the narrow agent's constrained action space becomes a liability: it cannot reach high enough rates fast enough to match sudden surges. This is the honest limit of the design: the action space constraint that accelerates convergence during training introduces a response ceiling during out-of-distribution stress.</>} />
 
 ## Conclusion
 

@@ -14,14 +14,7 @@ Consider a few concrete examples:
 
 <Example title="Examples of C-spaces">
 
-<div className="flex flex-col items-center my-12">
-  <img
-    src="../c-space/c-space.png"
-    alt="An abstract depiction of a robot's configuration space, showing a high-dimensional space with a single point representing the robot's current configuration"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-</div>
+<Figure src="../c-space/c-space.png" alt="An abstract depiction of a robot's configuration space, showing a high-dimensional space with a single point representing the robot's current configuration" />
 
 - **A door:** The physical configuration of a door requires only a single number to describe it: the angle $\theta$ about its hinge. Its C-space is 1-dimensional.
 - **A point on a plane:** A point moving on a flat surface needs two coordinates, $(x, y)$. Its C-space is a 2-dimensional plane.
@@ -204,14 +197,7 @@ While degrees of freedom (dof) define the dimension of a robot's configuration s
 <Example title="Topologically Equivalent Spaces">
 For example, the surface of a sphere and a football are topologically equivalent because one can be stretched into the other, but a sphere cannot be deformed into a flat plane without being cut.
 
-<div className="flex flex-col items-center my-12">
-  <img
-    src="../c-space/Pasted image 20260406110542.png"
-    alt="Visual showing topologically equivalent spaces (sphere and football) contrasted with non-equivalent spaces (sphere and plane)"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-</div>
+<Figure src="../c-space/Pasted image 20260406110542.png" alt="Visual showing topologically equivalent spaces (sphere and football) contrasted with non-equivalent spaces (sphere and plane)" />
 </Example>
 
 The topology of a complex robotic system can often be understood by expressing its C-space as the **Cartesian product of simpler, lower-dimensional spaces**:

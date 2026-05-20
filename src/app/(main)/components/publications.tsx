@@ -2,7 +2,7 @@
 
 import type React from "react"
 import Link from "next/link"
-import { ExternalLink, FileText } from "lucide-react"
+import { FileText } from "lucide-react"
 import { cn } from "@/lib/utils"
 import publicationsData from "@/data/publications.json"
 
@@ -17,7 +17,6 @@ interface Publication {
 }
 
 export const RecentPublications: React.FC = () => {
-  // Direct import for static export - no API needed
   const publications = (publicationsData as Publication[]).slice(0, 5)
 
   return (
@@ -48,62 +47,105 @@ export const RecentPublications: React.FC = () => {
   )
 }
 
+function PaperSkeleton({ className }: { className?: string }) {
+  return (
+    <div
+      aria-hidden
+      className={cn(
+        "relative aspect-[3/4] w-full overflow-hidden rounded-sm border border-border/70 bg-background/95 shadow-sm",
+        className
+      )}
+    >
+      <div className="absolute inset-0 p-2 space-y-1.5">
+        <div className="h-1.5 w-3/4 rounded-sm bg-foreground/30" />
+        <div className="h-1 w-2/3 rounded-sm bg-foreground/15" />
+        <div className="pt-1.5 space-y-1">
+          <div className="h-0.5 w-full rounded-sm bg-foreground/20" />
+          <div className="h-0.5 w-[95%] rounded-sm bg-foreground/20" />
+          <div className="h-0.5 w-[88%] rounded-sm bg-foreground/20" />
+          <div className="h-0.5 w-[92%] rounded-sm bg-foreground/20" />
+          <div className="h-0.5 w-3/4 rounded-sm bg-foreground/20" />
+        </div>
+        <div className="pt-1 space-y-1">
+          <div className="h-0.5 w-full rounded-sm bg-foreground/20" />
+          <div className="h-0.5 w-[90%] rounded-sm bg-foreground/20" />
+          <div className="h-0.5 w-4/5 rounded-sm bg-foreground/20" />
+        </div>
+        <div className="pt-1.5">
+          <div className="h-3 w-2/3 rounded-sm bg-foreground/10" />
+        </div>
+        <div className="pt-1 space-y-1">
+          <div className="h-0.5 w-[85%] rounded-sm bg-foreground/20" />
+          <div className="h-0.5 w-3/4 rounded-sm bg-foreground/20" />
+        </div>
+      </div>
+    </div>
+  )
+}
+
+function PublicationCard({ publication }: { publication: Publication }) {
+  const dest = publication.pdf || publication.link
+  const kind = publication.pdf ? "PDF" : "Web"
+  const subtitle = `${publication.journal} · ${kind}`
+
+  return (
+    <Link
+      href={dest}
+      target="_blank"
+      rel="noopener noreferrer"
+      prefetch={false}
+      className={cn(
+        "group relative block overflow-hidden rounded-xl border border-border/60 bg-card px-4 py-3 transition-all duration-300",
+        "hover:border-primary/40 hover:bg-muted/30 hover:-translate-y-0.5 hover:shadow-md"
+      )}
+    >
+      <div className="flex items-center gap-6">
+        <div className="relative shrink-0 self-center h-16 w-12 sm:h-20 sm:w-16">
+          <div
+            className={cn(
+              "absolute inset-0 transition-all duration-500 ease-out",
+              "opacity-70 group-hover:opacity-100",
+              "group-hover:-translate-y-0.5 group-hover:-rotate-3"
+            )}
+          >
+            <PaperSkeleton className="h-full w-full" />
+          </div>
+        </div>
+
+        <div className="min-w-0 flex-1 pl-1 pr-2">
+          <h3 className="font-serif text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-lg">
+            {publication.title}
+          </h3>
+          <p className="mt-1 font-sans text-xs text-muted-foreground sm:text-sm">
+            {subtitle} · {publication.year}
+          </p>
+        </div>
+      </div>
+    </Link>
+  )
+}
+
 export const PublicationShowcase: React.FC = () => {
   const publications = publicationsData as Publication[]
 
   return (
     <main className="max-w-4xl mx-auto w-full px-5 lg:px-6 py-16">
-      <div className="mb-12 border-b border-border pb-6">
-        <h1 className="mb-4">Manuscripts</h1>
+      <div className="mb-10 border-b border-border pb-6">
+        <h1 className="mb-3">Manuscripts</h1>
         <p className="text-muted-foreground font-serif text-lg">A collection of research, drafts, and published works.</p>
       </div>
 
-      <div className="space-y-8">
+      <div className="space-y-3">
         {publications.length === 0 ? (
           <p className="text-muted-foreground font-serif">No manuscripts found.</p>
         ) : (
-          publications.map((publication) => {
-            const dest = publication.pdf || publication.link;
-            return (
-              <Link
-                href={dest}
-                key={publication.id}
-                target="_blank"
-                rel="noopener noreferrer"
-                prefetch={false}
-                className="group block p-6 rounded-lg border border-border/50 bg-card hover:border-primary/30 hover:bg-muted/20 hover:-translate-y-0.5 transition-all duration-300"
-              >
-                <div className="flex flex-col sm:flex-row sm:items-baseline gap-3 mb-2">
-                  <h3 className="text-xl font-serif font-semibold text-foreground group-hover:text-primary transition-colors">
-                    {publication.title}
-                  </h3>
-                  {publication.pdf ? (
-                    <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-semibold bg-primary/10 text-primary">
-                      <FileText className="w-3 h-3" /> PDF
-                    </span>
-                  ) : (
-                    <span className="shrink-0 inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-full text-[10px] uppercase tracking-wider font-semibold bg-secondary text-secondary-foreground">
-                      <ExternalLink className="w-3 h-3" /> WEB
-                    </span>
-                  )}
-                </div>
-
-                <p className="text-base text-muted-foreground font-sans leading-relaxed mb-4">
-                  {publication.authors.join(', ')}
-                </p>
-
-                <div className="flex items-center gap-2 text-sm text-muted-foreground/80 font-serif">
-                  <span className="italic font-medium">{publication.journal}</span>
-                  <span>&bull;</span>
-                  <span>{publication.year}</span>
-                </div>
-              </Link>
-            );
-          })
+          publications.map((publication) => (
+            <PublicationCard key={`${publication.id}-${publication.title}`} publication={publication} />
+          ))
         )}
       </div>
     </main>
-  );
-};
+  )
+}
 
-export default PublicationShowcase;
+export default PublicationShowcase

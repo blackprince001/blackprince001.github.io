@@ -265,7 +265,7 @@ export const BilateralMarginNotesContainer: React.FC<BilateralMarginNotesContain
       const top = positions.get(note.id)
       if (top === undefined) return null
       return (
-        <div key={note.id} style={{ position: "absolute", top, width: "100%" }}>
+        <div key={note.id} style={{ position: "absolute", top, width: "100%", pointerEvents: "auto" }}>
           <NoteCard note={note} side={side} />
         </div>
       )

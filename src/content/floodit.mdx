@@ -21,17 +21,7 @@ You can play against it right here — Q-values for every move are shown live in
   <strong>Live deployment:</strong> You play the blue corner; the trained DQN plays red. The bar chart on the right shows the Q-values the agent computed for each color choice on its last move — the green-highlighted bar is the action it actually took.
 </div>
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../rl-filler/imessage.png" 
-    alt="System Architecture Diagram"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    46 wins in Filler built brick by brick.
-  </div>
-</div>
+<Figure src="../rl-filler/imessage.png" alt="System Architecture Diagram" caption={<>46 wins in Filler built brick by brick.</>} />
 
 Flood-It presents an interesting challenge for RL: it combines discrete action selection with strategic territory planning. Unlike pure reflex games (like Atari), success requires understanding spatial relationships and opponent behavior. Unlike pure strategy games (like Chess), the state space is manageable enough for deep learning to excel.
 
@@ -47,17 +37,7 @@ For this implementation, I used $H=8$, $W=7$, and $C=6$, creating a state space 
 
 The system is architected in three layers, each with clear responsibilities:
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../rl-filler/architecture.png" 
-    alt="System Architecture Diagram"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>System Architecture:</strong> The three-layer design separates game logic, RL training, and web interface for modularity and maintainability.
-  </div>
-</div>
+<Figure src="../rl-filler/architecture.png" alt="System Architecture Diagram" caption={<><strong>System Architecture:</strong> The three-layer design separates game logic, RL training, and web interface for modularity and maintainability.</>} />
 
 ### 1. Core Game Engine
 
@@ -99,7 +79,7 @@ where $\Delta |T_1| = |T_1(t)| - |T_1(t-1)|$ is the change in territory size. Th
     loop
     muted
   >
-    <source src="../rl-filler/training.mp4" type="video/webm" />
+    <source src="../rl-filler/training.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 </div>
@@ -177,17 +157,7 @@ Then select: $a^* = \arg\max_{a \in \mathcal{A}_{valid}} Q(\mathbf{s}, a)$
 
 This ensures the AI never makes illegal moves while still leveraging its learned value estimates.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../rl-filler/q-value.png" 
-    alt="Q-Value Visualization in Frontend"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Q-Value Transparency:</strong> The frontend displays Q-values for all actions, showing the AI's evaluation of each color choice. The chosen action (highlighted in green) typically has the highest Q-value among valid options.
-  </div>
-</div>
+<Figure src="../rl-filler/q-value.png" alt="Q-Value Visualization in Frontend" caption={<><strong>Q-Value Transparency:</strong> The frontend displays Q-values for all actions, showing the AI's evaluation of each color choice. The chosen action (highlighted in green) typically has the highest Q-value among valid options.</>} />
 
 ## Web Interface: Real-Time Decision Visualization
 
@@ -216,7 +186,7 @@ This transparency is crucial for understanding and trusting the AI's decisions. 
     loop
     muted
   >
-    <source src="../rl-filler/gameplay.mp4" type="video/webm" />
+    <source src="../rl-filler/gameplay.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 </div>
@@ -242,14 +212,7 @@ After training for 500,000 timesteps, the AI demonstrates several learned behavi
 
 The learning curve shows steady improvement in mean episode reward, with the policy transitioning from random play to strategic territory capture.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../rl-filler/reward.png" 
-    alt="Episode Reward Graph"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-</div>
+<Figure src="../rl-filler/reward.png" alt="Episode Reward Graph" />
 
 ## Technical Implementation Details
 
@@ -263,17 +226,7 @@ The API (`api.py`) uses FastAPI with WebSocket support for real-time communicati
 
 The WebSocket protocol enables low-latency updates, with the entire game loop (player move → AI inference → state update) completing in milliseconds.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../rl-filler/screenshot.png" 
-    alt="Frontend Interface Screenshot"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md border border-gray-200"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>User Interface:</strong> The polished dark-mode interface with territory visualization, Q-value displays, and collapsible AI move history.
-  </div>
-</div>
+<Figure src="../rl-filler/screenshot.png" alt="Frontend Interface Screenshot" caption={<><strong>User Interface:</strong> The polished dark-mode interface with territory visualization, Q-value displays, and collapsible AI move history.</>} />
 
 ### Frontend Design
 
@@ -333,7 +286,7 @@ Several directions could improve the system:
     loop
     muted
   >
-    <source src="../rl-filler/ai.mp4" type="video/webm" />
+    <source src="../rl-filler/ai.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
 </div>

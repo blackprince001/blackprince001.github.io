@@ -81,16 +81,7 @@ Let's break down the engineering decisions here:
 3.  **Fairness ($\sum D_{j}(t)$):** This term tracks the cumulative delay of specific vehicles. It acts as a "pressure valve," ensuring the agent cannot sacrifice a low-density lane indefinitely.
 4.  **Action Penalty ($\Omega(a_t)$):** A regularization term that penalizes rapid phase flickering.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../atscs/policy.png" 
-    alt="Reward Components over Time"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Figure 2: Reward Component Analysis (Scenario A).</strong> Notice how the Fairness penalty spikes early in training but forces the policy to stabilize, eventually leading to a higher Total Reward.
-  </div>
-</div>
+<Figure src="../atscs/policy.png" alt="Reward Components over Time" caption={<><strong>Figure 2: Reward Component Analysis (Scenario A).</strong> Notice how the Fairness penalty spikes early in training but forces the policy to stabilize, eventually leading to a higher Total Reward.</>} />
 
 ## Training and Curriculum Learning
 
@@ -118,7 +109,7 @@ Here, I introduced a second intersection 200m downstream. The challenge is the G
         Your browser does not support the video tag.
     </video>
     <div className="text-sm text-gray-500 mt-2 text-center italic">
-        <strong>Figure 4: Emergent Coordination.</strong> Intersection 2 (Right) learns to turn green exactly 10 seconds after Intersection 1 releases traffic, matching the travel time $t = d/v_{max}$.
+        <strong>Figure 4: Emergent Coordination.</strong> Intersection 2 (Right) learns to turn green exactly 10 seconds after Intersection 1 releases traffic, matching the travel time {'$t = d/v_{max}$'}.
     </div>
 </div>
 
@@ -183,7 +174,7 @@ The 2x2 Grid represents the most chaotic system. We stress-tested the system by 
 </div>
 
 <div>
-    <video controls>
+    <video controls autoPlay loop muted>
         <source src="../atscs/scenario-c.mp4" type="video/mp4" />
         Your browser does not support the video tag.
     </video>

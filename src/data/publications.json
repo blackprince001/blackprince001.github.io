@@ -32,5 +32,16 @@
     "year": 2026,
     "link": "https://compeng.knust.com",
     "pdf": "/publications/adaptive-traffic-shaper.pdf"
+  },
+  {
+    "id": 1,
+    "title": "Real-Time Traffic Density Estimation: A Hybrid Computer Vision and Predictive Machine Learning Pipeline",
+    "authors": [
+      "Prince Kwabena Appiah Boadu"
+    ],
+    "journal": "Term Paper",
+    "year": 2026,
+    "link": "https://compeng.knust.com",
+    "pdf": "/publications/traffic-density-estimation.pdf"
   }
 ]

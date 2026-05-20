@@ -12,6 +12,7 @@ import RustRunner from './components/code-runner/rust'
 import GoRunner from './components/code-runner/golang'
 import CodeSnippet from './components/code-runner/code-snippet'
 import { BlogExample } from './components/ui/blog-example'
+import { Figure } from './components/ui/figure'
 
 
 export function useMDXComponents(components: MDXComponents): MDXComponents {
@@ -39,6 +40,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     GoRunner,
     CodeSnippet,
     Example: BlogExample,
+    Figure,
     ...components,
   }
 }

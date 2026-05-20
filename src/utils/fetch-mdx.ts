@@ -20,6 +20,7 @@ import RustRunner from "@/components/code-runner/rust"
 import GoRunner from "@/components/code-runner/golang"
 import CodeSnippet from "@/components/code-runner/code-snippet"
 import { BlogExample } from "@/components/ui/blog-example"
+import { Figure } from "@/components/ui/figure"
 
 const contentDir = path.join(process.cwd(), "/src/content/")
 const shortsContentDir = path.join(process.cwd(), "/src/content/shorts/")
@@ -67,7 +68,8 @@ const customComponents = {
   RustRunner,
   GoRunner,
   CodeSnippet,
-  Example: BlogExample
+  Example: BlogExample,
+  Figure
 }
 
 export async function getBlogBySlug(slug: string) {

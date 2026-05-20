@@ -14,17 +14,7 @@ Decision trees make predictions by navigating from the root node to a leaf node.
 
 Decision trees can be visualized using the `export_graphviz()` function in Scikit-Learn, and the resulting output can be displayed using Graphviz.<AutoNumberedSidenote>Graphviz is an open-source graph visualization software package. See <a href="https://graphviz.org/">Graphviz documentation</a>.</AutoNumberedSidenote> Graphviz is an open-source graph visualization software package that includes a command-line tool for converting .dot files to various formats, making it easy to visualize and understand the decision-making process of a trained tree.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.52.03 PM.png" 
-    alt="Decision tree visualization showing prediction path"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Decision Tree Visualization:</strong> A trained decision tree showing the path from root to leaf for making predictions on the iris dataset.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.52.03 PM.png" alt="Decision tree visualization showing prediction path" caption={<><strong>Decision Tree Visualization:</strong> A trained decision tree showing the path from root to leaf for making predictions on the iris dataset.</>} />
 
 ### Making Predictions
 
@@ -52,33 +42,13 @@ While both measures often lead to similar trees, Gini impurity is computationall
 
 **At each node, the algorithm evaluates all possible features and their thresholds to identify the split that yields the greatest reduction in impurity or MSE**. **The algorithm aims to create subsets that are as pure as possible**. 
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.53.20 PM.png" 
-    alt="CART algorithm finding best split"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Finding the Best Split:</strong> The CART algorithm evaluates all possible splits to minimize impurity at each node.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.53.20 PM.png" alt="CART algorithm finding best split" caption={<><strong>Finding the Best Split:</strong> The CART algorithm evaluates all possible splits to minimize impurity at each node.</>} />
 
 For instance, when training a `DecisionTreeClassifier` on the iris dataset, the algorithm might find that splitting based on petal length ≤ 2.45 cm results in the purest subsets.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.50.47 PM.png" 
-    alt="Decision tree trained on the iris dataset"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-<Example title="Iris Dataset Classification">
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.50.47 PM.png" alt="Decision tree trained on the iris dataset" caption={<><Example title="Iris Dataset Classification">
 **Iris Dataset Example:** A decision tree trained on the iris dataset using petal length and width as features.
-</Example>
-  </div>
-</div>
+</Example></>} />
 
 ### Recursive Splitting and Stopping Criteria
 
@@ -88,17 +58,7 @@ For instance, when training a `DecisionTreeClassifier` on the iris dataset, the 
 
 Decision trees can be used for both classification and regression tasks. For classification, each leaf node predicts a class label. For regression, each leaf node predicts a value, typically the average of the target values for the instances in that node.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.54.31 PM.png" 
-    alt="Regression tree example"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Regression Tree:</strong> A decision tree used for regression, where each leaf node predicts the average target value of instances in that region.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.54.31 PM.png" alt="Regression tree example" caption={<><strong>Regression Tree:</strong> A decision tree used for regression, where each leaf node predicts the average target value of instances in that region.</>} />
 
 ### Cost Functions
 
@@ -216,33 +176,13 @@ Decision trees also have disadvantages:
 
 Decision trees possess a remarkable ability to adapt to training data, often to the point of overfitting. **Overfitting occurs when a model learns the training data too well, capturing noise and outliers that hinder its ability to generalize to unseen data**. **Regularization techniques are employed to curb a decision tree's flexibility during training, thus mitigating the risk of overfitting**.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.54.09 PM.png" 
-    alt="Overfitting in decision trees"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-<Example title="Overfitting in Decision Trees">
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.54.09 PM.png" alt="Overfitting in decision trees" caption={<><Example title="Overfitting in Decision Trees">
 **Overfitting Example:** A decision tree that has overfit to the training data, creating overly complex decision boundaries.
-</Example>
-  </div>
-</div>
+</Example></>} />
 
 Limiting the depth of a decision tree is a straightforward regularization method. Scikit-Learn provides the `max_depth` hyperparameter to control this aspect. A lower `max_depth` restricts the tree's growth, preventing it from becoming overly complex.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.55.03 PM.png" 
-    alt="Regularized decision tree with max_depth constraint"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Regularized Tree:</strong> A decision tree with `max_depth` constraint, showing simpler decision boundaries that generalize better.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.55.03 PM.png" alt="Regularized decision tree with max_depth constraint" caption={<><strong>Regularized Tree:</strong> A decision tree with `max_depth` constraint, showing simpler decision boundaries that generalize better.</>} />
 
 Scikit-Learn's `DecisionTreeClassifier` offers various hyperparameters to regulate the tree's structure:
 
@@ -252,17 +192,7 @@ Scikit-Learn's `DecisionTreeClassifier` offers various hyperparameters to regula
 - **`min_samples_leaf`**: Specifies the minimum number of samples a leaf node must have. This hyperparameter prevents the creation of leaf nodes with very few samples, again addressing the issue of overfitting.
 - **`min_weight_fraction_leaf`**: Similar to `min_samples_leaf` but expressed as a fraction of the total weighted instances. This option is particularly useful when dealing with weighted instances, allowing for more nuanced control over leaf node creation.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.57.58 PM.png" 
-    alt="Effect of regularization hyperparameters"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Regularization Effects:</strong> Comparison of decision boundaries with different regularization hyperparameter settings.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.57.58 PM.png" alt="Effect of regularization hyperparameters" caption={<><strong>Regularization Effects:</strong> Comparison of decision boundaries with different regularization hyperparameter settings.</>} />
 
 Increasing the values of hyperparameters starting with "min" or decreasing those starting with "max" generally results in a more regularized model. For example, increasing `min_samples_leaf` forces the tree to have more instances per leaf, leading to a simpler model less likely to overfit.
 
@@ -274,33 +204,13 @@ Decision trees exhibit a preference for orthogonal decision boundaries, making t
 
 In its original orientation, a decision tree can easily separate the classes with a single, straight split. However, rotating the dataset by 45 degrees results in a more convoluted decision boundary with multiple orthogonal splits. While both trees might achieve perfect accuracy on the training data, the rotated tree is likely to generalize poorly to new data.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.58.22 PM.png" 
-    alt="Decision tree sensitivity to data orientation"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Orientation Sensitivity:</strong> The same dataset rotated by 45 degrees requires a more complex decision boundary with multiple splits.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.58.22 PM.png" alt="Decision tree sensitivity to data orientation" caption={<><strong>Orientation Sensitivity:</strong> The same dataset rotated by 45 degrees requires a more complex decision boundary with multiple splits.</>} />
 
 ### Mitigating Sensitivity to Orientation: Feature Scaling and PCA
 
 Feature scaling and Principal Component Analysis (PCA) can help alleviate this sensitivity to data orientation. Feature scaling ensures that all features have a similar range, preventing any single feature from dominating the splitting process. PCA, a dimensionality reduction technique, rotates the data to minimize the correlation between features.<AutoNumberedSidenote>For more on PCA, see the <a href="https://en.wikipedia.org/wiki/Principal_component_analysis">Wikipedia article on Principal Component Analysis</a>.</AutoNumberedSidenote> This rotation can align the data with the axes, enabling the decision tree to make more effective splits.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-11-08 at 7.59.01 PM.png" 
-    alt="PCA applied to rotated data for decision trees"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>PCA Solution:</strong> Applying PCA to rotated data can help decision trees create more effective splits by aligning the data with the axes.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.59.01 PM.png" alt="PCA applied to rotated data for decision trees" caption={<><strong>PCA Solution:</strong> Applying PCA to rotated data can help decision trees create more effective splits by aligning the data with the axes.</>} />
 
 <BlogSuggestion link="/blog/pca" title="More on PCA here" />
 

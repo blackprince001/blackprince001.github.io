@@ -54,17 +54,7 @@ Voting classifiers are a straightforward yet powerful ensemble method that lever
 
 This approach can be likened to seeking opinions from multiple experts and choosing the most popular opinion as the final decision.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 4.53.32 PM.png" 
-    alt="Voting classifier combining multiple base models"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Voting Classifier:</strong> Multiple base models make predictions, and the ensemble selects the class with the majority of votes.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 4.53.32 PM.png" alt="Voting classifier combining multiple base models" caption={<><strong>Voting Classifier:</strong> Multiple base models make predictions, and the ensemble selects the class with the majority of votes.</>} />
 
 ### Hard Voting vs. Soft Voting
 
@@ -100,17 +90,7 @@ The disadvantage of bootstrap sampling is that each base model only sees, on ave
 
 By training base models on different subsets of the data, bagging and pasting introduce variability in the learning process, leading to models that make different types of errors. This diversity in predictions ultimately **reduces the variance of the ensemble model, resulting in improved generalization performance**.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 4.54.38 PM.png" 
-    alt="Bagging and pasting ensemble methods"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Bagging and Pasting:</strong> Training multiple models on different subsets of data to create diversity and reduce variance.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 4.54.38 PM.png" alt="Bagging and pasting ensemble methods" caption={<><strong>Bagging and Pasting:</strong> Training multiple models on different subsets of data to create diversity and reduce variance.</>} />
 
 ### Bagging vs. Pasting
 
@@ -192,17 +172,7 @@ Ensemble methods like Random Forests aim to **reduce variance by averaging the p
 
 Random Forests provide a valuable tool for assessing the relative importance of each feature in the dataset.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 4.57.25 PM.png" 
-    alt="Feature importance in Random Forests"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Feature Importance:</strong> Random Forests can assess the relative importance of features based on how much they reduce impurity across all trees.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 4.57.25 PM.png" alt="Feature importance in Random Forests" caption={<><strong>Feature Importance:</strong> Random Forests can assess the relative importance of features based on how much they reduce impurity across all trees.</>} />
 
 The sources describe a method for calculating feature importance based on how much the tree nodes using a particular feature reduce impurity. For a single decision tree, the importance of feature $k$ is given by:
 
@@ -263,29 +233,9 @@ Boosting is another powerful ensemble learning technique that combines multiple 
 
 The sources illustrate the process of AdaBoost with visualizations showing the sequential training process and how instance weights are updated. The decision boundaries of consecutive learners demonstrate how the ensemble progressively focuses on the harder instances, effectively reducing the error.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 4.58.41 PM.png" 
-    alt="AdaBoost sequential training process"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>AdaBoost Training:</strong> Sequential training process showing how instance weights are updated to focus on misclassified examples.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 4.58.41 PM.png" alt="AdaBoost sequential training process" caption={<><strong>AdaBoost Training:</strong> Sequential training process showing how instance weights are updated to focus on misclassified examples.</>} />
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 4.59.26 PM.png" 
-    alt="AdaBoost decision boundaries"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>AdaBoost Decision Boundaries:</strong> How consecutive learners progressively focus on harder instances, improving the ensemble's accuracy.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 4.59.26 PM.png" alt="AdaBoost decision boundaries" caption={<><strong>AdaBoost Decision Boundaries:</strong> How consecutive learners progressively focus on harder instances, improving the ensemble's accuracy.</>} />
 
 #### Advantages and Limitations
 
@@ -326,17 +276,7 @@ Gradient Boosting is a more generalized boosting approach that can be used for b
 
 The sources outline the following steps for Gradient Boosting:
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 4.37.48 PM.png" 
-    alt="Gradient Boosting algorithm overview"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Gradient Boosting Algorithm:</strong> Overview of the iterative process for building a gradient boosted ensemble.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 4.37.48 PM.png" alt="Gradient Boosting algorithm overview" caption={<><strong>Gradient Boosting Algorithm:</strong> Overview of the iterative process for building a gradient boosted ensemble.</>} />
 
 1. **Initialize the ensemble:** The ensemble is often initialized with a simple model that minimizes the loss function on the training data.
 
@@ -360,17 +300,7 @@ The choice of loss function depends on the specific task. For regression, the sq
 
 - **Gradient Tree Boosting (GBRT):** Uses decision trees as the weak learners. The sources provide an example of GBRT for regression, demonstrating how each tree fits the residual errors of the previous ensemble.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 5.00.46 PM.png" 
-    alt="Gradient Tree Boosting for regression"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Gradient Tree Boosting:</strong> Visualization showing how each tree fits the residual errors of the previous ensemble, progressively improving predictions.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 5.00.46 PM.png" alt="Gradient Tree Boosting for regression" caption={<><strong>Gradient Tree Boosting:</strong> Visualization showing how each tree fits the residual errors of the previous ensemble, progressively improving predictions.</>} />
 
 - **Stochastic Gradient Boosting:** Introduces randomness by training each tree on a random subset of the training data.
 
@@ -474,17 +404,7 @@ where:
 
 The weights ($w_m$) are typically learned by training the blender model on a separate dataset, ensuring that the best-performing base models do not dominate the ensemble.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 5.04.28 PM.png" 
-    alt="Stacking ensemble method architecture"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Stacking Architecture:</strong> A meta-learner (blender) learns to optimally combine predictions from multiple base models.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 5.04.28 PM.png" alt="Stacking ensemble method architecture" caption={<><strong>Stacking Architecture:</strong> A meta-learner (blender) learns to optimally combine predictions from multiple base models.</>} />
 
 ### Building the Blending Training Set
 
@@ -500,17 +420,7 @@ The first step involves constructing a training set specifically for the blender
 
 Once the blending training set is created, train the blender model on this data. The blender learns to map the input features (the base model predictions) to the target variable, essentially learning how to effectively combine the base model predictions.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 5.05.03 PM.png" 
-    alt="Training the blender model in stacking"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Training the Blender:</strong> The meta-learner is trained on predictions from base models to learn optimal combination weights.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 5.05.03 PM.png" alt="Training the blender model in stacking" caption={<><strong>Training the Blender:</strong> The meta-learner is trained on predictions from base models to learn optimal combination weights.</>} />
 
 ### Retraining Base Predictors and Making Predictions
 
@@ -534,17 +444,7 @@ For instance, the sources demonstrate using a `StackingClassifier` on the moons 
 
 Stacking can be extended to include multiple layers of blenders. This approach might offer additional performance gains but comes at the cost of increased training time and complexity.
 
-<div className="flex flex-col items-center my-12">
-  <img 
-    src="../ml-book-assets/Screenshot 2024-12-01 at 5.05.20 PM.png" 
-    alt="Multilayer stacking architecture"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-sm text-gray-500 mt-4 text-center italic">
-    <strong>Multilayer Stacking:</strong> Multiple layers of blenders can potentially improve performance but increase complexity.
-  </div>
-</div>
+<Figure src="../ml-book-assets/Screenshot 2024-12-01 at 5.05.20 PM.png" alt="Multilayer stacking architecture" caption={<><strong>Multilayer Stacking:</strong> Multiple layers of blenders can potentially improve performance but increase complexity.</>} />
 
 **Key benefits of stacking include:**
 
