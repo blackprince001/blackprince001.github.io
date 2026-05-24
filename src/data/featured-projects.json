@@ -1,0 +1,400 @@
+[
+  {
+    "name": "Lumen",
+    "date": "2026",
+    "tags": [
+      "TypeScript",
+      "FastAPI",
+      "pgvector",
+      "RAG"
+    ],
+    "description": [
+      "A self-hostable research-paper management platform with AI-powered reading assistance, full-text and semantic search, and automatic relationship discovery through citations. Ingests papers directly from arXiv, ACM, IEEE, OpenReview, PMLR, NeurIPS, and friends, or via raw PDF upload, then organises them into hierarchical groups, custom tags, and reading states.",
+      "AI reading is wired to Google Gemini for chat-with-paper sessions (threaded so follow-ups stay scoped), auto-generated summaries, key-findings extraction, and smart highlights. The backend is FastAPI + SQLAlchemy 2 async on PostgreSQL 16 with pgvector for 768-dim semantic search; Celery on Redis handles background ingestion and AI tasks. Frontend is React 19 + Vite + TanStack Query + a TipTap editor, with an integrated PDF.js reader and per-user data isolation behind Google OAuth and JWT."
+    ],
+    "images": [
+      "/featured-projects/lumen-1.png",
+      "/featured-projects/lumen-4.png",
+      "/featured-projects/lumen-2.png",
+      "/featured-projects/lumen-3.png",
+      "/featured-projects/lumen-5.png"
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/lumen"
+      }
+    ]
+  },
+  {
+    "name": "Oware Engine and a Ladder of RL Agents",
+    "date": "2026",
+    "tags": [
+      "Reinforcement Learning",
+      "DQN",
+      "PPO",
+      "AlphaZero"
+    ],
+    "description": [
+      "A custom Oware (Abapa ruleset) engine paired with three RL agents (DQN, PPO, and an AlphaZero-lite trained via MCTS self-play) pitted against a depth-limited Minimax baseline. The post is as much about what failed as what worked: a curriculum that forgets, league self-play that turns inward, and an AlphaZero that never finished its warm-up.",
+      "A round-robin Elo tournament with 100 games per pair settles the order. Minimax-d6 anchors the top, DQN comes second, PPO third, and AlphaZero-lite lands below Random, exactly what an under-trained policy on a 300-ply game with terminal-only reward should look like."
+    ],
+    "images": [
+      "/featured-projects/oware-1.png",
+      "/featured-projects/oware-2.png",
+      "/featured-projects/oware-3.png",
+      "/featured-projects/oware-4.png",
+      "/featured-projects/oware-5.png"
+    ],
+    "links": [
+      {
+        "label": "Write-up",
+        "url": "/blog/oware"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/oware"
+      },
+      {
+        "label": "Website",
+        "url": "https://oware-ai.vercel.app/#/"
+      }
+    ]
+  },
+  {
+    "name": "Real-Time Traffic Density Estimation",
+    "date": "2026",
+    "tags": [
+      "Computer Vision",
+      "PyTorch",
+      "Real-Time"
+    ],
+    "description": [
+      "A two-stage pipeline for traffic monitoring. The first stage pairs an object detector with a spatial logic layer that filters detections against a precomputed road mask, so only on-road vehicles contribute to density measurements.",
+      "The second stage consumes the cleaned telemetry and forecasts short-horizon density with an LSTM, GRU, or TCN. Benchmarked across multiple YOLO variants and RT-DETR on hardware ranging from embedded boards to GPU servers."
+    ],
+    "images": [
+      "/traffic-pipeline/infra.png",
+      "/traffic-pipeline/rtdetr-l_clip1.mp4"
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "/publications/traffic-density-estimation.pdf"
+      },
+      {
+        "label": "Write-up",
+        "url": "/blog/vision"
+      },
+      {
+        "label": "Github",
+        "url": "https://github.com/blackprince001/acvp"
+      }
+    ]
+  },
+  {
+    "name": "AWS IoT Greengrass for Predictive Maintenance",
+    "date": "2026",
+    "tags": [
+      "Edge Computing",
+      "IIoT",
+      "AWS",
+      "MLOps"
+    ],
+    "description": [
+      "A hybrid cloud-edge architecture for industrial predictive maintenance, integrating local ML inference with selective cloud synchronization through AWS IoT Core and Greengrass v2.",
+      "Empirically validated against a cloud-only baseline on real AWS infrastructure. The proposed configuration cuts cloud-bound bandwidth by 86.8% and decision latency by 256× (from 23.1 ms cloud round-trip to 0.09 ms local inference), while maintaining an anomaly-class F1 of 0.84 with 91% recall at the edge, even with the cloud disconnected."
+    ],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "/publications/iot-edge-greengrass.pdf"
+      }
+    ]
+  },
+  {
+    "name": "Odumsor — Live Power-Outage Map for Ghana",
+    "date": "2026",
+    "tags": [
+      "Civic Tech",
+      "React",
+      "PWA",
+      "Community"
+    ],
+    "description": [
+      "A community-built platform that turns Ghana's power instability (locally called dumsor) into something legible. Anyone can log Dum (power out) or Sor (power on) for their zone, location-gated so users can only report on areas they're physically inside. Confirmed outages turn red on the map, restored zones turn green, untouched areas stay grey until enough reports come in.",
+      "Status is crowd-verified: the platform aggregates reports from the last six hours and requires multiple agreeing voices before flipping a zone, so single false alarms get filtered out. Restoration ETAs are computed per-zone from each area's own outage history, and official ECG load-management schedules sit alongside live reports so you can tell what's planned from what isn't."
+    ],
+    "images": [
+      "/featured-projects/odumsor-1.png",
+      "/featured-projects/odumsor-2.png"
+    ],
+    "links": [
+      {
+        "label": "Website",
+        "url": "https://odumsor.com/"
+      },
+      {
+        "label": "About",
+        "url": "https://odumsor.com/about"
+      }
+    ]
+  },
+  {
+    "name": "Dynamic Network Traffic Shaping Agent",
+    "date": "2026",
+    "tags": [
+      "Reinforcement Learning",
+      "Networking",
+      "ns-3"
+    ],
+    "description": [
+      "Replaced static Token Bucket Filter (TBF) shapers with a PPO agent that observes shifting network conditions and adjusts rate limits in real time. A Python Gymnasium environment talks to an ns-3 C++ simulator over stdin/stdout pipes, normalizing raw telemetry (queue occupancy, throughput, drop count) into a stable 4D state vector governing continuous action spaces in the 40–90 Mbps range.",
+      "Training is accelerated by swapping heavy ns-3 compilation for a mock simulator driven by an Ornstein-Uhlenbeck process that mimics bursty internet traffic. A/B tested against fixed baselines on real-world Cloudflare Radar data, showing near-zero queue drops and latency spikes even at 200% out-of-distribution intensity."
+    ],
+    "images": [],
+    "links": [
+      {
+        "label": "Paper",
+        "url": "/publications/adaptive-traffic-shaper.pdf"
+      },
+      {
+        "label": "Write-up",
+        "url": "/blog/traffic-shaping"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/network-shaping"
+      }
+    ]
+  },
+  {
+    "name": "Adaptive Traffic Signal Control Grid",
+    "date": "2025",
+    "tags": [
+      "Reinforcement Learning",
+      "PPO",
+      "Simulation"
+    ],
+    "description": [
+      "Formulated traffic signal control as an MDP and trained a PPO agent that outperforms traditional fixed-time controllers, reducing wait times by 96.1% on the heavy-traffic evaluation run. Curriculum learning steps through three scenarios (single intersection → arterial road → 2×2 grid) with W&B model versioning and artifact tracking.",
+      "Custom simulator grounded in the Intelligent Driver Model (IDM) accounts for non-linear vehicle dynamics, braking inertia, and shockwave propagation. The continuous reward function balances throughput efficiency, squared-queue congestion penalties, and fairness (delay-tracking) to eliminate “starvation” of low-density lanes. Scaling from a single node to a 2×2 grid produced emergent “Green Wave” synchronization and perimeter gating under saturation (>1200 veh/hr)."
+    ],
+    "images": [
+      "/atscs/policy.png",
+      "/atscs/flow.png"
+    ],
+    "links": [
+      {
+        "label": "Write-up",
+        "url": "/blog/traffic"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/atscs"
+      }
+    ]
+  },
+  {
+    "name": "DQN Agent for Territory Capture (Flood-It)",
+    "date": "2025",
+    "tags": [
+      "Reinforcement Learning",
+      "DQN",
+      "React"
+    ],
+    "description": [
+      "Trained a DQN with an MLP policy via Stable Baselines3 to master a 6-color, 6^56 state-space grid game, achieving a 46-game win streak against random opponents. Custom Gymnasium environment with H×W×C one-hot encoded tensors so the network processes spatial relationships categorically.",
+      "Deployed the model into an interactive web app (React + FastAPI + WebSockets) that surfaces raw inference Q-values in real time. Overcame a player-perspective training mismatch by applying dynamic horizontal/vertical tensor flips on the backend prior to inference, with no model retraining needed."
+    ],
+    "images": [
+      "/featured-projects/floodit-1.png",
+      "/featured-projects/floodit-2.png"
+    ],
+    "links": [
+      {
+        "label": "Write-up",
+        "url": "/blog/floodit"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/rl-filler"
+      },
+      {
+        "label": "Website",
+        "url": "https://floodit-ai.vercel.app/#/play"
+      }
+    ]
+  },
+  {
+    "name": "Humanoid Balancing Policy with MjLab",
+    "date": "2025",
+    "tags": [
+      "Reinforcement Learning",
+      "Robotics",
+      "MuJoCo",
+      "PPO",
+      "mjlab"
+    ],
+    "description": [
+      "A stabilizing control policy for the 29-DOF Unitree G1 humanoid trained with PPO and a small Actor-Critic network (512 → 256 → 128). Built on the mjlab framework with MuJoCo Warp to simulate 4,096 parallel environments directly on the GPU, bypassing CPU bottlenecks.",
+      "Modified pre-existing walking task algorithms by constraining velocity commands to zero and tightening reference-pose standard deviations to shape a “minimum energy basin” reward. Domain randomization across friction, mass, and actuator gains, plus NaN guards on qpos/qvel to catch numerical instabilities without crashing training."
+    ],
+    "images": [
+      "https://youtu.be/jo5zx4osVn4?si=fAlG-AR2Kh3uzVQ_",
+      "/robotics/no_policy.mp4",
+      "/robotics/wobbly.mp4",
+      "/robotics/standing_policy.mp4",
+      "/robotics/render.png"
+    ],
+    "links": [
+      {
+        "label": "Write-up",
+        "url": "/blog/standing_robot"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/mj-experiments"
+      },
+      {
+        "label": "Youtube",
+        "url": "https://youtu.be/jo5zx4osVn4?si=96GdSbOWgQ2Qp3pB"
+      }
+    ]
+  },
+  {
+    "name": "PolyglotRAG",
+    "date": "2025",
+    "tags": [
+      "Rust",
+      "RAG",
+      "Vector Search"
+    ],
+    "description": [
+      "A high-performance, locally-run RAG engine in Rust that unifies and makes searchable a wide array of personal knowledge sources (websites, YouTube transcripts, PDFs, and audio) through a single semantically searchable vector database.",
+      "Modular, pipeline-based architecture centered on an event scheduler, so new data sources (“pipes”) and processing logic drop in without touching the core. Multi-threaded ingestion writes through shared memory to a chunker/embedder, vectors land in PGVector, and a REST query API exposes low-latency cosine-similarity retrieval."
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/polyglot-rag"
+      }
+    ]
+  },
+  {
+    "name": "Predictive Maintenance for Mud Pumps",
+    "date": "2025",
+    "tags": [
+      "Time Series",
+      "XGBoost",
+      "Feature Engineering"
+    ],
+    "description": [
+      "A failure-forecasting pipeline for two industrial mud pumps. The first cut produced suspiciously perfect 98% accuracy, a red flag that surfaced two forms of data leakage: trivial prediction (the model just spotted pumps already stopped via Speed = 0) and random-split evaluation that let the model train on future data to “predict” the past.",
+      "Fixing both required a stricter framing of the question (“is the pump showing signs it is *about* to fail?”) and a chronological, time-aware validation split that simulates real deployment. After a deep-learning detour with LSTMs, the final approach leans on rolling-window features (mean, std over 24h) and tree-based models (Random Forest, XGBoost) for a more honest baseline."
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/mud-pump-failure-forecasting"
+      }
+    ]
+  },
+  {
+    "name": "Autonomous Navigation with SLAM",
+    "date": "2024",
+    "tags": [
+      "ROS2",
+      "Robotics",
+      "Gazebo"
+    ],
+    "description": [
+      "An autonomous navigation stack for a precision-agriculture robot built on ROS/ROS2, with A* and Dynamic Window Approach (DWA) running on custom navigation controllers. Cut navigation errors significantly during in-field trials.",
+      "Authored a differential-drive controller, a keyboard teleop controller, and a custom model-based Farmland environment for navigation. Built high-fidelity agricultural simulation environments in Gazebo with custom crop models, achieving high correlation with real-world robot behaviour for the vision-based detection systems."
+    ],
+    "images": [
+      "https://youtu.be/PFf42d8XLMU?si=sXH40y9FvulGgdvr",
+      "/robotics/wheeler.png"
+    ],
+    "links": [
+      {
+        "label": "Farmland sim",
+        "url": "https://github.com/blackprince001/ros-farmland"
+      },
+      {
+        "label": "Sim Robot",
+        "url": "https://github.com/blackprince001/Sim_robot_Differential-Drive-SLAM"
+      },
+      {
+        "label": "Youtube",
+        "url": "https://youtu.be/PFf42d8XLMU?si=sXH40y9FvulGgdvr"
+      }
+    ]
+  },
+  {
+    "name": "Armbot: ROS Transforms on a Custom Arm",
+    "date": "2024",
+    "tags": [
+      "ROS1",
+      "Robotics",
+      "TF",
+      "Simulation"
+    ],
+    "description": [
+      "A custom arm robot dropped into a ROS1 workspace to make transform mechanics concrete. The TF tree is the star: each joint publishes its own frame, the chain composes into the end-effector pose, and the same arithmetic that looks abstract in slides becomes a visualizable graph in rviz.",
+      "Done alongside the SLAM coursework, so the same TF intuition (frames, parents, time-stamped lookups) carries straight over to localization and mapping work."
+    ],
+    "images": [
+      "https://youtu.be/AgszF7tCzN8?si=a-uts_f_mB27MkN5",
+      "/robotics/arm.png"
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/Armbot_Transformations_Sim"
+      },
+      {
+        "label": "Video",
+        "url": "https://youtu.be/AgszF7tCzN8"
+      }
+    ]
+  },
+  {
+    "name": "Patio",
+    "date": "2024",
+    "tags": [
+      "Go",
+      "Systems",
+      "Networking"
+    ],
+    "description": [
+      "A lightweight, configurable reverse-proxy gateway in Go. Sits between clients and one or more origin servers or microservices, providing rate limiting and request/response modification.",
+      "Built around concurrent request handling, token-bucket rate limiting, and a customizable middleware chain. Implements the circuit-breaker pattern, response caching, and fair rate limiting."
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/patio"
+      }
+    ]
+  },
+  {
+    "name": "Octopush",
+    "date": "2024",
+    "tags": [
+      "Go",
+      "Systems",
+      "Concurrency"
+    ],
+    "description": [
+      "A pluggable concurrent HTTP file server in Go with faster file retrieval. Built with the Gin router and GORM for persistence, using goroutines and channels for parallel uploads and downloads.",
+      "Implements chunked transfer encoding and a custom memory pool tuned for large-file handling, so neither the kernel nor the heap becomes the bottleneck."
+    ],
+    "links": [
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/octopush"
+      }
+    ]
+  }
+]

@@ -4,6 +4,7 @@ import React, { useState, useEffect } from 'react';
 import { usePathname } from 'next/navigation';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
+import { FeaturedProjects } from './featured-projects';
 
 interface GitHubRepo {
   id: number;
@@ -100,10 +101,19 @@ const ProjectShowcase: React.FC = () => {
 
   return (
     <main className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      <h1 className="mb-8">Open Source Projects</h1>
-      <p className="text-lg font-serif leading-relaxed mb-8">
+      <h1 className="mb-4">Projects</h1>
+      <p className="text-lg font-serif leading-relaxed mb-10">
         Building software in the open as a mode of creative exploration.
       </p>
+
+      <FeaturedProjects />
+
+      <div className="mb-4 flex items-baseline justify-between">
+        <h2 className="font-serif">Open Source</h2>
+        <span className="font-sans text-xs text-muted-foreground">
+          Pulled live from GitHub
+        </span>
+      </div>
 
       {/* Sort Tabs */}
       <div className="flex gap-4 mb-8 border-b border-border">
@@ -128,7 +138,7 @@ const ProjectShowcase: React.FC = () => {
       </div>
 
       <div className="space-y-6">
-        {sortedProjects.map((project) => (
+        {sortedProjects.slice(0, 7).map((project) => (
           <ProjectComponent key={project.id} project={project} />
         ))}
       </div>
