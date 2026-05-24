@@ -8,8 +8,10 @@
     ],
     "journal": "Term Paper",
     "year": 2024,
+    "domain": "IoT Security",
     "link": "https://compeng.knust.com",
-    "pdf": "/publications/sns.pdf"
+    "pdf": "/publications/sns.pdf",
+    "abstract": "This paper presents a comprehensive survey of side-channel attacks (SCAs) targeting Internet of Things (IoT) devices, a growing area of concern as these devices become increasingly prevalent in critical applications. SCAs exploit unintended information leakage from physical implementations of cryptographic algorithms, threatening the security of IoT devices. We categorize and analyze various SCA techniques, including timing attacks, power analysis, and electromagnetic attacks, highlighting their relevance to IoT devices due to resource constraints and physical accessibility. We review existing countermeasures, both algorithmic and hardware-based, that aim to mitigate these risks, discuss the challenges in balancing security with performance, and propose future research directions to enhance IoT security against evolving threats."
   },
   {
     "id": 1,
@@ -20,7 +22,9 @@
     "journal": "Term Paper",
     "year": 2026,
     "link": "https://compeng.knust.com",
-    "pdf": "/publications/adsl.pdf"
+    "domain": "Networking",
+    "pdf": "/publications/adsl.pdf",
+    "abstract": "The \"last mile\" of telecommunications networks has historically represented the most significant technical and economic bottleneck in residential broadband access. As the transition from narrowband dial-up to broadband intensified in the late 1990s, service providers faced a dilemma: the astronomical cost of new fiber deployment versus the surging demand for multimedia content. Asymmetric Digital Subscriber Line (ADSL) emerged as the definitive solution, repurposing the existing Public Switched Telephone Network (PSTN) copper infrastructure. By leveraging advanced modulation techniques like Discrete Multi-Tone (DMT) and Frequency Division Multiplexing (FDM), ADSL achieved high-speed data transmission over aging twisted-pair lines. This paper reviews the xDSL family, analyzing the shift from consumer-driven asymmetric traffic to the physical zenith of copper, and explores mechanisms of failure including signal attenuation, crosstalk, and legacy hardware incompatibilities."
   },
   {
     "id": 1,
@@ -31,7 +35,9 @@
     "journal": "Term Paper",
     "year": 2026,
     "link": "https://compeng.knust.com",
-    "pdf": "/publications/adaptive-traffic-shaper.pdf"
+    "domain": "Reinforcement Learning · Networking",
+    "pdf": "/publications/adaptive-traffic-shaper.pdf",
+    "abstract": "Static Token Bucket Filters (TBFs) enforce a single contracted rate regardless of how traffic actually behaves. Set the rate too low and the shaper starves bursts and triggers TCP retransmissions; set it too high and bursts pass through unsmoothed and congest downstream queues. Real internet demand is non-stationary, so any fixed rate is wrong for most of the day. We replace the fixed rate with a learned policy. A PPO agent observes a four-dimensional vector (queue, throughput, drop intensity, demand) and emits a continuous TBF rate every second. The agent is trained inside a custom Gymnasium environment that drives an ns-3 bottleneck topology, using a four-level curriculum that progresses from constant CBR through bursty on-off, mixed elephant/mice flows, and finally three weeks of real Cloudflare Radar traffic. We evaluate two action shapes against six static baselines spanning 30–80 Mbps."
   },
   {
     "id": 1,
@@ -42,6 +48,24 @@
     "journal": "Term Paper",
     "year": 2026,
     "link": "https://compeng.knust.com",
-    "pdf": "/publications/traffic-density-estimation.pdf"
+    "domain": "Computer Vision",
+    "pdf": "/publications/traffic-density-estimation.pdf",
+    "abstract": "Accurate traffic density estimation from camera feeds is a prerequisite for routing, signal control, and forecasting. Existing detectors count every vehicle in the frame without distinguishing active road participants from parked or off-road objects, producing systematically biased estimates. We introduce a two-stage framework that pairs object detection and tracking with a spatial logic layer filtering detections against a precomputed road mask, then forecasts short-horizon density with an LSTM, GRU, or TCN. Evaluated across multiple YOLO variants and RT-DETR on hardware from embedded boards to GPU servers."
+  },
+  {
+    "id": 1,
+    "title": "Seamless Deployment of Machine Learning Inference at the Far Edge: An Empirical AWS IoT Greengrass Architecture for Industrial Predictive Maintenance",
+    "authors": [
+      "Prince K. A. Boadu",
+      "Jeffery B. Kyei",
+      "Enoch K. Koranteng",
+      "Griffth S. Klogo"
+    ],
+    "journal": "Conference Paper",
+    "year": 2026,
+    "link": "https://compeng.knust.com",
+    "domain": "Edge Computing · IIoT",
+    "pdf": "/publications/iot-edge-greengrass.pdf",
+    "abstract": "The growth of Industrial IoT devices in manufacturing generates continuous, high-volume sensor data streams requiring real-time analysis for predictive maintenance. Traditional cloud-centric architectures introduce critical limitations in latency, bandwidth, and resilience. This paper presents a hybrid cloud-edge architecture using AWS IoT Core and AWS IoT Greengrass v2, integrating local ML inference at the edge with selective cloud synchronization. The proposed configuration reduces cloud-bound bandwidth by 86.8%, cuts decision latency by 256× (23.1 ms cloud round-trip to 0.09 ms local inference), and maintains an anomaly-class F1 of 0.84 with 91% recall at the edge without cloud involvement."
   }
 ]

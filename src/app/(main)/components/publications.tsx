@@ -2,7 +2,8 @@
 
 import type React from "react"
 import Link from "next/link"
-import { FileText } from "lucide-react"
+import { FileText, ChevronDown } from "lucide-react"
+import { useState } from "react"
 import { cn } from "@/lib/utils"
 import publicationsData from "@/data/publications.json"
 
@@ -14,6 +15,8 @@ interface Publication {
   year: number
   link: string
   pdf?: string
+  abstract?: string
+  domain?: string
 }
 
 export const RecentPublications: React.FC = () => {
@@ -85,8 +88,7 @@ function PaperSkeleton({ className }: { className?: string }) {
 
 function PublicationCard({ publication }: { publication: Publication }) {
   const dest = publication.pdf || publication.link
-  const kind = publication.pdf ? "PDF" : "Web"
-  const subtitle = `${publication.journal} · ${kind}`
+  const [expanded, setExpanded] = useState(false)
 
   return (
     <Link
@@ -116,9 +118,46 @@ function PublicationCard({ publication }: { publication: Publication }) {
           <h3 className="font-serif text-base font-semibold leading-snug text-foreground transition-colors group-hover:text-primary sm:text-lg">
             {publication.title}
           </h3>
-          <p className="mt-1 font-sans text-xs text-muted-foreground sm:text-sm">
-            {subtitle} · {publication.year}
-          </p>
+          <div className="mt-1.5 flex flex-wrap items-center gap-2">
+            {publication.domain && (
+              <span className="inline-flex items-center rounded-full border border-border/70 bg-muted/50 px-2 py-0.5 font-sans text-[10px] font-medium uppercase tracking-wider text-muted-foreground">
+                {publication.domain}
+              </span>
+            )}
+            <span className="font-sans text-xs text-muted-foreground sm:text-sm">
+              {publication.year}
+            </span>
+          </div>
+          {publication.abstract && (
+            <>
+              <p
+                className={cn(
+                  "mt-2 font-serif text-sm leading-relaxed text-muted-foreground/90",
+                  !expanded && "line-clamp-3"
+                )}
+              >
+                {publication.abstract}
+              </p>
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.preventDefault()
+                  e.stopPropagation()
+                  setExpanded((v) => !v)
+                }}
+                className="mt-1.5 inline-flex items-center gap-1 font-sans text-xs font-medium text-muted-foreground hover:text-foreground transition-colors"
+                aria-expanded={expanded}
+              >
+                {expanded ? "Show less" : "Read more"}
+                <ChevronDown
+                  className={cn(
+                    "h-3 w-3 transition-transform duration-200",
+                    expanded && "rotate-180"
+                  )}
+                />
+              </button>
+            </>
+          )}
         </div>
       </div>
     </Link>
