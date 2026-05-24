@@ -9,7 +9,6 @@ import rehypeHighlight from 'rehype-highlight';
  
 /** @type {import('next').NextConfig} */
 const nextConfig = {
-  basePath: "/blackprince001.github.io",
   output: "export",
   // images: { unoptimized: true },
   reactStrictMode: true,
