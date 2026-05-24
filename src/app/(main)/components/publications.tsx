@@ -11,7 +11,6 @@ interface Publication {
   id: number
   title: string
   authors: string[]
-  journal: string
   year: number
   link: string
   pdf?: string
@@ -40,7 +39,7 @@ export const RecentPublications: React.FC = () => {
                 {publication.pdf && <FileText className="h-3 w-3 text-muted-foreground" />}
               </h3>
               <p className="text-sm text-muted-foreground font-serif">
-                {publication.authors.join(", ")} &mdash; <span className="italic">{publication.journal}</span>, {publication.year}
+                {publication.authors.join(", ")} &mdash; {publication.year}
               </p>
             </Link>
           </div>
