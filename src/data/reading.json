@@ -1,0 +1,451 @@
+{
+  "categories": [
+    {
+      "id": "technical",
+      "label": "Technical",
+      "description": "Engineering, systems, and craft."
+    },
+    {
+      "id": "academia",
+      "label": "Academia",
+      "description": "Mathematics, science, and theory."
+    },
+    {
+      "id": "fiction",
+      "label": "Fiction",
+      "description": "Novels and short stories."
+    },
+    {
+      "id": "philosophy",
+      "label": "Philosophy & Essays",
+      "description": "Ideas, criticism, and long-form thinking."
+    },
+    {
+      "id": "psychology",
+      "label": "Psychology & Neuroscience",
+      "description": "The mind, behaviour, and the brain."
+    }
+  ],
+  "books": [
+    {
+      "title": "Deep Learning",
+      "author": "Ian Goodfellow, Yoshua Bengio, Aaron Courville",
+      "category": "technical",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780262035613-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Reinforcement Learning: An Introduction",
+      "author": "Richard S. Sutton, Andrew G. Barto",
+      "category": "technical",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780262039246-L.jpg",
+      "status": "reading"
+    },
+    {
+      "title": "Machine Learning with PyTorch and Scikit-Learn",
+      "author": "Sebastian Raschka",
+      "category": "technical",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781801819312-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Dive into Deep Learning",
+      "author": "Aston Zhang, Zachary C. Lipton, Mu Li, Alexander J. Smola",
+      "category": "technical",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781009389433-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Programming Massively Parallel Processors",
+      "author": "David B. Kirk, Wen-mei W. Hwu",
+      "category": "technical",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780323912310-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Data-Driven Science and Engineering",
+      "author": "Steven L. Brunton, J. Nathan Kutz",
+      "category": "technical",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781108422093-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Computer Networking: A Top-Down Approach",
+      "author": "James F. Kurose, Keith W. Ross",
+      "category": "technical",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780133594140-L.jpg",
+      "status": "finished"
+    },
+    {
+      "title": "Data Science from Scratch",
+      "author": "Joel Grus",
+      "category": "technical",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781492041139-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "A Course of Pure Mathematics",
+      "author": "G. H. Hardy",
+      "category": "academia",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780521720557-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Love and Math",
+      "author": "Edward Frenkel",
+      "category": "academia",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780465064953-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Weird Math",
+      "author": "David Darling, Agnijo Banerjee",
+      "category": "academia",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781541644786-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "What is Life?",
+      "author": "Erwin Schrödinger",
+      "category": "academia",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781107604667-L.jpg",
+      "status": "reading"
+    },
+    {
+      "title": "Wholeness and the Implicate Order",
+      "author": "David Bohm",
+      "category": "academia",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780415289795-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Brothers Karamazov",
+      "author": "Fyodor Dostoevsky",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780374528379-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Count of Monte Cristo",
+      "author": "Alexandre Dumas",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780140449266-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Trial",
+      "author": "Franz Kafka",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780805209990-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Siddhartha",
+      "author": "Hermann Hesse",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780143131724-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Lord of the Flies",
+      "author": "William Golding",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780571056866-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Pride and Prejudice",
+      "author": "Jane Austen",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780141439518-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Great Expectations",
+      "author": "Charles Dickens",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780141439563-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Recursion",
+      "author": "Blake Crouch",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781524759780-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The 7½ Deaths of Evelyn Hardcastle",
+      "author": "Stuart Turton",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781492657965-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Meditations",
+      "author": "Marcus Aurelius",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780140449334-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Beyond Good and Evil",
+      "author": "Friedrich Nietzsche",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780140449235-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Republic",
+      "author": "Plato",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780140455113-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Letters from a Stoic",
+      "author": "Seneca",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780140442106-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Pensées",
+      "author": "Blaise Pascal",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780140446456-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Sapiens: A Brief History of Humankind",
+      "author": "Yuval Noah Harari",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780062316097-L.jpg",
+      "status": "finished"
+    },
+    {
+      "title": "Homo Deus: A Brief History of Tomorrow",
+      "author": "Yuval Noah Harari",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780062464316-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Behave: The Biology of Humans at Our Best and Worst",
+      "author": "Robert M. Sapolsky",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781594205071-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Deep Work",
+      "author": "Cal Newport",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781455586691-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Why We Sleep",
+      "author": "Matthew Walker",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781501144318-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "How to Change Your Mind",
+      "author": "Michael Pollan",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781594204227-L.jpg",
+      "status": "finished"
+    },
+    {
+      "title": "The Creative Act: A Way of Being",
+      "author": "Rick Rubin",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780593652886-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "How Minds Change",
+      "author": "David McRaney",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780593190296-L.jpg",
+      "status": "reading"
+    },
+    {
+      "title": "You Are Now Less Dumb",
+      "author": "David McRaney",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781592408795-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "You Can Beat Your Brain",
+      "author": "David McRaney",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781780743813-L.jpg",
+      "status": "finished"
+    },
+    {
+      "title": "The Strange Order of Things",
+      "author": "Antonio Damasio",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780307908759-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Cognitive Neuroscience of Working Memory",
+      "author": "Naoyuki Osaka, Robert H. Logie, Mark D'Esposito",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780198570394-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Predictably Irrational",
+      "author": "Dan Ariely",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780061353239-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Dopamine Nation",
+      "author": "Anna Lembke",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781524746728-L.jpg",
+      "status": "finished"
+    },
+    {
+      "title": "The Social Leap",
+      "author": "William von Hippel",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780062740397-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Interpretation of Dreams",
+      "author": "Sigmund Freud",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781593080273-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Psychopathology of Everyday Life",
+      "author": "Sigmund Freud",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780140187946-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Three Essays on the Theory of Sexuality",
+      "author": "Sigmund Freud",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780465086078-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Jokes and Their Relation to the Unconscious",
+      "author": "Sigmund Freud",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780140186031-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Psychological Types",
+      "author": "Carl Gustav Jung",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780691018133-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Psychology and the Occult",
+      "author": "Carl Gustav Jung",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780415437455-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Road Less Traveled",
+      "author": "M. Scott Peck",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780743243155-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Breaking the Habit of Being Yourself",
+      "author": "Joe Dispenza",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781401938093-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "The Subtle Art of Not Giving a F*ck",
+      "author": "Mark Manson",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780062457714-L.jpg",
+      "status": "finished"
+    },
+    {
+      "title": "Why Greatness Cannot Be Planned: The Myth of the Objective",
+      "author": "Kenneth O. Stanley, Joel Lehman",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9783319155234-L.jpg",
+      "status": "finished"
+    },
+    {
+      "title": "Critique of Pure Reason",
+      "author": "Immanuel Kant",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780521657297-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Sampling Normal and Schizophrenic Inner Experience",
+      "author": "Russell T. Hurlburt",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780306435775-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Sampling Inner Experience in Disturbed Affect",
+      "author": "Russell T. Hurlburt",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780306446245-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Exploring Inner Experience: The Descriptive Experience Sampling Method",
+      "author": "Russell T. Hurlburt, Christopher L. Heavey",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9789027252128-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Describing Inner Experience? Proponent Meets Skeptic",
+      "author": "Russell T. Hurlburt, Eric Schwitzgebel",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780262514118-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Investigating Pristine Inner Experience: Moments of Truth",
+      "author": "Russell T. Hurlburt",
+      "category": "psychology",
+      "cover": "https://covers.openlibrary.org/b/isbn/9781107610477-L.jpg",
+      "status": "want-to-read"
+    },
+    {
+      "title": "Amusing Ourselves to Death",
+      "author": "Neil Postman",
+      "category": "philosophy",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780143036531-L.jpg",
+      "status": "reading"
+    },
+    {
+      "title": "No Longer Human",
+      "author": "Osamu Dazai",
+      "category": "fiction",
+      "cover": "https://covers.openlibrary.org/b/isbn/9780811204811-L.jpg",
+      "status": "finished"
+    }
+  ]
+}

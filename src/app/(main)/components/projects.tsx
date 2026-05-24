@@ -20,7 +20,7 @@ interface GitHubRepo {
 
 export const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project }) => {
   return (
-    <div className="py-4 border-b border-border/40 last:border-0">
+    <div className="py-4">
       <div className="flex justify-between items-baseline mb-2">
         <a
           href={project.html_url}
