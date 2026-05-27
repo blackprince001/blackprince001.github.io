@@ -10,6 +10,7 @@ import Quiz from './components/quiz/quiz'
 import PreviewLink from "./components/ui/linked-previews"
 import RustRunner from './components/code-runner/rust'
 import GoRunner from './components/code-runner/golang'
+import PythonRunner from './components/code-runner/python'
 import CodeSnippet from './components/code-runner/code-snippet'
 import { BlogExample } from './components/ui/blog-example'
 import { Figure } from './components/ui/figure'
@@ -38,6 +39,7 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     PreviewLink,
     RustRunner,
     GoRunner,
+    PythonRunner,
     CodeSnippet,
     Example: BlogExample,
     Figure,

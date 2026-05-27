@@ -2,7 +2,8 @@
 
 import type React from "react"
 import { useState, useEffect, useRef } from "react"
-import { Play, FileCode, ChevronDown, ChevronUp, Wifi, WifiOff } from 'lucide-react'
+import { Play, FileCode, ChevronDown, ChevronUp } from 'lucide-react'
+import { CodeEditor } from './code-editor'
 
 interface WebSocketMessage {
   type: string
@@ -128,10 +129,6 @@ const RustRunner: React.FC<RustRunnerProps> = ({
     }
   }
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setCode(e.target.value)
-  }
-
   return (
     <div className="space-y-4">
       {/* Code Editor Section */}
@@ -146,13 +143,10 @@ const RustRunner: React.FC<RustRunnerProps> = ({
           <div className="flex items-center space-x-3">
             {/* Connection Status */}
             <div className="flex items-center space-x-2">
-              {isConnected ? (
-                <Wifi className="h-4 w-4 text-emerald-500" />
-              ) : (
-                <WifiOff className="h-4 w-4 text-red-500" />
-              )}
-              <div className={`h-2 w-2 rounded-full transition-colors duration-300 ${isConnected ? "bg-emerald-500 animate-pulse" : "bg-red-500"
-                }`} />
+              <div className={`h-2 w-2 rounded-full ${isConnected ? "bg-emerald-500" : "bg-red-500"}`} />
+              <span className="text-sm text-muted-foreground">
+                {isConnected ? "Connected" : "Connecting…"}
+              </span>
             </div>
 
             <button
@@ -175,16 +169,11 @@ const RustRunner: React.FC<RustRunnerProps> = ({
 
         {/* Code Editor */}
         <div className="border-x border-b border-border/50 rounded-b-lg overflow-hidden">
-          <textarea
+          <CodeEditor
             value={code}
+            onValueChange={setCode}
+            language="rust"
             placeholder="Enter Rust code here..."
-            onChange={handleCodeChange}
-            className="w-full font-mono text-sm bg-background text-foreground p-4 min-h-[300px] resize-none border-0 focus:outline-none focus:ring-0"
-            style={{
-              fontFamily: 'JetBrains Mono, Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-              fontSize: '14px',
-              lineHeight: '1.6',
-            }}
           />
         </div>
 

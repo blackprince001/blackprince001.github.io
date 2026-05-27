@@ -126,6 +126,80 @@
   font-weight: 600;
 }
 
+/* Prism token colors for the code-runner editors (.code-editor).
+   Mirrors the GitHub-style hljs palette above for visual consistency. */
+.code-editor .token.keyword,
+.code-editor .token.builtin,
+.code-editor .token.boolean,
+.code-editor .token.tag {
+  color: #cf222e;
+  font-weight: 600;
+}
+
+.code-editor .token.string,
+.code-editor .token.char,
+.code-editor .token.attr-value {
+  color: #0a3069;
+}
+
+.code-editor .token.function,
+.code-editor .token.class-name {
+  color: #8250df;
+  font-weight: 500;
+}
+
+.code-editor .token.number {
+  color: #0550ae;
+}
+
+.code-editor .token.comment,
+.code-editor .token.prolog,
+.code-editor .token.doctype,
+.code-editor .token.cdata {
+  color: #6e7781;
+  font-style: italic;
+}
+
+.code-editor .token.operator,
+.code-editor .token.punctuation {
+  color: #24292f;
+}
+
+/* Dark mode overrides */
+.dark .code-editor .token.keyword,
+.dark .code-editor .token.builtin,
+.dark .code-editor .token.boolean,
+.dark .code-editor .token.tag {
+  color: #ff7b72;
+}
+
+.dark .code-editor .token.string,
+.dark .code-editor .token.char,
+.dark .code-editor .token.attr-value {
+  color: #a5d6ff;
+}
+
+.dark .code-editor .token.function,
+.dark .code-editor .token.class-name {
+  color: #d2a8ff;
+}
+
+.dark .code-editor .token.number {
+  color: #79c0ff;
+}
+
+.dark .code-editor .token.comment,
+.dark .code-editor .token.prolog,
+.dark .code-editor .token.doctype,
+.dark .code-editor .token.cdata {
+  color: #8b949e;
+}
+
+.dark .code-editor .token.operator,
+.dark .code-editor .token.punctuation {
+  color: #e6edf3;
+}
+
 /* Base typography improvements */
 @layer base {
   :root {

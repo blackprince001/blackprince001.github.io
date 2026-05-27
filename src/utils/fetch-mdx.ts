@@ -18,6 +18,7 @@ import PreviewLink from "@/components/ui/linked-previews"
 import LinkEmbed from "@/components/ui/link-embed"
 import RustRunner from "@/components/code-runner/rust"
 import GoRunner from "@/components/code-runner/golang"
+import PythonRunner from "@/components/code-runner/python"
 import CodeSnippet from "@/components/code-runner/code-snippet"
 import { BlogExample } from "@/components/ui/blog-example"
 import { Figure } from "@/components/ui/figure"
@@ -67,6 +68,7 @@ const customComponents = {
   LinkEmbed,
   RustRunner,
   GoRunner,
+  PythonRunner,
   CodeSnippet,
   Example: BlogExample,
   Figure

@@ -3,6 +3,7 @@
 import type React from "react"
 import { useState, useRef } from "react"
 import { Play, FileCode, ChevronDown, ChevronUp } from 'lucide-react'
+import { CodeEditor } from './code-editor'
 
 interface GoPlaygroundResponse {
   events?: {
@@ -96,9 +97,6 @@ const GoRunner: React.FC<GoRunnerProps> = ({
     }
   };
 
-  const handleCodeChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
-    setCode(e.target.value)
-  }
 
   return (
     <div className="space-y-4">
@@ -111,32 +109,35 @@ const GoRunner: React.FC<GoRunnerProps> = ({
             <span className="text-sm font-medium text-foreground">main.go</span>
           </div>
 
-          <button
-            onClick={runCode}
-            disabled={isRunning}
-            className={`px-4 py-2 rounded-md text-white text-sm flex items-center gap-2 font-medium transition-all duration-200 ${isRunning
-              ? "bg-amber-500 shadow-md cursor-not-allowed"
-              : hasErrors
-                ? "bg-amber-500 hover:bg-amber-600 shadow-md hover:shadow-lg"
-                : "bg-emerald-600 hover:bg-emerald-700 shadow-md hover:shadow-lg"
-              }`}
-          >
-            <Play className="h-4 w-4" />
-            {isRunning ? "Running..." : "Run Code"}
-          </button>
+          <div className="flex items-center space-x-3">
+            {/* Connection Status */}
+            <div className="flex items-center space-x-2">
+              <div className="h-2 w-2 rounded-full bg-emerald-500" />
+              <span className="text-sm text-muted-foreground">Connected</span>
+            </div>
+
+            <button
+              onClick={runCode}
+              disabled={isRunning}
+              className={`px-4 py-2 rounded-md text-white text-sm flex items-center gap-2 font-medium transition-all duration-200 ${isRunning
+                ? "bg-amber-500 shadow-md cursor-not-allowed"
+                : hasErrors
+                  ? "bg-amber-500 hover:bg-amber-600 shadow-md hover:shadow-lg"
+                  : "bg-emerald-600 hover:bg-emerald-700 shadow-md hover:shadow-lg"
+                }`}
+            >
+              <Play className="h-4 w-4" />
+              {isRunning ? "Running..." : "Run Code"}
+            </button>
+          </div>
         </div>
 
         {/* Code Editor */}
         <div className="border-x border-b border-border/50 rounded-b-lg overflow-hidden">
-          <textarea
+          <CodeEditor
             value={code}
-            onChange={handleCodeChange}
-            className="w-full font-mono text-sm bg-background text-foreground p-4 min-h-[300px] resize-none border-0 focus:outline-none focus:ring-0"
-            style={{
-              fontFamily: 'JetBrains Mono, Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-              fontSize: '14px',
-              lineHeight: '1.6',
-            }}
+            onValueChange={setCode}
+            language="go"
             placeholder="Enter Go code here..."
           />
         </div>
