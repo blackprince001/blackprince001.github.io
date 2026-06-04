@@ -323,7 +323,7 @@
       },
       {
         "label": "Sim Robot",
-        "url": "https://github.com/blackprince001/Sim_robot_Differential-Drive-SLAM"
+        "url": "https://github.com/blackprince001/sim_robot"
       },
       {
         "label": "Youtube",
@@ -351,7 +351,7 @@
     "links": [
       {
         "label": "GitHub",
-        "url": "https://github.com/blackprince001/Armbot_Transformations_Sim"
+        "url": "https://github.com/blackprince001/armbot"
       },
       {
         "label": "Video",
