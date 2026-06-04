@@ -57,6 +57,9 @@ const ProjectShowcase: React.FC = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
   const [sortBy, setSortBy] = useState<'stars' | 'recent'>('stars');
+  const [page, setPage] = useState(1);
+
+  const PER_PAGE = 7;
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -64,7 +67,7 @@ const ProjectShowcase: React.FC = () => {
       try
       {
         const response = await fetch(
-          `https://api.github.com/users/blackprince001/repos?per_page=20&sort=created`
+          `https://api.github.com/users/blackprince001/repos?per_page=100&sort=created`
         );
         if (!response.ok)
         {
@@ -96,6 +99,13 @@ const ProjectShowcase: React.FC = () => {
     }
   });
 
+  const totalPages = Math.max(1, Math.ceil(sortedProjects.length / PER_PAGE));
+  const currentPage = Math.min(page, totalPages);
+  const paginatedProjects = sortedProjects.slice(
+    (currentPage - 1) * PER_PAGE,
+    currentPage * PER_PAGE
+  );
+
   if (isLoading) return <div className="py-12 text-center text-muted-foreground font-serif">Loading projects...</div>;
   if (error) return <div className="py-12 text-center text-red-500 font-serif">{error}</div>;
 
@@ -118,7 +128,7 @@ const ProjectShowcase: React.FC = () => {
       {/* Sort Tabs */}
       <div className="flex gap-4 mb-8 border-b border-border">
         <button
-          onClick={() => setSortBy('stars')}
+          onClick={() => { setSortBy('stars'); setPage(1); }}
           className={`pb-2 px-1 text-sm font-sans transition-colors ${sortBy === 'stars'
             ? 'border-b-2 border-primary text-foreground'
             : 'text-muted-foreground hover:text-foreground'
@@ -127,7 +137,7 @@ const ProjectShowcase: React.FC = () => {
           Most Stars
         </button>
         <button
-          onClick={() => setSortBy('recent')}
+          onClick={() => { setSortBy('recent'); setPage(1); }}
           className={`pb-2 px-1 text-sm font-sans transition-colors ${sortBy === 'recent'
             ? 'border-b-2 border-primary text-foreground'
             : 'text-muted-foreground hover:text-foreground'
@@ -138,10 +148,32 @@ const ProjectShowcase: React.FC = () => {
       </div>
 
       <div className="space-y-6">
-        {sortedProjects.slice(0, 7).map((project) => (
+        {paginatedProjects.map((project) => (
           <ProjectComponent key={project.id} project={project} />
         ))}
       </div>
+
+      {totalPages > 1 && (
+        <div className="mt-10 flex items-center justify-between border-t border-border pt-6">
+          <button
+            onClick={() => setPage((p) => Math.max(1, p - 1))}
+            disabled={currentPage === 1}
+            className="text-sm font-sans text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          >
+            &larr; Previous
+          </button>
+          <span className="font-sans text-xs text-muted-foreground">
+            Page {currentPage} of {totalPages}
+          </span>
+          <button
+            onClick={() => setPage((p) => Math.min(totalPages, p + 1))}
+            disabled={currentPage === totalPages}
+            className="text-sm font-sans text-muted-foreground transition-colors hover:text-foreground disabled:pointer-events-none disabled:opacity-40"
+          >
+            Next &rarr;
+          </button>
+        </div>
+      )}
     </main>
   );
 };
