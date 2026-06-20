@@ -1,5 +1,33 @@
 [
   {
+    "name": "SpeakUp — Real-Time Classroom Engagement",
+    "date": "2026",
+    "tags": [
+      "FastAPI",
+      "WebSockets",
+      "React",
+      "Real-Time"
+    ],
+    "description": [
+      "A session-shaped platform for live classroom engagement. A lecturer opens a room; students join with a short code (no account needed) to ask questions anonymously, upvote so the best rise, answer single/multi-select polls with hidden solutions and a peer-instruction re-vote, run think-pair-share, and give presentation feedback. The whole feature set reduces to four primitives: rooms, contribution boards, polls with a reveal state machine, and activity sequencing.",
+      "Each room runs as an in-memory actor on a single asyncio event loop, backed by SQLite (aiosqlite) and rebuilt lazily on restart, no message broker, no threads. FastAPI with native Starlette WebSockets on the backend; React 19 + Vite + TypeScript as an installable PWA with Clerk auth on the front. A deliberate privacy stance separates presence from authorship: the teacher sees who is present, but posts stay anonymous and peers never see who said what."
+    ],
+    "images": [
+      "/featured-projects/speakup-1.png",
+      "/featured-projects/speakup-2.png"
+    ],
+    "links": [
+      {
+        "label": "Web App",
+        "url": "https://speakup-rooms.vercel.app/"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/speakup"
+      }
+    ]
+  },
+  {
     "name": "Lumen",
     "date": "2026",
     "tags": [
@@ -23,6 +51,10 @@
       {
         "label": "GitHub",
         "url": "https://github.com/blackprince001/lumen"
+      },
+      {
+        "label": "Website",
+        "url": "https://lumen-landing-eight.vercel.app/"
       }
     ]
   },
