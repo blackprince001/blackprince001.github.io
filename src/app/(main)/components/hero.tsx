@@ -23,6 +23,20 @@ function HeroSection() {
             This site is my digital garden, a living archive of ideas in motion. It houses everything from raw working notes and open-source projects to structured essays and formal manuscripts.
           </p>
 
+          <div className="mb-8 rounded-lg border border-border bg-muted/40 px-4 py-3">
+            <p className="font-sans text-xs uppercase tracking-wide text-muted-foreground mb-1">
+              Currently Teaching
+            </p>
+            <a
+              href="https://robotics-course-458.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="font-serif text-primary hover:underline underline-offset-4"
+            >
+              Robotics Course &rarr;
+            </a>
+          </div>
+
           <div className="flex gap-6 font-sans text-sm">
             <Link href="/blog" className="text-primary hover:underline underline-offset-4">
               Read Blog &rarr;
