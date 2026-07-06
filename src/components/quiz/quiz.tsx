@@ -10,16 +10,14 @@ import {
   useStore,
   createStore,
 } from "jotai";
-import React from "react";
+import React, { useMemo } from "react";
+import { RichText } from "@/components/ui/latex";
 
 // Atoms for state management
 const finalAnswersAtom = atom<number[]>([]); // Stores user's answers
 const currentQuestionAtom = atom(0); // Tracks the current question index
 const selectedAnswerAtom = atom<number | null>(null); // Tracks the selected answer
 const submittedAtom = atom(false); // Tracks if the current question is submitted
-
-// Custom store for Jotai
-const customStore = createStore();
 
 // Atom to handle submitted answers
 const handleSubmittedAnswerAtom = atom(null, (get, set, answerIndex: number) => {
@@ -47,8 +45,18 @@ interface QuizProps {
   quizData: QuizQuestion[];
 }
 
-// Quiz Component
-const Quiz = ({ quizData }: QuizProps) => {
+// Quiz Component — wraps the inner quiz in its own Jotai store so multiple
+// quizzes (or navigation between posts) don't share question/answer state
+const Quiz = (props: QuizProps) => {
+  const store = useMemo(() => createStore(), []);
+  return (
+    <Provider store={store}>
+      <QuizInner {...props} />
+    </Provider>
+  );
+};
+
+const QuizInner = ({ quizData }: QuizProps) => {
   const store = useStore();
   const [currentQuestion, setCurrentQuestion] = useAtom(currentQuestionAtom, {
     store,
@@ -75,15 +83,17 @@ const Quiz = ({ quizData }: QuizProps) => {
     <div className="quiz my-8 border rounded-lg">
       <div className="space-y-4 px-8">
         <p className="text-lg font-semibold mb-4 ">
-          {currentQuestionData.question}
+          <RichText text={currentQuestionData.question} />
         </p>
-        <div className="flex justify-center">
-          <img
-            src={currentQuestionData.image}
-            alt="Question Image"
-            className="max-w-full h-auto"
-          />
-        </div>
+        {currentQuestionData.image && (
+          <div className="flex justify-center">
+            <img
+              src={currentQuestionData.image}
+              alt="Question Image"
+              className="max-w-full h-auto"
+            />
+          </div>
+        )}
         <div className="space-y-2">
           {currentQuestionData.answers.map((answer, index) => (
             <QuizMCAnswer
@@ -97,13 +107,13 @@ const Quiz = ({ quizData }: QuizProps) => {
                 }
               }}
             >
-              {answer.text}
+              <RichText text={answer.text} />
             </QuizMCAnswer>
           ))}
         </div>
         {submitted && currentQuestionData.explanation && (
           <div className="text-sm mt-4">
-            {currentQuestionData.explanation}
+            <RichText text={currentQuestionData.explanation} />
           </div>
         )}
       </div>

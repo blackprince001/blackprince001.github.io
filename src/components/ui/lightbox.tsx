@@ -69,7 +69,7 @@ export function Lightbox({ items, index, onClose, onPrev, onNext }: LightboxProp
       role="dialog"
       aria-modal="true"
       aria-label={alt}
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/90 backdrop-blur-sm animate-dialog-fade"
       onClick={onClose}
     >
       <button
@@ -119,14 +119,14 @@ export function Lightbox({ items, index, onClose, onPrev, onNext }: LightboxProp
           loop
           playsInline
           onClick={(e) => e.stopPropagation()}
-          className="max-h-[92vh] max-w-[94vw] rounded-md shadow-2xl"
+          className="max-h-[92vh] max-w-[94vw] rounded-md shadow-2xl animate-dialog-zoom"
         />
       ) : (
         <img
           src={item.src}
           alt={alt}
           onClick={(e) => e.stopPropagation()}
-          className="max-h-[92vh] max-w-[94vw] object-contain rounded-md shadow-2xl"
+          className="max-h-[92vh] max-w-[94vw] object-contain rounded-md shadow-2xl animate-dialog-zoom"
         />
       )}
     </div>

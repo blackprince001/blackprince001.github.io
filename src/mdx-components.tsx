@@ -1,6 +1,9 @@
 import type { MDXComponents } from 'mdx/types'
 import Image, { ImageProps } from 'next/image'
 import MeshRenderSwitch from './components/graphics/render'
+import RotationFrameDemo from './components/graphics/RotationFrameDemo'
+import AxisAngleDemo from './components/graphics/AxisAngleDemo'
+import ScrewMotionDemo from './components/graphics/ScrewMotionDemo'
 import { HelloFx, InequalitiesExample, Sigmoid } from './components/maths/graphing'
 import ImageGrid from './components/ui/image-grid'
 import BlogSuggestion from './components/ui/blog-suggested'
@@ -43,6 +46,9 @@ export function useMDXComponents(components: MDXComponents): MDXComponents {
     CodeSnippet,
     Example: BlogExample,
     Figure,
+    RotationFrameDemo,
+    AxisAngleDemo,
+    ScrewMotionDemo,
     ...components,
   }
 }

@@ -22,6 +22,9 @@ import PythonRunner from "@/components/code-runner/python"
 import CodeSnippet from "@/components/code-runner/code-snippet"
 import { BlogExample } from "@/components/ui/blog-example"
 import { Figure } from "@/components/ui/figure"
+import RotationFrameDemo from '@/components/graphics/RotationFrameDemo'
+import AxisAngleDemo from '@/components/graphics/AxisAngleDemo'
+import ScrewMotionDemo from '@/components/graphics/ScrewMotionDemo'
 
 const contentDir = path.join(process.cwd(), "/src/content/")
 const shortsContentDir = path.join(process.cwd(), "/src/content/shorts/")
@@ -71,7 +74,10 @@ const customComponents = {
   PythonRunner,
   CodeSnippet,
   Example: BlogExample,
-  Figure
+  Figure,
+  RotationFrameDemo,
+  AxisAngleDemo,
+  ScrewMotionDemo
 }
 
 export async function getBlogBySlug(slug: string) {

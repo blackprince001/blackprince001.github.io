@@ -3,6 +3,7 @@
 import * as React from "react"
 import { cn } from "@/lib/utils"
 import { Lightbox, useLightboxNav, type LightboxItem } from "@/components/ui/lightbox"
+import { RichText } from "@/components/ui/latex"
 
 interface FigureProps {
   title?: React.ReactNode
@@ -66,6 +67,7 @@ export function Figure({ title, src, srcs, alt, caption, cols, className }: Figu
                     key={i}
                     src={s}
                     alt={altFor(i)}
+                    isSingle={isSingle}
                     onOpen={lbIdx >= 0 ? () => lb.open(lbIdx) : () => {}}
                   />
                 )
@@ -75,7 +77,7 @@ export function Figure({ title, src, srcs, alt, caption, cols, className }: Figu
         </div>
         {caption && (
           <figcaption className="mt-3 px-2 text-sm italic text-zinc-500 dark:text-zinc-400 sm:text-[0.95rem]">
-            {caption}
+            {typeof caption === "string" ? <RichText text={caption} /> : caption}
           </figcaption>
         )}
       </figure>
@@ -91,7 +93,17 @@ export function Figure({ title, src, srcs, alt, caption, cols, className }: Figu
   )
 }
 
-function MediaItem({ src, alt, onOpen }: { src: string; alt: string; onOpen: () => void }) {
+function MediaItem({
+  src,
+  alt,
+  isSingle,
+  onOpen,
+}: {
+  src: string
+  alt: string
+  isSingle: boolean
+  onOpen: () => void
+}) {
   if (isVideo(src)) {
     return (
       <video
@@ -108,13 +120,22 @@ function MediaItem({ src, alt, onOpen }: { src: string; alt: string; onOpen: () 
     <button
       type="button"
       onClick={onOpen}
-      className="group relative block w-full overflow-hidden rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400"
+      className={cn(
+        "group relative overflow-hidden rounded-md focus:outline-none focus-visible:ring-2 focus-visible:ring-zinc-400",
+        // Single images render at native resolution (capped by the container)
+        // instead of being stretched to fill it, which would upscale small
+        // source rasters and blur them.
+        isSingle ? "inline-flex max-w-full justify-center" : "block w-full"
+      )}
       aria-label={`Open ${alt} fullscreen`}
     >
       <img
         src={src}
         alt={alt}
-        className="w-full h-auto object-contain rounded-md transition-transform duration-300 group-hover:scale-[1.01]"
+        className={cn(
+          "h-auto object-contain rounded-md transition-transform duration-300 group-hover:scale-[1.01]",
+          isSingle ? "max-w-full" : "w-full"
+        )}
       />
       <span className="pointer-events-none absolute right-2 top-2 rounded-md bg-black/55 px-1.5 py-1 text-[10px] font-medium uppercase tracking-wider text-white opacity-0 transition-opacity duration-200 group-hover:opacity-100">
         Expand

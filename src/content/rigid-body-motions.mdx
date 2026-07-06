@@ -1,0 +1,528 @@
+---
+title: "Rigid Body Motions"
+publishDate: "July 6, 2026"
+tag: "Robotics"
+---
+
+This whole chapter is notation for one simple idea: glue a coordinate frame to every body, then describe each frame relative to another.<AutoNumberedSidenote>Primary reference: <a href="https://modernrobotics.northwestern.edu">Modern Robotics: Mechanics, Planning, and Control</a> by Lynch &amp; Park (2017), Chapter 3.</AutoNumberedSidenote> The symbols look heavy, but each one is careful bookkeeping for a plain question. Whenever a definition or formula shows up here, don't try to memorize the symbols. Stop and ask: *which frame is this written in, and what is it actually describing?* If you can answer that out loud, the way you'd explain it to a friend who has never seen a robot, you understand the material.
+
+The position and orientation of a rigid body together are called its **pose**. A **rigid body** is an idealized object where the distance between any two points stays constant no matter what forces act on it. That single constraint collapses an infinite-dimensional space of configurations down to six numbers: three for position, three for orientation.
+
+<Figure
+  src="../rigid-body-motions/fig-3.6.png"
+  alt="A rigid body with a frame attached, showing how pose = position + orientation"
+  caption={"Pose = position $p$ + orientation of a body frame $\\{b\\}$ in a fixed frame $\\{s\\}$."}
+/>
+
+## Frames: the language of pose
+
+Telling a robot "the gripper is at $(3, 1, 2)$" is not enough. At that one point the gripper could still be upright, tilted, or upside-down. A position fixes a point; it says nothing about which way the body faces.
+
+So we never track a bare point. We rigidly attach a **body frame** $\{b\}$, a little set of axes, to the object, and describe it inside a **fixed frame** $\{s\}$, the world. The body's pose is both things together: where $\{b\}$'s origin sits and which way its axes point. A rigid body's state is a frame, not a point.
+
+All frames in robotics are **right-handed**: curl the fingers of your right hand from $\hat{x}$ toward $\hat{y}$, and your thumb points along $\hat{z}$. Positive rotation about an axis follows the same rule: thumb along the axis, fingers curl in the positive direction.
+
+<Figure
+  src="../rigid-body-motions/fig-3.2.png"
+  alt="Right-handed coordinate frame convention"
+  caption="Right-handed frame; positive rotation follows the right-hand rule."
+/>
+
+## Rigid body motions in the plane
+
+We start in 2D, where everything can be drawn. Every idea here (frames, a rotation matrix, composing motions) returns in 3D with more bookkeeping but no new concepts.
+
+In the plane a pose is three numbers: a position $p = (p_x, p_y)$ and one orientation angle $\theta$. Rather than carry the bare angle, we record where the body's axes point, as the columns of a matrix:
+
+<center>
+
+$$P = \begin{pmatrix} \hat{x}_b & \hat{y}_b \end{pmatrix} = \begin{pmatrix} \cos\theta & -\sin\theta \\ \sin\theta & \cos\theta \end{pmatrix}$$
+
+</center>
+
+Read those columns literally as arrows: the first is the direction of the body's $x$-axis, the second its $y$-axis, both written in the world's coordinates. The matrix is nothing more exotic than "draw me the body's axes."
+
+<Figure
+  src="../rigid-body-motions/fig-3.3.png"
+  alt="Planar body located by position p and angle theta"
+  caption={"Planar body: $\\{b\\}$ located by $p = (p_x, p_y)$ and angle $\\theta$."}
+/>
+
+Why carry a whole matrix when the single angle $\theta$ holds the same information? Because the bare angle is clumsy to work with. You have to babysit the wrap-around at $360°$ every time you combine two turns, and it is awkward to differentiate when we get to velocities. The matrix has none of those problems: combining turns is just multiplication, its columns automatically encode a valid orientation, and the very same construction becomes a $3 \times 3$ matrix in 3D with no new ideas.
+
+<Example title="Reading a planar rotation matrix">
+
+For $\theta = 90°$:
+
+<center>
+
+$$P = \begin{pmatrix} 0 & -1 \\ 1 & 0 \end{pmatrix}$$
+
+</center>
+
+The first column $(0, 1)$ is where $\hat{x}_b$ ends up, pointing straight "up" in $\{s\}$, exactly a quarter-turn. The matrix and the picture agree.
+
+And for $\theta = 0$? Without computing: $P = I$, the identity. The body frame is perfectly aligned with the space frame.
+</Example>
+
+## Rotations in 3D
+
+Orientation is the hard half of pose, so it gets its own treatment. The set of all valid $3 \times 3$ rotation matrices is the **special orthogonal group**:
+
+<center>
+
+$$SO(3) = \{ R \in \mathbb{R}^{3 \times 3} : R^T R = I, \ \det R = 1 \}$$
+
+</center>
+
+The two conditions each forbid a way of *not* being a real rotation. $R^T R = I$ keeps the axes unit-length and perpendicular: the body is not stretched or sheared. And $\det R = +1$ keeps the frame right-handed: the value $-1$ would be a mirror image, turning a right hand into a left hand, which no real motion does.
+
+Three gifts fall out for free:
+
+1. $R^{-1} = R^T$: undo a rotation by transposing it.
+2. $R_1 R_2 \in SO(3)$: rotations compose into rotations.
+3. $\|Rv\| = \|v\|$: rotating a vector never changes its length.
+
+$SO(3)$ has 9 numbers and 6 constraints, so $9 - 6 = 3$ degrees of freedom, and no singularities, unlike three Euler angles, which always have a configuration where they break down.
+
+### Yaw, pitch, roll
+
+In 2D one angle sufficed. In 3D we stack three elementary turns. The common yaw–pitch–roll convention multiplies $R = R_z(\psi) R_y(\theta) R_x(\phi)$, with $\phi$ = roll (about $x$), $\theta$ = pitch (about $y$), $\psi$ = yaw (about $z$). The product balloons into a matrix full of sine–cosine products, and it is tempting to stare at it looking for meaning. Don't. Remember what $R$ *is*: its columns are still just arrows,
+
+<center>
+
+$$R = \begin{pmatrix} | & | & | \\ r_1 & r_2 & r_3 \\ | & | & | \end{pmatrix}$$
+
+</center>
+
+where $r_1$ is where the body $x$-axis points, $r_2$ the body $y$-axis, $r_3$ the body $z$-axis, each written in world coordinates. The third column is literally the body's $z$-axis after all three turns. No trig insight required.
+
+### One matrix, three jobs
+
+A rotation matrix gets used in three different ways, and quietly confusing them is the number one source of sign and order errors:
+
+<table className="min-w-full text-left text-sm my-8">
+  <thead className="bg-gray-100 border-b border-gray-200">
+    <tr>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Job</th>
+      <th scope="col" className="px-6 py-3 font-semibold text-gray-900 text-left">Meaning</th>
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-gray-100">
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900">Describe</td>
+      <td className="px-6 py-4 text-gray-700">$R_{sb}$ is the orientation of frame $\{b\}$ as seen from $\{s\}$. Nothing moves.</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900">Change language</td>
+      <td className="px-6 py-4 text-gray-700">$v_s = R_{sb} v_b$: the <em>same</em> arrow, re-written from $\{b\}$'s numbers into $\{s\}$'s numbers.</td>
+    </tr>
+    <tr className="hover:bg-gray-50">
+      <td className="px-6 py-4 font-medium text-gray-900">Operate</td>
+      <td className="px-6 py-4 text-gray-700">$Rv$ actually rotates $v$ into a <em>new</em> arrow. The body really turns.</td>
+    </tr>
+  </tbody>
+</table>
+
+Read the subscripts like fractions: $R_{sb}$ is "$s$ from $b$." Set it beside $R_{bc}$ ("$b$ from $c$") and the $b$'s cancel: $R_{sb} R_{bc} = R_{sc}$. That one habit kills most ordering mistakes.
+
+### Rotating a frame: in whose axes?
+
+The same $R$ gives two different results depending on which side you multiply on:
+
+- **Premultiply** ($R_{sb'} = R \, R_{sb}$): the frame turns about an axis of the *world*.
+- **Postmultiply** ($R_{sb''} = R_{sb} \, R$): the frame turns about an axis of the *body*.
+
+Think of giving someone directions. Multiplying on the left is "turn toward north," a world instruction. Multiplying on the right is "turn left from where you're facing," a body instruction. Same turn, different reference point.
+
+<Figure
+  src="../rigid-body-motions/fig-3.9.png"
+  alt="Same rotation applied in the fixed frame versus the body frame"
+  caption={"Same $R = \\text{Rot}(\\hat{z}, 90°)$, applied in the fixed frame (top) vs. the body frame (bottom)."}
+/>
+
+### Try it: rotating a frame
+
+Drag the sliders to rotate a body frame relative to the fixed world frame, and watch the columns of $R_{sb}$ change. The determinant stays at $1$ no matter what you do: that's the group structure at work.
+
+<RotationFrameDemo />
+
+## Angular velocity
+
+At any instant a spinning body turns about *one* axis $\hat{\omega}$ at *one* rate $\dot{\theta}$. Bundle "which way" and "how fast" into a single arrow, the **angular velocity**:
+
+<center>
+
+$$\omega = \hat{\omega} \dot{\theta} \in \mathbb{R}^3$$
+
+</center>
+
+Each body axis is just a point being dragged around a circle, so its tip moves as $\dot{\hat{x}} = \omega \times \hat{x}$. Stack that for all three axes and you get the central identity
+
+<center>
+
+$$\dot{R} = [\omega_s] R = R [\omega_b]$$
+
+</center>
+
+where $\omega_s$ is the angular velocity written in the space frame and $\omega_b$ the same motion written in the body frame. Nothing mysterious: it only says every axis is swept around by the same $\omega$.
+
+<Figure
+  src="../rigid-body-motions/fig-3.10.png"
+  alt="Angular velocity as spin axis and rate"
+  caption={"The angular velocity $\\omega = \\hat{\\omega}\\dot{\\theta}$: spin axis $\\hat{\\omega}$, rate $\\dot{\\theta}$."}
+/>
+
+### The skew-symmetric trick
+
+What is that $[\omega]$ bracket? The cross product $\omega \times (\cdot)$ is a linear operation, so we can write it as a matrix and then use ordinary matrix algebra on rotating motion:
+
+<center>
+
+$$[\omega] = \begin{pmatrix} 0 & -\omega_3 & \omega_2 \\ \omega_3 & 0 & -\omega_1 \\ -\omega_2 & \omega_1 & 0 \end{pmatrix}, \qquad \omega \times v = [\omega] v$$
+
+</center>
+
+This matrix is skew-symmetric: $[\omega]^T = -[\omega]$. The set of all such matrices is named $so(3)$, the **Lie algebra** of $SO(3)$. Keep the two worlds straight: lowercase $so(3)$ holds angular velocities, infinitesimal spins, while uppercase $SO(3)$ holds finished rotations. The exponential map bridges them, and that's the next section.
+
+<Example title="Can a body spin about several axes at once?">
+
+An aircraft can be rolling (about body $x$) and pitching (about body $y$) at the same instant, so you might measure $\omega = (2, 1, 0)$ rad/s, with both an $x$- and a $y$-component. Two separate rotations at once?
+
+No. The components combine into one angular velocity vector. The body is not spinning about two independent axes; it spins about the single axis $\omega$ points along, here a line tilted between $x$ and $y$. Just as eastward and northward speeds add into one velocity, rotational components add into one angular velocity. For $\omega = (1, 1, 0)$ the body instantaneously spins about the diagonal $(1,1,0)$ axis, not "half about $x$, half about $y$."
+</Example>
+
+## Exponential coordinates and Rodrigues' formula
+
+Here is the whole idea in one sentence: every orientation can be reached by starting aligned, then turning by a single angle $\theta$ about a single unit axis $\hat{\omega}$, like driving a screwdriver. Pick an axis, pick how far to twist.
+
+Those three numbers $\hat{\omega}\theta \in \mathbb{R}^3$ are the **exponential coordinates** of the rotation: the direction is the axis, the length is the angle. Three numbers, the bare minimum.
+
+<Figure
+  src="../rigid-body-motions/fig-3.11.png"
+  alt="Rotating a point about an axis by an angle"
+  caption={"Rotating $p(0)$ about axis $\\hat{\\omega}$ by angle $\\theta$."}
+/>
+
+### Why $R = e^{[\hat{\omega}]\theta}$
+
+The claim earns its name in four steps:
+
+1. **A physical model.** Spin a vector $p(0)$ about a fixed unit axis $\hat{\omega}$ at a constant 1 rad/s for $\theta$ seconds; let $p(t)$ trace the tip's path.
+2. **The differential equation.** The tip's velocity is always perpendicular to both $\hat{\omega}$ and $p$, so $\dot{p} = \hat{\omega} \times p = [\hat{\omega}] p$.
+3. **Solve the linear ODE.** This is $\dot{x} = Ax$, whose solution is the matrix exponential: $p(\theta) = e^{[\hat{\omega}]\theta} p(0)$. So $R = e^{[\hat{\omega}]\theta}$.
+4. **Expand the series.** Using the cyclic identity $[\hat{\omega}]^3 = -[\hat{\omega}]$, every higher power collapses back onto $[\hat{\omega}]$ or $[\hat{\omega}]^2$, and the two bracketed series are exactly $\sin\theta$ and $(1 - \cos\theta)$.
+
+The result is **Rodrigues' formula**:
+
+<center>
+
+$$R = e^{[\hat{\omega}]\theta} = I + \sin\theta \, [\hat{\omega}] + (1 - \cos\theta) \, [\hat{\omega}]^2$$
+
+</center>
+
+Don't let the $e^{[\cdot]}$ scare you. It is not a number raised to a power. It is the machine that takes an axis and angle and hands back the actual rotation matrix. Rodrigues' formula is that machine written out in closed form, so you can compute it by hand with no infinite sum.
+
+<Example title="Axis-angle to matrix, by hand">
+
+Take $\hat{\omega} = (0, 0, 1)$ and $\theta = 30°$. Then
+
+<center>
+
+$$[\hat{\omega}] = \begin{pmatrix} 0 & -1 & 0 \\ 1 & 0 & 0 \\ 0 & 0 & 0 \end{pmatrix}, \qquad [\hat{\omega}]^2 = \begin{pmatrix} -1 & 0 & 0 \\ 0 & -1 & 0 \\ 0 & 0 & 0 \end{pmatrix}$$
+
+</center>
+
+Rodrigues gives
+
+<center>
+
+$$R = I + \sin 30° \, [\hat{\omega}] + (1 - \cos 30°)[\hat{\omega}]^2 = \begin{pmatrix} \cos 30° & -\sin 30° & 0 \\ \sin 30° & \cos 30° & 0 \\ 0 & 0 & 1 \end{pmatrix}$$
+
+</center>
+
+Sanity check: a turn about $\hat{z}$ leaves $z$ alone (third row and column match $I$) and acts as the planar rotation matrix on $xy$, exactly the 2D case from earlier.
+</Example>
+
+### From rotation back to axis-angle: the log
+
+The reverse trip, the matrix logarithm, reads the axis and angle back off any $R \in SO(3)$:
+
+<center>
+
+$$\theta = \cos^{-1}\!\left(\tfrac{1}{2}(\operatorname{tr} R - 1)\right), \qquad [\hat{\omega}] = \frac{1}{2 \sin\theta}(R - R^T)$$
+
+</center>
+
+Picture every rotation as a single dot inside a solid ball of radius $\pi$. The direction from the center is the rotation axis; the distance from the center is the angle, never more than a half-turn. The center itself is "no rotation." The picture even shows why minimal 3-number representations are always a little awkward: opposite points on the surface ($\theta = \pi$) are the *same* rotation, so the chart quietly wraps around on itself.
+
+<Figure
+  src="../rigid-body-motions/fig-3.13.png"
+  alt="SO(3) as a solid ball of radius pi"
+  caption={"$SO(3)$ as a solid ball of radius $\\pi$: a point $r = \\hat{\\omega}\\theta$ is a rotation."}
+/>
+
+<Example title="Matrix to axis-angle, by hand">
+
+Take the cyclic rotation that sends $\hat{x} \to \hat{y} \to \hat{z} \to \hat{x}$:
+
+<center>
+
+$$R = \begin{pmatrix} 0 & 0 & 1 \\ 1 & 0 & 0 \\ 0 & 1 & 0 \end{pmatrix}$$
+
+</center>
+
+**Angle.** Here $\operatorname{tr} R = 0$, so $\theta = \cos^{-1}(-\tfrac{1}{2}) = 120°$.
+
+**Axis.** With $\sin 120° = \tfrac{\sqrt{3}}{2}$,
+
+<center>
+
+$$[\hat{\omega}] = \frac{1}{\sqrt{3}} \begin{pmatrix} 0 & -1 & 1 \\ 1 & 0 & -1 \\ -1 & 1 & 0 \end{pmatrix} \quad\Rightarrow\quad \hat{\omega} = \frac{1}{\sqrt{3}} \begin{pmatrix} 1 \\ 1 \\ 1 \end{pmatrix}$$
+
+</center>
+
+Sanity check: a $120°$ turn about the body diagonal $(1,1,1)$ cycles the three axes in turn, exactly the $R$ we started from.
+</Example>
+
+### Try it: axis-angle to rotation matrix
+
+Pick an axis and an angle, and watch Rodrigues' formula produce the matrix. The yellow line is the rotation axis.
+
+<AxisAngleDemo />
+
+## Homogeneous transforms and twists
+
+Rotation handled orientation. A full rigid body motion also translates. So we bolt a rotation $R$ and a translation $p$ into one $4 \times 4$ matrix, the **homogeneous transformation**:
+
+<center>
+
+$$T = \begin{pmatrix} R & p \\ 0 & 1 \end{pmatrix} \in SE(3)$$
+
+</center>
+
+Stacking them this way means every trick we already had for rotations keeps working for full pose: compose by multiplying, change frames by multiplying, and the subscripts still cancel: $T_{sb} T_{bc} = T_{sc}$.
+
+The bottom row $(0, 0, 0, 1)$ is the bookkeeping that makes it happen. To hit a 3D point $x$ with a $4 \times 4$ matrix, first pad it to a 4-vector by appending a $1$. Then one multiply does rotate-and-translate at once:
+
+<center>
+
+$$\begin{pmatrix} R & p \\ 0 & 1 \end{pmatrix} \begin{pmatrix} x \\ 1 \end{pmatrix} = \begin{pmatrix} Rx + p \\ 1 \end{pmatrix}$$
+
+</center>
+
+The trailing $1$ is preserved, so transforms chain indefinitely. Undoing a pose is *not* just a transpose: the translation has to be rotated back too:
+
+<center>
+
+$$T^{-1} = \begin{pmatrix} R^T & -R^T p \\ 0 & 1 \end{pmatrix}$$
+
+</center>
+
+And the same trio of jobs carries over: one $T$ can *describe* a configuration ($T_{sb}$), *change frame* by the cancellation rule, or *displace* a point or frame as an operator.
+
+### Every motion is a screw
+
+The **Chasles–Mozzi theorem** says any rigid displacement at all can be achieved by rotating about some fixed axis while translating along that same axis: a **screw motion**. However tangled a move looks ("turn a bit, then slide over there"), you can always re-pick the axis so the whole thing becomes one clean screw: twist about a line while sliding along it, exactly like driving a bolt. Pure rotation and pure translation are the two extremes.
+
+<Figure
+  src="../rigid-body-motions/fig-3.5.png"
+  alt="A rotation then translation equals one rotation about a displaced point"
+  caption="A rotation then translation (path 1+2) equals one rotation about a displaced point, a screw."
+/>
+
+A screw is set by a point $q$ on its axis, a unit direction $\hat{s}$, and a **pitch** $h$: how far it advances along the axis per radian turned about it, the threads-per-turn of a bolt. One number sets the whole mix. $h = 0$ is pure rotation, spin in place. $h \to \infty$ is pure translation, slide without turning. Everything between is a genuine corkscrew. The resulting transformation is
+
+<center>
+
+$$T = \begin{pmatrix} R & (I - R)q + h\theta\hat{\omega} \\ 0 & 1 \end{pmatrix}$$
+
+</center>
+
+### The twist: velocity of a rigid body
+
+The velocity of a moving frame is a **twist** $\mathcal{V} = (\omega, v) \in \mathbb{R}^6$: the angular velocity $\omega$ stacked on a linear velocity $v$. It answers two questions about a moving body at one instant: how is it turning ($\omega$), and how is it sliding ($v$). It is the velocity twin of the screw.
+
+The subtle part is *whose* velocity $v$ is. A rotating body has a different speed at every point, so we cannot quote "the body's speed." Instead $v$ is the velocity of the body point passing through the frame origin right now, even if no real material sits there. Read a twist as: "spin like $\omega$, and the point at my origin moves like $v$." That fixed reference point is the trick that lets twists add and transform cleanly.
+
+The same physical motion has different numbers in $\{s\}$ and $\{b\}$. The $6 \times 6$ **adjoint** of $T = (R, p)$ converts a twist from one frame to the other:
+
+<center>
+
+$$\mathcal{V}_s = [Ad_{T_{sb}}] \mathcal{V}_b, \qquad [Ad_T] = \begin{pmatrix} R & 0 \\ [p]R & R \end{pmatrix}$$
+
+</center>
+
+It is simply the change-of-frame rule for velocities, the way $R$ and $T$ were the change-of-frame rules for vectors and points. Whenever you need a velocity "from the other frame's point of view," the adjoint is the converter.
+
+<Figure
+  src="../rigid-body-motions/fig-3.18.png"
+  alt="A car chassis rotating about a point, with its twist seen from two frames"
+  caption={"A chassis pivoting about point $r$: the same twist seen in $\\{s\\}$ and $\\{b\\}$."}
+/>
+
+The steered car above makes the odd convention concrete. The car is really just pivoting about the point $r$. Yet the spatial twist reports, as its $v_s$, the velocity of the imaginary chassis point currently at the $\{s\}$ origin, not the velocity of the car's center. Quoting "the velocity at the origin" feels strange the first time, but it is precisely the bookkeeping that lets twists compose. The body twist tells the same story from the driver's seat.
+
+### The screw axis: a unit twist
+
+Normalize a twist and you get the **unit screw axis** $\mathcal{S} = (\omega, v)$, where $v = -\omega \times q + h\omega$. Then any twist factors as direction times speed:
+
+<center>
+
+$$\mathcal{V} = \mathcal{S} \dot{\theta}$$
+
+</center>
+
+$\mathcal{S}$ says *which* screw you are turning: where the axis is, which way it points, how fast it advances. $\dot{\theta}$ says how quickly you turn it.
+
+<Figure
+  src="../rigid-body-motions/fig-3.19.png"
+  alt="A screw axis defined by a point, unit direction and pitch"
+  caption={"A screw axis: point $q$ on the axis, unit direction $\\hat{s}$, pitch $h$."}
+/>
+
+The screwdriver idea now scales up to full motion. Just as $SO(3)$ had $\hat{\omega}\theta$, the group $SE(3)$ has $\mathcal{S}\theta \in \mathbb{R}^6$: follow the unit screw $\mathcal{S}$ for an amount $\theta$:
+
+<center>
+
+$$T = e^{[\mathcal{S}]\theta} \in SE(3)$$
+
+</center>
+
+Name a screw, say how far to turn it, and the exponential hands back the finished pose. Today's screws are tomorrow's robot joints: this exact exponential is the engine of the product-of-exponentials forward kinematics in the next chapter.
+
+### Try it: screw motion
+
+The screw axis here is vertical, through the yellow point. Turn up the pitch and watch rotation pick up a climb along the axis. Hit animate to watch the frame corkscrew its way through the motion.
+
+<ScrewMotionDemo />
+
+## Wrenches
+
+Twists package velocities, angular plus linear, into one 6-vector. **Wrenches** do the same for forces.
+
+The same force $f$ does different things depending on where it is applied: push a door at the handle and it swings; push at the hinge and nothing turns. A force alone is an incomplete description of a load. The missing piece is the **moment** $m = r \times f$, the turning effect of $f$ applied at point $r$ about the frame origin. Package both:
+
+<center>
+
+$$\mathcal{F} = \begin{pmatrix} m \\ f \end{pmatrix} \in \mathbb{R}^6$$
+
+</center>
+
+A wrench is "a push plus a turn-this-way."
+
+### Power pairs them
+
+Notice the pairing: a twist is $(\omega, v)$, a wrench is $(m, f)$, both with the angular part first. Their dot product is **power**:
+
+<center>
+
+$$\text{power} = \mathcal{F}^T \mathcal{V} = m^T \omega + f^T v$$
+
+</center>
+
+Power is work done per second, a real physical quantity, so it cannot depend on which frame you wrote it in. Hold onto that single fact: it forces the transformation rule. Twists already transform by $[Ad_T]$, so for the product to come out the same in every frame, wrenches must transform by its transpose:
+
+<center>
+
+$$\mathcal{F}_b = [Ad_{T_{ab}}]^T \mathcal{F}_a$$
+
+</center>
+
+You never invent a new rule for forces. You take the velocity converter you already built and transpose it. The reason is pure physics: the energy per second has to be the same no matter who is looking, and that demand is exactly a transpose.
+
+<Example title="The hand and the apple">
+
+A hand (mass 0.5 kg) holds an apple (0.1 kg) under gravity. Two weights pull straight down: one on the apple (frame $\{a\}$), one on the hand (frame $\{h\}$). The wrist sensor (frame $\{f\}$) feels both, but only once each is spoken in *its* frame. Convert with the adjoint transpose, then simply add:
+
+<center>
+
+$$\mathcal{F}_f = [Ad_{T_{af}}]^T \mathcal{F}_a + [Ad_{T_{hf}}]^T \mathcal{F}_h$$
+
+</center>
+
+The moment arms ride in through the adjoints, turning a downward pull into a twisting load at the wrist.
+
+Why must both wrenches be in the same frame before adding? Because 6-vectors only add when written in identical coordinates, like adding "3 steps east" to "3 steps forward" only after agreeing on one compass.
+</Example>
+
+<Figure
+  src="../rigid-body-motions/fig-3.22.png"
+  alt="Hand holding an apple, wrenches converted to the wrist sensor frame"
+  caption="A hand holding an apple under gravity: each weight becomes a wrench at the wrist."
+/>
+
+## Quiz
+
+<Quiz quizData={[
+  {
+    question: "A rotation matrix $R \\in SO(3)$ must satisfy which properties?",
+    answers: [
+      { text: "$R^T R = I$ and $\\det(R) = 1$", correct: true },
+      { text: "$R^T R = I$ and $\\det(R) = -1$", correct: false },
+      { text: "$R R^T = -I$ and $\\det(R) = 1$", correct: false },
+      { text: "$R = R^T$ and $\\det(R) = 1$", correct: false },
+    ],
+    explanation: "$SO(3)$ is the Special Orthogonal group: orthogonal ($R^T R = I$) with positive determinant ($\\det(R) = 1$). The determinant being $+1$ (not $-1$) ensures the rotation preserves orientation (no reflection).",
+  },
+  {
+    question: "If $R_{ab}$ describes frame $\\{b\\}$ relative to frame $\\{a\\}$, and $R_{bc}$ describes frame $\\{c\\}$ relative to frame $\\{b\\}$, what is $R_{ac}$?",
+    answers: [
+      { text: "$R_{ac} = R_{ab} R_{bc}$", correct: true },
+      { text: "$R_{ac} = R_{bc} R_{ab}$", correct: false },
+      { text: "$R_{ac} = R_{ab}^T R_{bc}$", correct: false },
+      { text: "$R_{ac} = R_{ab} + R_{bc}$", correct: false },
+    ],
+    explanation: "Rotation matrices compose by multiplication: to get from $\\{a\\}$ to $\\{c\\}$, go from $\\{a\\}$ to $\\{b\\}$ then $\\{b\\}$ to $\\{c\\}$. The subscripts cancel like fractions. The order matters: matrix multiplication is not commutative.",
+  },
+  {
+    question: "According to Rodrigues' formula, what is the rotation matrix for rotating by $\\theta$ about axis $\\hat{\\omega}$?",
+    answers: [
+      { text: "$R = I + \\sin\\theta \\, [\\hat{\\omega}] + (1 - \\cos\\theta)[\\hat{\\omega}]^2$", correct: true },
+      { text: "$R = I + \\cos\\theta \\, [\\hat{\\omega}] + \\sin\\theta \\, [\\hat{\\omega}]^2$", correct: false },
+      { text: "$R = I + \\theta[\\hat{\\omega}] + (\\theta^2 / 2)[\\hat{\\omega}]^2$", correct: false },
+      { text: "$R = e^{\\theta[\\hat{\\omega}]}$ only, no closed form exists", correct: false },
+    ],
+    explanation: "Rodrigues' formula gives the closed-form solution to the matrix exponential. It's derived from the Taylor series of $e^{\\theta[\\hat{\\omega}]}$, using the property that $[\\hat{\\omega}]^3 = -[\\hat{\\omega}]$.",
+  },
+  {
+    question: "A twist $\\mathcal{V} = (\\omega, v)$ represents:",
+    answers: [
+      { text: "Angular velocity $\\omega$ and linear velocity $v$ of a rigid body", correct: true },
+      { text: "Force $\\omega$ and moment $v$ applied to a rigid body", correct: false },
+      { text: "Position $\\omega$ and orientation $v$ of a rigid body", correct: false },
+      { text: "Angular momentum $\\omega$ and linear momentum $v$", correct: false },
+    ],
+    explanation: "A twist combines angular and linear velocity into a single 6D vector. The $v$ is the velocity of the body point currently passing through the frame origin. Force and moment are combined into a wrench, not a twist.",
+  },
+  {
+    question: "By Chasles' theorem, any rigid body motion can be achieved by:",
+    answers: [
+      { text: "A screw motion: rotation about an axis combined with translation along that axis", correct: true },
+      { text: "Three sequential rotations about the coordinate axes", correct: false },
+      { text: "Translation followed by rotation", correct: false },
+      { text: "A single rotation about some axis", correct: false },
+    ],
+    explanation: "Chasles' theorem (also called the Mozzi-Chasles theorem) states that any rigid body displacement can be produced by a screw motion. Pure rotation is a special case with zero pitch; pure translation is the limit as pitch $h \\to \\infty$.",
+  },
+  {
+    question: "The power delivered by a wrench $\\mathcal{F}$ acting on a body with twist $\\mathcal{V}$ is:",
+    answers: [
+      { text: "$\\text{Power} = \\mathcal{F}^T \\mathcal{V} = m \\cdot \\omega + f \\cdot v$", correct: true },
+      { text: "$\\text{Power} = \\|\\mathcal{F}\\| \\, \\|\\mathcal{V}\\|$", correct: false },
+      { text: "$\\text{Power} = \\mathcal{F} \\times \\mathcal{V}$", correct: false },
+      { text: "$\\text{Power} = \\operatorname{trace}(\\mathcal{F}^T \\mathcal{V})$", correct: false },
+    ],
+    explanation: "The reciprocal product $\\mathcal{F}^T \\mathcal{V}$ gives power, which is frame-invariant. The moment $m$ (torque) pairs with angular velocity $\\omega$, and force $f$ pairs with linear velocity $v$. This duality between wrenches and twists runs through all of robot dynamics.",
+  },
+]} />
+
+## Summary
+
+- A rigid body's state is a frame; pose = position $p$ + orientation $R$.
+- Rotations live in $SO(3)$ ($R^T R = I$, $\det R = 1$): the inverse is the transpose, and there are no singularities. One $R$ plays three roles: describe, change language, operate.
+- Angular velocity gives $\dot{R} = [\omega]R$. Exponential coordinates $\hat{\omega}\theta$ and Rodrigues' formula connect axis-angle and matrix in both directions.
+- Homogeneous transforms $SE(3)$ bundle $(R, p)$; every motion is a screw (Chasles–Mozzi). The twist $(\omega, v)$ is its velocity; the adjoint moves twists between frames.
+- Wrenches $(m, f)$ bundle moment and force. They transform by the adjoint transpose because $\mathcal{F}^T \mathcal{V}$ is power, and power can't depend on the frame.
+
+Twists and wrenches are dual 6-vectors paired by power, the same screw geometry, read two ways. This duality runs through all of robot dynamics, and the exponential $T = e^{[\mathcal{S}]\theta}$ built here is the engine of forward kinematics in the next chapter.

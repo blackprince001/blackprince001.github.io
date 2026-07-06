@@ -225,10 +225,28 @@
     --radius: 0rem;
   }
 
+  /* Image dialog (lightbox) pop-out animation */
+  @keyframes dialog-fade {
+    from { opacity: 0; }
+    to { opacity: 1; }
+  }
+
+  @keyframes dialog-zoom {
+    from { opacity: 0; transform: scale(0.92); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .animate-dialog-fade {
+    animation: dialog-fade 0.2s ease-out;
+  }
+
+  .animate-dialog-zoom {
+    animation: dialog-zoom 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  }
+
   /* Responsive Math Styling - Fixed sizes to prevent scaling with base font */
   .katex {
-    font-size: 15.84px !important;
-    /* Reduced by 10% from 17.6px */
+    font-size: 17.6px !important;
     max-width: 100%;
     overflow-x: auto;
     overflow-y: hidden;
@@ -272,8 +290,7 @@
 
   @media (max-width: 640px) {
     .katex {
-      font-size: 12.96px !important;
-      /* Reduced by 10% from 14.4px */
+      font-size: 14.4px !important;
       max-width: 100vw;
     }
 
