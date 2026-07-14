@@ -1,0 +1,46 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { reading } from "../lib/site-data";
+
+const statusLabel = {
+  reading: "Reading",
+  finished: "Finished",
+  "want-to-read": "Queued",
+};
+---
+
+<BaseLayout title="Reading — blackprince" description="Books shaping my work across engineering, science, fiction, and philosophy.">
+  <article class="collection-page">
+    <header class="collection-header">
+      <p class="section-index">Working library</p>
+      <h1>Reading</h1>
+      <p>Books shaping my work across engineering, science, fiction, philosophy, and the study of mind.</p>
+    </header>
+    <nav class="reading-nav" aria-label="Reading categories">
+      {reading.categories.map((category) => <a href={`#${category.id}`}>{category.label}</a>)}
+    </nav>
+    {reading.categories.map((category) => {
+      const books = reading.books.filter((book) => book.category === category.id);
+      return (
+        <section id={category.id} class="reading-section" aria-labelledby={`${category.id}-title`}>
+          <div>
+            <h2 id={`${category.id}-title`}>{category.label}</h2>
+            <p>{category.description}</p>
+          </div>
+          <div class="book-grid">
+            {books.map((book) => (
+              <article class="book-entry">
+                <img src={book.cover} alt="" loading="lazy" decoding="async" />
+                <div>
+                  <p>{statusLabel[book.status]}</p>
+                  <h3>{book.title}</h3>
+                  <p>{book.author}</p>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+      );
+    })}
+  </article>
+</BaseLayout>

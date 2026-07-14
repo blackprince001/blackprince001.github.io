@@ -1,0 +1,13 @@
+---
+import { getCollection } from "astro:content";
+import ShortsIndex from "../../components/astro/ShortsIndex.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const entries = (await getCollection("shorts", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const tags = [...new Set(entries.flatMap((entry) => entry.data.tags))].sort();
+---
+
+<BaseLayout title="Shorts — blackprince" description="Short notes, ideas, and works in progress.">
+  <ShortsIndex entries={entries} tags={tags} />
+</BaseLayout>

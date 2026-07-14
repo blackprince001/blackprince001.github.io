@@ -11,7 +11,7 @@ timestamp: 2026-07-14
 
 # Redesign branch and phase map
 
-Status: Phase 0 complete / Phase 1 complete
+Status: Phase 0 complete / Phase 1 complete / Phase 2 in progress
 Started: 2026-07-14
 
 ## Safety branches
@@ -80,8 +80,13 @@ Purpose:
 
 Exit gate:
 
-- route manifest and content parity
-- all schemas and internal references pass
+- [x] all long-form writing, shorts, and collection pages build from canonical sources
+- [x] required interactive article components have explicit Astro island boundaries
+- [ ] RSS and remaining machine-readable route parity
+- [ ] internal-link and media-reference audit
+- [ ] final Phase 2 schema, responsive, and accessibility review
+
+Checkpoint: all public content views now have Astro routes and 48 pages build statically. The Next application remains the production fallback while the remaining parity checks are completed; see [PHASE_2_CONTENT_MIGRATION.md](./PHASE_2_CONTENT_MIGRATION.md).
 
 ### Phase 3 — `codex/phase-3-flagship-storytelling`
 

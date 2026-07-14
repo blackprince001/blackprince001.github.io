@@ -1,0 +1,18 @@
+---
+import ProjectFeature from "../components/astro/ProjectFeature.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { projects } from "../lib/site-data";
+---
+
+<BaseLayout title="Projects — blackprince" description="Selected systems, research prototypes, and open-source engineering work.">
+  <article class="collection-page">
+    <header class="collection-header">
+      <p class="section-index">Systems and research</p>
+      <h1>Projects</h1>
+      <p>Selected systems, research prototypes, and open-source engineering work.</p>
+    </header>
+    <div class="project-list">
+      {projects.map((project, index) => <ProjectFeature project={project} index={index} />)}
+    </div>
+  </article>
+</BaseLayout>

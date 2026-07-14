@@ -1,0 +1,18 @@
+---
+interface Props {
+  href: string;
+  title: string;
+  description?: string;
+}
+
+const { href, title, description } = Astro.props;
+const external = /^https?:\/\//.test(href);
+---
+
+<aside class="article-link-embed">
+  <a href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>
+    <strong>{title}</strong>
+    {description && <span>{description}</span>}
+    <small>Open resource <span aria-hidden="true">↗</span></small>
+  </a>
+</aside>

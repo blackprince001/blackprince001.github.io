@@ -1,0 +1,30 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { publications } from "../lib/site-data";
+
+const entries = [...publications].sort((a, b) => b.year - a.year);
+---
+
+<BaseLayout title="Manuscripts — blackprince" description="Research manuscripts and technical publications by Prince Kwabena Appiah Boadu.">
+  <article class="collection-page">
+    <header class="collection-header">
+      <p class="section-index">Research archive</p>
+      <h1>Manuscripts</h1>
+      <p>Research manuscripts and technical publications across intelligent systems, networking, perception, and security.</p>
+    </header>
+    <div class="publication-list">
+      {entries.map((entry) => (
+        <article class="publication-entry">
+          <p>{entry.year} · {entry.domain ?? "Research"}</p>
+          <h2>{entry.title}</h2>
+          <p>{entry.authors.join(", ")}</p>
+          {entry.abstract && <p>{entry.abstract}</p>}
+          <div>
+            {entry.pdf && <a class="text-link" href={entry.pdf} target="_blank" rel="noreferrer">Read PDF <span aria-hidden="true">↗</span></a>}
+            <a class="text-link" href={entry.link} target="_blank" rel="noreferrer">Source <span aria-hidden="true">↗</span></a>
+          </div>
+        </article>
+      ))}
+    </div>
+  </article>
+</BaseLayout>

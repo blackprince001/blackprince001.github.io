@@ -1,0 +1,9 @@
+---
+import GoRunner from "../../code-runner/golang";
+---
+
+<section class="interactive-island" aria-label="Interactive Go code runner">
+  <p class="interactive-island__fallback">Editable Go example. Running code contacts the configured remote compiler.</p>
+  <GoRunner {...Astro.props} client:only="react" />
+  <noscript>Enable JavaScript to edit and run this example.</noscript>
+</section>

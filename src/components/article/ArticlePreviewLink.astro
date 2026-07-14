@@ -1,0 +1,6 @@
+---
+interface Props { title: string; link: string; summary: string }
+const { title, link, summary } = Astro.props;
+---
+
+<a class="article-preview-link" href={link} title={summary} aria-label={`${title}. ${summary}`}>{title}</a>

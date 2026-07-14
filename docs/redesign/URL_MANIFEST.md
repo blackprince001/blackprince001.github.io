@@ -8,28 +8,31 @@ timestamp: 2026-07-14
 
 # Public URL migration manifest
 
-Status: Phase 1 foundation complete
+Status: Phase 2 content-route checkpoint complete
 
-The production deployment remains the Next.js export on `master`. Astro owns preview builds on the Phase 1 branch only.
+The production deployment remains the Next.js export on `master`. Astro owns preview builds on the active Phase 2 branch until the migration exit gate is accepted.
 
 | Public route | Next source | Astro status | Phase |
 |---|---|---|---|
-| `/` | `src/app/(main)/page.tsx` | Homepage proof complete | 1 |
-| `/blog` | `src/app/(posts)/blog/page.tsx` | Typed index proof complete | 1 |
-| `/blog/default` | `src/app/(posts)/blog/[slug]/page.tsx` | Simple article proof complete | 1 |
-| `/blog/rigid-body-motions` | `src/app/(posts)/blog/[slug]/page.tsx` | Complex island proof complete | 1 |
-| Remaining `/blog/[slug]` | `src/app/(posts)/blog/[slug]/page.tsx` | Pending route parity | 2 |
-| `/shorts` | `src/app/shorts/page.tsx` | Pending | 2 |
-| `/shorts/[slug]` | `src/app/shorts/[slug]/page.tsx` | Pending | 2 |
-| `/shorts/tag/[tag]` | `src/app/shorts/tag/[tag]/page.tsx` | Pending | 2 |
-| `/projects` | `src/app/projects/page.tsx` | Pending | 2 |
-| `/publications` | `src/app/publications/page.tsx` | Pending | 2 |
-| `/reading` | `src/app/reading/page.tsx` | Pending | 2 |
+| `/` | `src/app/(main)/page.tsx` | Complete; collection-backed | 2 |
+| `/blog` | `src/app/(posts)/blog/page.tsx` | Complete; collection-backed | 2 |
+| `/blog/[slug]` | `src/app/(posts)/blog/[slug]/page.tsx` | All 29 published articles build | 2 |
+| `/shorts` | `src/app/shorts/page.tsx` | Complete | 2 |
+| `/shorts/[slug]` | `src/app/shorts/[slug]/page.tsx` | All 5 shorts build | 2 |
+| `/shorts/tag/[tag]` | `src/app/shorts/tag/[tag]/page.tsx` | All 7 tag routes build | 2 |
+| `/projects` | `src/app/projects/page.tsx` | Complete | 2 |
+| `/publications` | `src/app/publications/page.tsx` | Complete | 2 |
+| `/reading` | `src/app/reading/page.tsx` | Complete | 2 |
 | `/404.html` | framework fallback | Complete | 1 |
+| `/sitemap-index.xml` | `src/app/sitemap.ts` | Complete through Astro sitemap integration | 1 |
+| `/robots.txt` | `src/app/robots.ts` | Pending parity | 2 |
+| RSS feed | none | Pending | 2 |
+| `/api/publications` | `src/app/api/publications/route.ts` | Remains on Next until API contract retirement or replacement | 2 |
 
 ## Content boundary
 
-- `src/content/` is the canonical Next-compatible MDX source and a validated Astro collection.
-- `src/content-v2/` remains available for new collections such as shorts during Phase 2.
-- `src/data/writing-index.json` is a temporary validated index for public links while article bodies are converted.
-- A legacy article route moves only after its MDX, media, and interactive components build and render correctly in Astro.
+- `src/content/*.mdx` is the canonical Next-compatible source for long-form writing and a validated Astro collection.
+- `src/content/shorts/*.mdx` is the canonical shorts source and a validated Astro collection.
+- Homepage and writing indexes now query the content collection directly; the temporary writing index has been removed.
+- Project, publication, and reading data remain validated through the shared data model.
+- Legacy React is retained only behind explicit islands where an article interaction requires it.

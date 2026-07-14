@@ -35,12 +35,5 @@ export const readingSchema = z.object({
   })),
 });
 
-export const writingIndexSchema = z.array(z.object({
-  slug: z.string(),
-  title: z.string(),
-  publishDate: z.coerce.date(),
-  tag: z.string(),
-}));
-
 export type Project = z.infer<typeof projectSchema>;
 export type Publication = z.infer<typeof publicationSchema>;

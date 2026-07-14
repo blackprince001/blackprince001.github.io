@@ -6,16 +6,56 @@ interface Props {
   src?: string;
   srcs?: string[];
   alt?: string;
-  caption?: string;
+  caption?: unknown;
   cols?: 1 | 2 | 3 | 4;
+}
+
+interface AstroJsxNode {
+  type?: unknown;
+  props?: { children?: unknown };
+  [key: string]: unknown;
 }
 
 const { title, src, srcs, alt = "Article figure", caption, cols } = Astro.props;
 const media = srcs?.length ? srcs : src ? [src] : [];
 const normalizeSrc = (value: string) => value.replace(/^\.\.\//, "/");
-const captionHtml = caption?.replace(/\$([^$]+)\$/g, (_match, expression) =>
-  katex.renderToString(expression, { throwOnError: false, output: "html" }),
-);
+const allowedCaptionTags = new Set(["strong", "em", "code", "span", "br"]);
+const escapeHtml = (value: string) => value
+  .replaceAll("&", "&amp;")
+  .replaceAll("<", "&lt;")
+  .replaceAll(">", "&gt;")
+  .replaceAll('"', "&quot;")
+  .replaceAll("'", "&#039;");
+const renderText = (value: string) => {
+  let cursor = 0;
+  let html = "";
+
+  for (const match of value.matchAll(/\$([^$]+)\$/g)) {
+    const index = match.index ?? 0;
+    html += escapeHtml(value.slice(cursor, index));
+    html += katex.renderToString(match[1], { throwOnError: false, output: "html" });
+    cursor = index + match[0].length;
+  }
+
+  return html + escapeHtml(value.slice(cursor));
+};
+const renderCaption = (value: unknown): string => {
+  if (value === null || value === undefined || value === false) return "";
+  if (typeof value === "string" || typeof value === "number") return renderText(String(value));
+  if (Array.isArray(value)) return value.map(renderCaption).join("");
+  if (typeof value !== "object") return "";
+
+  const node = value as AstroJsxNode;
+  const children = renderCaption(node.props?.children);
+  const tag = typeof node.type === "string" && allowedCaptionTags.has(node.type)
+    ? node.type
+    : undefined;
+
+  if (!tag) return children;
+  if (tag === "br") return "<br>";
+  return `<${tag}>${children}</${tag}>`;
+};
+const captionHtml = renderCaption(caption);
 ---
 
 {media.length > 0 && (

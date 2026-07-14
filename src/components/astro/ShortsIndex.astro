@@ -1,0 +1,38 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+interface Props {
+  entries: CollectionEntry<"shorts">[];
+  tags: string[];
+  activeTag?: string;
+}
+
+const { entries, tags, activeTag } = Astro.props;
+const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", day: "numeric" });
+const visibleEntries = activeTag ? entries.filter((entry) => entry.data.tags.includes(activeTag)) : entries;
+---
+
+<article class="index-page shorts-index">
+  <p class="section-index">Short form</p>
+  <h1>Shorts</h1>
+  <p>Snapshots of ideas, course corrections, and mental models shared while they are still unfolding.</p>
+  <nav class="short-filter" aria-label="Filter shorts by topic">
+    <a href="/shorts" aria-current={!activeTag ? "page" : undefined}>All</a>
+    {tags.map((tag) => (
+      <a href={`/shorts/tag/${encodeURIComponent(tag)}`} aria-current={activeTag === tag ? "page" : undefined}>{tag}</a>
+    ))}
+  </nav>
+  <div class="entry-list">
+    {visibleEntries.map((entry) => (
+      <a class="short-entry" href={`/shorts/${entry.id}`}>
+        <span class="entry-date">{date.format(entry.data.publishedAt)}</span>
+        <span>
+          <strong>{entry.data.title}</strong>
+          {entry.data.summary && <small>{entry.data.summary}</small>}
+          <small>{entry.data.tags.map((tag) => `#${tag}`).join("  ")}</small>
+        </span>
+        <span class="entry-arrow" aria-hidden="true">↗</span>
+      </a>
+    ))}
+  </div>
+</article>

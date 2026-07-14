@@ -1,0 +1,9 @@
+---
+import PythonRunner from "../../code-runner/python";
+---
+
+<section class="interactive-island" aria-label="Interactive Python code runner">
+  <p class="interactive-island__fallback">Editable Python example that runs in the browser.</p>
+  <PythonRunner {...Astro.props} client:only="react" />
+  <noscript>Enable JavaScript to edit and run this example.</noscript>
+</section>

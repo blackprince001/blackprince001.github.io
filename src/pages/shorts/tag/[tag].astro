@@ -1,0 +1,21 @@
+---
+import { getCollection } from "astro:content";
+import ShortsIndex from "../../../components/astro/ShortsIndex.astro";
+import BaseLayout from "../../../layouts/BaseLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("shorts", ({ data }) => !data.draft);
+  const tags = [...new Set(entries.flatMap((entry) => entry.data.tags))];
+  return tags.map((tag) => ({ params: { tag }, props: { activeTag: tag } }));
+}
+
+interface Props { activeTag: string }
+const { activeTag } = Astro.props;
+const entries = (await getCollection("shorts", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const tags = [...new Set(entries.flatMap((entry) => entry.data.tags))].sort();
+---
+
+<BaseLayout title={`${activeTag} shorts — blackprince`} description={`Short notes filed under ${activeTag}.`}>
+  <ShortsIndex entries={entries} tags={tags} activeTag={activeTag} />
+</BaseLayout>
