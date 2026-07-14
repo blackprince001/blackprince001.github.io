@@ -1,4 +1,6 @@
 ---
+import { challenges } from "../../data/challenges";
+
 interface Heading {
   depth: number;
   slug: string;
@@ -40,6 +42,17 @@ const visible = headings.length > 1;
           ))}
         </ol>
       </nav>
+      <section class="floating-toc__challenge" aria-labelledby="toc-challenge-label" data-toc-challenge>
+        <p id="toc-challenge-label">Challenge <span data-challenge-number>{challenges[0].id}</span></p>
+        <p class="floating-toc__question" data-challenge-question aria-live="polite">{challenges[0].question}</p>
+        <p class="floating-toc__response" data-challenge-response>Respond: true, false, indeterminate, or meaningless.</p>
+        <button type="button" data-next-challenge>Another challenge</button>
+        <ul hidden data-challenge-bank>
+          {challenges.map((challenge) => (
+            <li data-id={challenge.id} data-type={challenge.type} data-options={challenge.options?.join("|_")}>{challenge.question}</li>
+          ))}
+        </ul>
+      </section>
     </div>
   </aside>
 )}
@@ -55,6 +68,26 @@ const visible = headings.length > 1;
     const sections = links
       .map((link) => document.getElementById(link.dataset.tocSlug ?? ""))
       .filter((section): section is HTMLElement => Boolean(section));
+    const challengeRoot = root.querySelector<HTMLElement>("[data-toc-challenge]");
+    const challengeNumber = challengeRoot?.querySelector<HTMLElement>("[data-challenge-number]");
+    const challengeQuestion = challengeRoot?.querySelector<HTMLElement>("[data-challenge-question]");
+    const challengeResponse = challengeRoot?.querySelector<HTMLElement>("[data-challenge-response]");
+    const challengeBank = Array.from(challengeRoot?.querySelectorAll<HTMLElement>("[data-challenge-bank] li") ?? []);
+    let challengeIndex = 0;
+
+    const showChallenge = (index: number) => {
+      const challenge = challengeBank[index];
+      if (!challenge || !challengeNumber || !challengeQuestion || !challengeResponse) return;
+      challengeIndex = index;
+      challengeNumber.textContent = challenge.dataset.id ?? "";
+      challengeQuestion.textContent = challenge.textContent ?? "";
+      const options = challenge.dataset.options?.split("|_").filter(Boolean);
+      challengeResponse.textContent = options?.length
+        ? `Choose: ${options.join(" · ")}`
+        : challenge.dataset.type === "freeResponse"
+          ? "Consider your answer before continuing."
+          : "Respond: true, false, indeterminate, or meaningless.";
+    };
 
     if (!trigger || !content || sections.length === 0) return;
 
@@ -78,6 +111,12 @@ const visible = headings.length > 1;
     };
 
     trigger.addEventListener("click", () => setOpen(trigger.getAttribute("aria-expanded") !== "true"));
+    challengeRoot?.querySelector<HTMLButtonElement>("[data-next-challenge]")?.addEventListener("click", () => {
+      if (challengeBank.length < 2) return;
+      let next = challengeIndex;
+      while (next === challengeIndex) next = Math.floor(Math.random() * challengeBank.length);
+      showChallenge(next);
+    });
     links.forEach((link) => link.addEventListener("click", () => setOpen(false)));
     document.addEventListener("click", (event) => {
       if (!root.contains(event.target as Node)) setOpen(false);
@@ -89,6 +128,7 @@ const visible = headings.length > 1;
       }
     });
     document.addEventListener("scroll", updateActive, { passive: true });
+    showChallenge(Math.floor(Math.random() * challengeBank.length));
     updateActive();
   });
 </script>

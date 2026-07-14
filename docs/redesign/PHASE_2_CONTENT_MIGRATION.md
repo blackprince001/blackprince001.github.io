@@ -44,6 +44,8 @@ Figure captions are centered beneath their media, and native article videos now 
 
 JetBrains Mono is now self-hosted in regular and bold WOFF2 weights and owns the shared monospace token, including Astro metadata, tags, code, and React island utilities. The regular face is preloaded because these compact interface labels appear in the initial viewport; system monospace faces remain as resilient fallbacks.
 
+Article titles now use a tighter display scale. The floating outline once again includes the rotating Cicada challenge prompt, and wide article layouts measure and alternate sidenotes across both margins while preventing same-side collisions; narrow layouts retain the inline parenthetical treatment.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files

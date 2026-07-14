@@ -2,3 +2,34 @@
   <span class="article-sidenote__marker" aria-hidden="true"></span>
   <span class="article-sidenote__content"><slot /></span>
 </span>
+
+<script>
+  const layoutArticleSidenotes = () => {
+    const body = document.querySelector<HTMLElement>(".article-body");
+    if (!body) return;
+    const notes = Array.from(body.querySelectorAll<HTMLElement>(".article-sidenote"));
+    const wideLayout = matchMedia("(min-width: 78rem)").matches;
+    const cursors = { left: 0, right: 0 };
+
+    notes.forEach((note, index) => {
+      const marker = note.querySelector<HTMLElement>(".article-sidenote__marker");
+      const content = note.querySelector<HTMLElement>(".article-sidenote__content");
+      const side = index % 2 === 0 ? "left" : "right";
+      note.dataset.side = side;
+      content?.style.removeProperty("top");
+      if (!wideLayout || !marker || !content) return;
+      const desiredTop = marker.offsetTop;
+      const top = Math.max(desiredTop, cursors[side]);
+      content.style.top = `${top}px`;
+      cursors[side] = top + content.offsetHeight + 14;
+    });
+  };
+
+  let sidenoteResizeTimer: number | undefined;
+  addEventListener("resize", () => {
+    clearTimeout(sidenoteResizeTimer);
+    sidenoteResizeTimer = window.setTimeout(layoutArticleSidenotes, 100);
+  }, { passive: true });
+  document.fonts.ready.then(layoutArticleSidenotes);
+  requestAnimationFrame(layoutArticleSidenotes);
+</script>
