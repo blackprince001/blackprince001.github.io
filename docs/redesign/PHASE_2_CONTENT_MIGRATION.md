@@ -36,6 +36,8 @@ The homepage wordmark now returns to the intro view, and the manuscript list use
 
 The manuscript index now carries those previews into the full research archive. Global navigation has moved from the top edge into a compact bottom dock, leaving the reading plane clear while preserving every destination at mobile widths. Article sidenotes once again behave as notes: inline and parenthetical in narrow layouts, numbered and placed in the margin when space allows.
 
+The dock now owns the site identity as well: `blackprince` is the Home destination and the redundant top wordmark has been removed. Navigation items collapse while the page is actively scrolling and return after scrolling settles; the same control can be toggled directly, remains keyboard-accessible, and uses a horizontally scrollable inner row when narrow screens cannot fit every destination at once.
+
 Figures no longer sit inside outlined or tinted frames. Images open in a native modal viewer with a dark backdrop, keyboard navigation, focus restoration, reduced-motion handling, and a shared-element expansion where the browser supports view transitions. The three robotics demonstrations and the general mesh viewer now consume the same page, surface, ink, and muted theme tokens as the surrounding article, so the existing Astro theme switch updates their chrome without a separate theme provider.
 
 ## Verification evidence
