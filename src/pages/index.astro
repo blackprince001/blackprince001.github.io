@@ -66,8 +66,13 @@ const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", da
         <div class="manuscript-list">
           {recentPublications.map((publication) => (
             <a class="manuscript-row" href={publication.pdf ?? publication.link} target="_blank" rel="noopener noreferrer">
-              <span class="manuscript-year">{publication.year}</span>
-              <span>
+              {publication.preview && (
+                <span class="manuscript-preview" aria-hidden="true">
+                  <img src={publication.preview} alt="" loading="lazy" decoding="async" width="600" height="800" />
+                </span>
+              )}
+              <span class="manuscript-copy">
+                <span class="manuscript-year">{publication.year}</span>
                 <strong>{publication.title}</strong>
                 <small>{publication.domain ?? publication.authors.join(", ")}</small>
               </span>

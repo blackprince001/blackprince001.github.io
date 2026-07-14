@@ -16,6 +16,7 @@ export const publicationSchema = z.object({
   year: z.number(),
   link: z.string(),
   pdf: z.string().optional(),
+  preview: z.string().optional(),
   abstract: z.string().optional(),
   domain: z.string().optional(),
 });

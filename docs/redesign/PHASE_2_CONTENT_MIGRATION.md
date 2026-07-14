@@ -32,6 +32,8 @@ The shared editorial layer now also includes colored tag pills, searchable and t
 
 Tag pills now cover manuscript domains, reading categories, and book statuses as well as writing and project technologies. Detailed project entries also restore the backup site's complete media sets: supporting images sit beside the project narrative, remaining assets form a responsive gallery, images open in a keyboard-operable viewer, and video/YouTube sources retain their native controls.
 
+The homepage wordmark now returns to the intro view, and the manuscript list uses first-page previews rendered from the canonical local PDFs. These previews add useful visual context without introducing decorative card chrome or changing the site's restrained editorial hierarchy.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files
