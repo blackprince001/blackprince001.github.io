@@ -14,6 +14,22 @@
   src: url("/fonts/Inter-Bold.ttf") format("truetype");
 }
 
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 400;
+  font-display: swap;
+  src: url("/fonts/JetBrainsMono-Regular.woff2") format("woff2");
+}
+
+@font-face {
+  font-family: "JetBrains Mono";
+  font-style: normal;
+  font-weight: 700;
+  font-display: swap;
+  src: url("/fonts/JetBrainsMono-Bold.woff2") format("woff2");
+}
+
 :root {
   color-scheme: light dark;
   --page: #f7f7f3;
@@ -25,7 +41,7 @@
   --measure: 43rem;
   --visual-measure: 68rem;
   --sans: "Inter", system-ui, sans-serif;
-  --mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
 :root[data-theme="dark"] {
@@ -67,6 +83,7 @@ body {
 a { color: inherit; }
 img { display: block; max-width: 100%; }
 button { font: inherit; }
+.font-mono { font-family: var(--mono) !important; }
 
 .tag-list { display: flex; flex-wrap: wrap; gap: 0.38rem; }
 .tag-pill {

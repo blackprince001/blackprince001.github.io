@@ -42,6 +42,8 @@ Figures no longer sit inside outlined or tinted frames. Images open in a native 
 
 Figure captions are centered beneath their media, and native article videos now share a centered, constrained presentation rather than inheriting inconsistent MDX wrapper alignment. The existing Giscus discussion configuration has also moved into the shared Astro article layout, restoring theme-aware comments to both long-form writing and shorts.
 
+JetBrains Mono is now self-hosted in regular and bold WOFF2 weights and owns the shared monospace token, including Astro metadata, tags, code, and React island utilities. The regular face is preloaded because these compact interface labels appear in the initial viewport; system monospace faces remain as resilient fallbacks.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files
