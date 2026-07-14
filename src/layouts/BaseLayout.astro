@@ -51,7 +51,7 @@ const nav = [
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
     <nav class="site-nav" aria-label="Primary navigation" data-collapsed="false">
-      <a class="site-nav__home" href="/#intro" aria-current={pathname === "/" ? "page" : undefined}>blackprince</a>
+      <a class="site-nav__home" href="/#intro" aria-label="blackprince, home" aria-current={pathname === "/" ? "page" : undefined}>bp</a>
       <div class="site-nav__items" id="primary-navigation-items">
         {nav.map(([label, href]) => (
           <a href={href} aria-current={pathname.startsWith(href) ? "page" : undefined}>{label}</a>
