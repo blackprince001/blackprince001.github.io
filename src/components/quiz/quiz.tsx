@@ -1,206 +1,127 @@
-"use client"; // Mark this as a client component
+"use client"
 
-import { ArrowLeft, ArrowRight } from "lucide-react";
-import {
-  Provider,
-  atom,
-  useAtom,
-  useAtomValue,
-  useSetAtom,
-  useStore,
-  createStore,
-} from "jotai";
-import React, { useMemo } from "react";
-import { RichText } from "@/components/ui/latex";
-
-// Atoms for state management
-const finalAnswersAtom = atom<number[]>([]); // Stores user's answers
-const currentQuestionAtom = atom(0); // Tracks the current question index
-const selectedAnswerAtom = atom<number | null>(null); // Tracks the selected answer
-const submittedAtom = atom(false); // Tracks if the current question is submitted
-
-// Atom to handle submitted answers
-const handleSubmittedAnswerAtom = atom(null, (get, set, answerIndex: number) => {
-  const currentQuestion = get(currentQuestionAtom);
-  set(finalAnswersAtom, (prev) => {
-    const updatedAnswers = [...prev];
-    updatedAnswers[currentQuestion] = answerIndex;
-    return updatedAnswers;
-  });
-});
+import { Check, ChevronLeft, ChevronRight, X } from "lucide-react"
+import { useId, useState } from "react"
+import { RichText } from "@/components/ui/latex"
 
 interface QuizAnswer {
-  text: string;
-  correct: boolean;
+  text: string
+  correct: boolean
 }
 
 interface QuizQuestion {
-  question: string;
-  answers: QuizAnswer[];
-  image?: string;
-  explanation?: string;
+  question: string
+  answers: QuizAnswer[]
+  image?: string
+  explanation?: string
 }
 
 interface QuizProps {
-  quizData: QuizQuestion[];
+  quizData: QuizQuestion[]
 }
 
-// Quiz Component — wraps the inner quiz in its own Jotai store so multiple
-// quizzes (or navigation between posts) don't share question/answer state
-const Quiz = (props: QuizProps) => {
-  const store = useMemo(() => createStore(), []);
+export default function Quiz({ quizData }: QuizProps) {
+  const labelId = useId()
+  const [questionIndex, setQuestionIndex] = useState(0)
+  const [answers, setAnswers] = useState<Array<number | undefined>>([])
+  const [selection, setSelection] = useState<number | null>(null)
+  const submitted = answers[questionIndex] !== undefined
+  const question = quizData[questionIndex]
+
+  if (!question) {
+    return <p className="quiz__empty">This knowledge check has no questions yet.</p>
+  }
+
+  const moveTo = (nextIndex: number) => {
+    setQuestionIndex(nextIndex)
+    setSelection(answers[nextIndex] ?? null)
+  }
+
+  const submit = () => {
+    if (selection === null) return
+    setAnswers((current) => {
+      const next = [...current]
+      next[questionIndex] = selection
+      return next
+    })
+  }
+
+  const selectedAnswer = submitted ? answers[questionIndex] : selection
+  const selectedIsCorrect = selectedAnswer !== undefined && selectedAnswer !== null
+    ? question.answers[selectedAnswer]?.correct
+    : false
+  const answeredCount = answers.filter((answer) => answer !== undefined).length
+
   return (
-    <Provider store={store}>
-      <QuizInner {...props} />
-    </Provider>
-  );
-};
-
-const QuizInner = ({ quizData }: QuizProps) => {
-  const store = useStore();
-  const [currentQuestion, setCurrentQuestion] = useAtom(currentQuestionAtom, {
-    store,
-  });
-  const [selectedAnswer, setSelectedAnswer] = useAtom(selectedAnswerAtom, {
-    store,
-  });
-  const finalAnswers = useAtomValue(finalAnswersAtom, { store });
-  const submitAnswer = useSetAtom(handleSubmittedAnswerAtom, { store });
-  const [submitted, setSubmitted] = useAtom(submittedAtom, { store });
-
-  const handleQuestionChange = (newQuestionIndex: number) => {
-    const newAnswer = finalAnswers[newQuestionIndex] ?? null;
-    setCurrentQuestion(newQuestionIndex);
-    setSubmitted(newAnswer !== null);
-    setSelectedAnswer(newAnswer);
-  };
-
-  const currentQuestionData = quizData[currentQuestion];
-
-  return (
-    <div className="quiz my-8 border rounded-lg" aria-labelledby="quiz-question">
-      <div className="space-y-4 px-8">
-        <p id="quiz-question" className="text-lg font-semibold mb-4 ">
-          <RichText text={currentQuestionData.question} />
-        </p>
-        {currentQuestionData.image && (
-          <div className="flex justify-center">
-            <img
-              src={currentQuestionData.image}
-              alt="Question Image"
-              className="max-w-full h-auto"
-            />
-          </div>
-        )}
-        <div className="space-y-2">
-          {currentQuestionData.answers.map((answer, index) => (
-            <QuizMCAnswer
-              key={index}
-              correct={answer.correct}
-              isSelected={selectedAnswer === index}
-              showVerdict={submitted && (selectedAnswer === index || answer.correct)}
-              onClick={() => {
-                if (!submitted) {
-                  setSelectedAnswer(index);
-                }
-              }}
-            >
-              <RichText text={answer.text} />
-            </QuizMCAnswer>
-          ))}
+    <section className="quiz" aria-labelledby={labelId}>
+      <header className="quiz__header">
+        <div>
+          <p className="quiz__eyebrow">Knowledge check</p>
+          <p className="quiz__progress">{questionIndex + 1} / {quizData.length}</p>
         </div>
-        {submitted && currentQuestionData.explanation && (
-          <div className="text-sm mt-4" role="status" aria-live="polite">
-            <RichText text={currentQuestionData.explanation} />
-          </div>
+        <div className="quiz__progress-track" aria-hidden="true">
+          <span style={{ width: `${((questionIndex + 1) / quizData.length) * 100}%` }} />
+        </div>
+      </header>
+
+      <div className="quiz__body">
+        <h4 id={labelId} className="quiz__question"><RichText text={question.question} /></h4>
+        {question.image && (
+          <figure className="quiz__figure">
+            <img src={question.image} alt="Diagram for this question" />
+          </figure>
         )}
+        <div className="quiz__answers" role="radiogroup" aria-labelledby={labelId}>
+          {question.answers.map((answer, index) => {
+            const selected = selectedAnswer === index
+            const revealCorrect = submitted && answer.correct
+            const revealIncorrect = submitted && selected && !answer.correct
+            return (
+              <button
+                key={index}
+                type="button"
+                role="radio"
+                aria-checked={selected}
+                className="quiz__answer"
+                data-selected={selected || undefined}
+                data-verdict={revealCorrect ? "correct" : revealIncorrect ? "incorrect" : undefined}
+                disabled={submitted}
+                onClick={() => setSelection(index)}
+              >
+                <span className="quiz__answer-index" aria-hidden="true">{String.fromCharCode(65 + index)}</span>
+                <span className="quiz__answer-text"><RichText text={answer.text} /></span>
+                {revealCorrect && <Check className="quiz__verdict" aria-hidden="true" />}
+                {revealIncorrect && <X className="quiz__verdict" aria-hidden="true" />}
+              </button>
+            )
+          })}
+        </div>
+
+        <div className="quiz__feedback" role="status" aria-live="polite">
+          {submitted && (
+            <>
+              <p className="quiz__feedback-title" data-correct={selectedIsCorrect || undefined}>
+                {selectedIsCorrect ? "Correct" : "Not quite"}
+              </p>
+              {question.explanation && <div><RichText text={question.explanation} /></div>}
+            </>
+          )}
+        </div>
       </div>
 
-      <div className="flex items-center justify-between mt-6">
-        <button
-          className="btn px-4 py-2 rounded-lg"
-          disabled={currentQuestion === 0}
-          aria-label="Previous question"
-          onClick={() => handleQuestionChange(currentQuestion - 1)}
-        >
-          <ArrowLeft className="-ml-0.5 mr-2 h-4 w-4" />
+      <footer className="quiz__footer">
+        <button type="button" className="component-button component-button--quiet" disabled={questionIndex === 0} onClick={() => moveTo(questionIndex - 1)}>
+          <ChevronLeft aria-hidden="true" /> Previous
         </button>
-        <span>
-          Question {currentQuestion + 1} of {quizData.length}
-        </span>
-        <button
-          className="btn px-4 py-2 rounded-lg"
-          disabled={selectedAnswer === null || (submitted && currentQuestion === quizData.length - 1)}
-          aria-label={submitted ? "Next question" : "Submit answer"}
-          onClick={() => {
-            if (!submitted) {
-              submitAnswer(selectedAnswer ?? -1);
-              setSubmitted(true);
-            } else {
-              handleQuestionChange(currentQuestion + 1);
-            }
-          }}
-        >
-          {submitted ? <ArrowRight className="-mr-0.5 ml-2 h-4 w-4" /> : "Submit"}
-        </button>
-      </div>
-    </div>
-  );
-};
-
-// QuizMCAnswer Component
-interface QuizMCAnswerProps {
-  correct?: boolean;
-  isSelected: boolean;
-  showVerdict: boolean;
-  onClick: () => void;
-  children: React.ReactNode;
+        <span>{answeredCount} answered</span>
+        {submitted ? (
+          <button type="button" className="component-button" disabled={questionIndex === quizData.length - 1} onClick={() => moveTo(questionIndex + 1)}>
+            Next <ChevronRight aria-hidden="true" />
+          </button>
+        ) : (
+          <button type="button" className="component-button" disabled={selection === null} onClick={submit}>Check answer</button>
+        )}
+      </footer>
+    </section>
+  )
 }
-
-const QuizMCAnswer = ({
-  correct,
-  isSelected,
-  showVerdict,
-  onClick,
-  children,
-}: QuizMCAnswerProps) => {
-  return (
-    <button
-      className={`flex w-full items-start border rounded-lg px-4 py-3 text-left focus:outline-none ${showVerdict
-        ? correct
-          ? "ring-2 ring-green-600 "
-          : "ring-2 ring-red-600"
-        : ""
-        } ${isSelected && !showVerdict
-          ? "ring-2"
-          : "hover:bg-[#333333] transition-colors"
-        }`}
-      onClick={onClick}
-      disabled={showVerdict}
-    >
-      <span
-        className={`
-          flex-shrink-0 h-6 w-6 rounded-full font-medium inline-flex items-center justify-center
-          ${isSelected || showVerdict
-            ? "ring-2 ring-offset-2 ring-offset-[#2a2a2a] font-bold"
-            : "border border-[#333333]"
-          }
-          ${showVerdict
-            ? correct
-              ? "ring-green-600 bg-green-600"
-              : "ring-red-600 bg-red-600"
-            : ""
-          }
-          ${isSelected && !showVerdict
-            ? "ring-[#3b82f6]"
-            : ""
-          }
-        `}
-      >
-      </span>
-      <div className="flex-1 ml-3">{children}</div>
-    </button>
-  );
-};
-
-export default Quiz;

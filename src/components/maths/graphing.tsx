@@ -2,14 +2,28 @@
 
 import * as React from "react"
 import { Mafs, Coordinates, Plot, Theme, useMovablePoint } from "mafs"
+import "mafs/core.css"
+
+function GraphFrame({ title, description, interactive = false, children }: { title: string; description: string; interactive?: boolean; children: React.ReactNode }) {
+  return (
+    <figure className="math-graph" aria-label={`${title}. ${description}`}>
+      <figcaption className="math-graph__header">
+        <span>{title}</span>
+        <span>{interactive ? "Drag the point to explore" : description}</span>
+      </figcaption>
+      <div className="math-graph__canvas">{children}</div>
+      {interactive && <p className="math-graph__description">{description}</p>}
+    </figure>
+  )
+}
 
 export function InequalitiesExample() {
   const a = useMovablePoint([0, -1])
 
   return (
-    <div className="rounded-xl border border-zinc-200/50 bg-zinc-50/50 dark:border-zinc-800/50 dark:bg-zinc-900/40 overflow-hidden my-8">
-    <Mafs height={320}>
-      <Coordinates.Cartesian />
+    <GraphFrame title="Intersecting inequalities" description="The shaded regions update as the movable point changes both inequalities." interactive>
+      <Mafs height={360}>
+        <Coordinates.Cartesian subdivisions={4} />
 
       <Plot.Inequality
         x={{
@@ -28,29 +42,29 @@ export function InequalitiesExample() {
       />
 
       {a.element}
-    </Mafs>
-    </div>
+      </Mafs>
+    </GraphFrame>
   )
 }
 
 export function HelloFx() {
   return (
-    <div className="rounded-xl border border-zinc-200/50 bg-zinc-50/50 dark:border-zinc-800/50 dark:bg-zinc-900/40 overflow-hidden my-8">
-    <Mafs height={320}>
+    <GraphFrame title="Tangent function" description="The graph of y = 2 tan(x).">
+      <Mafs height={360} viewBox={{ x: [-Math.PI, Math.PI], y: [-6, 6] }}>
         <Coordinates.Cartesian subdivisions={4} />
-        <Plot.OfX y={(x) => 2 * Math.tan(x)} />
-    </Mafs>
-    </div>
+        <Plot.OfX y={(x) => 2 * Math.tan(x)} color={Theme.blue} />
+      </Mafs>
+    </GraphFrame>
   )
 }
 
 export function Sigmoid() {
   return (
-    <div className="rounded-xl border border-zinc-200/50 bg-zinc-50/50 dark:border-zinc-800/50 dark:bg-zinc-900/40 overflow-hidden my-8">
-    <Mafs height={300} viewBox={{ x: [-1, 1], y: [-1, 1], padding: 0.5, }}>
+    <GraphFrame title="Sigmoid function" description="The logistic curve maps every real input to a value between zero and one.">
+      <Mafs height={340} viewBox={{ x: [-6, 6], y: [-0.2, 1.2], padding: 0.4 }}>
       <Coordinates.Cartesian subdivisions={4}/>
-        <Plot.OfX y={(x) => 1 / (1 + Math.exp(-x))} />
-    </Mafs>
-    </div>
+        <Plot.OfX y={(x) => 1 / (1 + Math.exp(-x))} color={Theme.blue} />
+      </Mafs>
+    </GraphFrame>
   )
 }

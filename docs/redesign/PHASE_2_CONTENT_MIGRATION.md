@@ -46,6 +46,8 @@ JetBrains Mono is now self-hosted in regular and bold WOFF2 weights and owns the
 
 Article titles now use a tighter display scale. The floating outline once again includes the rotating Cicada challenge prompt, and wide article layouts measure and alternate sidenotes across both margins while preventing same-side collisions; narrow layouts retain the inline parenthetical treatment.
 
+Interactive article components now share the same minimal system language. Knowledge checks use clear progress, answer, verdict, and explanation states; Mafs graphs load their required styles, use legible bounded views, and inherit the active theme; and the Go, Rust, and in-browser Python runners share a responsive editor/console frame with explicit connection, running, success, and error feedback.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files
