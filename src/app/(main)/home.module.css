@@ -124,7 +124,6 @@
 }
 
 .homeSection {
-  border-top: 1px solid hsl(var(--border));
   padding: clamp(4.5rem, 9vw, 7.5rem) 0;
   scroll-margin-top: 2rem;
 }
@@ -278,12 +277,12 @@
 
 .entryList,
 .manuscriptList {
-  border-top: 1px solid hsl(var(--border));
+  display: grid;
+  gap: 0.15rem;
 }
 
 .entryRow {
   align-items: baseline;
-  border-bottom: 1px solid hsl(var(--border));
   color: hsl(var(--foreground));
   display: grid;
   gap: 1rem;
@@ -325,7 +324,6 @@
 
 .manuscriptRow {
   align-items: start;
-  border-bottom: 1px solid hsl(var(--border));
   color: hsl(var(--foreground));
   display: grid;
   gap: 1rem;
