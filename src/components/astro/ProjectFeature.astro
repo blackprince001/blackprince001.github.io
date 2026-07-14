@@ -1,15 +1,18 @@
 ---
 import type { Project } from "../../lib/content-model";
+import ProjectMediaTile from "./ProjectMediaTile.astro";
 import TagPill from "./TagPill.astro";
 
 interface Props {
   project: Project;
   index: number;
+  layout?: "summary" | "detail";
 }
 
-const { project, index } = Astro.props;
+const { project, index, layout = "summary" } = Astro.props;
 const primaryLink = project.links[0];
-const image = project.images?.[0];
+const media = project.images ?? [];
+const image = media[0];
 const external = primaryLink?.url.startsWith("http");
 const summaries: Record<string, string> = {
   "SpeakUp — Real-Time Classroom Engagement":
@@ -20,9 +23,18 @@ const summaries: Record<string, string> = {
     "A custom Oware engine and evaluation ladder for DQN, PPO, AlphaZero-lite, and Minimax agents, including the training strategies that failed.",
 };
 const description = summaries[project.name] ?? (Array.isArray(project.description) ? project.description[0] : project.description);
+const paragraphs = Array.isArray(project.description) ? project.description : [project.description];
+const videoPattern = /\.(mp4|webm|mov|m4v|ogv)(\?.*)?$/i;
+const youtubePattern = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/;
+const imageMedia = media.filter((item) => !videoPattern.test(item) && !youtubePattern.test(item));
+const sideMedia = media.slice(0, 2);
+const remainingMedia = media.slice(2);
+const slug = project.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
+const imageIndex = (src: string) => imageMedia.indexOf(src);
 ---
 
-<article>
+{layout === "summary" ? (
+<article class="project-feature project-feature--summary">
   {image && (
     <a
       class="project-media"
@@ -61,3 +73,107 @@ const description = summaries[project.name] ?? (Array.isArray(project.descriptio
     </div>
   </div>
 </article>
+) : (
+  <article id={slug} class="project-feature project-feature--detail" data-project-gallery data-project-images={JSON.stringify(imageMedia)}>
+    <div class:list={["project-detail-grid", media.length === 0 && "project-detail-grid--copy-only"]}>
+      <div class="project-detail-copy">
+        <div class="project-title-row">
+          <h3>{project.name}</h3>
+          <span>{project.date}</span>
+        </div>
+        <div class="tag-list project-detail-tags">
+          {project.tags.map((tag) => <TagPill label={tag} />)}
+        </div>
+        <div class="project-detail-description">
+          {paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+        </div>
+        <div class="project-links project-detail-links">
+          {project.links.map((link) => (
+            <a
+              class="text-link"
+              href={link.url}
+              target={link.url.startsWith("http") ? "_blank" : undefined}
+              rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}
+            >
+              {link.label} <span aria-hidden="true">↗</span>
+            </a>
+          ))}
+        </div>
+      </div>
+      {sideMedia.length > 0 && (
+        <div class="project-side-media">
+          {sideMedia.map((src, mediaIndex) => (
+            <ProjectMediaTile
+              src={src}
+              alt={`${project.name} project view ${mediaIndex + 1}`}
+              imageIndex={imageIndex(src)}
+              loading={index === 0 && mediaIndex === 0 ? "eager" : "lazy"}
+            />
+          ))}
+        </div>
+      )}
+    </div>
+
+    {remainingMedia.length > 0 && (
+      <div class="project-gallery-rest">
+        {remainingMedia.map((src, mediaIndex) => (
+          <ProjectMediaTile
+            src={src}
+            alt={`${project.name} project view ${mediaIndex + 3}`}
+            imageIndex={imageIndex(src)}
+          />
+        ))}
+      </div>
+    )}
+
+    {imageMedia.length > 0 && (
+      <dialog class="project-lightbox" aria-label={`${project.name} image viewer`}>
+        <div class="project-lightbox__frame">
+          <button class="project-lightbox__close" type="button" data-lightbox-close aria-label="Close image viewer">Close</button>
+          <button class="project-lightbox__previous" type="button" data-lightbox-previous aria-label="Previous image">←</button>
+          <img src={imageMedia[0]} alt={`${project.name} project view 1`} />
+          <button class="project-lightbox__next" type="button" data-lightbox-next aria-label="Next image">→</button>
+          <p aria-live="polite"></p>
+        </div>
+      </dialog>
+    )}
+  </article>
+)}
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-project-gallery]").forEach((gallery) => {
+    const dialog = gallery.querySelector<HTMLDialogElement>(".project-lightbox");
+    const image = dialog?.querySelector<HTMLImageElement>("img");
+    const status = dialog?.querySelector<HTMLParagraphElement>("p");
+    const triggers = [...gallery.querySelectorAll<HTMLButtonElement>("[data-project-image]")]
+      .filter((trigger) => Number(trigger.dataset.projectImage) >= 0);
+    let images: string[] = [];
+    let activeIndex = 0;
+
+    try {
+      images = JSON.parse(gallery.dataset.projectImages ?? "[]") as string[];
+    } catch {
+      images = [];
+    }
+
+    if (!dialog || !image || !status || images.length === 0) return;
+
+    const showImage = (index: number) => {
+      activeIndex = (index + images.length) % images.length;
+      image.src = images[activeIndex];
+      image.alt = `${gallery.querySelector("h3")?.textContent ?? "Project"} project view ${activeIndex + 1}`;
+      status.textContent = `Image ${activeIndex + 1} of ${images.length}`;
+    };
+
+    triggers.forEach((trigger) => trigger.addEventListener("click", () => {
+      showImage(Number(trigger.dataset.projectImage));
+      dialog.showModal();
+    }));
+    dialog.querySelector<HTMLButtonElement>("[data-lightbox-close]")?.addEventListener("click", () => dialog.close());
+    dialog.querySelector<HTMLButtonElement>("[data-lightbox-previous]")?.addEventListener("click", () => showImage(activeIndex - 1));
+    dialog.querySelector<HTMLButtonElement>("[data-lightbox-next]")?.addEventListener("click", () => showImage(activeIndex + 1));
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  });
+</script>

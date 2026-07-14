@@ -30,6 +30,8 @@ Interactive demonstrations remain React islands. Heavy visualization and code-ru
 
 The shared editorial layer now also includes colored tag pills, searchable and tag-filterable writing, centered article tables, and a press-mode floating table of contents. The projects route preserves the previous information hierarchy—featured work followed by sortable, paginated open-source repositories—inside the new visual system.
 
+Tag pills now cover manuscript domains, reading categories, and book statuses as well as writing and project technologies. Detailed project entries also restore the backup site's complete media sets: supporting images sit beside the project narrative, remaining assets form a responsive gallery, images open in a keyboard-operable viewer, and video/YouTube sources retain their native controls.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files

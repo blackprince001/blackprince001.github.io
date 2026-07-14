@@ -196,10 +196,10 @@ The Astro pattern owns the accessible label, fallback, caption, loading state, a
 
 ## Phase 2 implemented editorial primitives
 
-- `TagPill` is the single tag presentation across writing, shorts, projects, and article metadata. It uses a compact text-only badge, a deterministic restrained tone per label, and supports static, link, and filter-button semantics.
+- `TagPill` is the single taxonomy and status presentation across writing, shorts, projects, manuscripts, reading, and article metadata. It uses a compact text-only badge, a deterministic restrained tone per label, and supports static, link, and filter-button semantics.
 - `FloatingToc` adapts the compact indicator-bar pattern to a press-mode Astro control. It tracks H2/H3 position, exposes a native navigation list, closes with Escape and outside press, restores focus, and becomes a labeled floating control on narrow screens.
 - Writing search remains a small progressive-enhancement script: the complete article list exists in static HTML, while title, summary, and tag filtering update an announced result count.
-- Projects retain the established featured/open-source hierarchy. Featured work uses the editorial project treatment; the repository archive progressively loads, sorts, and paginates GitHub data with an explicit fallback link.
+- Projects retain the established featured/open-source hierarchy. The full archive restores the backup design's text-and-media split, two-up supporting media, responsive remainder gallery, image viewer, local video controls, and privacy-enhanced YouTube embeds. Homepage summaries deliberately retain the quieter single-image treatment. The repository archive progressively loads, sorts, and paginates GitHub data with an explicit fallback link.
 - Article tables are centered as objects and center their cell content while retaining horizontal overflow for genuinely wide data.
 
 ## Suggested project structure

@@ -1,4 +1,5 @@
 ---
+import TagPill from "../components/astro/TagPill.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { publications } from "../lib/site-data";
 
@@ -15,7 +16,10 @@ const entries = [...publications].sort((a, b) => b.year - a.year);
     <div class="publication-list">
       {entries.map((entry) => (
         <article class="publication-entry">
-          <p>{entry.year} · {entry.domain ?? "Research"}</p>
+          <div class="publication-kicker">
+            <span>{entry.year}</span>
+            <TagPill label={entry.domain ?? "Research"} />
+          </div>
           <h2>{entry.title}</h2>
           <p>{entry.authors.join(", ")}</p>
           {entry.abstract && <p>{entry.abstract}</p>}

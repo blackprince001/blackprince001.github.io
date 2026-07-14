@@ -16,7 +16,7 @@ import { projects } from "../lib/site-data";
       <p class="section-index">Selected work</p>
       <h2 id="featured-projects-title">Featured projects</h2>
       <div class="project-list">
-        {projects.map((project, index) => <ProjectFeature project={project} index={index} />)}
+        {projects.map((project, index) => <ProjectFeature project={project} index={index} layout="detail" />)}
       </div>
     </section>
     <OpenSourceProjects />
