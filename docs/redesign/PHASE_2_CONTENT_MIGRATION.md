@@ -48,6 +48,8 @@ Article titles now use a tighter display scale. The floating outline once again 
 
 Interactive article components now share the same minimal system language. Knowledge checks use clear progress, answer, verdict, and explanation states; Mafs graphs load their required styles, use legible bounded views, and inherit the active theme; and the Go, Rust, and in-browser Python runners share a responsive editor/console frame with explicit connection, running, success, and error feedback.
 
+Figures now respond to their composition context: article-level media can retain the wider visual measure, while figures nested in examples stay inside the surfaced panel. The configuration-space article's remaining raw image blocks were migrated to the shared centered, captioned, zoomable figure component.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files

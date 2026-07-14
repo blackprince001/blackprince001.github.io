@@ -421,6 +421,9 @@ button.project-media-tile { padding: 0; cursor: zoom-in; }
 .article-example { margin: 2.5rem 0; border-radius: 0.5rem; padding: clamp(1.25rem, 4vw, 2rem); background: var(--surface); }
 .article-example__label { margin: 0 0 1rem !important; color: var(--muted); font-family: var(--mono); font-size: 0.65rem; letter-spacing: 0.065em; text-transform: uppercase; }
 .article-example > div > :last-child { margin-bottom: 0; }
+.article-example .article-figure { width: 100%; margin-right: 0; margin-left: 0; transform: none; }
+.article-example .article-figure__media { border-radius: 0.35rem; background: color-mix(in srgb, var(--page) 55%, transparent); }
+.article-example .article-figure__media img { max-height: 32rem; }
 .article-suggestion { margin: 2.5rem 0; border-radius: 0.5rem; padding: 1.25rem; background: var(--surface); }
 .article-suggestion p { margin: 0 0 0.5rem; font-weight: 700; }
 .article-suggestion a { color: var(--muted); font-size: 0.78rem; }
@@ -444,7 +447,7 @@ button.project-media-tile { padding: 0; cursor: zoom-in; }
 .article-figure__title { margin: 0 0 0.75rem !important; font-weight: 700; text-align: center; }
 .article-figure__media { display: grid; grid-template-columns: repeat(var(--figure-columns), minmax(0, 1fr)); align-items: center; gap: 0.75rem; }
 .article-figure__trigger { display: grid; place-items: center; overflow: hidden; min-width: 0; border: 0; padding: 0; background: transparent; color: inherit; cursor: zoom-in; }
-.article-figure__media img { width: auto; max-height: 38rem; object-fit: contain; }
+.article-figure__media img { width: auto; max-width: 100%; max-height: 38rem; object-fit: contain; }
 .article-figure figcaption { max-width: 48rem; margin: 0.75rem auto 0; color: var(--muted); font-size: 0.78rem; font-style: italic; line-height: 1.55; text-align: center; text-wrap: balance; }
 .article-figure__dialog { width: 100vw; max-width: none; height: 100dvh; max-height: none; border: 0; padding: 0; background: transparent; color: #f4f4ef; }
 .article-figure__dialog[open] { animation: figure-dialog-in 180ms ease-out; }
