@@ -50,7 +50,7 @@ const nav = [
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <nav class="site-nav" aria-label="Primary navigation" data-collapsed="false">
+    <nav class="site-nav" aria-label="Primary navigation" data-collapsed="true">
       <a class="site-nav__home" href="/#intro" aria-label="blackprince, home" aria-current={pathname === "/" ? "page" : undefined}>bp</a>
       <div class="site-nav__items" id="primary-navigation-items">
         {nav.map(([label, href]) => (
@@ -61,7 +61,7 @@ const nav = [
           <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="2.5" /><path d="M8 1v1.25M8 13.75V15M1 8h1.25M13.75 8H15M3.05 3.05l.9.9M12.05 12.05l.9.9M12.95 3.05l-.9.9M3.95 12.05l-.9.9" /></svg>
         </button>
       </div>
-      <button class="site-nav__toggle" type="button" aria-expanded="true" aria-controls="primary-navigation-items" aria-label="Collapse navigation">
+      <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="primary-navigation-items" aria-label="Expand navigation">
         <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M3 6.25 8 10.5l5-4.25" /></svg>
       </button>
     </nav>
@@ -92,7 +92,6 @@ const nav = [
 
       const navigation = document.querySelector<HTMLElement>(".site-nav");
       const navigationToggle = document.querySelector<HTMLButtonElement>(".site-nav__toggle");
-      let scrollEndTimer: number | undefined;
 
       const setNavigationCollapsed = (collapsed: boolean) => {
         if (!navigation || !navigationToggle) return;
@@ -104,12 +103,15 @@ const nav = [
       navigationToggle?.addEventListener("click", () => {
         setNavigationCollapsed(navigation?.dataset.collapsed !== "true");
       });
-      navigation?.addEventListener("focusin", () => setNavigationCollapsed(false));
-      window.addEventListener("scroll", () => {
-        setNavigationCollapsed(true);
-        window.clearTimeout(scrollEndTimer);
-        scrollEndTimer = window.setTimeout(() => setNavigationCollapsed(false), 180);
-      }, { passive: true });
+      document.addEventListener("click", (event) => {
+        if (navigation && !navigation.contains(event.target as Node)) setNavigationCollapsed(true);
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && navigation?.dataset.collapsed !== "true") {
+          setNavigationCollapsed(true);
+          navigationToggle?.focus();
+        }
+      });
     </script>
   </body>
 </html>

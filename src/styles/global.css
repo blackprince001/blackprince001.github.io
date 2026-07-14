@@ -160,10 +160,10 @@ button.tag-pill { cursor: pointer; }
   transition: gap 180ms ease-out, padding 180ms ease-out;
 }
 .site-nav__home { flex: 0 0 auto; font-weight: 700; }
-.site-nav__items { display: flex; align-items: center; gap: clamp(0.8rem, 2vw, 1.35rem); max-width: 60rem; overflow-x: auto; opacity: 1; transition: max-width 180ms ease-out, opacity 120ms ease-out, transform 180ms ease-out; scrollbar-width: none; }
+.site-nav__items { display: flex; align-items: center; gap: clamp(0.8rem, 2vw, 1.35rem); max-width: 60rem; overflow-x: auto; opacity: 1; visibility: visible; transition: max-width 180ms ease-out, opacity 120ms ease-out, transform 180ms ease-out, visibility 0s linear; scrollbar-width: none; }
 .site-nav__items::-webkit-scrollbar { display: none; }
 .site-nav[data-collapsed="true"] { gap: 0.4rem; padding-right: 0.6rem; }
-.site-nav[data-collapsed="true"] .site-nav__items { max-width: 0; overflow: hidden; opacity: 0; pointer-events: none; transform: translateY(0.35rem); }
+.site-nav[data-collapsed="true"] .site-nav__items { max-width: 0; overflow: hidden; opacity: 0; visibility: hidden; pointer-events: none; transform: translateY(0.35rem); transition-delay: 0s, 0s, 0s, 180ms; }
 .site-nav a { color: var(--muted); text-decoration: none; white-space: nowrap; transition: color 140ms ease; }
 .site-nav a:hover, .site-nav a[aria-current="page"] { color: var(--ink); }
 .site-nav__toggle { display: grid; flex: 0 0 auto; place-items: center; width: 2rem; height: 2rem; border: 0; border-radius: 999px; padding: 0; background: var(--surface); color: var(--muted); cursor: pointer; }
