@@ -63,16 +63,84 @@ const captionHtml = renderCaption(caption);
     {title && <p class="article-figure__title">{title}</p>}
     <div class="article-figure__media" style={`--figure-columns: ${cols ?? Math.min(media.length, 4)}`}>
       {media.map((item, index) => (
-        <a href={normalizeSrc(item)} target="_blank" rel="noreferrer" aria-label={`Open ${alt} in a new tab`}>
+        <button class="article-figure__trigger" type="button" data-figure-index={index} aria-label={`Enlarge ${media.length > 1 ? `${alt} (${index + 1})` : alt}`}>
           <img
             src={normalizeSrc(item)}
             alt={media.length > 1 ? `${alt} (${index + 1})` : alt}
             loading="lazy"
             decoding="async"
           />
-        </a>
+        </button>
       ))}
     </div>
     {captionHtml && <figcaption set:html={captionHtml} />}
+    <dialog class="article-figure__dialog" aria-label={`${alt} image viewer`}>
+      <div class="article-figure__dialog-frame">
+        <button class="article-figure__dialog-close" type="button" data-figure-close aria-label="Close image viewer">Close</button>
+        {media.length > 1 && <button class="article-figure__dialog-previous" type="button" data-figure-previous aria-label="Previous image">←</button>}
+        <img data-figure-dialog-image src={normalizeSrc(media[0])} alt={media.length > 1 ? `${alt} (1)` : alt} />
+        {media.length > 1 && <button class="article-figure__dialog-next" type="button" data-figure-next aria-label="Next image">→</button>}
+        {media.length > 1 && <p data-figure-count>1 / {media.length}</p>}
+      </div>
+    </dialog>
   </figure>
 )}
+
+<script>
+  document.querySelectorAll<HTMLElement>(".article-figure").forEach((figure) => {
+    if (figure.dataset.viewerReady) return;
+    figure.dataset.viewerReady = "true";
+
+    const dialog = figure.querySelector<HTMLDialogElement>(".article-figure__dialog");
+    const dialogImage = figure.querySelector<HTMLImageElement>("[data-figure-dialog-image]");
+    const triggers = Array.from(figure.querySelectorAll<HTMLButtonElement>("[data-figure-index]"));
+    const count = figure.querySelector<HTMLElement>("[data-figure-count]");
+    if (!dialog || !dialogImage || triggers.length === 0) return;
+
+    let activeIndex = 0;
+    let opener: HTMLButtonElement | null = null;
+    const showImage = (index: number) => {
+      activeIndex = (index + triggers.length) % triggers.length;
+      const image = triggers[activeIndex].querySelector<HTMLImageElement>("img");
+      if (!image) return;
+      dialogImage.src = image.currentSrc || image.src;
+      dialogImage.alt = image.alt;
+      if (count) count.textContent = `${activeIndex + 1} / ${triggers.length}`;
+    };
+    const open = (trigger: HTMLButtonElement, index: number) => {
+      opener = trigger;
+      const sourceImage = trigger.querySelector<HTMLImageElement>("img");
+      const reveal = () => {
+        showImage(index);
+        dialog.showModal();
+      };
+
+      if (document.startViewTransition && sourceImage && !matchMedia("(prefers-reduced-motion: reduce)").matches) {
+        sourceImage.style.viewTransitionName = "article-figure-expand";
+        const transition = document.startViewTransition(() => {
+          reveal();
+          sourceImage.style.viewTransitionName = "";
+          dialogImage.style.viewTransitionName = "article-figure-expand";
+        });
+        transition.finished.finally(() => {
+          sourceImage.style.viewTransitionName = "";
+          dialogImage.style.viewTransitionName = "";
+        });
+      } else {
+        reveal();
+      }
+    };
+
+    triggers.forEach((trigger, index) => trigger.addEventListener("click", () => open(trigger, index)));
+    dialog.querySelector<HTMLButtonElement>("[data-figure-close]")?.addEventListener("click", () => dialog.close());
+    dialog.querySelector<HTMLButtonElement>("[data-figure-previous]")?.addEventListener("click", () => showImage(activeIndex - 1));
+    dialog.querySelector<HTMLButtonElement>("[data-figure-next]")?.addEventListener("click", () => showImage(activeIndex + 1));
+    dialog.addEventListener("click", (event) => { if (event.target === dialog) dialog.close(); });
+    dialog.addEventListener("close", () => opener?.focus());
+    dialog.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") dialog.close();
+      if (event.key === "ArrowLeft") showImage(activeIndex - 1);
+      if (event.key === "ArrowRight") showImage(activeIndex + 1);
+    });
+  });
+</script>

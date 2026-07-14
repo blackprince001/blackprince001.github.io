@@ -97,8 +97,8 @@ export default function AxisAngleDemo() {
   }, [isFullscreen]);
 
   const containerClass = isFullscreen
-    ? "fixed inset-0 z-50 h-[100dvh] bg-zinc-950 flex flex-col overflow-y-auto overscroll-contain"
-    : "my-8 rounded-xl border border-zinc-200/50 dark:border-zinc-800/50 overflow-hidden flex flex-col";
+    ? "fixed inset-0 z-50 h-[100dvh] bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
+    : "my-8 rounded-lg bg-[var(--page)] text-[var(--ink)] overflow-hidden flex flex-col shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]";
 
   const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "h-[450px]";
 
@@ -114,16 +114,16 @@ export default function AxisAngleDemo() {
   return (
     <div className={containerClass}>
       {/* Controls - Top */}
-      <div className="bg-zinc-50 dark:bg-zinc-900/60 p-4 border-b border-zinc-200/50 dark:border-zinc-800/50 shrink-0">
+      <div className="bg-[var(--surface)] p-4 shrink-0">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-zinc-900 dark:text-zinc-100">
+          <h3 className="text-lg font-semibold text-[var(--ink)]">
             Axis-Angle to Rotation Matrix
           </h3>
           <button
             onClick={toggleFullscreen}
             aria-label={isFullscreen ? "Exit fullscreen axis-angle demo" : "Open axis-angle demo fullscreen"}
             aria-pressed={isFullscreen}
-            className="p-2 rounded-lg bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
+            className="p-2 rounded-lg bg-[var(--page)] text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
             title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
           >
             {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
@@ -188,7 +188,7 @@ export default function AxisAngleDemo() {
       </div>
 
       {/* 3D Canvas - Center */}
-      <div className={`${canvasHeight} bg-gradient-to-b from-zinc-900 to-zinc-950 shrink-0`}>
+      <div className={`${canvasHeight} bg-[var(--surface)] shrink-0`}>
         <Canvas camera={{ position: [3.4, -3.4, 2.4], up: [0, 0, 1], fov: 50 }}>
           <ambientLight intensity={0.6} />
           <directionalLight position={[5, -5, 5]} intensity={0.8} />

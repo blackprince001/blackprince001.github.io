@@ -16,7 +16,7 @@ interface RenderProp {
 
 function STLRender(prop: RenderProp) {
   return (
-    <div className="flex justify-center items-center w-full my-8">
+    <div className="flex justify-center items-center w-full my-8 rounded-lg overflow-hidden bg-[var(--surface)] shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]">
       <StlViewer
         style={{
           top: 0,
@@ -109,7 +109,7 @@ function GLBMeshRender(prop: RenderProp) {
       <Canvas
         flat
         linear
-        className="border-solid border-2 border-gray-500 rounded-lg"
+        className="rounded-lg"
         style={{ height: '600px', width: '100%', maxWidth: '1000px' }}
         camera={{ position: [5, 5, 5], fov: 50 }}
         shadows

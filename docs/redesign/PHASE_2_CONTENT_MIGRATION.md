@@ -34,6 +34,10 @@ Tag pills now cover manuscript domains, reading categories, and book statuses as
 
 The homepage wordmark now returns to the intro view, and the manuscript list uses first-page previews rendered from the canonical local PDFs. These previews add useful visual context without introducing decorative card chrome or changing the site's restrained editorial hierarchy.
 
+The manuscript index now carries those previews into the full research archive. Global navigation has moved from the top edge into a compact bottom dock, leaving the reading plane clear while preserving every destination at mobile widths. Article sidenotes once again behave as notes: inline and parenthetical in narrow layouts, numbered and placed in the margin when space allows.
+
+Figures no longer sit inside outlined or tinted frames. Images open in a native modal viewer with a dark backdrop, keyboard navigation, focus restoration, reduced-motion handling, and a shared-element expansion where the browser supports view transitions. The three robotics demonstrations and the general mesh viewer now consume the same page, surface, ink, and muted theme tokens as the surrounding article, so the existing Astro theme switch updates their chrome without a separate theme provider.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files
