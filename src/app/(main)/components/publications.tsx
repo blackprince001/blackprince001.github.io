@@ -6,6 +6,7 @@ import { FileText, ChevronDown } from "lucide-react"
 import { useState } from "react"
 import { cn } from "@/lib/utils"
 import publicationsData from "@/data/publications.json"
+import styles from "../home.module.css"
 
 interface Publication {
   id: number
@@ -19,30 +20,38 @@ interface Publication {
 }
 
 export const RecentPublications: React.FC = () => {
-  const publications = (publicationsData as Publication[]).slice(0, 5)
+  const publications = [...(publicationsData as Publication[])]
+    .sort((a, b) => b.year - a.year)
+    .slice(0, 5)
 
   return (
-    <section className="space-y-2">
-      <div className="flex justify-between items-baseline pb-2">
-        <h2>Recent Manuscripts</h2>
-        <Link href="/publications" className="text-sm font-sans text-muted-foreground hover:text-foreground hover:underline underline-offset-4">
-          View all &rarr;
+    <section id="manuscripts" className={styles.homeSection} aria-labelledby="manuscripts-title">
+      <div className={styles.sectionHeading}>
+        <div>
+          <p className={styles.sectionIndex}>03 / Research</p>
+          <h2 id="manuscripts-title">Recent manuscripts</h2>
+        </div>
+        <Link href="/publications" className={styles.sectionLink}>
+          View all <span aria-hidden="true">→</span>
         </Link>
       </div>
 
-      <div className="space-y-4">
+      <div className={styles.manuscriptList}>
         {publications.map((publication) => (
-          <div key={publication.id} className="group">
-            <Link href={publication.pdf || publication.link} target="_blank" rel="noopener noreferrer" className="block">
-              <h3 className="text-base font-serif font-medium text-primary group-hover:underline underline-offset-4 mb-1 flex items-center gap-2">
-                {publication.title}
-                {publication.pdf && <FileText className="h-3 w-3 text-muted-foreground" />}
-              </h3>
-              <p className="text-sm text-muted-foreground font-serif">
-                {publication.authors.join(", ")} &mdash; {publication.year}
-              </p>
-            </Link>
-          </div>
+          <Link
+            key={`${publication.id}-${publication.title}`}
+            href={publication.pdf || publication.link}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={styles.manuscriptRow}
+          >
+            <span className={styles.manuscriptYear}>{publication.year}</span>
+            <span>
+              <strong>{publication.title}</strong>
+              <small>{publication.domain ?? publication.authors.join(", ")}</small>
+            </span>
+            <FileText className={styles.manuscriptIcon} aria-hidden="true" />
+          </Link>
         ))}
       </div>
     </section>

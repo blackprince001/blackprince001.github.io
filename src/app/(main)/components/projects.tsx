@@ -5,6 +5,9 @@ import { usePathname } from 'next/navigation';
 import { ArrowRight, Star } from 'lucide-react';
 import Link from 'next/link';
 import { FeaturedProjects } from './featured-projects';
+import featuredProjects from '@/data/featured-projects.json';
+import { assetPath } from '@/lib/asset-path';
+import styles from '../home.module.css';
 
 interface GitHubRepo {
   id: number;
@@ -16,6 +19,15 @@ interface GitHubRepo {
   created_at: string;
   topics: string[];
   fork: boolean;
+}
+
+const projectSummaries: Record<string, string> = {
+  "SpeakUp — Real-Time Classroom Engagement":
+    "A real-time classroom platform built around anonymous questions, ranked discussion, polls, and activity sequencing—without requiring student accounts.",
+  Lumen:
+    "A self-hostable research library for ingesting, organizing, searching, and reading papers with semantic retrieval and AI-assisted analysis.",
+  "Oware Engine and a Ladder of RL Agents":
+    "A custom Oware engine and evaluation ladder for DQN, PPO, AlphaZero-lite, and Minimax agents, including the training strategies that failed.",
 }
 
 export const ProjectComponent: React.FC<{ project: GitHubRepo }> = ({ project }) => {
@@ -179,61 +191,67 @@ const ProjectShowcase: React.FC = () => {
 };
 
 export const RecentProjects: React.FC = () => {
-  const [projects, setProjects] = useState<GitHubRepo[]>([])
-  const [isLoading, setIsLoading] = useState(true)
-  const [error, setError] = useState<string | null>(null)
-
-  useEffect(() => {
-    const fetchProjects = async () => {
-      setIsLoading(true)
-      try
-      {
-        const response = await fetch(`https://api.github.com/users/blackprince001/repos?per_page=5&sort=created`)
-        if (!response.ok) throw new Error("Failed to fetch projects")
-        const data: GitHubRepo[] = await response.json()
-        const nonForkedProjects = data.filter((project) => !project.fork)
-        setProjects(nonForkedProjects)
-      } catch (err)
-      {
-        setError("An error occurred.")
-      } finally
-      {
-        setIsLoading(false)
-      }
-    }
-    fetchProjects()
-  }, [])
-
-  if (isLoading) return null;
-  if (error) return null;
+  const projects = featuredProjects.slice(0, 3)
 
   return (
-    <section className="space-y-2">
-      <div className="flex justify-between items-baseline pb-2">
-        <h2>Recent Projects</h2>
-        <Link href="/projects" className="text-sm font-sans text-muted-foreground hover:text-foreground hover:underline underline-offset-4">
-          View all &rarr;
+    <section id="work" className={styles.homeSection} aria-labelledby="work-title">
+      <div className={styles.sectionHeading}>
+        <div>
+          <p className={styles.sectionIndex}>01 / Systems</p>
+          <h2 id="work-title">Selected work</h2>
+        </div>
+        <Link href="/projects" className={styles.sectionLink}>
+          View all <span aria-hidden="true">→</span>
         </Link>
       </div>
 
-      <div className="space-y-2">
-        {projects.slice(0, 5).map((project) => (
-          <div key={project.id} className="group">
-            <Link href={project.html_url} target="_blank" className="block">
-              <div className="flex justify-between items-baseline mb-1">
-                <h3 className="text-base font-serif font-medium text-primary group-hover:underline underline-offset-4">
-                  {project.name}
-                </h3>
-                <span className="text-xs text-muted-foreground flex items-center gap-1">
-                  <Star className="h-3 w-3" /> {project.stargazers_count}
-                </span>
+      <div className={styles.projectList}>
+        {projects.map((project, index) => {
+          const primaryLink = project.links[0]
+          const image = project.images?.[0]
+          return (
+            <article key={project.name} className={styles.projectCard}>
+              {image && (
+                <a
+                  href={primaryLink?.url ?? "/projects"}
+                  className={styles.projectMedia}
+                  target={primaryLink?.url.startsWith("http") ? "_blank" : undefined}
+                  rel={primaryLink?.url.startsWith("http") ? "noopener noreferrer" : undefined}
+                  aria-label={`Open ${project.name}`}
+                >
+                  <img src={assetPath(image)} alt="" />
+                  <span className={styles.mediaLabel}>System / 0{index + 1}</span>
+                  <span className={styles.mediaAction} aria-hidden="true">Inspect ↗</span>
+                </a>
+              )}
+              <div className={styles.projectBody}>
+                <div className={styles.projectTitleRow}>
+                  <h3>{project.name}</h3>
+                  <span>{project.date}</span>
+                </div>
+                <p>
+                  {projectSummaries[project.name]
+                    ?? (Array.isArray(project.description) ? project.description[0] : project.description)}
+                </p>
+                <div className={styles.projectMeta}>
+                  <span>{project.tags.slice(0, 3).join(" · ")}</span>
+                  <div>
+                    {project.links.map((link) => (
+                      <a
+                        key={`${project.name}-${link.label}`}
+                        href={link.url}
+                        target={link.url.startsWith("http") ? "_blank" : undefined}
+                        rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}
+                      >
+                        {link.label} <span aria-hidden="true">↗</span>
+                      </a>
+                    ))}
+                  </div>
+                </div>
               </div>
-              <p className="text-sm text-muted-foreground line-clamp-2 font-serif">
-                {project.description}
-              </p>
-            </Link>
-          </div>
-        ))}
+            </article>
+          )
+        })}
       </div>
     </section>
   )

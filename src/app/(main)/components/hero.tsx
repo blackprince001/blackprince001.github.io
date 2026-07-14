@@ -1,55 +1,36 @@
-"use client"
-
 import Link from "next/link"
+import styles from "../home.module.css"
 
 function HeroSection() {
   return (
-    <section className="py-12">
-      <div className="max-w-5xl">
-        <h2 className="mb-4">
-          Prince Kwabena Appiah Boadu
-        </h2>
+    <section id="intro" className={styles.hero} aria-labelledby="intro-title">
+      <div className={styles.identityMark} aria-hidden="true">PK</div>
+      <h1 className={styles.hello} id="intro-title">Hi. I&apos;m Prince.</h1>
 
-        <div className="prose prose-lg text-foreground">
-          <p className="font-serif text-sm leading-relaxed text-muted-foreground mb-6">
-            Systems Engineer & Robotics Researcher
-          </p>
+      <div className={styles.introCopy}>
+        <p>
+          I&apos;m a systems engineer and robotics researcher. I build autonomous systems and study
+          the places where machine learning, software engineering, and design meet.
+        </p>
+        <p>
+          This site is my working archive: research notes, open-source systems, long-form essays,
+          and manuscripts shaped by the questions I&apos;m currently following.
+        </p>
+        <p>
+          At the moment, I&apos;m teaching a practical course on robotics and continuing work across
+          robot learning, perception, and infrastructure for intelligent systems.
+        </p>
+      </div>
 
-          <p className="font-serif leading-relaxed mb-6">
-            I build autonomous robotic systems and explore the intersection of machine learning, software engineering, and design.
-          </p>
-
-          <p className="font-serif leading-relaxed mb-8">
-            This site is my digital garden, a living archive of ideas in motion. It houses everything from raw working notes and open-source projects to structured essays and formal manuscripts.
-          </p>
-
-          <div className="mb-8 rounded-lg border border-border bg-muted/40 px-4 py-3">
-            <p className="font-sans text-xs uppercase tracking-wide text-muted-foreground mb-1">
-              Currently Teaching
-            </p>
-            <a
-              href="https://robotics-course-458.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="font-serif text-primary hover:underline underline-offset-4"
-            >
-              Robotics Course &rarr;
-            </a>
-          </div>
-
-          <div className="flex gap-6 font-sans text-sm">
-            <Link href="/blog" className="text-primary hover:underline underline-offset-4">
-              Read Blog &rarr;
-            </Link>
-            <Link href="/projects" className="text-primary hover:underline underline-offset-4">
-              View Projects &rarr;
-            </Link>
-          </div>
-        </div>
+      <div className={styles.heroActions}>
+        <a href="https://robotics-course-458.vercel.app/" target="_blank" rel="noopener noreferrer">
+          Robotics course <span aria-hidden="true">↗</span>
+        </a>
+        <Link href="/blog">Read the journal <span aria-hidden="true">→</span></Link>
+        <Link href="/projects">View all projects <span aria-hidden="true">→</span></Link>
       </div>
     </section>
   )
 }
 
 export default HeroSection
-
