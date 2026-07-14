@@ -1,6 +1,7 @@
 ---
 import "katex/dist/katex.min.css";
 import "../styles/islands.css";
+import ArticleComments from "../components/article/ArticleComments.astro";
 import FloatingToc from "../components/astro/FloatingToc.astro";
 import TagPill from "../components/astro/TagPill.astro";
 import BaseLayout from "./BaseLayout.astro";
@@ -33,6 +34,7 @@ const formattedDate = publishDate.toLocaleDateString("en", {
       <h1>{title}</h1>
     </header>
     <div class="article-body"><slot /></div>
+    <ArticleComments />
   </article>
   <FloatingToc headings={headings} />
 </BaseLayout>

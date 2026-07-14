@@ -40,6 +40,8 @@ The dock now owns the site identity as well: `blackprince` is the Home destinati
 
 Figures no longer sit inside outlined or tinted frames. Images open in a native modal viewer with a dark backdrop, keyboard navigation, focus restoration, reduced-motion handling, and a shared-element expansion where the browser supports view transitions. The three robotics demonstrations and the general mesh viewer now consume the same page, surface, ink, and muted theme tokens as the surrounding article, so the existing Astro theme switch updates their chrome without a separate theme provider.
 
+Figure captions are centered beneath their media, and native article videos now share a centered, constrained presentation rather than inheriting inconsistent MDX wrapper alignment. The existing Giscus discussion configuration has also moved into the shared Astro article layout, restoring theme-aware comments to both long-form writing and shorts.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files

@@ -1,0 +1,51 @@
+<section class="article-comments" aria-labelledby="article-comments-title">
+  <header class="article-comments__header">
+    <p class="section-index">Discussion</p>
+    <h2 id="article-comments-title">Comments</h2>
+    <p>Questions, corrections, and thoughtful additions are welcome. Comments are powered by GitHub Discussions.</p>
+  </header>
+  <div class="article-comments__thread">
+    <script
+      is:inline
+      src="https://giscus.app/client.js"
+      data-repo="blackprince001/blackprince001.github.io"
+      data-repo-id="R_kgDOHYpg4Q"
+      data-category="General"
+      data-category-id="DIC_kwDOHYpg4c4CjNIb"
+      data-mapping="pathname"
+      data-strict="0"
+      data-reactions-enabled="1"
+      data-emit-metadata="0"
+      data-input-position="top"
+      data-theme="preferred_color_scheme"
+      data-lang="en"
+      data-loading="lazy"
+      crossorigin="anonymous"
+      async
+    ></script>
+    <noscript>Enable JavaScript to view and join the discussion.</noscript>
+  </div>
+</section>
+
+<script>
+  const comments = document.querySelector<HTMLElement>(".article-comments");
+  const syncCommentTheme = () => {
+    const frame = comments?.querySelector<HTMLIFrameElement>(".giscus-frame");
+    if (!frame?.contentWindow) return;
+    frame.contentWindow.postMessage({
+      giscus: {
+        setConfig: {
+          theme: document.documentElement.classList.contains("dark") ? "dark_dimmed" : "light",
+        },
+      },
+    }, "https://giscus.app");
+  };
+
+  if (comments) {
+    new MutationObserver(syncCommentTheme).observe(comments, { childList: true, subtree: true });
+    new MutationObserver(syncCommentTheme).observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme"],
+    });
+  }
+</script>
