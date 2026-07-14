@@ -74,6 +74,8 @@ export default function RotationFrameDemo() {
           </h3>
           <button
             onClick={toggleFullscreen}
+            aria-label={isFullscreen ? "Exit fullscreen rotation demo" : "Open rotation demo fullscreen"}
+            aria-pressed={isFullscreen}
             className="p-2 rounded-lg bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
             title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
           >
@@ -84,6 +86,7 @@ export default function RotationFrameDemo() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
           <DemoSlider
             label={<span>Roll <Latex tex="(\hat{x})" /></span>}
+            ariaLabel="Roll angle"
             value={roll}
             min={-180}
             max={180}
@@ -92,6 +95,7 @@ export default function RotationFrameDemo() {
           />
           <DemoSlider
             label={<span>Pitch <Latex tex="(\hat{y})" /></span>}
+            ariaLabel="Pitch angle"
             value={pitch}
             min={-180}
             max={180}
@@ -100,6 +104,7 @@ export default function RotationFrameDemo() {
           />
           <DemoSlider
             label={<span>Yaw <Latex tex="(\hat{z})" /></span>}
+            ariaLabel="Yaw angle"
             value={yaw}
             min={-180}
             max={180}
@@ -107,10 +112,11 @@ export default function RotationFrameDemo() {
             format={degrees}
           />
           <div>
-            <label className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
+            <label htmlFor="rotation-frame-mode" className="block text-sm font-medium text-zinc-700 dark:text-zinc-300 mb-1.5">
               Frame Mode
             </label>
             <select
+              id="rotation-frame-mode"
               value={mode}
               onChange={(e) => setMode(e.target.value as "fixed" | "body")}
               className="w-full h-10 px-3 text-sm bg-white dark:bg-zinc-800 border border-zinc-300 dark:border-zinc-600 rounded-xl"

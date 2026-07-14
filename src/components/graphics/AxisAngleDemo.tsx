@@ -121,6 +121,8 @@ export default function AxisAngleDemo() {
           </h3>
           <button
             onClick={toggleFullscreen}
+            aria-label={isFullscreen ? "Exit fullscreen axis-angle demo" : "Open axis-angle demo fullscreen"}
+            aria-pressed={isFullscreen}
             className="p-2 rounded-lg bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
             title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
           >
@@ -131,6 +133,7 @@ export default function AxisAngleDemo() {
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-3 pt-2">
           <DemoSlider
             label={<span>Angle <Latex tex="\theta" /></span>}
+            ariaLabel="Rotation angle"
             value={theta}
             min={0}
             max={360}
@@ -139,6 +142,7 @@ export default function AxisAngleDemo() {
           />
           <DemoSlider
             label={<span>Axis <Latex tex="\omega_x" /></span>}
+            ariaLabel="Rotation axis x component"
             value={axisX}
             min={-1}
             max={1}
@@ -148,6 +152,7 @@ export default function AxisAngleDemo() {
           />
           <DemoSlider
             label={<span>Axis <Latex tex="\omega_y" /></span>}
+            ariaLabel="Rotation axis y component"
             value={axisY}
             min={-1}
             max={1}
@@ -157,6 +162,7 @@ export default function AxisAngleDemo() {
           />
           <DemoSlider
             label={<span>Axis <Latex tex="\omega_z" /></span>}
+            ariaLabel="Rotation axis z component"
             value={axisZ}
             min={-1}
             max={1}

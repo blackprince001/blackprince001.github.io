@@ -11,7 +11,7 @@ timestamp: 2026-07-14
 
 # Redesign branch and phase map
 
-Status: Phase 0 complete / Phase 1 in progress
+Status: Phase 0 complete / Phase 1 complete
 Started: 2026-07-14
 
 ## Safety branches
@@ -61,11 +61,11 @@ Purpose:
 
 Exit gate:
 
-- preview deployment works
-- simple and complex articles preserve behavior
-- core accessibility and performance budgets pass
+- [x] portable preview artifact builds without replacing production
+- [x] simple and complex article proofs preserve their required behavior
+- [x] Phase 1 accessibility and loading-contract checks pass
 
-First checkpoint: Astro static shell, approved homepage, typed collection boundary, build-only preview artifact, and route manifest are established. Article and hosted-preview gates remain open; see [PHASE_1_FOUNDATION.md](./PHASE_1_FOUNDATION.md).
+Accepted outcome: Astro static shell, approved homepage, shared legacy/Astro content source, simple essay route, complex React-island route, sitemap, and portable preview artifact are established. Production remains on Next until the final release phase; see [PHASE_1_FOUNDATION.md](./PHASE_1_FOUNDATION.md).
 
 ### Phase 2 — `codex/phase-2-content-migration`
 

@@ -1,14 +1,14 @@
 ---
 type: Implementation Decision
 title: Phase 1 Astro foundation
-description: Runtime choice, migration boundary, security findings, and first checkpoint for the Astro port.
+description: Runtime choice, migration boundary, article proofs, security findings, and verification for the Astro port.
 tags: [astro, architecture, migration]
 timestamp: 2026-07-14
 ---
 
 # Phase 1 Astro foundation
 
-Status: In progress
+Status: Complete
 Branch: `codex/phase-1-astro-foundation`
 
 ## Runtime decision
@@ -22,17 +22,18 @@ Astro 7 is suitable for this new foundation because no earlier Astro application
 - Pages and editorial components render as static Astro HTML.
 - Client JavaScript is opt-in through explicit island directives.
 - Theme switching is a small framework-free script.
-- Existing React demonstrations remain untouched until their individual route proof.
+- Existing React demonstrations render as bounded islands and hydrate only when near the viewport.
 - GitHub Pages keeps the root-site URL and therefore requires no Astro `base` path.
 
 ## Content boundary
 
-Astro 7 parses MDX more strictly than the legacy Next pipeline. The existing corpus includes JSX expressions and LaTeX braces that fail the new parser as a group. The foundation therefore does not rewrite source essays in place:
+The existing corpus depends on GitHub-flavored Markdown, TeX math, KaTeX, and embedded JSX. Phase 1 keeps one canonical source rather than forking article bodies:
 
-1. legacy content stays in `src/content/` for the Next fallback;
-2. converted content enters `src/content-v2/` under validated collections;
-3. a typed writing index preserves current homepage and `/blog` links during conversion;
-4. Phase 2 removes the temporary index after route parity.
+1. `src/content/` remains compatible with the Next fallback and is also loaded as an Astro content collection;
+2. Astro's unified Markdown processor supplies GFM, math, and KaTeX behavior;
+3. Astro-native wrappers own article structure, figures, examples, and notes;
+4. wrapper components apply `client:visible` directly to the three React demos and quiz;
+5. Phase 2 expands the proven route to the rest of the corpus and removes the temporary writing index.
 
 ## Dependency audit
 
@@ -40,17 +41,29 @@ Astro 7 parses MDX more strictly than the legacy Next pipeline. The existing cor
 
 No forced transitive cross-major override is applied in this checkpoint. The safer remediation is to keep production static, accept only trusted repository MDX, and remove the legacy graph after parity. The audit must be repeated when Next and unused visualization packages are removed.
 
-## Checkpoint evidence
+## Completed evidence
 
 - Astro configuration, local font loading, semantic theme tokens, shell, homepage, writing index, 404 page, sitemap, and typed data validation build successfully.
 - The production workflow is unchanged.
-- Pull requests can build and download a static Astro artifact without deploying over production.
+- Pull requests can build and download a portable static Astro preview artifact without deploying over production.
 - `bun run check` reports zero errors; remaining hints are in legacy Next source.
-- `bun run build` emits the first static preview to `dist/`.
+- `bun run build` emits the static preview, including `/blog/default/` and `/blog/rigid-body-motions/`.
+- `bun run build:next` still succeeds, preserving the production fallback.
+- The simple essay renders without framework JavaScript.
+- The robotics proof renders its complete linear article, math, figures, examples, quiz, and three React demonstrations.
+- Interactive code uses `client:visible` with a 240px root margin; below-fold images use native lazy loading.
+- Demo sliders, fullscreen controls, the frame selector, quiz navigation, and feedback expose accessible names and state.
+- The quiz no longer permits advancing before an answer is selected.
 
-## Remaining Phase 1 gates
+## Verification record
 
-- migrate and render one simple essay;
-- prove `rigid-body-motions` with its React islands;
-- establish an isolated hosted preview URL;
-- run final accessibility, motion, responsive, and performance verification on both article proofs.
+- Astro diagnostics: zero errors and zero warnings; six legacy-source hints remain.
+- Static routes: five pages plus sitemap generated successfully.
+- Responsive browser checks: 1280×900 and 390×844, with no document overflow.
+- Structural accessibility checks: one H1, no missing image alternatives, no duplicate IDs, and no unnamed controls on the robotics proof.
+- Runtime checks: no browser console errors or warnings; theme state and Tailwind's dark class remain synchronized.
+- Island checks: all four islands remain unhydrated above the fold; the rotation island hydrates on approach and its fullscreen state updates.
+- Asset inspection: the simple essay references no framework bundle; the large Three.js shared chunk is deferred behind `client:visible` on the technical article.
+- No-JavaScript behavior: article text, math, figures, descriptions, and controls are present in static HTML; each island includes an explicit fallback description.
+
+The PR artifact is the Phase 1 preview boundary. A public preview deployment is intentionally deferred: GitHub Pages has one production target, and using it for a phase preview would replace the current Next site. Phase 4 owns production deployment and field Core Web Vitals; Phase 1 proves the static artifact and loading contract without touching production.

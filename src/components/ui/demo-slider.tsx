@@ -4,6 +4,7 @@ import React, { useCallback, useRef, useState } from "react";
 
 interface DemoSliderProps {
   label: React.ReactNode;
+  ariaLabel?: string;
   value: number;
   min: number;
   max: number;
@@ -45,6 +46,7 @@ function useSliderTick() {
 // bubble above the thumb while dragging
 export function DemoSlider({
   label,
+  ariaLabel,
   value,
   min,
   max,
@@ -92,7 +94,7 @@ export function DemoSlider({
             max={max}
             step={step}
             value={value}
-            aria-label={typeof label === "string" ? label : undefined}
+            aria-label={ariaLabel ?? (typeof label === "string" ? label : undefined)}
             onChange={(e) => {
               onChange(Number(e.target.value));
               tick();

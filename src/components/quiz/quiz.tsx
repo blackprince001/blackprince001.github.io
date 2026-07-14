@@ -68,8 +68,6 @@ const QuizInner = ({ quizData }: QuizProps) => {
   const submitAnswer = useSetAtom(handleSubmittedAnswerAtom, { store });
   const [submitted, setSubmitted] = useAtom(submittedAtom, { store });
 
-  const canMoveOn = submitted || selectedAnswer === null;
-
   const handleQuestionChange = (newQuestionIndex: number) => {
     const newAnswer = finalAnswers[newQuestionIndex] ?? null;
     setCurrentQuestion(newQuestionIndex);
@@ -80,9 +78,9 @@ const QuizInner = ({ quizData }: QuizProps) => {
   const currentQuestionData = quizData[currentQuestion];
 
   return (
-    <div className="quiz my-8 border rounded-lg">
+    <div className="quiz my-8 border rounded-lg" aria-labelledby="quiz-question">
       <div className="space-y-4 px-8">
-        <p className="text-lg font-semibold mb-4 ">
+        <p id="quiz-question" className="text-lg font-semibold mb-4 ">
           <RichText text={currentQuestionData.question} />
         </p>
         {currentQuestionData.image && (
@@ -112,7 +110,7 @@ const QuizInner = ({ quizData }: QuizProps) => {
           ))}
         </div>
         {submitted && currentQuestionData.explanation && (
-          <div className="text-sm mt-4">
+          <div className="text-sm mt-4" role="status" aria-live="polite">
             <RichText text={currentQuestionData.explanation} />
           </div>
         )}
@@ -122,6 +120,7 @@ const QuizInner = ({ quizData }: QuizProps) => {
         <button
           className="btn px-4 py-2 rounded-lg"
           disabled={currentQuestion === 0}
+          aria-label="Previous question"
           onClick={() => handleQuestionChange(currentQuestion - 1)}
         >
           <ArrowLeft className="-ml-0.5 mr-2 h-4 w-4" />
@@ -131,9 +130,10 @@ const QuizInner = ({ quizData }: QuizProps) => {
         </span>
         <button
           className="btn px-4 py-2 rounded-lg"
-          disabled={canMoveOn && currentQuestion === quizData.length - 1}
+          disabled={selectedAnswer === null || (submitted && currentQuestion === quizData.length - 1)}
+          aria-label={submitted ? "Next question" : "Submit answer"}
           onClick={() => {
-            if (!canMoveOn) {
+            if (!submitted) {
               submitAnswer(selectedAnswer ?? -1);
               setSubmitted(true);
             } else {
@@ -141,8 +141,7 @@ const QuizInner = ({ quizData }: QuizProps) => {
             }
           }}
         >
-          {selectedAnswer === null ? "" : submitted ? "" : "Submit"}{" "}
-          {canMoveOn && <ArrowRight className="-mr-0.5 ml-2 h-4 w-4" />}
+          {submitted ? <ArrowRight className="-mr-0.5 ml-2 h-4 w-4" /> : "Submit"}
         </button>
       </div>
     </div>

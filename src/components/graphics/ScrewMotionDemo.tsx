@@ -230,6 +230,8 @@ export default function ScrewMotionDemo() {
             </button>
             <button
               onClick={toggleFullscreen}
+              aria-label={isFullscreen ? "Exit fullscreen screw motion demo" : "Open screw motion demo fullscreen"}
+              aria-pressed={isFullscreen}
               className="p-2 rounded-lg bg-zinc-200 dark:bg-zinc-700 hover:bg-zinc-300 dark:hover:bg-zinc-600 transition-colors"
               title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
             >
@@ -241,6 +243,7 @@ export default function ScrewMotionDemo() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
           <DemoSlider
             label={<span>Rotation <Latex tex="\theta" /></span>}
+            ariaLabel="Screw rotation angle"
             value={theta}
             min={0}
             max={360}
@@ -249,6 +252,7 @@ export default function ScrewMotionDemo() {
           />
           <DemoSlider
             label={<span>Pitch <Latex tex="h" /></span>}
+            ariaLabel="Screw pitch"
             value={pitch}
             min={0}
             max={2}

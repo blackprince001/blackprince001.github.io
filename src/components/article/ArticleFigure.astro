@@ -1,0 +1,38 @@
+---
+import katex from "katex";
+
+interface Props {
+  title?: string;
+  src?: string;
+  srcs?: string[];
+  alt?: string;
+  caption?: string;
+  cols?: 1 | 2 | 3 | 4;
+}
+
+const { title, src, srcs, alt = "Article figure", caption, cols } = Astro.props;
+const media = srcs?.length ? srcs : src ? [src] : [];
+const normalizeSrc = (value: string) => value.replace(/^\.\.\//, "/");
+const captionHtml = caption?.replace(/\$([^$]+)\$/g, (_match, expression) =>
+  katex.renderToString(expression, { throwOnError: false, output: "html" }),
+);
+---
+
+{media.length > 0 && (
+  <figure class="article-figure">
+    {title && <p class="article-figure__title">{title}</p>}
+    <div class="article-figure__media" style={`--figure-columns: ${cols ?? Math.min(media.length, 4)}`}>
+      {media.map((item, index) => (
+        <a href={normalizeSrc(item)} target="_blank" rel="noreferrer" aria-label={`Open ${alt} in a new tab`}>
+          <img
+            src={normalizeSrc(item)}
+            alt={media.length > 1 ? `${alt} (${index + 1})` : alt}
+            loading="lazy"
+            decoding="async"
+          />
+        </a>
+      ))}
+    </div>
+    {captionHtml && <figcaption set:html={captionHtml} />}
+  </figure>
+)}

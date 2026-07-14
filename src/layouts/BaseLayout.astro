@@ -38,8 +38,12 @@ const nav = [
     <title>{title}</title>
     <script is:inline>
       (() => {
+        const root = document.documentElement;
         const saved = localStorage.getItem("theme");
-        if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+        const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = saved === "light" || saved === "dark" ? saved : systemDark ? "dark" : "light";
+        if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+        root.classList.toggle("dark", theme === "dark");
       })();
     </script>
   </head>
@@ -67,6 +71,7 @@ const nav = [
         const current = root.dataset.theme ?? (systemDark ? "dark" : "light");
         const next = current === "dark" ? "light" : "dark";
         root.dataset.theme = next;
+        root.classList.toggle("dark", next === "dark");
         localStorage.setItem("theme", next);
       });
     </script>
