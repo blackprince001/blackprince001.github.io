@@ -1,0 +1,29 @@
+import { defineCollection } from "astro:content";
+import { glob } from "astro/loaders";
+import { z } from "astro/zod";
+
+const writing = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content-v2/writing" }),
+  schema: z.object({
+    title: z.string(),
+    publishDate: z.coerce.date(),
+    tag: z.string(),
+    description: z.string().optional(),
+    readingTime: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+const shorts = defineCollection({
+  loader: glob({ pattern: "**/*.{md,mdx}", base: "./src/content-v2/shorts" }),
+  schema: z.object({
+    title: z.string(),
+    publishedAt: z.coerce.date(),
+    tag: z.array(z.string()).optional(),
+    tags: z.array(z.string()).optional(),
+    summary: z.string().optional(),
+    draft: z.boolean().default(false),
+  }),
+});
+
+export const collections = { writing, shorts };

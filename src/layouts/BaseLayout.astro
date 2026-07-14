@@ -1,0 +1,74 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  pathname?: string;
+}
+
+const {
+  title = "blackprince | Nebula",
+  description = "Engineering journal of Prince Kwabena Appiah Boadu.",
+  pathname = Astro.url.pathname,
+} = Astro.props;
+
+const nav = [
+  ["Writing", "/blog"],
+  ["Shorts", "/shorts"],
+  ["Projects", "/projects"],
+  ["Manuscripts", "/publications"],
+  ["Reading", "/reading"],
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="canonical" href={new URL(pathname, Astro.site)} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={new URL("/images/seo-image.png", Astro.site)} />
+    <meta property="og:type" content="website" />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        const saved = localStorage.getItem("theme");
+        if (saved === "light" || saved === "dark") document.documentElement.dataset.theme = saved;
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <a class="wordmark" href="/">blackprince</a>
+      <nav class="site-nav" aria-label="Primary navigation">
+        {nav.map(([label, href]) => (
+          <a href={href} aria-current={pathname.startsWith(href) ? "page" : undefined}>{label}</a>
+        ))}
+        <button class="theme-toggle" type="button" aria-label="Toggle color theme">Theme</button>
+      </nav>
+    </header>
+    <main id="main-content"><slot /></main>
+    <footer class="site-footer">
+      <span>Prince Kwabena Appiah Boadu</span>
+      <span>Systems · Robotics · Learning</span>
+    </footer>
+    <script>
+      const button = document.querySelector<HTMLButtonElement>(".theme-toggle");
+      button?.addEventListener("click", () => {
+        const root = document.documentElement;
+        const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
+        const current = root.dataset.theme ?? (systemDark ? "dark" : "light");
+        const next = current === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        localStorage.setItem("theme", next);
+      });
+    </script>
+  </body>
+</html>

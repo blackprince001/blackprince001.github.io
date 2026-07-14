@@ -1,0 +1,23 @@
+---
+import BaseLayout from "../../layouts/BaseLayout.astro";
+import { writingIndex } from "../../lib/site-data";
+
+const writing = [...writingIndex].sort((a, b) => b.publishDate.valueOf() - a.publishDate.valueOf());
+const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", day: "numeric" });
+---
+
+<BaseLayout title="Writing — blackprince" description="Research notes, engineering essays, and works in progress.">
+  <article class="index-page">
+    <h1>Writing</h1>
+    <p>Research notes, engineering essays, and works in progress from the systems I build and the questions I keep returning to.</p>
+    <div class="entry-list">
+      {writing.map((entry) => (
+        <a class="entry-row" href={`/blog/${entry.slug}`}>
+          <span class="entry-date">{date.format(entry.publishDate)}</span>
+          <span class="entry-title">{entry.title}</span>
+          <span class="entry-arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+  </article>
+</BaseLayout>

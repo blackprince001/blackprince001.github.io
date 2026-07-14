@@ -1,0 +1,60 @@
+---
+import type { Project } from "../../lib/content-model";
+
+interface Props {
+  project: Project;
+  index: number;
+}
+
+const { project, index } = Astro.props;
+const primaryLink = project.links[0];
+const image = project.images?.[0];
+const external = primaryLink?.url.startsWith("http");
+const summaries: Record<string, string> = {
+  "SpeakUp — Real-Time Classroom Engagement":
+    "A real-time classroom platform built around anonymous questions, ranked discussion, polls, and activity sequencing—without requiring student accounts.",
+  Lumen:
+    "A self-hostable research library for ingesting, organizing, searching, and reading papers with semantic retrieval and AI-assisted analysis.",
+  "Oware Engine and a Ladder of RL Agents":
+    "A custom Oware engine and evaluation ladder for DQN, PPO, AlphaZero-lite, and Minimax agents, including the training strategies that failed.",
+};
+const description = summaries[project.name] ?? (Array.isArray(project.description) ? project.description[0] : project.description);
+---
+
+<article>
+  {image && (
+    <a
+      class="project-media"
+      href={primaryLink?.url ?? "/projects"}
+      target={external ? "_blank" : undefined}
+      rel={external ? "noopener noreferrer" : undefined}
+      aria-label={`Open ${project.name}`}
+    >
+      <img src={image} alt="" width="1200" height="750" loading={index === 0 ? "eager" : "lazy"} />
+      <span class="media-label">System / {String(index + 1).padStart(2, "0")}</span>
+      <span class="media-action" aria-hidden="true">Inspect ↗</span>
+    </a>
+  )}
+  <div class="project-body">
+    <div class="project-title-row">
+      <h3>{project.name}</h3>
+      <span>{project.date}</span>
+    </div>
+    <p>{description}</p>
+    <div class="project-meta">
+      <span>{project.tags.slice(0, 3).join(" · ")}</span>
+      <div class="project-links">
+        {project.links.map((link) => (
+          <a
+            class="text-link"
+            href={link.url}
+            target={link.url.startsWith("http") ? "_blank" : undefined}
+            rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}
+          >
+            {link.label} <span aria-hidden="true">↗</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </div>
+</article>
