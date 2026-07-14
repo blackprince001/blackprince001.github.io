@@ -50,6 +50,8 @@ Interactive article components now share the same minimal system language. Knowl
 
 Figures now respond to their composition context: article-level media can retain the wider visual measure, while figures nested in examples stay inside the surfaced panel. The configuration-space article's remaining raw image blocks were migrated to the shared centered, captioned, zoomable figure component.
 
+The rotation-frame, axis-angle, and screw-motion demos now use a shared fullscreen controller. Supporting browsers use the native fullscreen top layer; other browsers receive a body-level portal fallback with background scroll locking and Escape-to-exit, preventing later article figures or the bottom navigation from overlapping the active demo.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback, useRef } from "react";
+import { useState, useMemo, useRef } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { OrbitControls, Grid, Line } from "@react-three/drei";
 import { FrameAxes, BODY_FRAME_COLORS, WORLD_FRAME_COLORS } from "./FrameAxes";
@@ -8,6 +8,8 @@ import { DemoSlider } from "@/components/ui/demo-slider";
 import { InfoPanel, InfoCard } from "./demo-panel";
 import { Latex, matrixTex, vectorTex } from "@/components/ui/latex";
 import { Maximize2, Minimize2, Play, Pause } from "lucide-react";
+import { useDemoFullscreen } from "./use-demo-fullscreen";
+import { createPortal } from "react-dom";
 
 // Compute screw transformation matrix
 function screwTransform(
@@ -180,7 +182,7 @@ export default function ScrewMotionDemo() {
   const [theta, setTheta] = useState(90);
   const [pitch, setPitch] = useState(0.5);
   const [animate, setAnimate] = useState(false);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const { containerRef, isFullscreen, isFallbackFullscreen, toggleFullscreen } = useDemoFullscreen();
 
   const thetaRad = (theta * Math.PI) / 180;
   const axis: [number, number, number] = useMemo(() => [0, 0, 1], []); // Z-axis screw
@@ -191,12 +193,8 @@ export default function ScrewMotionDemo() {
     [axis, point, thetaRad, pitch]
   );
 
-  const toggleFullscreen = useCallback(() => {
-    setIsFullscreen(!isFullscreen);
-  }, [isFullscreen]);
-
   const containerClass = isFullscreen
-    ? "fixed inset-0 z-50 h-[100dvh] bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
+    ? "fixed inset-0 z-[1000] h-[100dvh] w-full bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
     : "my-8 rounded-lg bg-[var(--page)] text-[var(--ink)] overflow-hidden flex flex-col shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]";
 
   const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "h-[450px]";
@@ -208,8 +206,8 @@ export default function ScrewMotionDemo() {
     ? "Approaching Pure Translation"
     : `Combined Motion (h = ${pitch.toFixed(2)})`;
 
-  return (
-    <div className={containerClass}>
+  const demo = (
+    <div ref={containerRef} className={containerClass}>
       {/* Controls - Top */}
       <div className="bg-[var(--surface)] p-4 shrink-0">
         <div className="flex items-center justify-between mb-4">
@@ -328,4 +326,6 @@ export default function ScrewMotionDemo() {
       </InfoPanel>
     </div>
   );
+
+  return isFallbackFullscreen ? createPortal(demo, document.body) : demo;
 }

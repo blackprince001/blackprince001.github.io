@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Grid, Line } from "@react-three/drei";
 import { FrameAxes, BODY_FRAME_COLORS, WORLD_FRAME_COLORS } from "./FrameAxes";
@@ -8,6 +8,8 @@ import { DemoSlider } from "@/components/ui/demo-slider";
 import { InfoPanel, InfoCard } from "./demo-panel";
 import { Latex, matrixTex, vectorTex } from "@/components/ui/latex";
 import { Maximize2, Minimize2 } from "lucide-react";
+import { useDemoFullscreen } from "./use-demo-fullscreen";
+import { createPortal } from "react-dom";
 
 // Skew-symmetric matrix [ω̂] of a unit axis
 function skewMatrix([wx, wy, wz]: [number, number, number]): number[][] {
@@ -72,7 +74,7 @@ export default function AxisAngleDemo() {
   const [axisX, setAxisX] = useState(0);
   const [axisY, setAxisY] = useState(0);
   const [axisZ, setAxisZ] = useState(1);
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const { containerRef, isFullscreen, isFallbackFullscreen, toggleFullscreen } = useDemoFullscreen();
 
   // Normalize the axis
   const axis = useMemo(() => {
@@ -92,12 +94,8 @@ export default function AxisAngleDemo() {
     axis[2] * thetaRad,
   ], [axis, thetaRad]);
 
-  const toggleFullscreen = useCallback(() => {
-    setIsFullscreen(!isFullscreen);
-  }, [isFullscreen]);
-
   const containerClass = isFullscreen
-    ? "fixed inset-0 z-50 h-[100dvh] bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
+    ? "fixed inset-0 z-[1000] h-[100dvh] w-full bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
     : "my-8 rounded-lg bg-[var(--page)] text-[var(--ink)] overflow-hidden flex flex-col shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]";
 
   const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "h-[450px]";
@@ -111,8 +109,8 @@ export default function AxisAngleDemo() {
     { name: "XYZ", x: 1, y: 1, z: 1, color: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300" },
   ];
 
-  return (
-    <div className={containerClass}>
+  const demo = (
+    <div ref={containerRef} className={containerClass}>
       {/* Controls - Top */}
       <div className="bg-[var(--surface)] p-4 shrink-0">
         <div className="flex items-center justify-between mb-4">
@@ -269,4 +267,6 @@ export default function AxisAngleDemo() {
       </InfoPanel>
     </div>
   );
+
+  return isFallbackFullscreen ? createPortal(demo, document.body) : demo;
 }

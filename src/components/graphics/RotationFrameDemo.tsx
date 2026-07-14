@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo, useCallback } from "react";
+import { useState, useMemo } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, Grid } from "@react-three/drei";
 import { FrameAxes, BODY_FRAME_COLORS, WORLD_FRAME_COLORS } from "./FrameAxes";
@@ -8,6 +8,8 @@ import { DemoSlider } from "@/components/ui/demo-slider";
 import { InfoPanel, InfoCard } from "./demo-panel";
 import { Latex, matrixTex } from "@/components/ui/latex";
 import { Maximize2, Minimize2 } from "lucide-react";
+import { useDemoFullscreen } from "./use-demo-fullscreen";
+import { createPortal } from "react-dom";
 
 // Compute rotation matrix from Euler angles (ZYX convention: yaw-pitch-roll)
 function computeRotationMatrix(roll: number, pitch: number, yaw: number): number[][] {
@@ -33,7 +35,7 @@ export default function RotationFrameDemo() {
   const [pitch, setPitch] = useState(0);
   const [yaw, setYaw] = useState(30);
   const [mode, setMode] = useState<"fixed" | "body">("fixed");
-  const [isFullscreen, setIsFullscreen] = useState(false);
+  const { containerRef, isFullscreen, isFallbackFullscreen, toggleFullscreen } = useDemoFullscreen();
 
   const R = useMemo(
     () =>
@@ -52,20 +54,16 @@ export default function RotationFrameDemo() {
          + R[0][2] * (R[1][0] * R[2][1] - R[1][1] * R[2][0]);
   }, [R]);
 
-  const toggleFullscreen = useCallback(() => {
-    setIsFullscreen(!isFullscreen);
-  }, [isFullscreen]);
-
   const containerClass = isFullscreen
-    ? "fixed inset-0 z-50 h-[100dvh] bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
+    ? "fixed inset-0 z-[1000] h-[100dvh] w-full bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
     : "my-8 rounded-lg bg-[var(--page)] text-[var(--ink)] overflow-hidden flex flex-col shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]";
 
   const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "h-[450px]";
 
   const degrees = (v: number) => `${v}°`;
 
-  return (
-    <div className={containerClass}>
+  const demo = (
+    <div ref={containerRef} className={containerClass}>
       {/* Controls - Always at top */}
       <div className="bg-[var(--surface)] p-4 shrink-0">
         <div className="flex items-center justify-between mb-4">
@@ -235,4 +233,6 @@ export default function RotationFrameDemo() {
       </InfoPanel>
     </div>
   );
+
+  return isFallbackFullscreen ? createPortal(demo, document.body) : demo;
 }
