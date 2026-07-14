@@ -171,14 +171,23 @@ button.tag-pill { cursor: pointer; }
 .site-nav[data-collapsed="true"] .site-nav__toggle svg { transform: rotate(180deg); }
 
 .theme-toggle {
-  min-width: 2.5rem;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
   border: 0;
-  padding: 0.35rem 0;
+  border-radius: 999px;
+  padding: 0;
   background: transparent;
   color: var(--muted);
   cursor: pointer;
-  text-align: center;
 }
+.theme-toggle:hover { color: var(--ink); }
+.theme-icon { grid-area: 1 / 1; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.25; transition: opacity 140ms ease, transform 180ms ease-out; }
+.theme-icon--sun { opacity: 0; transform: rotate(-30deg) scale(0.8); }
+:root.dark .theme-icon--moon { opacity: 0; transform: rotate(30deg) scale(0.8); }
+:root.dark .theme-icon--sun { opacity: 1; transform: rotate(0) scale(1); }
 
 .site-footer {
   display: flex;
