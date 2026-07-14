@@ -1,0 +1,38 @@
+---
+interface Props {
+  label: string;
+  href?: string;
+  active?: boolean;
+  button?: boolean;
+  dataTag?: string;
+  class?: string;
+}
+
+const {
+  label,
+  href,
+  active = false,
+  button = false,
+  dataTag,
+  class: className = "",
+} = Astro.props;
+const tone = [...label].reduce((total, character) => total + character.charCodeAt(0), 0) % 7;
+const classes = `tag-pill tag-pill--${tone} ${className}`.trim();
+---
+
+{href ? (
+  <a class={classes} href={href} aria-current={active ? "page" : undefined}>
+    <span class="tag-pill__dot" aria-hidden="true"></span>
+    {label}
+  </a>
+) : button ? (
+  <button class={classes} type="button" aria-pressed={active} data-blog-tag={dataTag}>
+    <span class="tag-pill__dot" aria-hidden="true"></span>
+    {label}
+  </button>
+) : (
+  <span class={classes}>
+    <span class="tag-pill__dot" aria-hidden="true"></span>
+    {label}
+  </span>
+)}

@@ -1,5 +1,6 @@
 ---
 import type { Project } from "../../lib/content-model";
+import TagPill from "./TagPill.astro";
 
 interface Props {
   project: Project;
@@ -42,7 +43,9 @@ const description = summaries[project.name] ?? (Array.isArray(project.descriptio
     </div>
     <p>{description}</p>
     <div class="project-meta">
-      <span>{project.tags.slice(0, 3).join(" · ")}</span>
+      <div class="tag-list">
+        {project.tags.slice(0, 4).map((tag) => <TagPill label={tag} />)}
+      </div>
       <div class="project-links">
         {project.links.map((link) => (
           <a

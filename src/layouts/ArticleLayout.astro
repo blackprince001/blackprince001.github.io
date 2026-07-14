@@ -1,17 +1,20 @@
 ---
 import "katex/dist/katex.min.css";
 import "../styles/islands.css";
+import FloatingToc from "../components/astro/FloatingToc.astro";
+import TagPill from "../components/astro/TagPill.astro";
 import BaseLayout from "./BaseLayout.astro";
 
 interface Props {
   title: string;
   description?: string;
   publishDate: Date;
-  tag: string;
+  tags: string[];
+  headings?: { depth: number; slug: string; text: string }[];
   pathname: string;
 }
 
-const { title, description, publishDate, tag, pathname } = Astro.props;
+const { title, description, publishDate, tags, headings = [], pathname } = Astro.props;
 const formattedDate = publishDate.toLocaleDateString("en", {
   day: "2-digit",
   month: "short",
@@ -23,9 +26,13 @@ const formattedDate = publishDate.toLocaleDateString("en", {
   <article class="article-shell">
     <header class="article-header">
       <a class="article-back" href="/blog">← Writing</a>
-      <p>{tag} · <time datetime={publishDate.toISOString()}>{formattedDate}</time></p>
+      <div class="article-meta">
+        <div class="tag-list">{tags.map((tag) => <TagPill label={tag} />)}</div>
+        <time datetime={publishDate.toISOString()}>{formattedDate}</time>
+      </div>
       <h1>{title}</h1>
     </header>
     <div class="article-body"><slot /></div>
   </article>
+  <FloatingToc headings={headings} />
 </BaseLayout>

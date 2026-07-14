@@ -11,7 +11,7 @@ timestamp: 2026-07-14
 
 # Component and motion system
 
-Status: Phase 0 baseline / v0.3
+Status: Phase 2 implementation / v0.4
 Prepared: 2026-07-14
 Scope: Astro redesign and future technical writing
 
@@ -193,6 +193,14 @@ The Astro pattern owns the accessible label, fallback, caption, loading state, a
 6. Wrap third-party primitives behind project-owned components before they become authoring APIs.
 7. Every public component documents default, focus, active, disabled, loading, empty, error, expanded, and reduced-motion behavior where applicable.
 8. A component is not reusable until it has an example using real site content.
+
+## Phase 2 implemented editorial primitives
+
+- `TagPill` is the single tag presentation across writing, shorts, projects, and article metadata. It combines a text label with a colored dot, uses a deterministic tone per label, and supports static, link, and filter-button semantics.
+- `FloatingToc` adapts the compact indicator-bar pattern to a press-mode Astro control. It tracks H2/H3 position, exposes a native navigation list, closes with Escape and outside press, restores focus, and becomes a labeled floating control on narrow screens.
+- Writing search remains a small progressive-enhancement script: the complete article list exists in static HTML, while title, summary, and tag filtering update an announced result count.
+- Projects retain the established featured/open-source hierarchy. Featured work uses the editorial project treatment; the repository archive progressively loads, sorts, and paginates GitHub data with an explicit fallback link.
+- Article tables are centered as objects and center their cell content while retaining horizontal overflow for genuinely wide data.
 
 ## Suggested project structure
 

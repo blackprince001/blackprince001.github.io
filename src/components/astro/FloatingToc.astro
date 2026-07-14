@@ -1,0 +1,94 @@
+---
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const headings = Astro.props.headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const visible = headings.length > 1;
+---
+
+{visible && (
+  <aside class="floating-toc" data-floating-toc>
+    <button
+      class="floating-toc__trigger"
+      type="button"
+      aria-label="Open table of contents"
+      aria-expanded="false"
+      aria-controls="article-outline"
+    >
+      <span class="floating-toc__label">Contents</span>
+      <span class="floating-toc__bars" aria-hidden="true">
+        {headings.map((heading) => (
+          <span class="floating-toc__bar" data-toc-slug={heading.slug} data-level={heading.depth}></span>
+        ))}
+      </span>
+    </button>
+    <div class="floating-toc__content" id="article-outline" hidden>
+      <p>On this page</p>
+      <nav aria-label="Table of contents">
+        <ol>
+          {headings.map((heading) => (
+            <li style={`--floating-toc-level: ${heading.depth - 2}`}>
+              <a class="floating-toc__item" href={`#${heading.slug}`} data-toc-slug={heading.slug}>{heading.text}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+    </div>
+  </aside>
+)}
+
+<script>
+  const tocRoots = document.querySelectorAll<HTMLElement>("[data-floating-toc]");
+
+  tocRoots.forEach((root) => {
+    const trigger = root.querySelector<HTMLButtonElement>(".floating-toc__trigger");
+    const content = root.querySelector<HTMLElement>(".floating-toc__content");
+    const items = [...root.querySelectorAll<HTMLElement>("[data-toc-slug]")];
+    const links = [...root.querySelectorAll<HTMLAnchorElement>(".floating-toc__item")];
+    const sections = links
+      .map((link) => document.getElementById(link.dataset.tocSlug ?? ""))
+      .filter((section): section is HTMLElement => Boolean(section));
+
+    if (!trigger || !content || sections.length === 0) return;
+
+    const setOpen = (open: boolean) => {
+      trigger.setAttribute("aria-expanded", String(open));
+      trigger.setAttribute("aria-label", open ? "Close table of contents" : "Open table of contents");
+      content.hidden = !open;
+      root.toggleAttribute("data-open", open);
+    };
+
+    const updateActive = () => {
+      const threshold = window.innerHeight * 0.32;
+      const active = sections.reduce((current, section) =>
+        section.getBoundingClientRect().top <= threshold ? section : current, sections[0]);
+
+      items.forEach((item) => {
+        const isActive = item.dataset.tocSlug === active.id;
+        item.toggleAttribute("data-active", isActive);
+        if (item.matches("a")) item.setAttribute("aria-current", isActive ? "location" : "false");
+      });
+    };
+
+    trigger.addEventListener("click", () => setOpen(trigger.getAttribute("aria-expanded") !== "true"));
+    links.forEach((link) => link.addEventListener("click", () => setOpen(false)));
+    document.addEventListener("click", (event) => {
+      if (!root.contains(event.target as Node)) setOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && trigger.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        trigger.focus();
+      }
+    });
+    document.addEventListener("scroll", updateActive, { passive: true });
+    updateActive();
+  });
+</script>

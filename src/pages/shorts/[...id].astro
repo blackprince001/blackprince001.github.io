@@ -10,14 +10,15 @@ export async function getStaticPaths() {
 
 interface Props { entry: CollectionEntry<"shorts"> }
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 ---
 
 <ArticleLayout
   title={entry.data.title}
   description={entry.data.summary}
   publishDate={entry.data.publishedAt}
-  tag="Short"
+  tags={entry.data.tags.length ? entry.data.tags : ["Short"]}
+  headings={headings}
   pathname={Astro.url.pathname}
 >
   <Content components={{ LinkEmbed: ArticleLinkEmbed }} />

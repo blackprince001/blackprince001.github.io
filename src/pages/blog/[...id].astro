@@ -27,14 +27,15 @@ export async function getStaticPaths() {
 
 interface Props { entry: CollectionEntry<"writing"> }
 const { entry } = Astro.props;
-const { Content } = await render(entry);
+const { Content, headings } = await render(entry);
 ---
 
 <ArticleLayout
   title={entry.data.title}
   description={entry.data.description}
   publishDate={entry.data.publishDate}
-  tag={entry.data.tag}
+  tags={[entry.data.tag]}
+  headings={headings}
   pathname={Astro.url.pathname}
 >
   <Content components={{

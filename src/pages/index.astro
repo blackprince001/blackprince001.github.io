@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import ProjectFeature from "../components/astro/ProjectFeature.astro";
 import SectionHeading from "../components/astro/SectionHeading.astro";
+import TagPill from "../components/astro/TagPill.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { projects, publications } from "../lib/site-data";
 
@@ -50,7 +51,10 @@ const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", da
           {writing.map((entry) => (
             <a class="entry-row" href={`/blog/${entry.id}`}>
               <span class="entry-date">{date.format(entry.data.publishDate)}</span>
-              <span class="entry-title">{entry.data.title}</span>
+              <span class="entry-main">
+                <span class="entry-title">{entry.data.title}</span>
+                <TagPill label={entry.data.tag} />
+              </span>
               <span class="entry-arrow" aria-hidden="true">↗</span>
             </a>
           ))}

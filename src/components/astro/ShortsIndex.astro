@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import TagPill from "./TagPill.astro";
 
 interface Props {
   entries: CollectionEntry<"shorts">[];
@@ -17,9 +18,9 @@ const visibleEntries = activeTag ? entries.filter((entry) => entry.data.tags.inc
   <h1>Shorts</h1>
   <p>Snapshots of ideas, course corrections, and mental models shared while they are still unfolding.</p>
   <nav class="short-filter" aria-label="Filter shorts by topic">
-    <a href="/shorts" aria-current={!activeTag ? "page" : undefined}>All</a>
+    <TagPill label="All" href="/shorts" active={!activeTag} />
     {tags.map((tag) => (
-      <a href={`/shorts/tag/${encodeURIComponent(tag)}`} aria-current={activeTag === tag ? "page" : undefined}>{tag}</a>
+      <TagPill label={tag} href={`/shorts/tag/${encodeURIComponent(tag)}`} active={activeTag === tag} />
     ))}
   </nav>
   <div class="entry-list">
@@ -29,7 +30,9 @@ const visibleEntries = activeTag ? entries.filter((entry) => entry.data.tags.inc
         <span>
           <strong>{entry.data.title}</strong>
           {entry.data.summary && <small>{entry.data.summary}</small>}
-          <small>{entry.data.tags.map((tag) => `#${tag}`).join("  ")}</small>
+          <span class="tag-list short-entry__tags">
+            {entry.data.tags.map((tag) => <TagPill label={tag} />)}
+          </span>
         </span>
         <span class="entry-arrow" aria-hidden="true">↗</span>
       </a>

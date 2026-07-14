@@ -28,6 +28,8 @@ Article MDX maps legacy component names to small Astro-native primitives for fig
 
 Interactive demonstrations remain React islands. Heavy visualization and code-runner components load only when their article requires them and include a textual fallback. Mafs demonstrations and language runners use client-only boundaries because their current dependencies are not server-rendering compatible; this is an explicit compatibility exception, not the default component strategy.
 
+The shared editorial layer now also includes colored tag pills, searchable and tag-filterable writing, centered article tables, and a press-mode floating table of contents. The projects route preserves the previous information hierarchy—featured work followed by sortable, paginated open-source repositories—inside the new visual system.
+
 ## Verification evidence
 
 - `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files
@@ -36,6 +38,10 @@ Interactive demonstrations remain React islands. Heavy visualization and code-ru
 - Browser sampling: long-form caption, shorts, projects, manuscripts, reading, and a code-runner article each have one H1, a main landmark, no object serialization text, and no horizontal overflow
 - Mobile sampling at 390 px: long-form article, shorts index, and projects have no horizontal overflow
 - Browser error log: empty after the representative route checks
+- Writing interaction check: text search returned five robotics matches; the Machine Learning filter returned thirteen articles with an announced result count
+- Floating outline check: 24 H2/H3 entries tracked on the decision-tree article; Escape closed the panel and returned focus to its trigger
+- Project hierarchy check: 16 featured projects plus 84 non-fork GitHub repositories, paginated seven at a time
+- Table check: table and cell content centered with no document overflow
 
 ## Remaining Phase 2 work
 
