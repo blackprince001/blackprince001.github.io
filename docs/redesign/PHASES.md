@@ -1,6 +1,17 @@
+---
+type: Delivery Plan
+title: Redesign branch and phase map
+description: Branch boundaries, purposes, and exit gates for the redesign and Astro migration.
+tags:
+  - redesign
+  - migration
+  - delivery
+timestamp: 2026-07-14
+---
+
 # Redesign branch and phase map
 
-Status: Active
+Status: Phase 0 complete / Phase 1 ready
 Started: 2026-07-14
 
 ## Safety branches
@@ -28,9 +39,13 @@ Purpose:
 
 Exit gate:
 
-- the current minimal editorial structure is confirmed as the baseline
-- TRIBE-derived influence is bounded to reusable evidence and interaction components
-- first component APIs validated with real content
+- [x] the current minimal editorial structure is confirmed as the baseline
+- [x] TRIBE-derived influence is bounded to reusable evidence and interaction components
+- [x] first component contracts are validated with real content on the production homepage
+- [x] narrow and wide layouts, heading order, media loading, and overflow are verified
+- [x] the Astro handoff decisions and explicit non-goals are recorded
+
+Accepted outcome: see [PHASE_0_DECISION.md](./PHASE_0_DECISION.md).
 
 ### Phase 1 — `codex/phase-1-astro-foundation`
 

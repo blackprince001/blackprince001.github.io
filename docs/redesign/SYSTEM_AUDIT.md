@@ -1,3 +1,14 @@
+---
+type: System Audit
+title: Current-site system audit
+description: Baseline inventory of routes, content, interactivity, deployment, and migration risks in the current Next.js site.
+tags:
+  - audit
+  - nextjs
+  - astro
+timestamp: 2026-07-14
+---
+
 # Current-site system audit
 
 Status: discovery baseline

@@ -1,6 +1,17 @@
+---
+type: Design System Reference
+title: Component and motion system
+description: Visual foundations, component contracts, and motion rules for the Astro redesign.
+tags:
+  - design-system
+  - components
+  - motion
+timestamp: 2026-07-14
+---
+
 # Component and motion system
 
-Status: Direction selected / Draft v0.2
+Status: Phase 0 baseline / v0.3
 Prepared: 2026-07-14
 Scope: Astro redesign and future technical writing
 
@@ -53,6 +64,8 @@ The useful influence from TRIBE is at component level:
 - short state-preserving transitions with complete reduced-motion behavior
 
 These elements should feel like precise instruments placed inside a calm page. They must not turn every route into an exhibit or create a second visual identity.
+
+Routine horizontal rules are not part of the visual language. Section changes should be communicated through whitespace, alignment, labels, and type hierarchy. Borders remain appropriate when they define the boundary or affordance of an actual object such as a media frame, control, input, or dialog.
 
 ## Our interpretation
 
@@ -314,7 +327,7 @@ Motion tokens:
 }
 ```
 
-Values are starting points to tune in interactive prototypes, not immutable truths.
+Values are starting points to tune during the Astro proof slice, not immutable truths.
 
 ## Exhibit layout behavior
 
@@ -374,7 +387,7 @@ Values are starting points to tune in interactive prototypes, not immutable trut
 7. Adapt existing Three.js, graph, quiz, and code-runner components behind island wrappers
 8. Build the component and motion reference routes using real content
 
-## Proof components for the first prototype
+## Proof components for the Astro foundation
 
 Use `rigid-body-motions` to validate:
 

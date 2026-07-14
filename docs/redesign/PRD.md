@@ -1,6 +1,17 @@
+---
+type: Product Requirements
+title: Astro site overhaul
+description: Product, experience, architecture, and release requirements for the portfolio redesign and Astro migration.
+tags:
+  - redesign
+  - astro
+  - requirements
+timestamp: 2026-07-14
+---
+
 # Product requirements document: Astro site overhaul
 
-Status: Draft v0.1
+Status: Phase 0 baseline accepted / v0.2
 Owner: Prince Kwabena Appiah Boadu
 Prepared: 2026-07-14
 Target: `blackprince001.github.io`
@@ -100,21 +111,22 @@ The current site contains strong material, but its presentation understates its 
 
 ### Primary navigation
 
-- **Work** — selected projects and research systems
-- **Writing** — long essays and short notes, with format filters
-- **Research** — manuscripts, formal publications, and research artifacts
-- **About** — practice, biography, current focus, and contact
+- **Writing** — long-form essays
+- **Shorts** — short notes
+- **Projects** — selected systems and the open-source catalogue
+- **Manuscripts** — formal publications and research artifacts
+- **Reading** — the personal reading shelf
 
-The reading shelf remains part of the site but should appear as a personal collection within About or a secondary navigation surface rather than competing equally in the primary navigation.
+The homepage carries the introduction and current-focus material. Phase 1 preserves these labels and all current URLs so the framework migration does not also become an information-architecture migration. Any later consolidation into Work, Research, or About requires a separate product decision after route parity.
 
 ### Homepage chapters
 
-1. **Introduction** — portrait or personal mark, one-line practice, short positioning statement, current status
-2. **Selected work** — two to four flagship projects with distinct visual treatments
-3. **Ideas in motion** — recent essays and shorts, clearly distinguished by form
-4. **Research record** — selected manuscripts, talks, courses, or formal outputs
-5. **Off the clock** — reading, experiments, photography, or other human texture as content becomes available
-6. **Contact** — direct email and relevant profiles
+1. **Introduction** — personal mark, practice statement, working-archive description, and current teaching
+2. **Selected work** — two to four curated systems with technical media frames
+3. **Recent writing** — dated long-form entries
+4. **Recent manuscripts** — selected formal outputs
+
+Contact and personal profiles remain in the global footer. Shorts and Reading retain dedicated routes rather than being forced into the homepage before their editorial role is settled.
 
 ### Content relationships
 
@@ -315,13 +327,13 @@ Before launch, capture a four-week baseline from existing Umami data where avail
 
 ## 14. Delivery plan
 
-### Phase 0 — definition and visual prototypes
+### Phase 0 — definition and visual foundation
 
-- Confirm the product statement, primary navigation, and homepage chapter order
-- Evaluate three structurally different homepage prototypes on a disposable route, then retire the rejected structures
-- Explore typography, color, image treatment, and motion using real content
-- Prototype the Notebook and Exhibit presentation modes using the same tokens
-- Validate the first component APIs and motion specifications with real `rigid-body-motions` content
+- Confirm the product statement, migration-safe navigation, and homepage chapter order
+- Evaluate structurally different homepage directions and retire the rejected structures
+- Establish typography, color, image treatment, spacing, and motion rules using real content
+- Validate the first editorial and project-feature contracts on the production homepage
+- Specify the evidence and interaction contracts for validation with `rigid-body-motions` in Phase 1
 - Record the selected direction: retain the minimal professional structure and develop the reference influence at component level
 
 Exit: the existing minimal editorial structure is approved as the baseline, with a component language validated at narrow and wide widths.
@@ -391,25 +403,23 @@ Exit: all release requirements pass; no critical route or content regressions.
 | content cleanup changes meaning | normalize metadata separately from prose edits |
 | Astro/React integration version drift | pin resolved stable versions and validate official compatibility at kickoff |
 
-## 17. Open product decisions
+## 17. Phase 0 product decisions
 
-These do not block the proof slice, but should be resolved during Phase 0:
-
-1. Should the public identity lead with the full name, `blackprince`, or use each in different contexts?
-2. Which two projects deserve the first flagship treatment?
-3. Should “Shorts” remain a visible product label or become a filter under Writing?
-4. Which personal material beyond reading—photography, music, field notes, or none—belongs in v1?
-5. Should the visual system default to light, dark, or system theme?
-6. Is the primary desired outcome collaboration, research opportunity, teaching reach, employment, or an intentionally balanced mix?
+1. Use **Prince** in conversational introduction copy, the full name in formal metadata and attribution, and `blackprince` only where the established technical handle is useful.
+2. Treat **Oware Engine and a Ladder of RL Agents** and **Real-Time Traffic Density Estimation** as the first flagship candidates because each already connects substantial technical evidence with a write-up and external artifact.
+3. Keep **Shorts** as a visible product label during migration. Consolidation under Writing is a later information-architecture decision.
+4. Add no new personal-content category in v1. Reading remains the existing human-texture surface.
+5. Default to the **system theme** while supporting explicit light and dark selection.
+6. Keep the outcome intentionally balanced, with research understanding and collaboration as the strongest homepage signals.
 
 ## 18. Immediate next actions
 
-1. Review and amend this PRD, especially the open product decisions.
-2. Create a migration branch and record a complete current URL manifest.
-3. Use the completed homepage studies to confirm the current minimal editorial structure as the baseline.
-4. Build the first evidence, control, resource, and motion components using real project content, then validate them with `rigid-body-motions`.
-5. Choose one package manager and remove the competing lockfile during the Astro foundation change.
-6. Implement the Astro proof slice before converting the rest of the repository.
+1. Create `codex/phase-1-astro-foundation` from the accepted Phase 0 commit.
+2. Record a complete current URL manifest before changing the build system.
+3. Verify and pin the current supported Astro, MDX, and React integration versions from official documentation.
+4. Use Bun as the single package manager and remove the competing npm lockfile in the Astro foundation change.
+5. Implement Astro tokens, layouts, collections, and the accepted homepage proof.
+6. Migrate one simple essay and validate the evidence/island contracts with `rigid-body-motions` before bulk conversion.
 
 ## 19. Primary technical references
 
