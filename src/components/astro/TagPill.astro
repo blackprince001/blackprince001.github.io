@@ -22,17 +22,14 @@ const classes = `tag-pill tag-pill--${tone} ${className}`.trim();
 
 {href ? (
   <a class={classes} href={href} aria-current={active ? "page" : undefined}>
-    <span class="tag-pill__dot" aria-hidden="true"></span>
     {label}
   </a>
 ) : button ? (
   <button class={classes} type="button" aria-pressed={active} data-blog-tag={dataTag}>
-    <span class="tag-pill__dot" aria-hidden="true"></span>
     {label}
   </button>
 ) : (
   <span class={classes}>
-    <span class="tag-pill__dot" aria-hidden="true"></span>
     {label}
   </span>
 )}

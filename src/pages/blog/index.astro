@@ -14,10 +14,21 @@ const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", da
     <h1>Writing</h1>
     <p>Research notes, engineering essays, and works in progress from the systems I build and the questions I keep returning to.</p>
     <div class="writing-tools" data-writing-tools>
-      <label for="writing-search">Search writing</label>
-      <div class="writing-search">
-        <svg aria-hidden="true" viewBox="0 0 20 20"><path d="m14.2 14.2 3.3 3.3m-1.8-8.1a6.3 6.3 0 1 1-12.6 0 6.3 6.3 0 0 1 12.6 0Z" /></svg>
-        <input id="writing-search" type="search" placeholder="Search by title, topic, or summary" autocomplete="off" data-writing-search />
+      <div class="writing-control-row">
+        <div class="writing-field">
+          <label for="writing-search">Search writing</label>
+          <div class="writing-search">
+            <svg aria-hidden="true" viewBox="0 0 20 20"><path d="m14.2 14.2 3.3 3.3m-1.8-8.1a6.3 6.3 0 1 1-12.6 0 6.3 6.3 0 0 1 12.6 0Z" /></svg>
+            <input id="writing-search" type="search" placeholder="Search by title, topic, or summary" autocomplete="off" data-writing-search />
+          </div>
+        </div>
+        <div class="writing-sort">
+          <label for="writing-sort">Sort results</label>
+          <select id="writing-sort" data-writing-sort>
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
+        </div>
       </div>
       <div class="writing-filters" role="group" aria-label="Filter writing by topic">
         <TagPill label="All" button active dataTag="all" />
@@ -34,6 +45,7 @@ const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", da
           data-title={entry.data.title.toLocaleLowerCase()}
           data-tag={entry.data.tag.toLocaleLowerCase()}
           data-description={(entry.data.description ?? "").toLocaleLowerCase()}
+          data-date={entry.data.publishDate.valueOf()}
         >
           <span class="entry-date">{date.format(entry.data.publishDate)}</span>
           <span class="entry-main">
@@ -51,20 +63,32 @@ const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", da
 <script>
   document.querySelectorAll<HTMLElement>("[data-writing-tools]").forEach((tools) => {
     const input = tools.querySelector<HTMLInputElement>("[data-writing-search]");
+    const sort = tools.querySelector<HTMLSelectElement>("[data-writing-sort]");
     const buttons = [...tools.querySelectorAll<HTMLButtonElement>("[data-blog-tag]")];
-    const entries = [...document.querySelectorAll<HTMLElement>("[data-writing-entry]")];
+    const list = document.querySelector<HTMLElement>("[data-writing-list]");
+    const entries = [...(list?.querySelectorAll<HTMLElement>("[data-writing-entry]") ?? [])];
     const results = tools.querySelector<HTMLElement>(".writing-results");
     const empty = document.querySelector<HTMLElement>("[data-writing-empty]");
     let activeTag = "all";
 
-    if (!input || !results || !empty) return;
+    if (!input || !sort || !list || !results || !empty) return;
 
-    const filter = () => {
-      const query = input.value.trim().toLocaleLowerCase();
+    const normalize = (value: string) => value.trim().toLocaleLowerCase();
+
+    const updateResults = () => {
+      const query = normalize(input.value);
       let visible = 0;
 
+      const orderedEntries = [...entries].sort((left, right) => {
+        const leftDate = Number(left.dataset.date ?? 0);
+        const rightDate = Number(right.dataset.date ?? 0);
+        return sort.value === "oldest" ? leftDate - rightDate : rightDate - leftDate;
+      });
+
+      orderedEntries.forEach((entry) => list.append(entry));
+
       entries.forEach((entry) => {
-        const matchesTag = activeTag === "all" || entry.dataset.tag === activeTag;
+        const matchesTag = activeTag === "all" || normalize(entry.dataset.tag ?? "") === activeTag;
         const searchable = `${entry.dataset.title} ${entry.dataset.tag} ${entry.dataset.description}`;
         const matchesQuery = !query || searchable.includes(query);
         entry.hidden = !(matchesTag && matchesQuery);
@@ -77,11 +101,14 @@ const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", da
       empty.hidden = visible !== 0;
     };
 
-    input.addEventListener("input", filter);
+    input.addEventListener("input", updateResults);
+    sort.addEventListener("change", updateResults);
     buttons.forEach((button) => button.addEventListener("click", () => {
-      activeTag = (button.dataset.blogTag ?? "all").toLocaleLowerCase();
+      activeTag = normalize(button.dataset.blogTag ?? "all");
       buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
-      filter();
+      updateResults();
     }));
+
+    updateResults();
   });
 </script>

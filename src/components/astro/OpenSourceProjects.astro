@@ -52,10 +52,7 @@
       const element = document.createElement("span");
       const tone = [...label].reduce((total, character) => total + character.charCodeAt(0), 0) % 7;
       element.className = `tag-pill tag-pill--${tone}`;
-      const dot = document.createElement("span");
-      dot.className = "tag-pill__dot";
-      dot.setAttribute("aria-hidden", "true");
-      element.append(dot, label);
+      element.textContent = label;
       return element;
     };
 
