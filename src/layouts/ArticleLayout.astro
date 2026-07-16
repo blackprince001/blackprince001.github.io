@@ -38,3 +38,20 @@ const formattedDate = publishDate.toLocaleDateString("en", {
   </article>
   <FloatingToc headings={headings} />
 </BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLVideoElement>(".article-body video").forEach((video) => {
+    const setShape = (width: number, height: number) => {
+      if (!width || !height) return;
+      const ratio = width / height;
+      video.dataset.mediaShape = ratio >= 1.2 ? "landscape" : ratio <= 0.82 ? "portrait" : "square";
+    };
+
+    if (video.poster) {
+      const poster = new Image();
+      poster.addEventListener("load", () => setShape(poster.naturalWidth, poster.naturalHeight), { once: true });
+      poster.src = video.poster;
+    }
+    video.addEventListener("loadedmetadata", () => setShape(video.videoWidth, video.videoHeight));
+  });
+</script>
