@@ -392,7 +392,7 @@ button.project-media-tile { padding: 0; cursor: zoom-in; }
 .article-back:hover { color: var(--ink); }
 .article-meta { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin: 0 0 1.25rem; }
 .article-meta time { flex: 0 0 auto; color: var(--muted); font-family: var(--mono); font-size: 0.64rem; letter-spacing: 0.035em; text-transform: uppercase; }
-.article-header h1 { max-width: 38rem; margin: 0; font-size: clamp(2.1rem, 6vw, 3.8rem); font-weight: 400; letter-spacing: -0.055em; line-height: 1.03; text-wrap: balance; }
+.article-header h1 { max-width: 45rem; margin: 0; font-size: clamp(2.1rem, 6vw, 3.8rem); font-weight: 400; letter-spacing: -0.055em; line-height: 1.03; text-wrap: balance; }
 
 .article-body { position: relative; counter-reset: article-sidenote; color: color-mix(in srgb, var(--ink) 91%, transparent); font-size: clamp(1rem, 1.3vw, 1.075rem); line-height: 1.76; }
 .article-body > :first-child { margin-top: 0; }
@@ -411,9 +411,9 @@ button.project-media-tile { padding: 0; cursor: zoom-in; }
 .article-body center { overflow-x: auto; }
 .article-body .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.5rem 0; }
 .article-body img { border-radius: 0.55rem; }
-.article-body video { display: block; width: 100%; height: auto; max-height: 80dvh; margin: 3rem auto; border-radius: 0.55rem; background: #0c0c0b; object-fit: contain; }
-.article-body video[data-media-shape="landscape"] { width: min(var(--visual-measure), calc(100vw - 2.5rem)); margin-left: 50%; transform: translateX(-50%); }
-.article-body video[data-media-shape="square"] { width: min(48rem, calc(100vw - 2.5rem)); margin-left: 50%; transform: translateX(-50%); }
+.article-body video { display: block; width: min(100%, 43rem); height: auto; max-height: 68dvh; margin: 3rem auto; border-radius: 0.55rem; background: #0c0c0b; object-fit: contain; }
+.article-body video[data-media-shape="landscape"] { width: min(100%, 43rem); }
+.article-body video[data-media-shape="square"] { width: min(38rem, 100%); }
 .article-body video[data-media-shape="portrait"] { width: min(30rem, 100%); }
 .article-body iframe { display: block; max-width: 100%; margin-right: auto; margin-left: auto; }
 
