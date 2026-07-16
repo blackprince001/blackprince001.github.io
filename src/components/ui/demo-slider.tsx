@@ -4,6 +4,7 @@ import React, { useCallback, useRef, useState } from "react";
 
 interface DemoSliderProps {
   label: React.ReactNode;
+  ariaLabel?: string;
   value: number;
   min: number;
   max: number;
@@ -45,6 +46,7 @@ function useSliderTick() {
 // bubble above the thumb while dragging
 export function DemoSlider({
   label,
+  ariaLabel,
   value,
   min,
   max,
@@ -59,31 +61,31 @@ export function DemoSlider({
 
   return (
     <div>
-      <div className="mb-1.5 text-sm font-medium text-zinc-700 dark:text-zinc-300">
+      <div className="mb-1.5 text-sm font-medium text-[var(--ink)]">
         {label}
       </div>
       <div className="relative">
         <div
-          className={`pointer-events-none absolute -top-8 z-20 -translate-x-1/2 whitespace-nowrap rounded-md bg-zinc-950 px-2 py-0.5 font-mono text-xs text-white shadow-md transition-opacity duration-150 dark:bg-zinc-100 dark:text-zinc-900 ${
+          className={`pointer-events-none absolute -top-8 z-20 -translate-x-1/2 whitespace-nowrap rounded-md bg-[var(--ink)] px-2 py-0.5 font-mono text-xs text-[var(--page)] shadow-md transition-opacity duration-150 ${
             active ? "opacity-100" : "opacity-0"
           }`}
           style={{ left: `${pct}%` }}
         >
           {fmt(value)}
         </div>
-        <div className="relative h-10 overflow-hidden rounded-xl bg-zinc-300/70 dark:bg-zinc-700/70">
+        <div className="relative h-10 overflow-hidden rounded-lg bg-[color-mix(in_srgb,var(--muted)_28%,transparent)]">
           <div
-            className="absolute inset-y-0 left-0 bg-white"
+            className="absolute inset-y-0 left-0 bg-[var(--page)]"
             style={{ width: `${pct}%` }}
           />
           <div
-            className="absolute inset-y-1 z-10 w-[3px] rounded-full bg-zinc-950"
+            className="absolute inset-y-1 z-10 w-[3px] rounded-full bg-[var(--ink)]"
             style={{ left: `calc(${pct}% - 1.5px)` }}
           />
-          <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 rounded-md bg-zinc-950/90 px-1.5 py-0.5 font-mono text-[11px] text-white">
+          <span className="pointer-events-none absolute left-2 top-1/2 -translate-y-1/2 rounded-md bg-[var(--ink)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--page)]">
             {fmt(value)}
           </span>
-          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-zinc-950/50 px-1.5 py-0.5 font-mono text-[11px] text-white">
+          <span className="pointer-events-none absolute right-2 top-1/2 -translate-y-1/2 rounded-md bg-[color-mix(in_srgb,var(--ink)_55%,transparent)] px-1.5 py-0.5 font-mono text-[11px] text-[var(--page)]">
             {fmt(max)}
           </span>
           <input
@@ -92,7 +94,7 @@ export function DemoSlider({
             max={max}
             step={step}
             value={value}
-            aria-label={typeof label === "string" ? label : undefined}
+            aria-label={ariaLabel ?? (typeof label === "string" ? label : undefined)}
             onChange={(e) => {
               onChange(Number(e.target.value));
               tick();

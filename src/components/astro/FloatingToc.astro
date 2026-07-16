@@ -1,0 +1,134 @@
+---
+import { challenges } from "../../data/challenges";
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
+
+interface Props {
+  headings: Heading[];
+}
+
+const headings = Astro.props.headings.filter((heading) => heading.depth === 2 || heading.depth === 3);
+const visible = headings.length > 1;
+---
+
+{visible && (
+  <aside class="floating-toc" data-floating-toc>
+    <button
+      class="floating-toc__trigger"
+      type="button"
+      aria-label="Open table of contents"
+      aria-expanded="false"
+      aria-controls="article-outline"
+    >
+      <span class="floating-toc__label">Contents</span>
+      <span class="floating-toc__bars" aria-hidden="true">
+        {headings.map((heading) => (
+          <span class="floating-toc__bar" data-toc-slug={heading.slug} data-level={heading.depth}></span>
+        ))}
+      </span>
+    </button>
+    <div class="floating-toc__content" id="article-outline" hidden>
+      <p>On this page</p>
+      <nav aria-label="Table of contents">
+        <ol>
+          {headings.map((heading) => (
+            <li style={`--floating-toc-level: ${heading.depth - 2}`}>
+              <a class="floating-toc__item" href={`#${heading.slug}`} data-toc-slug={heading.slug}>{heading.text}</a>
+            </li>
+          ))}
+        </ol>
+      </nav>
+      <section class="floating-toc__challenge" aria-labelledby="toc-challenge-label" data-toc-challenge>
+        <p id="toc-challenge-label">Challenge <span data-challenge-number>{challenges[0].id}</span></p>
+        <p class="floating-toc__question" data-challenge-question aria-live="polite">{challenges[0].question}</p>
+        <p class="floating-toc__response" data-challenge-response>Respond: true, false, indeterminate, or meaningless.</p>
+        <button type="button" data-next-challenge>Another challenge</button>
+        <ul hidden data-challenge-bank>
+          {challenges.map((challenge) => (
+            <li data-id={challenge.id} data-type={challenge.type} data-options={challenge.options?.join("|_")}>{challenge.question}</li>
+          ))}
+        </ul>
+      </section>
+    </div>
+  </aside>
+)}
+
+<script>
+  const tocRoots = document.querySelectorAll<HTMLElement>("[data-floating-toc]");
+
+  tocRoots.forEach((root) => {
+    const trigger = root.querySelector<HTMLButtonElement>(".floating-toc__trigger");
+    const content = root.querySelector<HTMLElement>(".floating-toc__content");
+    const items = [...root.querySelectorAll<HTMLElement>("[data-toc-slug]")];
+    const links = [...root.querySelectorAll<HTMLAnchorElement>(".floating-toc__item")];
+    const sections = links
+      .map((link) => document.getElementById(link.dataset.tocSlug ?? ""))
+      .filter((section): section is HTMLElement => Boolean(section));
+    const challengeRoot = root.querySelector<HTMLElement>("[data-toc-challenge]");
+    const challengeNumber = challengeRoot?.querySelector<HTMLElement>("[data-challenge-number]");
+    const challengeQuestion = challengeRoot?.querySelector<HTMLElement>("[data-challenge-question]");
+    const challengeResponse = challengeRoot?.querySelector<HTMLElement>("[data-challenge-response]");
+    const challengeBank = Array.from(challengeRoot?.querySelectorAll<HTMLElement>("[data-challenge-bank] li") ?? []);
+    let challengeIndex = 0;
+
+    const showChallenge = (index: number) => {
+      const challenge = challengeBank[index];
+      if (!challenge || !challengeNumber || !challengeQuestion || !challengeResponse) return;
+      challengeIndex = index;
+      challengeNumber.textContent = challenge.dataset.id ?? "";
+      challengeQuestion.textContent = challenge.textContent ?? "";
+      const options = challenge.dataset.options?.split("|_").filter(Boolean);
+      challengeResponse.textContent = options?.length
+        ? `Choose: ${options.join(" · ")}`
+        : challenge.dataset.type === "freeResponse"
+          ? "Consider your answer before continuing."
+          : "Respond: true, false, indeterminate, or meaningless.";
+    };
+
+    if (!trigger || !content || sections.length === 0) return;
+
+    const setOpen = (open: boolean) => {
+      trigger.setAttribute("aria-expanded", String(open));
+      trigger.setAttribute("aria-label", open ? "Close table of contents" : "Open table of contents");
+      content.hidden = !open;
+      root.toggleAttribute("data-open", open);
+    };
+
+    const updateActive = () => {
+      const threshold = window.innerHeight * 0.32;
+      const active = sections.reduce((current, section) =>
+        section.getBoundingClientRect().top <= threshold ? section : current, sections[0]);
+
+      items.forEach((item) => {
+        const isActive = item.dataset.tocSlug === active.id;
+        item.toggleAttribute("data-active", isActive);
+        if (item.matches("a")) item.setAttribute("aria-current", isActive ? "location" : "false");
+      });
+    };
+
+    trigger.addEventListener("click", () => setOpen(trigger.getAttribute("aria-expanded") !== "true"));
+    challengeRoot?.querySelector<HTMLButtonElement>("[data-next-challenge]")?.addEventListener("click", () => {
+      if (challengeBank.length < 2) return;
+      let next = challengeIndex;
+      while (next === challengeIndex) next = Math.floor(Math.random() * challengeBank.length);
+      showChallenge(next);
+    });
+    links.forEach((link) => link.addEventListener("click", () => setOpen(false)));
+    document.addEventListener("click", (event) => {
+      if (!root.contains(event.target as Node)) setOpen(false);
+    });
+    document.addEventListener("keydown", (event) => {
+      if (event.key === "Escape" && trigger.getAttribute("aria-expanded") === "true") {
+        setOpen(false);
+        trigger.focus();
+      }
+    });
+    document.addEventListener("scroll", updateActive, { passive: true });
+    showChallenge(Math.floor(Math.random() * challengeBank.length));
+    updateActive();
+  });
+</script>

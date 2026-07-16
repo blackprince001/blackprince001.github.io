@@ -1,0 +1,9 @@
+---
+import MeshRenderSwitch from "../../graphics/render";
+---
+
+<section class="interactive-island" aria-label="Interactive three-dimensional model">
+  <p class="interactive-island__fallback">Interactive model: drag to inspect the object from different angles.</p>
+  <MeshRenderSwitch {...Astro.props} client:visible={{ rootMargin: "240px" }} />
+  <noscript>Enable JavaScript to inspect this three-dimensional model.</noscript>
+</section>

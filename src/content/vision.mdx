@@ -79,7 +79,7 @@ There's one quirk in the detection results worth flagging. The *vehicles* class 
 This looks bad until you realize it doesn't matter. Roads are large amorphous regions, not compact objects, so bounding-box representation is inherently a poor fit for them. Annotations are partial. The metric punishes any prediction that extends past the labeled extent, even when it's semantically correct. None of this affects the pipeline because **the road mask is precomputed once during data preparation** and used as a static binary filter at inference time. The detector's road-class output is never consulted online. The mask comes from accumulating per-frame road regions across the training set, then applying morphological closing and opening to clean up noise.
 
 <div className="flex justify-center my-10">
-  <video controls autoPlay loop muted playsInline className="max-w-2xl w-full rounded-lg shadow-md">
+  <video controls loop muted playsInline preload="none" poster="../video-posters/rtdetr-l_clip1.mp4.png" className="max-w-2xl w-full rounded-lg shadow-md">
     <source src="../traffic-pipeline/rtdetr-l_clip1.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>
@@ -185,7 +185,7 @@ A fixed-FPS controller paces the system. If processing is ahead of schedule, it 
 The output is an annotated video (road mask overlay, tracked boxes with IDs and speeds, and a HUD reporting live vehicle count, occupancy, congestion index, and the next-step density forecast) plus a parallel CSV writer dumping the full 10-feature telemetry stream for offline analysis.
 
 <div className="flex justify-center my-10">
-  <video controls autoPlay loop muted className="max-w-2xl w-full rounded-lg shadow-md">
+  <video controls loop muted playsInline preload="none" poster="../video-posters/pipeline_yolov5l_gru.mp4.png" className="max-w-2xl w-full rounded-lg shadow-md">
     <source src="../traffic-pipeline/pipeline_yolov5l_gru.mp4" type="video/mp4" />
     Your browser does not support the video tag.
   </video>

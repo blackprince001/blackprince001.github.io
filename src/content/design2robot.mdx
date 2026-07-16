@@ -23,9 +23,11 @@ Transforming your static CAD models into dynamic, simulatable robots isn't just 
     <video
         className="rounded-lg"
         controls
-        autoPlay
         loop
         muted
+        playsInline
+        preload="none"
+        poster="../video-posters/video-placeholder.svg"
     >
         <source src="../robotics/motion.webm" type="video/webm" />
         Your browser does support the video tag.
@@ -101,9 +103,6 @@ By following these steps, you've successfully transformed your Fusion 360 model 
 
 Whether you're designing for simulations, testing robotic kinematics, or preparing a model for more advanced control setups, having your Fusion 360 model in URDF format is a powerful step forward. With your model now in ROS-compatible format, you're well-prepared to continue exploring robotics, experimenting with new configurations, or integrating additional sensors and mechanisms. This process not only enhances your model's realism but also provides a bridge from design to functional simulation and beyond.
 
-You can follow the suggestion below to see how I setup gazebo to simulate the robot moving around. 
-
-<BlogSuggestion link="/blog/gazebo" title="Simulations with Gazebo" />
 
 Here are also a list of resources used to design the robot and export to URDF.
 

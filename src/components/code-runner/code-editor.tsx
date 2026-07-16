@@ -37,15 +37,16 @@ export function CodeEditor({
           language
         )
       }
-      padding={16}
+      padding={20}
       placeholder={placeholder}
-      className="code-editor min-h-[300px] bg-background text-foreground"
-      textareaClassName="focus:outline-none focus:ring-0"
+      className="code-editor"
+      textareaClassName="code-editor__textarea"
       style={{
         fontFamily:
           'JetBrains Mono, Consolas, Monaco, "Andale Mono", "Ubuntu Mono", monospace',
-        fontSize: "14px",
-        lineHeight: "1.6",
+        minHeight: "20rem",
+        fontSize: "13px",
+        lineHeight: "1.7",
       }}
     />
   )

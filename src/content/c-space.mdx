@@ -28,17 +28,11 @@ In essence, **C-space allows us to translate the complicated physical motion of 
 
 Robots are typically constructed from rigid bodies, called **links**, that are connected by various joints. Common joint types include **revolute** (hinge), **prismatic** (sliding), and **spherical** (ball-and-socket) joints, and each joint type provides specific freedoms while imposing constraints on the rigid bodies it connects.
 
-<div className="flex flex-col items-center my-12">
-  <img
-    src="../c-space/Pasted image 20260406105817.png"
-    alt="Diagrams showing common robot joint types: revolute (R), prismatic (P), helical (H), cylindrical (C), universal (U), and spherical (S) joints"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-[10px] text-zinc-500/50 mt-4 text-center italic">
-    Robot Joint Types: Each joint type provides a specific number of freedoms while constraining all other relative motion.
-  </div>
-</div>
+<Figure
+  src="../c-space/Pasted image 20260406105817.png"
+  alt="Diagrams showing common robot joint types: revolute, prismatic, helical, cylindrical, universal, and spherical joints"
+  caption="Robot joint types: each joint provides a specific number of freedoms while constraining all other relative motion."
+/>
 
 **Robot joints serve a dual purpose in defining a robot's configuration space: they provide specific freedoms of motion between rigid bodies while simultaneously acting as mathematical constraints that limit their overall movement**. When two rigid bodies are connected by a joint, the total degrees of freedom of the system is reduced. The number of constraints a joint imposes, subtracted from the rigid body's inherent dof (three for a planar body and six for a spatial body), equals the exact number of freedoms that specific joint provides. This relationship is foundational for determining the dimension of a robot's overall C-space.
 
@@ -208,17 +202,11 @@ The topology of a complex robotic system can often be understood by expressing i
 
 Using these building blocks, the C-space of a **2R robot arm** (two revolute joints) is written as $S^1 \times S^1$, which forms a torus ($T^2$). Similarly, the C-space of a **planar rigid body** is $\mathbb{R}^2 \times S^1$, combining its 2D Euclidean translation with its 1D circular rotation.
 
-<div className="flex flex-col items-center my-12">
-  <img
-    src="../c-space/Pasted image 20260406110653.png"
-    alt="Visualization of the C-space of a 2R robot arm as a torus formed by the product of two circles S1 x S1"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-[10px] text-zinc-500/50 mt-4 text-center italic">
-    2R Robot C-space: The configuration space of a two-revolute-joint robot arm is topologically a torus $T^2 = S^1 \times S^1$.
-  </div>
-</div>
+<Figure
+  src="../c-space/Pasted image 20260406110653.png"
+  alt="Visualization of the C-space of a 2R robot arm as a torus formed by the product of two circles"
+  caption="2R robot C-space: the configuration space of a two-revolute-joint robot arm is topologically a torus $T^2 = S^1 \times S^1$."
+/>
 
 Understanding topology is critical because if we ignore it and force a curved topological space into a flat grid of minimal coordinates (an <em>explicit parameterization</em>), we create <strong>mathematical singularities</strong>. A classic example is using latitude and longitude to map a sphere; this representation breaks down at the North and South Poles, causing velocity calculations to blow up toward infinity even when the robot's physical motion is smooth.
 
@@ -314,17 +302,11 @@ For a Pfaffian constraint $A(\theta)\dot{\theta} = 0$, if there does not exist a
 <Example title="A Coin Rolling Upright on a Plane Without Slipping">
 A coin rolling upright on a plane without slipping. The "no-slip" velocity constraint restricts its instantaneous movement direction, but through maneuvering, the coin can still reach any configuration within its full 4-dimensional C-space.
 
-<div className="flex flex-col items-center my-12">
-  <img
-    src="../c-space/Pasted image 20260406110817.png"
-    alt="A coin rolling on a flat plane illustrating a nonholonomic no-slip constraint: despite the velocity constraint the coin can reach any (x, y, theta, phi) in its 4D C-space through maneuvering"
-    className="max-w-full h-auto object-contain rounded-lg shadow-md"
-    style={{ height: 'auto' }}
-  />
-  <div className="text-[10px] text-zinc-500/50 mt-4 text-center italic">
-    Nonholonomic Constraint: A rolling coin cannot slip sideways instantaneously, yet it can maneuver to reach any $(x, y, \theta, \phi)$ in its 4D C-space.
-  </div>
-</div>
+<Figure
+  src="../c-space/Pasted image 20260406110817.png"
+  alt="A coin rolling on a flat plane illustrating a nonholonomic no-slip constraint"
+  caption="Nonholonomic constraint: a rolling coin cannot slip sideways instantaneously, yet it can maneuver to reach any $(x, y, \theta, \phi)$ in its 4D C-space."
+/>
 </Example>
 
 ## Task Space and Workspace
@@ -347,4 +329,3 @@ A coin rolling upright on a plane without slipping. The "no-slip" velocity const
 To calculate movements safely, engineers must choose how to mathematically represent this C-space. Because curved topological spaces cause mathematical singularities when forced into flat, minimum-coordinate grids (explicit parameterization), it is standard to use an **implicit representation**. This method avoids singularities by using extra coordinates and restricting them with **holonomic constraints** — position-level equations that permanently tie variables together and successfully reduce the dimension of the actual reachable C-space. These are fundamentally different from **nonholonomic constraints**, which are velocity-level restrictions (like a wheel rolling without slipping) that limit instantaneous movement but do not shrink the robot's overall reachable space.
 
 Finally, while C-space tracks the entire machine, a robot's practical application is evaluated using two end-effector concepts: the **task space** (the mathematical space naturally required to express a specific job) and the **workspace** (the physical space the robot's structure actually allows it to reach).
-

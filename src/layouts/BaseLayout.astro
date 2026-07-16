@@ -1,0 +1,128 @@
+---
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+  pathname?: string;
+  robots?: string;
+}
+
+const {
+  title = "blackprince | Nebula",
+  description = "Engineering journal of Prince Kwabena Appiah Boadu.",
+  pathname = Astro.url.pathname,
+  robots,
+} = Astro.props;
+const canonical = new URL(pathname, Astro.site);
+const socialImage = new URL("/images/seo-image.png", Astro.site);
+
+const nav = [
+  ["Writing", "/blog"],
+  ["Shorts", "/shorts"],
+  ["Projects", "/projects"],
+  ["Manuscripts", "/publications"],
+  ["Reading", "/reading"],
+];
+---
+
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" href="/icon.svg" type="image/svg+xml" />
+    <link rel="alternate" type="application/rss+xml" title="blackprince — Writing" href="/rss.xml" />
+    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    <link rel="canonical" href={canonical} />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:url" content={canonical} />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
+    <title>{title}</title>
+    <script is:inline>
+      (() => {
+        const root = document.documentElement;
+        const saved = localStorage.getItem("theme");
+        const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
+        const theme = saved === "light" || saved === "dark" ? saved : systemDark ? "dark" : "light";
+        if (saved === "light" || saved === "dark") root.dataset.theme = saved;
+        root.classList.toggle("dark", theme === "dark");
+      })();
+    </script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <nav class="site-nav" aria-label="Primary navigation" data-collapsed="true">
+      <a class="site-nav__home" href="/#intro" aria-label="blackprince, home" aria-current={pathname === "/" ? "page" : undefined}>bp</a>
+      <div class="site-nav__items" id="primary-navigation-items">
+        {nav.map(([label, href]) => (
+          <a href={href} aria-current={pathname.startsWith(href) ? "page" : undefined}>{label}</a>
+        ))}
+        <button class="theme-toggle" type="button" aria-label="Toggle color theme">
+          <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M13.1 10.35A5.75 5.75 0 0 1 5.65 2.9 5.75 5.75 0 1 0 13.1 10.35Z" /></svg>
+          <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="2.5" /><path d="M8 1v1.25M8 13.75V15M1 8h1.25M13.75 8H15M3.05 3.05l.9.9M12.05 12.05l.9.9M12.95 3.05l-.9.9M3.95 12.05l-.9.9" /></svg>
+        </button>
+      </div>
+      <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="primary-navigation-items" aria-label="Expand navigation">
+        <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M3 6.25 8 10.5l5-4.25" /></svg>
+      </button>
+    </nav>
+    <main id="main-content"><slot /></main>
+    <footer class="site-footer">
+      <span>Prince Kwabena Appiah Boadu</span>
+      <span>Systems · AI/Robotics · Learning</span>
+    </footer>
+    <script>
+      const button = document.querySelector<HTMLButtonElement>(".theme-toggle");
+      const updateThemeButton = () => {
+        if (!button) return;
+        const nextTheme = document.documentElement.classList.contains("dark") ? "light" : "dark";
+        button.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
+        button.title = `Switch to ${nextTheme} theme`;
+      };
+      updateThemeButton();
+      button?.addEventListener("click", () => {
+        const root = document.documentElement;
+        const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
+        const current = root.dataset.theme ?? (systemDark ? "dark" : "light");
+        const next = current === "dark" ? "light" : "dark";
+        root.dataset.theme = next;
+        root.classList.toggle("dark", next === "dark");
+        localStorage.setItem("theme", next);
+        updateThemeButton();
+      });
+
+      const navigation = document.querySelector<HTMLElement>(".site-nav");
+      const navigationToggle = document.querySelector<HTMLButtonElement>(".site-nav__toggle");
+
+      const setNavigationCollapsed = (collapsed: boolean) => {
+        if (!navigation || !navigationToggle) return;
+        navigation.dataset.collapsed = String(collapsed);
+        navigationToggle.setAttribute("aria-expanded", String(!collapsed));
+        navigationToggle.setAttribute("aria-label", collapsed ? "Expand navigation" : "Collapse navigation");
+      };
+
+      navigationToggle?.addEventListener("click", () => {
+        setNavigationCollapsed(navigation?.dataset.collapsed !== "true");
+      });
+      document.addEventListener("click", (event) => {
+        if (navigation && !navigation.contains(event.target as Node)) setNavigationCollapsed(true);
+      });
+      document.addEventListener("keydown", (event) => {
+        if (event.key === "Escape" && navigation?.dataset.collapsed !== "true") {
+          setNavigationCollapsed(true);
+          navigationToggle?.focus();
+        }
+      });
+    </script>
+  </body>
+</html>

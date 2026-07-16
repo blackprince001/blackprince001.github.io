@@ -1,0 +1,12 @@
+---
+import Quiz from "../../quiz/quiz";
+
+interface QuizAnswer { text: string; correct: boolean }
+interface QuizQuestion { question: string; answers: QuizAnswer[]; image?: string; explanation?: string }
+interface Props { quizData: QuizQuestion[] }
+---
+
+<section class="interactive-island" aria-label="Article knowledge check">
+  <Quiz {...Astro.props} client:visible={{ rootMargin: "240px" }} />
+  <noscript>Enable JavaScript to take the knowledge check.</noscript>
+</section>

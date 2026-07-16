@@ -46,9 +46,7 @@ While both measures often lead to similar trees, Gini impurity is computationall
 
 For instance, when training a `DecisionTreeClassifier` on the iris dataset, the algorithm might find that splitting based on petal length ≤ 2.45 cm results in the purest subsets.
 
-<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.50.47 PM.png" alt="Decision tree trained on the iris dataset" caption={<><Example title="Iris Dataset Classification">
-**Iris Dataset Example:** A decision tree trained on the iris dataset using petal length and width as features.
-</Example></>} />
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.50.47 PM.png" alt="Decision tree trained on the iris dataset" caption={<><strong>Iris Dataset Example:</strong> A decision tree trained on the iris dataset using petal length and width as features.</>} />
 
 ### Recursive Splitting and Stopping Criteria
 
@@ -176,9 +174,7 @@ Decision trees also have disadvantages:
 
 Decision trees possess a remarkable ability to adapt to training data, often to the point of overfitting. **Overfitting occurs when a model learns the training data too well, capturing noise and outliers that hinder its ability to generalize to unseen data**. **Regularization techniques are employed to curb a decision tree's flexibility during training, thus mitigating the risk of overfitting**.
 
-<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.54.09 PM.png" alt="Overfitting in decision trees" caption={<><Example title="Overfitting in Decision Trees">
-**Overfitting Example:** A decision tree that has overfit to the training data, creating overly complex decision boundaries.
-</Example></>} />
+<Figure src="../ml-book-assets/Screenshot 2024-11-08 at 7.54.09 PM.png" alt="Overfitting in decision trees" caption={<><strong>Overfitting Example:</strong> A decision tree that has overfit to the training data, creating overly complex decision boundaries.</>} />
 
 Limiting the depth of a decision tree is a straightforward regularization method. Scikit-Learn provides the `max_depth` hyperparameter to control this aspect. A lower `max_depth` restricts the tree's growth, preventing it from becoming overly complex.
 
@@ -261,5 +257,4 @@ However, decision trees are not without their limitations. Their sensitivity to 
 The CART algorithm's greedy, hierarchical approach makes decision trees fast to train and easy to interpret, but also contributes to their instability. By combining multiple trees through ensemble methods, we can leverage the strengths of decision trees—their interpretability and ability to capture complex patterns—while mitigating their weaknesses.
 
 As we move forward in machine learning, the interpretability of decision trees remains valuable, even as we develop more complex models. Understanding how decision trees work provides a foundation for understanding ensemble methods and other advanced techniques that build upon these fundamental algorithms.
-
 

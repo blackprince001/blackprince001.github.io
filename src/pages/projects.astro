@@ -1,0 +1,24 @@
+---
+import ProjectFeature from "../components/astro/ProjectFeature.astro";
+import OpenSourceProjects from "../components/astro/OpenSourceProjects.astro";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { projects } from "../lib/site-data";
+---
+
+<BaseLayout title="Projects — blackprince" description="Selected systems, research prototypes, and open-source engineering work.">
+  <article class="collection-page">
+    <header class="collection-header">
+      <p class="section-index">Systems and research</p>
+      <h1>Projects</h1>
+      <p>Selected systems, research prototypes, and open-source engineering work.</p>
+    </header>
+    <section class="featured-projects" aria-labelledby="featured-projects-title">
+      <p class="section-index">Selected work</p>
+      <h2 id="featured-projects-title">Featured projects</h2>
+      <div class="project-list">
+        {projects.map((project, index) => <ProjectFeature project={project} index={index} layout="detail" />)}
+      </div>
+    </section>
+    <OpenSourceProjects />
+  </article>
+</BaseLayout>

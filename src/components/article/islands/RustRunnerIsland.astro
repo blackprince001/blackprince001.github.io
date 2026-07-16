@@ -1,0 +1,9 @@
+---
+import RustRunner from "../../code-runner/rust";
+---
+
+<section class="interactive-island" aria-label="Interactive Rust code runner">
+  <p class="interactive-island__fallback">Editable Rust example. Running code connects to the configured playground.</p>
+  <RustRunner {...Astro.props} client:only="react" />
+  <noscript>Enable JavaScript to edit and run this example.</noscript>
+</section>

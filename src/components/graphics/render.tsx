@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Mesh } from "three";
-import { STLLoader } from 'three-stdlib';
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Suspense } from "react";
 import { StlViewer } from "react-stl-viewer";
@@ -16,7 +15,7 @@ interface RenderProp {
 
 function STLRender(prop: RenderProp) {
   return (
-    <div className="flex justify-center items-center w-full my-8">
+    <div className="flex justify-center items-center w-full my-8 rounded-lg overflow-hidden bg-[var(--surface)] shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]">
       <StlViewer
         style={{
           top: 0,
@@ -109,7 +108,7 @@ function GLBMeshRender(prop: RenderProp) {
       <Canvas
         flat
         linear
-        className="border-solid border-2 border-gray-500 rounded-lg"
+        className="rounded-lg"
         style={{ height: '600px', width: '100%', maxWidth: '1000px' }}
         camera={{ position: [5, 5, 5], fov: 50 }}
         shadows

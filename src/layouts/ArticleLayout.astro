@@ -1,0 +1,78 @@
+---
+import "katex/dist/katex.min.css";
+import "../styles/islands.css";
+import ArticleComments from "../components/article/ArticleComments.astro";
+import FloatingToc from "../components/astro/FloatingToc.astro";
+import TagPill from "../components/astro/TagPill.astro";
+import BaseLayout from "./BaseLayout.astro";
+
+interface Props {
+  title: string;
+  description?: string;
+  publishDate: Date;
+  tags: string[];
+  headings?: { depth: number; slug: string; text: string }[];
+  pathname: string;
+}
+
+const {
+  title,
+  description,
+  publishDate,
+  tags,
+  headings = [],
+  pathname,
+} = Astro.props;
+const formattedDate = publishDate.toLocaleDateString("en", {
+  day: "2-digit",
+  month: "short",
+  year: "numeric",
+});
+---
+
+<BaseLayout
+  title={`${title} | blackprince`}
+  description={description ?? `${title}, by Prince Kwabena Appiah Boadu.`}
+  pathname={pathname}
+>
+  <article class="article-shell">
+    <header class="article-header">
+      <a class="article-back" href="/blog">← Writing</a>
+      <h1>{title}</h1>
+      <br>
+      <div class="article-meta">
+        <div class="tag-list">{tags.map((tag: string) => <TagPill label={tag} />)}</div>
+        <time datetime={publishDate.toISOString()}>{formattedDate}</time>
+      </div>
+    </header>
+    <div class="article-body"><slot /></div>
+    <ArticleComments />
+  </article>
+  <FloatingToc headings={headings} />
+</BaseLayout>
+
+<script>
+  document
+    .querySelectorAll<HTMLVideoElement>(".article-body video")
+    .forEach((video) => {
+      const setShape = (width: number, height: number) => {
+        if (!width || !height) return;
+        const ratio = width / height;
+        video.dataset.mediaShape =
+          ratio >= 1.2 ? "landscape" : ratio <= 0.82 ? "portrait" : "square";
+      };
+
+      if (video.poster) {
+        const poster = new Image();
+        poster.addEventListener(
+          "load",
+          () => setShape(poster.naturalWidth, poster.naturalHeight),
+          { once: true },
+        );
+        poster.src = video.poster;
+      }
+      video.addEventListener("loadedmetadata", () =>
+        setShape(video.videoWidth, video.videoHeight),
+      );
+    });
+</script>

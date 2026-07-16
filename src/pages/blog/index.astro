@@ -1,0 +1,93 @@
+---
+import { getCollection } from "astro:content";
+import TagPill from "../../components/astro/TagPill.astro";
+import BaseLayout from "../../layouts/BaseLayout.astro";
+
+const writing = (await getCollection("writing", ({ data }) => !data.draft))
+  .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
+const tags = [...new Set(writing.map((entry) => entry.data.tag))].sort();
+const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", day: "numeric" });
+---
+
+<BaseLayout title="Writing — blackprince" description="Research notes, engineering essays, and works in progress.">
+  <article class="index-page">
+    <h1>Writing</h1>
+    <p>Research notes, engineering essays, and works in progress from the systems I build and the questions I keep returning to.</p>
+    <div class="writing-tools" data-writing-tools>
+      <div class="writing-field">
+        <label for="writing-search">Search writing</label>
+        <div class="writing-search">
+          <svg aria-hidden="true" viewBox="0 0 20 20"><path d="m14.2 14.2 3.3 3.3m-1.8-8.1a6.3 6.3 0 1 1-12.6 0 6.3 6.3 0 0 1 12.6 0Z" /></svg>
+          <input id="writing-search" type="search" placeholder="Search by title, topic, or summary" autocomplete="off" data-writing-search />
+        </div>
+      </div>
+      <div class="writing-filters" role="group" aria-label="Filter writing by topic">
+        <TagPill label="All" button active dataTag="all" />
+        {tags.map((tag) => <TagPill label={tag} button dataTag={tag} />)}
+      </div>
+      <p class="writing-results" role="status" aria-live="polite">Showing all {writing.length} articles.</p>
+    </div>
+    <div class="entry-list" data-writing-list>
+      {writing.map((entry) => (
+        <a
+          class="entry-row"
+          href={`/blog/${entry.id}`}
+          data-writing-entry
+          data-title={entry.data.title.toLocaleLowerCase()}
+          data-tag={entry.data.tag.toLocaleLowerCase()}
+          data-description={(entry.data.description ?? "").toLocaleLowerCase()}
+        >
+          <span class="entry-date">{date.format(entry.data.publishDate)}</span>
+          <span class="entry-main">
+            <span class="entry-title">{entry.data.title}</span>
+            <TagPill label={entry.data.tag} />
+          </span>
+          <span class="entry-arrow" aria-hidden="true">↗</span>
+        </a>
+      ))}
+    </div>
+    <p class="writing-empty" data-writing-empty hidden>No articles match this search and topic.</p>
+  </article>
+</BaseLayout>
+
+<script>
+  document.querySelectorAll<HTMLElement>("[data-writing-tools]").forEach((tools) => {
+    const input = tools.querySelector<HTMLInputElement>("[data-writing-search]");
+    const buttons = [...tools.querySelectorAll<HTMLButtonElement>("[data-blog-tag]")];
+    const entries = [...document.querySelectorAll<HTMLElement>("[data-writing-entry]")];
+    const results = tools.querySelector<HTMLElement>(".writing-results");
+    const empty = document.querySelector<HTMLElement>("[data-writing-empty]");
+    let activeTag = "all";
+
+    if (!input || !results || !empty) return;
+
+    const normalize = (value: string) => value.trim().toLocaleLowerCase();
+
+    const updateResults = () => {
+      const query = normalize(input.value);
+      let visible = 0;
+
+      entries.forEach((entry) => {
+        const matchesTag = activeTag === "all" || normalize(entry.dataset.tag ?? "") === activeTag;
+        const searchable = `${entry.dataset.title} ${entry.dataset.tag} ${entry.dataset.description}`;
+        const matchesQuery = !query || searchable.includes(query);
+        entry.hidden = !(matchesTag && matchesQuery);
+        if (!entry.hidden) visible += 1;
+      });
+
+      results.textContent = query || activeTag !== "all"
+        ? `${visible} ${visible === 1 ? "article" : "articles"} found.`
+        : `Showing all ${visible} articles.`;
+      empty.hidden = visible !== 0;
+    };
+
+    input.addEventListener("input", updateResults);
+    buttons.forEach((button) => button.addEventListener("click", () => {
+      activeTag = normalize(button.dataset.blogTag ?? "all");
+      buttons.forEach((item) => item.setAttribute("aria-pressed", String(item === button)));
+      updateResults();
+    }));
+
+    updateResults();
+  });
+</script>

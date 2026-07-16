@@ -1,0 +1,78 @@
+---
+type: Delivery Checkpoint
+title: Phase 2 content migration
+description: Current route, content, and island parity checkpoint for the Astro migration.
+tags: [astro, content, migration, phase-2]
+timestamp: 2026-07-14
+---
+
+# Phase 2 content migration
+
+Status: Complete
+Branch: `codex/phase-2-content-migration`
+
+## Checkpoint outcome
+
+The Astro preview now builds every public content view from the site's canonical sources:
+
+- 29 published long-form articles and the writing index
+- 5 shorts, the shorts index, and 7 tag indexes
+- projects, manuscripts, and reading pages
+- homepage, sitemap, and 404 page
+
+This produces 48 static pages. The temporary writing-index JSON has been removed; the homepage and writing page now query the validated Astro collection directly.
+
+## Component boundary
+
+Article MDX maps legacy component names to small Astro-native primitives for figures, examples, sidenotes, suggestions, previews, code, and link embeds. Rich figure captions are rendered as static, allow-listed HTML with inline KaTeX support.
+
+Interactive demonstrations remain React islands. Heavy visualization and code-runner components load only when their article requires them and include a textual fallback. Mafs demonstrations and language runners use client-only boundaries because their current dependencies are not server-rendering compatible; this is an explicit compatibility exception, not the default component strategy.
+
+The shared editorial layer now also includes colored tag pills, searchable and tag-filterable writing, centered article tables, and a press-mode floating table of contents. The projects route preserves the previous information hierarchy—featured work followed by sortable, paginated open-source repositories—inside the new visual system.
+
+Tag pills now cover manuscript domains, reading categories, and book statuses as well as writing and project technologies. Detailed project entries also restore the backup site's complete media sets: supporting images sit beside the project narrative, remaining assets form a responsive gallery, images open in a keyboard-operable viewer, and video/YouTube sources retain their native controls.
+
+The homepage wordmark now returns to the intro view, and the manuscript list uses first-page previews rendered from the canonical local PDFs. These previews add useful visual context without introducing decorative card chrome or changing the site's restrained editorial hierarchy.
+
+The manuscript index now carries those previews into the full research archive. Global navigation has moved from the top edge into a compact bottom dock, leaving the reading plane clear while preserving every destination at mobile widths. Article sidenotes once again behave as notes: inline and parenthetical in narrow layouts, numbered and placed in the margin when space allows.
+
+The dock now owns the site identity as well: `blackprince` is the Home destination and the redundant top wordmark has been removed. Navigation items collapse while the page is actively scrolling and return after scrolling settles; the same control can be toggled directly, remains keyboard-accessible, and uses a horizontally scrollable inner row when narrow screens cannot fit every destination at once.
+
+Figures no longer sit inside outlined or tinted frames. Images open in a native modal viewer with a dark backdrop, keyboard navigation, focus restoration, reduced-motion handling, and a shared-element expansion where the browser supports view transitions. The three robotics demonstrations and the general mesh viewer now consume the same page, surface, ink, and muted theme tokens as the surrounding article, so the existing Astro theme switch updates their chrome without a separate theme provider.
+
+Figure captions are centered beneath their media, and native article videos now share a centered, constrained presentation rather than inheriting inconsistent MDX wrapper alignment. The existing Giscus discussion configuration has also moved into the shared Astro article layout, restoring theme-aware comments to both long-form writing and shorts.
+
+JetBrains Mono is now self-hosted in regular and bold WOFF2 weights and owns the shared monospace token, including Astro metadata, tags, code, and React island utilities. The regular face is preloaded because these compact interface labels appear in the initial viewport; system monospace faces remain as resilient fallbacks.
+
+Article titles now use a tighter display scale. The floating outline once again includes the rotating Cicada challenge prompt, and wide article layouts measure and alternate sidenotes across both margins while preventing same-side collisions; narrow layouts retain the inline parenthetical treatment.
+
+Interactive article components now share the same minimal system language. Knowledge checks use clear progress, answer, verdict, and explanation states; Mafs graphs load their required styles, use legible bounded views, and inherit the active theme; and the Go, Rust, and in-browser Python runners share a responsive editor/console frame with explicit connection, running, success, and error feedback.
+
+Figures now respond to their composition context: article-level media can retain the wider visual measure, while figures nested in examples stay inside the surfaced panel. The configuration-space article's remaining raw image blocks were migrated to the shared centered, captioned, zoomable figure component.
+
+The rotation-frame, axis-angle, and screw-motion demos now use a shared fullscreen controller. Supporting browsers use the native fullscreen top layer; other browsers receive a body-level portal fallback with background scroll locking and Escape-to-exit, preventing later article figures or the bottom navigation from overlapping the active demo.
+
+## Verification evidence
+
+- `bun run check`: zero errors; six pre-existing TypeScript hints in legacy files
+- `bun run build`: 48 Astro pages generated successfully
+- `bun run build:next`: production fallback builds successfully with existing lint warnings
+- Browser sampling: long-form caption, shorts, projects, manuscripts, reading, and a code-runner article each have one H1, a main landmark, no object serialization text, and no horizontal overflow
+- Mobile sampling at 390 px: long-form article, shorts index, and projects have no horizontal overflow
+- Browser error log: empty after the representative route checks
+- Writing interaction check: text search returned five robotics matches; the Machine Learning filter returned thirteen articles with an announced result count
+- Floating outline check: 24 H2/H3 entries tracked on the decision-tree article; Escape closed the panel and returned focus to its trigger
+- Project hierarchy check: 16 featured projects plus 84 non-fork GitHub repositories, paginated seven at a time
+- Table check: table and cell content centered with no document overflow
+- `bun run audit:site`: all local references across 48 generated HTML pages resolve; the publications API matches its canonical JSON; robots points to the Astro sitemap; RSS contains all 34 published writing and shorts entries
+- Final desktop sampling at 1280 px: homepage, writing, two representative complex articles, projects, manuscripts, reading, and shorts each have one H1, one main landmark, labeled controls/media, and no horizontal overflow
+- Final mobile sampling at 390 px: homepage, writing, two representative complex articles, projects, manuscripts, and shorts have no horizontal overflow; dock and article-return targets retain at least a 24 px interaction height
+
+## Accepted machine-readable contracts
+
+- `/rss.xml` combines published long-form writing and shorts in reverse chronological order.
+- `/robots.txt` allows public crawling and names `/sitemap-index.xml` as the canonical sitemap.
+- `/api/publications` remains an exact static JSON compatibility endpoint backed by the canonical publication data.
+- Legacy `../` public-media conventions are normalized during MDX compilation, and the generated-output audit prevents a regression to broken route-relative assets.
+
+Production remains on Next as the rollback line until the Phase 4 launch gate is accepted.

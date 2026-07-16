@@ -1,0 +1,40 @@
+---
+import type { CollectionEntry } from "astro:content";
+import TagPill from "./TagPill.astro";
+
+interface Props {
+  entries: CollectionEntry<"shorts">[];
+  tags: string[];
+  activeTag?: string;
+}
+
+const { entries, tags, activeTag } = Astro.props;
+const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", day: "numeric" });
+const visibleEntries = activeTag ? entries.filter((entry) => entry.data.tags.includes(activeTag)) : entries;
+---
+
+<article class="index-page shorts-index">
+  <h1>Shorts</h1>
+  <p>Snapshots of ideas, course corrections, and mental models shared while they are still unfolding.</p>
+  <nav class="short-filter" aria-label="Filter shorts by topic">
+    <TagPill label="All" href="/shorts" active={!activeTag} />
+    {tags.map((tag) => (
+      <TagPill label={tag} href={`/shorts/tag/${encodeURIComponent(tag)}`} active={activeTag === tag} />
+    ))}
+  </nav>
+  <div class="entry-list">
+    {visibleEntries.map((entry) => (
+      <a class="short-entry" href={`/shorts/${entry.id}`}>
+        <span class="entry-date">{date.format(entry.data.publishedAt)}</span>
+        <span>
+          <strong>{entry.data.title}</strong>
+          {entry.data.summary && <small>{entry.data.summary}</small>}
+          <span class="tag-list short-entry__tags">
+            {entry.data.tags.map((tag) => <TagPill label={tag} />)}
+          </span>
+        </span>
+        <span class="entry-arrow" aria-hidden="true">↗</span>
+      </a>
+    ))}
+  </div>
+</article>

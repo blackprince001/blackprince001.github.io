@@ -1,0 +1,9 @@
+---
+interface Props { title?: string }
+const { title } = Astro.props;
+---
+
+<aside class="article-example" aria-label={title ? `Example: ${title}` : "Example"}>
+  <p class="article-example__label">Example{title ? ` · ${title}` : ""}</p>
+  <div><slot /></div>
+</aside>

@@ -1,0 +1,20 @@
+---
+interface Props {
+  index: string;
+  eyebrow: string;
+  title: string;
+  href: string;
+  label?: string;
+  headingId: string;
+}
+
+const { index, eyebrow, title, href, label = "View all", headingId } = Astro.props;
+---
+
+<div class="section-heading">
+  <div>
+    <p class="section-index">{index} / {eyebrow}</p>
+    <h2 id={headingId}>{title}</h2>
+  </div>
+  <a href={href} class="text-link">{label} <span aria-hidden="true">→</span></a>
+</div>

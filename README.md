@@ -1,36 +1,42 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# blackprince
 
-## Getting Started
+Prince Kwabena Appiah Boadu’s static portfolio, research archive, and technical journal. The production site is built with Astro; React is retained only for interactive article islands such as simulations, graphs, quizzes, and code runners.
 
-First, run the development server:
+## Local development
+
+The project uses Bun 1.3.14 and a single `bun.lock`.
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install --frozen-lockfile
+bun run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+The local site runs at `http://localhost:4321`.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Verification
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+```bash
+bun run verify
+bun audit --production
+```
 
-## Learn More
+`verify` type-checks Astro/shared source, builds the complete static artifact, and audits all generated pages for internal link/media integrity, metadata, headings/landmarks, alt text, deferred video, machine-readable endpoints, zero-framework-JS core routes, and asset budgets.
 
-To learn more about Next.js, take a look at the following resources:
+## Content authoring
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- Long-form writing: `src/content/*.mdx`
+- Shorts: `src/content/shorts/*.mdx`
+- Projects: `src/data/featured-projects.json`
+- Flagship case studies: `src/lib/flagship-stories.ts`
+- Manuscripts: `src/data/publications.json`
+- Reading: `src/data/reading.json`
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+Public media belongs in `public/`. Existing MDX may use the legacy `../asset` convention; the Astro processor normalizes it to a root-relative public URL and the generated-site audit verifies the target.
 
-## Deploy on Vercel
+Use Astro components for structure and static presentation. Add a React island only when the feature requires client state or a browser-only rendering engine, and prefer `client:visible` for heavy demonstrations below the fold.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Delivery
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Pull requests build and retain an Astro preview artifact. A push to `master` runs the same verification gate and deploys `dist` to GitHub Pages.
+
+The redesign decisions, phase checkpoints, and release/rollback procedure live in [`docs/redesign`](./docs/redesign/index.md).

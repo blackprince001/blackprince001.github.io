@@ -19,10 +19,10 @@ export function InfoPanel({
   }, [isFullscreen]);
 
   return (
-    <div className="shrink-0 border-t border-zinc-200/50 bg-zinc-100 dark:border-zinc-800/50 dark:bg-zinc-900/40">
+    <div className="shrink-0 bg-[var(--surface)] text-[var(--ink)]">
       <button
         onClick={() => setCollapsed(!collapsed)}
-        className="flex w-full items-center justify-center gap-1.5 py-1.5 text-xs text-zinc-500 transition-colors hover:text-zinc-800 dark:hover:text-zinc-200"
+        className="flex w-full items-center justify-center gap-1.5 py-1.5 text-xs text-[var(--muted)] transition-colors hover:text-[var(--ink)]"
       >
         {collapsed ? <ChevronUp size={14} /> : <ChevronDown size={14} />}
         {collapsed ? "Show details" : "Hide details"}
@@ -52,10 +52,10 @@ export function InfoCard({
 }) {
   return (
     <div
-      className={`rounded-xl border border-zinc-300/60 bg-zinc-50/60 p-4 dark:border-zinc-700/60 dark:bg-zinc-900/30 ${className}`}
+      className={`rounded-lg bg-[var(--page)] p-4 text-[var(--ink)] ${className}`}
     >
       {title && (
-        <h4 className="mb-2 text-sm font-semibold text-zinc-700 dark:text-zinc-300">
+        <h4 className="mb-2 text-sm font-semibold text-[var(--ink)]">
           {title}
         </h4>
       )}

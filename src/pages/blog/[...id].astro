@@ -1,0 +1,63 @@
+---
+import { getCollection, render, type CollectionEntry } from "astro:content";
+import ArticleExample from "../../components/article/ArticleExample.astro";
+import ArticleFigure from "../../components/article/ArticleFigure.astro";
+import ArticleSidenote from "../../components/article/ArticleSidenote.astro";
+import ArticleCodeSnippet from "../../components/article/ArticleCodeSnippet.astro";
+import ArticlePreviewLink from "../../components/article/ArticlePreviewLink.astro";
+import ArticleSuggestion from "../../components/article/ArticleSuggestion.astro";
+import AxisAngleDemo from "../../components/article/islands/AxisAngleDemoIsland.astro";
+import GoRunner from "../../components/article/islands/GoRunnerIsland.astro";
+import HelloFx from "../../components/article/islands/HelloFxIsland.astro";
+import InequalitiesExample from "../../components/article/islands/InequalitiesExampleIsland.astro";
+import MeshRenderSwitch from "../../components/article/islands/MeshRenderIsland.astro";
+import PythonRunner from "../../components/article/islands/PythonRunnerIsland.astro";
+import Quiz from "../../components/article/islands/QuizIsland.astro";
+import RotationFrameDemo from "../../components/article/islands/RotationFrameDemoIsland.astro";
+import RustRunner from "../../components/article/islands/RustRunnerIsland.astro";
+import ScrewMotionDemo from "../../components/article/islands/ScrewMotionDemoIsland.astro";
+import Sigmoid from "../../components/article/islands/SigmoidIsland.astro";
+import ArticleLayout from "../../layouts/ArticleLayout.astro";
+
+export async function getStaticPaths() {
+  const entries = await getCollection("writing", ({ data }) => !data.draft);
+
+  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+}
+
+interface Props { entry: CollectionEntry<"writing"> }
+const { entry } = Astro.props;
+const { Content, headings } = await render(entry);
+---
+
+<ArticleLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  publishDate={entry.data.publishDate}
+  tags={[entry.data.tag]}
+  headings={headings}
+  pathname={Astro.url.pathname}
+>
+  <Content components={{
+    Figure: ArticleFigure,
+    Example: ArticleExample,
+    Sidenote: ArticleSidenote,
+    AutoNumberedSidenote: ArticleSidenote,
+    MarginNoteMarker: ArticleSidenote,
+    AutoNumberedMarginNote: ArticleSidenote,
+    BlogSuggestion: ArticleSuggestion,
+    PreviewLink: ArticlePreviewLink,
+    CodeSnippet: ArticleCodeSnippet,
+    MeshRenderSwitch,
+    HelloFx,
+    InequalitiesExample,
+    Sigmoid,
+    GoRunner,
+    PythonRunner,
+    RustRunner,
+    RotationFrameDemo,
+    AxisAngleDemo,
+    ScrewMotionDemo,
+    Quiz,
+  }} />
+</ArticleLayout>
