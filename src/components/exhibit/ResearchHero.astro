@@ -1,0 +1,21 @@
+---
+import type { FlagshipStory } from "../../lib/flagship-stories";
+import TagPill from "../astro/TagPill.astro";
+import EvidenceStage from "./EvidenceStage.astro";
+import ResourceLinks from "./ResourceLinks.astro";
+
+interface Props { story: FlagshipStory }
+const { story } = Astro.props;
+---
+
+<header class="research-hero">
+  <div class="research-hero__copy">
+    <a class="article-back" href="/projects">← Projects</a>
+    <p class="section-index">{story.eyebrow}</p>
+    <h1>{story.title}</h1>
+    <p class="research-hero__summary">{story.summary}</p>
+    <div class="tag-list">{story.tags.map((tag) => <TagPill label={tag} />)}</div>
+    <ResourceLinks resources={story.resources} />
+  </div>
+  <EvidenceStage {...story.hero} caption={`${story.title} — primary system view.`} eager />
+</header>

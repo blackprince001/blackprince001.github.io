@@ -11,7 +11,7 @@ timestamp: 2026-07-14
 
 # Redesign branch and phase map
 
-Status: Phase 0 complete / Phase 1 complete / Phase 2 complete / Phase 3 next
+Status: Phase 0 complete / Phase 1 complete / Phase 2 complete / Phase 3 complete / Phase 4 next
 Started: 2026-07-14
 
 ## Safety branches
@@ -100,8 +100,10 @@ Purpose:
 
 Exit gate:
 
-- two complete flagship stories
-- motion, responsive behavior, and fallbacks pass review
+- [x] two complete flagship stories
+- [x] motion, responsive behavior, and fallbacks pass review
+
+Accepted outcome: Oware and Flood-It now have data-driven flagship case studies composed from shared research hero, resource, metric, chapter, and evidence-stage primitives. Wide layouts pair narrative with sticky evidence; narrow layouts return to normal document flow; see [PHASE_3_FLAGSHIP_STORYTELLING.md](./PHASE_3_FLAGSHIP_STORYTELLING.md).
 
 ### Phase 4 — `codex/phase-4-verification-launch`
 

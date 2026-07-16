@@ -80,6 +80,10 @@
     ],
     "links": [
       {
+        "label": "Case study",
+        "url": "/projects/oware"
+      },
+      {
         "label": "Write-up",
         "url": "/blog/oware"
       },
@@ -244,6 +248,10 @@
       "/featured-projects/floodit-2.png"
     ],
     "links": [
+      {
+        "label": "Case study",
+        "url": "/projects/floodit"
+      },
       {
         "label": "Write-up",
         "url": "/blog/floodit"

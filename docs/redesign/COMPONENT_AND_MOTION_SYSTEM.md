@@ -11,7 +11,7 @@ timestamp: 2026-07-14
 
 # Component and motion system
 
-Status: Phase 2 accepted / v0.5
+Status: Phase 3 accepted / v0.6
 Prepared: 2026-07-14
 Scope: Astro redesign and future technical writing
 
@@ -201,6 +201,15 @@ The Astro pattern owns the accessible label, fallback, caption, loading state, a
 - Writing search remains a small progressive-enhancement script: the complete article list exists in static HTML, while title, summary, and tag filtering update an announced result count.
 - Projects retain the established featured/open-source hierarchy. The full archive restores the backup design's text-and-media split, two-up supporting media, responsive remainder gallery, image viewer, local video controls, and privacy-enhanced YouTube embeds. Homepage summaries deliberately retain the quieter single-image treatment. The repository archive progressively loads, sorts, and paginates GitHub data with an explicit fallback link.
 - Article tables are centered as objects and center their cell content while retaining horizontal overflow for genuinely wide data.
+
+## Phase 3 implemented exhibit primitives
+
+- `ResearchHero` combines the core claim, compact taxonomy, repeatable resources, and primary system evidence without introducing a separate visual identity.
+- `MetricGroup` presents a measured result together with its label and interpretive context; a large number is never left to imply its own meaning.
+- `ResearchChapter` and `EvidenceStage` form the stable wide-screen narrative/evidence pair. Sticky behavior belongs to the chapter boundary and is removed on narrow screens.
+- `ResourceLinks` provides the same write-up, source, and deployment actions at the beginning and end of a story.
+- Flagship content is typed data, while structure stays in Astro components. Oware and Flood-It are the two validating uses required before these patterns are considered reusable.
+- Chapter reveals use a short opacity/translation transition only after enhancement is ready. Reduced motion and no-JavaScript rendering both retain complete, visible content.
 
 ## Suggested project structure
 

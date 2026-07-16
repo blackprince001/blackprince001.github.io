@@ -1,0 +1,16 @@
+---
+import type { FlagshipChapter } from "../../lib/flagship-stories";
+import EvidenceStage from "./EvidenceStage.astro";
+
+interface Props { chapter: FlagshipChapter }
+const { chapter } = Astro.props;
+---
+
+<section id={chapter.id} class="research-chapter" data-exhibit-reveal>
+  <div class="research-chapter__copy">
+    <p class="section-index">{chapter.index} · Finding</p>
+    <h2>{chapter.title}</h2>
+    {chapter.paragraphs.map((paragraph) => <p>{paragraph}</p>)}
+  </div>
+  <EvidenceStage {...chapter.media} />
+</section>
