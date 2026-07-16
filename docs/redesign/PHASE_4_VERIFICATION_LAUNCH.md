@@ -34,7 +34,7 @@ Branch: `codex/phase-4-verification-launch`
 
 ## Deliberate boundary
 
-The previous Next source remains in the repository only as migration history; TypeScript and the production package graph now target Astro/shared sources. The immutable backup branch and prior phase branches preserve a buildable pre-migration checkpoint. A later cleanup can remove the retired source tree after the Astro release has completed its observation window.
+The retired Next source tree, configuration, loaders, and generated artifacts have now been removed. Astro owns the complete application and production package graph. The immutable backup branch and prior phase branches preserve buildable pre-migration checkpoints when historical comparison is needed.
 
 GitHub Pages does not provide application-server headers or runtime health endpoints. Core availability is instead the static homepage plus machine-readable sitemap/robots/feed checks. A strict CSP should be introduced only with a reporting/staging layer because the current site intentionally hosts inline Astro scripts, WebAssembly runners, Giscus, YouTube, and live project embeds.
 

@@ -15,5 +15,6 @@
 - **Motion** — Limited exhibit motion to composited, one-time chapter reveals with reduced-motion and static-render fallbacks.
 - **Release candidate** — Moved GitHub Pages from the Next artifact to verified Astro `dist` output and promoted the generated crawler into both preview and release CI.
 - **Security** — Retired Next-only production packages, patched the remaining transitive build graph, and reached a clean production advisory audit.
+- **Framework retirement** — Removed the inactive Next application tree, configuration, loaders, UI wrappers, and generated artifacts after Astro assumed every public route.
 - **Performance** — Deferred all article/project video transfer behind posters and intentional playback; enforced compressed JS/CSS budgets in the artifact audit.
 - **Boundary** — Left production promotion, deployed Lighthouse/field evidence, and the first-hour observation pending explicit release authorization.

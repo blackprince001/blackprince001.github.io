@@ -46,7 +46,7 @@ Check these in order:
 If a critical route, content, accessibility, or asset regression appears:
 
 1. Revert the release merge commit on `master` with a new revert commit; do not reset or force-push.
-2. Push the revert and watch the existing Pages workflow restore the previous Next artifact and workflow.
+2. Push the revert and watch the existing Pages workflow restore the previous known-good Astro artifact and workflow.
 3. Re-run the production smoke sequence against the restored deployment.
 4. Keep the failed Astro commit reachable on the phase branch, fix there, and repeat the complete release gate.
 
