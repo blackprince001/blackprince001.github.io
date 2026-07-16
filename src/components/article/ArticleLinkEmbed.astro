@@ -3,16 +3,54 @@ interface Props {
   href: string;
   title: string;
   description?: string;
+  image?: string;
+  favicon?: string;
+  meta?: string;
+  label?: string;
 }
 
-const { href, title, description } = Astro.props;
+const { href, title, description, image, favicon, meta, label } = Astro.props;
 const external = /^https?:\/\//.test(href);
+let source = label ?? "blackprince001.github.io";
+
+if (external && !label) {
+  try {
+    source = new URL(href).hostname.replace(/^www\./, "");
+  } catch {
+    source = href;
+  }
+}
 ---
 
 <aside class="article-link-embed">
-  <a href={href} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>
-    <strong>{title}</strong>
-    {description && <span>{description}</span>}
-    <small>Open resource <span aria-hidden="true">↗</span></small>
+  <a
+    class:list={["article-link-embed__card", image && "article-link-embed__card--media"]}
+    href={href}
+    target={external ? "_blank" : undefined}
+    rel={external ? "noreferrer" : undefined}
+  >
+    {image && (
+      <span class="article-link-embed__media">
+        <img src={image} alt="" loading="lazy" decoding="async" data-preview-image />
+      </span>
+    )}
+    <span class="article-link-embed__body">
+      <span class="article-link-embed__source">
+        {favicon ? <img src={favicon} alt="" width="18" height="18" loading="lazy" data-preview-favicon /> : <i aria-hidden="true">{source.slice(0, 2).toUpperCase()}</i>}
+        <span>{source}</span>
+      </span>
+      <strong>{title}</strong>
+      {description && <span class="article-link-embed__description">{description}</span>}
+      <small>{meta || "Open resource"} <span aria-hidden="true">↗</span></small>
+    </span>
   </a>
 </aside>
+
+<script>
+  document.querySelectorAll<HTMLImageElement>("[data-preview-image]").forEach((image) => {
+    image.addEventListener("error", () => image.closest(".article-link-embed__media")?.remove(), { once: true });
+  });
+  document.querySelectorAll<HTMLImageElement>("[data-preview-favicon]").forEach((image) => {
+    image.addEventListener("error", () => image.remove(), { once: true });
+  });
+</script>
