@@ -8,7 +8,7 @@ timestamp: 2026-07-14
 
 # Phase 2 content migration
 
-Status: In progress
+Status: Complete
 Branch: `codex/phase-2-content-migration`
 
 ## Checkpoint outcome
@@ -64,12 +64,15 @@ The rotation-frame, axis-angle, and screw-motion demos now use a shared fullscre
 - Floating outline check: 24 H2/H3 entries tracked on the decision-tree article; Escape closed the panel and returned focus to its trigger
 - Project hierarchy check: 16 featured projects plus 84 non-fork GitHub repositories, paginated seven at a time
 - Table check: table and cell content centered with no document overflow
+- `bun run audit:site`: all local references across 48 generated HTML pages resolve; the publications API matches its canonical JSON; robots points to the Astro sitemap; RSS contains all 34 published writing and shorts entries
+- Final desktop sampling at 1280 px: homepage, writing, two representative complex articles, projects, manuscripts, reading, and shorts each have one H1, one main landmark, labeled controls/media, and no horizontal overflow
+- Final mobile sampling at 390 px: homepage, writing, two representative complex articles, projects, manuscripts, and shorts have no horizontal overflow; dock and article-return targets retain at least a 24 px interaction height
 
-## Remaining Phase 2 work
+## Accepted machine-readable contracts
 
-- add RSS and decide the final `robots.txt` ownership
-- resolve the `/api/publications` contract before the Next Pages Router is retired
-- audit internal links and media references across every content entry
-- run the final accessibility, responsive, and content-parity gate
+- `/rss.xml` combines published long-form writing and shorts in reverse chronological order.
+- `/robots.txt` allows public crawling and names `/sitemap-index.xml` as the canonical sitemap.
+- `/api/publications` remains an exact static JSON compatibility endpoint backed by the canonical publication data.
+- Legacy `../` public-media conventions are normalized during MDX compilation, and the generated-output audit prevents a regression to broken route-relative assets.
 
-Production remains on Next until these checks pass and Phase 2 is accepted.
+Production remains on Next as the rollback line until the Phase 4 launch gate is accepted.

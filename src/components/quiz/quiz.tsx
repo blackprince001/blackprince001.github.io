@@ -68,7 +68,7 @@ export default function Quiz({ quizData }: QuizProps) {
         <h4 id={labelId} className="quiz__question"><RichText text={question.question} /></h4>
         {question.image && (
           <figure className="quiz__figure">
-            <img src={question.image} alt="Diagram for this question" />
+            <img src={question.image.replace(/^\.\.\//, "/")} alt="Diagram for this question" />
           </figure>
         )}
         <div className="quiz__answers" role="radiogroup" aria-labelledby={labelId}>

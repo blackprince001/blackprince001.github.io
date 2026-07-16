@@ -5,6 +5,7 @@ import sitemap from "@astrojs/sitemap";
 import { defineConfig } from "astro/config";
 import rehypeKatex from "rehype-katex";
 import remarkMath from "remark-math";
+import remarkNormalizePublicPaths from "./src/lib/remark-normalize-public-paths.mjs";
 
 export default defineConfig({
   site: "https://blackprince001.github.io",
@@ -12,7 +13,7 @@ export default defineConfig({
   markdown: {
     processor: unified({
       gfm: true,
-      remarkPlugins: [remarkMath],
+      remarkPlugins: [remarkNormalizePublicPaths, remarkMath],
       rehypePlugins: [rehypeKatex],
     }),
   },

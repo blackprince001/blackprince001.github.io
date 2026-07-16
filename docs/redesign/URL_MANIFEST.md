@@ -8,7 +8,7 @@ timestamp: 2026-07-14
 
 # Public URL migration manifest
 
-Status: Phase 2 content-route checkpoint complete
+Status: Phase 2 accepted
 
 The production deployment remains the Next.js export on `master`. Astro owns preview builds on the active Phase 2 branch until the migration exit gate is accepted.
 
@@ -25,9 +25,9 @@ The production deployment remains the Next.js export on `master`. Astro owns pre
 | `/reading` | `src/app/reading/page.tsx` | Complete | 2 |
 | `/404.html` | framework fallback | Complete | 1 |
 | `/sitemap-index.xml` | `src/app/sitemap.ts` | Complete through Astro sitemap integration | 1 |
-| `/robots.txt` | `src/app/robots.ts` | Pending parity | 2 |
-| RSS feed | none | Pending | 2 |
-| `/api/publications` | `src/app/api/publications/route.ts` | Remains on Next until API contract retirement or replacement | 2 |
+| `/robots.txt` | `src/app/robots.ts` | Complete; Astro-owned and sitemap-index aware | 2 |
+| `/rss.xml` | none | Complete; writing and shorts feed | 2 |
+| `/api/publications` | `src/app/api/publications/route.ts` | Complete; static compatibility endpoint | 2 |
 
 ## Content boundary
 

@@ -11,7 +11,7 @@ timestamp: 2026-07-14
 
 # Component and motion system
 
-Status: Phase 2 implementation / v0.4
+Status: Phase 2 accepted / v0.5
 Prepared: 2026-07-14
 Scope: Astro redesign and future technical writing
 

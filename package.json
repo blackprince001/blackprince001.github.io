@@ -7,6 +7,8 @@
     "build": "ASTRO_TELEMETRY_DISABLED=1 astro build",
     "preview": "ASTRO_TELEMETRY_DISABLED=1 astro preview",
     "check": "ASTRO_TELEMETRY_DISABLED=1 astro check",
+    "audit:site": "node scripts/audit-site.mjs",
+    "verify": "bun run check && bun run build && bun run audit:site",
     "dev:next": "next dev",
     "build:next": "next build",
     "start:next": "next start",
