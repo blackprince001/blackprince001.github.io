@@ -16,11 +16,6 @@
     "isolatedModules": true,
     "jsx": "preserve",
     "incremental": true,
-    "plugins": [
-      {
-        "name": "next"
-      }
-    ],
     "paths": {
       "@/*": [
         "./src/*"
@@ -29,12 +24,22 @@
     "target": "ES2017"
   },
   "include": [
-    "next-env.d.ts",
-    "**/*.ts",
-    "**/*.tsx",
-    ".next/types/**/*.ts"
+    "src/**/*.ts",
+    "src/**/*.tsx",
+    ".astro/types.d.ts"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/app",
+    "src/mdx-components.tsx",
+    "src/utils/fetch-mdx.ts",
+    "src/components/gradient-placeholder.tsx",
+    "src/components/theme-provider.tsx",
+    "src/components/theme-toggle.tsx",
+    "src/components/umami-analytics.tsx",
+    "src/components/ui/blog-suggested.tsx",
+    "src/components/ui/footer.tsx",
+    "src/components/ui/link-embed.tsx",
+    "src/components/ui/navbar.tsx"
   ]
 }

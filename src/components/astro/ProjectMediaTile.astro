@@ -4,9 +4,10 @@ interface Props {
   alt: string;
   imageIndex?: number;
   loading?: "eager" | "lazy";
+  poster?: string;
 }
 
-const { src, alt, imageIndex, loading = "lazy" } = Astro.props;
+const { src, alt, imageIndex, loading = "lazy", poster } = Astro.props;
 const videoPattern = /\.(mp4|webm|mov|m4v|ogv)(\?.*)?$/i;
 const youtubeMatch = src.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
 const youtubeId = youtubeMatch?.[1];
@@ -23,7 +24,7 @@ const isVideo = videoPattern.test(src);
     allowfullscreen
   ></iframe>
 ) : isVideo ? (
-  <video class="project-media-tile" src={src} controls muted playsinline preload="metadata" aria-label={alt}></video>
+  <video class="project-media-tile" src={src} controls muted playsinline preload="none" poster={poster} aria-label={alt}></video>
 ) : (
   <button class="project-media-tile project-media-tile--image" type="button" data-project-image={imageIndex} aria-label={`Open ${alt} fullscreen`}>
     <img src={src} alt={alt} loading={loading} decoding="async" />

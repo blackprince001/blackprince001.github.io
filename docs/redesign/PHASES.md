@@ -11,7 +11,7 @@ timestamp: 2026-07-14
 
 # Redesign branch and phase map
 
-Status: Phase 0 complete / Phase 1 complete / Phase 2 complete / Phase 3 complete / Phase 4 next
+Status: Phase 0 complete / Phase 1 complete / Phase 2 complete / Phase 3 complete / Phase 4 release candidate
 Started: 2026-07-14
 
 ## Safety branches
@@ -117,8 +117,11 @@ Purpose:
 
 Exit gate:
 
-- PRD release criteria pass
-- no critical route or content regressions
+- [x] pre-launch PRD release criteria pass
+- [x] no critical route or content regressions in the release artifact
+- [ ] production deployment and first-hour observation
+
+Release-candidate outcome: the Astro artifact, CI/deploy workflow, generated-site crawler, dependency graph, metadata, deferred media, asset budgets, responsive layouts, and critical interactions pass locally. Production-only Lighthouse/field measurements and the first-hour watch begin after an explicitly authorized merge/push; see [PHASE_4_VERIFICATION_LAUNCH.md](./PHASE_4_VERIFICATION_LAUNCH.md) and [RELEASE_RUNBOOK.md](./RELEASE_RUNBOOK.md).
 
 ## Branch rules
 

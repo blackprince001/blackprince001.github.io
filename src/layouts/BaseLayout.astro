@@ -5,13 +5,17 @@ interface Props {
   title?: string;
   description?: string;
   pathname?: string;
+  robots?: string;
 }
 
 const {
   title = "blackprince | Nebula",
   description = "Engineering journal of Prince Kwabena Appiah Boadu.",
   pathname = Astro.url.pathname,
+  robots,
 } = Astro.props;
+const canonical = new URL(pathname, Astro.site);
+const socialImage = new URL("/images/seo-image.png", Astro.site);
 
 const nav = [
   ["Writing", "/blog"],
@@ -28,15 +32,21 @@ const nav = [
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width" />
     <meta name="description" content={description} />
+    {robots && <meta name="robots" content={robots} />}
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title="blackprince — Writing" href="/rss.xml" />
     <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
-    <link rel="canonical" href={new URL(pathname, Astro.site)} />
+    <link rel="canonical" href={canonical} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content={new URL("/images/seo-image.png", Astro.site)} />
+    <meta property="og:image" content={socialImage} />
+    <meta property="og:url" content={canonical} />
     <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImage} />
     <title>{title}</title>
     <script is:inline>
       (() => {

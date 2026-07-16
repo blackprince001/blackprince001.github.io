@@ -1,9 +1,8 @@
 "use client";
 
 import { useRef } from "react";
-import { Canvas, useFrame, useLoader } from "@react-three/fiber";
+import { Canvas, useFrame } from "@react-three/fiber";
 import { Mesh } from "three";
-import { STLLoader } from 'three-stdlib';
 import { Environment, OrbitControls, useGLTF } from "@react-three/drei";
 import { Suspense } from "react";
 import { StlViewer } from "react-stl-viewer";

@@ -8,4 +8,6 @@
 * [Phase 1 Astro foundation](./PHASE_1_FOUNDATION.md) - Runtime, content boundary, audit findings, and open gates.
 * [Phase 2 content migration](./PHASE_2_CONTENT_MIGRATION.md) - Complete route, island, and machine-readable parity.
 * [Phase 3 flagship storytelling](./PHASE_3_FLAGSHIP_STORYTELLING.md) - Reusable exhibit contracts and two project stories.
+* [Phase 4 verification and launch](./PHASE_4_VERIFICATION_LAUNCH.md) - Release-candidate evidence and production-only gates.
+* [Release runbook](./RELEASE_RUNBOOK.md) - Promotion, smoke tests, observation, and rollback.
 * [Public URL migration manifest](./URL_MANIFEST.md) - Route ownership and parity status.

@@ -25,6 +25,8 @@ jobs:
         run: bun run check
       - name: Build Astro preview
         run: bun run build
+      - name: Audit generated site
+        run: bun run audit:site
       - name: Upload static preview
         uses: actions/upload-artifact@v4
         with:
