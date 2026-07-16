@@ -35,7 +35,7 @@ The acceleration command sent to the physics stepper at every timestep $t$ is:
 <center>$$ \dot{v}(s, v, \Delta v) = a \left[ 1 - \left(\frac{v}{v_0}\right)^\delta - \left(\frac{s^*(v, \Delta v)}{s}\right)^2 \right] $$</center>
 
 <div>
-    <video controls loop muted playsInline preload="none" poster="../atscs/flow.png">
+    <video controls loop muted playsInline preload="none" poster="../video-posters/idm-sim.mp4.png">
         <source src="../atscs/idm-sim.mp4" type="video/mp4" />
         Your browser does not support the video tag.
     </video>
@@ -91,7 +91,7 @@ We employed a curriculum learning strategy, slowly increasing the entropy of the
 The goal here was simple mapping: $Queue \rightarrow Green$. The agent quickly learned to minimize the "all-red" dead time by grouping vehicles into platoons.
 
 <div>
-    <video controls loop muted playsInline preload="none" poster="../atscs/policy.png">
+    <video controls loop muted playsInline preload="none" poster="../video-posters/scenario-a.mp4.png">
         <source src="../atscs/scenario-a.mp4" type="video/mp4" />
         Your browser does not support the video tag.
     </video>
@@ -104,7 +104,7 @@ The goal here was simple mapping: $Queue \rightarrow Green$. The agent quickly l
 Here, I introduced a second intersection 200m downstream. The challenge is the Green Wave. The agent controlling Intersection 1 must learn that its actions affect the input state of Intersection 2.
 
 <div>
-    <video controls loop muted playsInline preload="none" poster="../atscs/image.png">
+    <video controls loop muted playsInline preload="none" poster="../video-posters/scenario-b.mp4.png">
         <source src="../atscs/scenario-b.mp4" type="video/mp4" />
         Your browser does not support the video tag.
     </video>
@@ -166,7 +166,7 @@ The 2x2 Grid represents the most chaotic system. We stress-tested the system by 
 />
 
 <div>
-    <video controls loop muted playsInline preload="none" poster="../atscs/flow.png">
+    <video controls loop muted playsInline preload="none" poster="../video-posters/scenario-c.mp4.png">
         <source src="../atscs/scenario-c.mp4" type="video/mp4" />
         Your browser does not support the video tag.
     </video>

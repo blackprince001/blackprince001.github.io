@@ -107,7 +107,6 @@ const imageIndex = (src: string) => imageMedia.indexOf(src);
               src={src}
               alt={`${project.name} project view ${mediaIndex + 1}`}
               imageIndex={imageIndex(src)}
-              poster={imageMedia[0]}
               loading={index === 0 && mediaIndex === 0 ? "eager" : "lazy"}
             />
           ))}
@@ -122,7 +121,6 @@ const imageIndex = (src: string) => imageMedia.indexOf(src);
             src={src}
             alt={`${project.name} project view ${mediaIndex + 3}`}
             imageIndex={imageIndex(src)}
-            poster={imageMedia[0]}
           />
         ))}
       </div>

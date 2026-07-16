@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-labelledby="title description">
+  <title id="title">Video preview</title>
+  <desc id="description">A neutral video placeholder with a play symbol.</desc>
+  <rect width="1200" height="675" fill="#171715"/>
+  <circle cx="600" cy="337.5" r="58" fill="none" stroke="#f4f2eb" stroke-width="3" opacity="0.78"/>
+  <path d="M584 302v71l58-35.5z" fill="#f4f2eb" opacity="0.9"/>
+</svg>

@@ -4,14 +4,20 @@ interface Props {
   alt: string;
   imageIndex?: number;
   loading?: "eager" | "lazy";
-  poster?: string;
 }
 
-const { src, alt, imageIndex, loading = "lazy", poster } = Astro.props;
+const { src, alt, imageIndex, loading = "lazy" } = Astro.props;
 const videoPattern = /\.(mp4|webm|mov|m4v|ogv)(\?.*)?$/i;
 const youtubeMatch = src.match(/(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/);
 const youtubeId = youtubeMatch?.[1];
 const isVideo = videoPattern.test(src);
+const videoPosters: Record<string, string> = {
+  "/traffic-pipeline/rtdetr-l_clip1.mp4": "/video-posters/rtdetr-l_clip1.mp4.png",
+  "/robotics/no_policy.mp4": "/video-posters/no_policy.mp4.png",
+  "/robotics/wobbly.mp4": "/video-posters/wobbly.mp4.png",
+  "/robotics/standing_policy.mp4": "/video-posters/standing_policy.mp4.png",
+};
+const poster = videoPosters[src];
 ---
 
 {youtubeId ? (
