@@ -61,7 +61,7 @@ const nav = [
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <nav class="site-nav" aria-label="Primary navigation" data-collapsed="true">
+    <nav class="site-nav" aria-label="Primary navigation" data-collapsed="false">
       <a class="site-nav__home" href="/#intro" aria-label="blackprince, home" aria-current={pathname === "/" ? "page" : undefined}>bp</a>
       <div class="site-nav__items" id="primary-navigation-items">
         {nav.map(([label, href]) => (
@@ -72,7 +72,7 @@ const nav = [
           <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="2.5" /><path d="M8 1v1.25M8 13.75V15M1 8h1.25M13.75 8H15M3.05 3.05l.9.9M12.05 12.05l.9.9M12.95 3.05l-.9.9M3.95 12.05l-.9.9" /></svg>
         </button>
       </div>
-      <button class="site-nav__toggle" type="button" aria-expanded="false" aria-controls="primary-navigation-items" aria-label="Expand navigation">
+      <button class="site-nav__toggle" type="button" aria-expanded="true" aria-controls="primary-navigation-items" aria-label="Collapse navigation">
         <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M3 6.25 8 10.5l5-4.25" /></svg>
       </button>
     </nav>

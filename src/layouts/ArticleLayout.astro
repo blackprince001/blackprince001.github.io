@@ -37,11 +37,12 @@ const formattedDate = publishDate.toLocaleDateString("en", {
 >
   <article class="article-shell">
     <header class="article-header">
-      <a class="article-back" href="/blog">← Writing</a>
-      <h1>{title}</h1>
-      <br>
-      <div class="article-meta">
+      <a class="article-back" href="/blog">↩ Writing</a>
+      <div class="article-title-row">
+        <h1>{title}</h1>
         <div class="tag-list">{tags.map((tag: string) => <TagPill label={tag} />)}</div>
+      </div>
+      <div class="article-meta">
         <time datetime={publishDate.toISOString()}>{formattedDate}</time>
       </div>
     </header>

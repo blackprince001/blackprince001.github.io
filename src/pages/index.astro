@@ -23,9 +23,9 @@ const date = new Intl.DateTimeFormat("en", {
   <div class="home">
     <aside class="section-rail" aria-label="Homepage sections">
       <a href="#intro">Intro</a>
-      <a href="#work">Selected work</a>
       <a href="#writing">Writing</a>
       <a href="#manuscripts">Manuscripts</a>
+      <a href="#work">Selected work</a>
     </aside>
 
     <div class="home-column">
@@ -66,32 +66,13 @@ const date = new Intl.DateTimeFormat("en", {
         </div>
       </section>
 
-      <section id="work" class="home-section" aria-labelledby="work-title">
-        <SectionHeading
-          index="01"
-          eyebrow="Systems"
-          title="Selected work"
-          href="/projects"
-          headingId="work-title"
-        />
-        <div class="project-list">
-          {
-            projects
-              .slice(0, 3)
-              .map((project, index) => (
-                <ProjectFeature project={project} index={index} />
-              ))
-          }
-        </div>
-      </section>
-
       <section
         id="writing"
         class="home-section"
         aria-labelledby="writing-title"
       >
         <SectionHeading
-          index="02"
+          index="01"
           eyebrow="Journal"
           title="Recent writing"
           href="/blog"
@@ -123,7 +104,7 @@ const date = new Intl.DateTimeFormat("en", {
         aria-labelledby="manuscripts-title"
       >
         <SectionHeading
-          index="03"
+          index="02"
           eyebrow="Research"
           title="Recent manuscripts"
           href="/publications"
@@ -162,6 +143,25 @@ const date = new Intl.DateTimeFormat("en", {
                 </span>
               </a>
             ))
+          }
+        </div>
+      </section>
+
+      <section id="work" class="home-section" aria-labelledby="work-title">
+        <SectionHeading
+          index="03"
+          eyebrow="Systems"
+          title="Selected work"
+          href="/projects"
+          headingId="work-title"
+        />
+        <div class="project-list">
+          {
+            projects
+              .slice(0, 3)
+              .map((project, index) => (
+                <ProjectFeature project={project} index={index} />
+              ))
           }
         </div>
       </section>
