@@ -1,4 +1,6 @@
 ---
+import "@fontsource-variable/inter/standard.css";
+import "@fontsource-variable/inter/standard-italic.css";
 import "../styles/global.css";
 
 interface Props {
@@ -16,6 +18,9 @@ const {
 } = Astro.props;
 const canonical = new URL(pathname, Astro.site);
 const socialImage = new URL("/images/seo-image.png", Astro.site);
+const isHome = pathname === "/";
+const isBlogArticle = pathname.startsWith("/blog/") && pathname !== "/blog/";
+const isShortArticle = pathname.startsWith("/shorts/") && pathname !== "/shorts/" && !pathname.startsWith("/shorts/tag/");
 
 const nav = [
   ["Writing", "/blog"],
@@ -61,26 +66,33 @@ const nav = [
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
-    <nav class="site-nav" aria-label="Primary navigation" data-collapsed="false">
-      <a class="site-nav__home" href="/#intro" aria-label="blackprince, home" aria-current={pathname === "/" ? "page" : undefined}>bp</a>
-      <div class="site-nav__items" id="primary-navigation-items">
-        {nav.map(([label, href]) => (
-          <a href={href} aria-current={pathname.startsWith(href) ? "page" : undefined}>{label}</a>
-        ))}
-        <button class="theme-toggle" type="button" aria-label="Toggle color theme">
-          <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M13.1 10.35A5.75 5.75 0 0 1 5.65 2.9 5.75 5.75 0 1 0 13.1 10.35Z" /></svg>
-          <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="2.5" /><path d="M8 1v1.25M8 13.75V15M1 8h1.25M13.75 8H15M3.05 3.05l.9.9M12.05 12.05l.9.9M12.95 3.05l-.9.9M3.95 12.05l-.9.9" /></svg>
-        </button>
+    <div class:list={["site-frame", { "site-frame--with-nav": isHome }]}>
+      {isHome && (
+        <nav class="site-nav" aria-label="Primary navigation" data-menu-open="false">
+          <a class="site-nav__home" href="/" aria-current="page">Home</a>
+          <button class="site-nav__menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation-menu" aria-label="Open navigation menu">
+            <svg aria-hidden="true" viewBox="0 0 18 18" width="18" height="18"><path d="M3 5h12M3 9h12M3 13h12" /></svg>
+          </button>
+          <div class="site-nav__menu" id="primary-navigation-menu">
+            {nav.map(([label, href]) => <a href={href}>{label}</a>)}
+            <button class="theme-toggle" type="button" aria-label="Toggle color theme">
+              <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M13.1 10.35A5.75 5.75 0 0 1 5.65 2.9 5.75 5.75 0 1 0 13.1 10.35Z" /></svg>
+              <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="2.5" /><path d="M8 1v1.25M8 13.75V15M1 8h1.25M13.75 8H15M3.05 3.05l.9.9M12.05 12.05l.9.9M12.95 3.05l-.9.9M3.95 12.05l-.9.9" /></svg>
+            </button>
+          </div>
+        </nav>
+      )}
+      <div class="site-content">
+        <main id="main-content">
+          {!isHome && !isBlogArticle && !isShortArticle && <a class="page-home-link" href="/">↩ Home</a>}
+          <slot />
+        </main>
+        <footer class="site-footer">
+          <span>Prince Kwabena Appiah Boadu</span>
+          <span>Systems · AI/Robotics · Learning</span>
+        </footer>
       </div>
-      <button class="site-nav__toggle" type="button" aria-expanded="true" aria-controls="primary-navigation-items" aria-label="Collapse navigation">
-        <svg aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M3 6.25 8 10.5l5-4.25" /></svg>
-      </button>
-    </nav>
-    <main id="main-content"><slot /></main>
-    <footer class="site-footer">
-      <span>Prince Kwabena Appiah Boadu</span>
-      <span>Systems · AI/Robotics · Learning</span>
-    </footer>
+    </div>
     <script>
       const button = document.querySelector<HTMLButtonElement>(".theme-toggle");
       const updateThemeButton = () => {
@@ -102,27 +114,26 @@ const nav = [
       });
 
       const navigation = document.querySelector<HTMLElement>(".site-nav");
-      const navigationToggle = document.querySelector<HTMLButtonElement>(".site-nav__toggle");
-
-      const setNavigationCollapsed = (collapsed: boolean) => {
-        if (!navigation || !navigationToggle) return;
-        navigation.dataset.collapsed = String(collapsed);
-        navigationToggle.setAttribute("aria-expanded", String(!collapsed));
-        navigationToggle.setAttribute("aria-label", collapsed ? "Expand navigation" : "Collapse navigation");
+      const menuToggle = document.querySelector<HTMLButtonElement>(".site-nav__menu-toggle");
+      const menu = document.querySelector<HTMLElement>(".site-nav__menu");
+      const setMenuOpen = (open: boolean) => {
+        if (!navigation || !menuToggle) return;
+        navigation.dataset.menuOpen = String(open);
+        menuToggle.setAttribute("aria-expanded", String(open));
+        menuToggle.setAttribute("aria-label", open ? "Close navigation menu" : "Open navigation menu");
       };
-
-      navigationToggle?.addEventListener("click", () => {
-        setNavigationCollapsed(navigation?.dataset.collapsed !== "true");
-      });
+      menuToggle?.addEventListener("click", () => setMenuOpen(navigation?.dataset.menuOpen !== "true"));
+      menu?.querySelectorAll("a").forEach((link) => link.addEventListener("click", () => setMenuOpen(false)));
       document.addEventListener("click", (event) => {
-        if (navigation && !navigation.contains(event.target as Node)) setNavigationCollapsed(true);
+        if (navigation && !navigation.contains(event.target as Node)) setMenuOpen(false);
       });
       document.addEventListener("keydown", (event) => {
-        if (event.key === "Escape" && navigation?.dataset.collapsed !== "true") {
-          setNavigationCollapsed(true);
-          navigationToggle?.focus();
+        if (event.key === "Escape" && navigation?.dataset.menuOpen === "true") {
+          setMenuOpen(false);
+          menuToggle?.focus();
         }
       });
+
     </script>
   </body>
 </html>

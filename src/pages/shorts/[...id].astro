@@ -20,6 +20,8 @@ const { Content, headings } = await render(entry);
   tags={entry.data.tags.length ? entry.data.tags : ["Short"]}
   headings={headings}
   pathname={Astro.url.pathname}
+  backHref="/shorts"
+  backLabel="Shorts"
 >
   <Content components={{ LinkEmbed: ArticleLinkEmbed }} />
 </ArticleLayout>

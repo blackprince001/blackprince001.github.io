@@ -12,9 +12,7 @@ import { projects } from "../lib/site-data";
       <h1>Projects</h1>
       <p>Selected systems, research prototypes, and open-source engineering work.</p>
     </header>
-    <section class="featured-projects" aria-labelledby="featured-projects-title">
-      <p class="section-index">Selected work</p>
-      <h2 id="featured-projects-title">Featured projects</h2>
+    <section class="featured-projects" aria-label="Featured projects">
       <div class="project-list">
         {projects.map((project, index) => <ProjectFeature project={project} index={index} layout="detail" />)}
       </div>

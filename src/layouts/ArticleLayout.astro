@@ -13,6 +13,8 @@ interface Props {
   tags: string[];
   headings?: { depth: number; slug: string; text: string }[];
   pathname: string;
+  backHref?: string;
+  backLabel?: string;
 }
 
 const {
@@ -22,6 +24,8 @@ const {
   tags,
   headings = [],
   pathname,
+  backHref = "/blog",
+  backLabel = "Writing",
 } = Astro.props;
 const formattedDate = publishDate.toLocaleDateString("en", {
   day: "2-digit",
@@ -37,7 +41,7 @@ const formattedDate = publishDate.toLocaleDateString("en", {
 >
   <article class="article-shell">
     <header class="article-header">
-      <a class="article-back" href="/blog">↩ Writing</a>
+      <a class="article-back" href={backHref}>↩ {backLabel}</a>
       <div class="article-title-row">
         <h1>{title}</h1>
         <div class="tag-list">{tags.map((tag: string) => <TagPill label={tag} />)}</div>

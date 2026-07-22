@@ -8,8 +8,8 @@
   </header>
 
   <div class="open-source__controls" role="group" aria-label="Sort open-source projects">
-    <button type="button" data-project-sort="stars" aria-pressed="true">Most stars</button>
-    <button type="button" data-project-sort="recent" aria-pressed="false">Recent</button>
+    <button type="button" data-project-sort="recent" aria-pressed="true">Recent</button>
+    <button type="button" data-project-sort="stars" aria-pressed="false">Most stars</button>
   </div>
 
   <p class="open-source__status" role="status" aria-live="polite">Loading repositories from GitHub…</p>
@@ -43,7 +43,7 @@
     const next = root.querySelector<HTMLButtonElement>("[data-project-page='next']");
     const perPage = 7;
     let repositories: Repository[] = [];
-    let sort: "stars" | "recent" = "stars";
+    let sort: "stars" | "recent" = "recent";
     let page = 1;
 
     if (!list || !status || !pagination || !pageLabel || !previous || !next) return;

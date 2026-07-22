@@ -114,7 +114,7 @@ export default function AxisAngleDemo() {
       {/* Controls - Top */}
       <div className="bg-[var(--surface)] p-4 shrink-0">
         <div className="flex items-center justify-between mb-4">
-          <h3 className="text-lg font-semibold text-[var(--ink)]">
+          <h3 className="text-[length:var(--heading-3)] font-[var(--heading-weight-3)] text-[var(--ink)]">
             Axis-Angle to Rotation Matrix
           </h3>
           <button

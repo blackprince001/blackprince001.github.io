@@ -55,7 +55,7 @@ export function InfoCard({
       className={`rounded-lg bg-[var(--page)] p-4 text-[var(--ink)] ${className}`}
     >
       {title && (
-        <h4 className="mb-2 text-sm font-semibold text-[var(--ink)]">
+        <h4 className="mb-2 text-[length:var(--heading-4)] font-[var(--heading-weight-4)] text-[var(--ink)]">
           {title}
         </h4>
       )}
