@@ -2,6 +2,7 @@
 import "@fontsource-variable/inter/standard.css";
 import "@fontsource-variable/inter/standard-italic.css";
 import "../styles/global.css";
+import ReturnArrowIcon from "../components/astro/ReturnArrowIcon.astro";
 
 interface Props {
   title?: string;
@@ -84,7 +85,12 @@ const nav = [
       )}
       <div class="site-content">
         <main id="main-content">
-          {!isHome && !isBlogArticle && !isShortArticle && <a class="page-home-link" href="/">↩ Home</a>}
+          {!isHome && !isBlogArticle && !isShortArticle && (
+            <a class="page-home-link" href="/">
+              <ReturnArrowIcon />
+              <span>Home</span>
+            </a>
+          )}
           <slot />
         </main>
         <footer class="site-footer">

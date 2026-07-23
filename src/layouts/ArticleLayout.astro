@@ -3,6 +3,7 @@ import "katex/dist/katex.min.css";
 import "../styles/islands.css";
 import ArticleComments from "../components/article/ArticleComments.astro";
 import FloatingToc from "../components/astro/FloatingToc.astro";
+import ReturnArrowIcon from "../components/astro/ReturnArrowIcon.astro";
 import TagPill from "../components/astro/TagPill.astro";
 import BaseLayout from "./BaseLayout.astro";
 
@@ -41,7 +42,10 @@ const formattedDate = publishDate.toLocaleDateString("en", {
 >
   <article class="article-shell">
     <header class="article-header">
-      <a class="article-back" href={backHref}>↩ {backLabel}</a>
+      <a class="article-back" href={backHref}>
+        <ReturnArrowIcon />
+        <span>{backLabel}</span>
+      </a>
       <div class="article-title-row">
         <h1>{title}</h1>
         <div class="tag-list">{tags.map((tag: string) => <TagPill label={tag} />)}</div>

@@ -1,0 +1,28 @@
+---
+title: "AI Safety Testing"
+publishedAt: "2026-07-04"
+tag:
+  - writing
+  - ai
+summary: "What testing Claude’s safeguards revealed about intent, unverifiable context, and the moral cost of refusing to act."
+---
+
+I thought I could argue my way around an AI's safeguards. If I found a fallacy or inconsistency in its reasoning, I assumed I had the upper hand. Testing Claude showed me otherwise. Every path I tried seemed to return to a simple rule: the same harmful action remains harmful regardless of the motive behind the request.
+
+That consistency is reassuring. It may also be incomplete. What happens when refusing to act produces harm of its own?
+
+The AI cannot independently verify the story surrounding a request. It does not know whether the person described as dangerous is actually dangerous, whether the urgency is real, or whether the proposed action is the only option. The justification comes from the same person asking the AI to make an exception.
+
+If a convincing motive were enough to permit a harmful action, anyone could manufacture one. The safest rule is therefore to judge the requested action rather than the moral framing wrapped around it. This makes the safeguard difficult to manipulate, but it also creates a harder moral problem.
+
+Imagine an autonomous AI agent with the authority to intervene. It is told that someone is about to bomb a crowded place and that the only available intervention would kill the attacker. If the agent refuses because the action still involves killing someone, innocent people may die. If it accepts, it acts on a story it cannot independently verify and may kill an innocent person.
+
+The same dilemma looks different for a chatbot. A chatbot can refuse to provide harmful assistance while leaving the decision and responsibility with a human. An autonomous agent does not have that distance. When it controls the action, refusing to intervene is also a decision with consequences. A safeguard that is responsible in conversation becomes more difficult to apply when the system can affect the outcome directly.
+
+Present-day chatbots are closer to the first case. This means the hypothetical does not necessarily prove that their safeguards are flawed. Instead, it tests whether they can recognise the moral tension without treating it as permission to produce harmful assistance.
+
+That is the test I want to try next. I am less interested in whether I can trick the system into giving me a forbidden output, and more interested in whether it can reason about the possible cost of its own refusal.
+
+My first instinct was to find an inconsistency and treat it as an opening. What the experience changed was not my belief that safeguards can be questioned, but my assumption that identifying a difficult edge case meant I had defeated their reasoning. A system can recognise the moral cost of refusing and still refuse to turn that tension into an exception.
+
+Perhaps the point of safety testing is not to win the argument. It is to discover where a rule remains useful, where context makes it uncertain, and whether the model can tell the difference without abandoning the safeguard entirely.

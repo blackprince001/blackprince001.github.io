@@ -176,8 +176,9 @@ button.tag-pill { cursor: pointer; }
 .site-nav__menu { display: flex; flex-direction: column; gap: 0.12rem; }
 .site-nav__menu-toggle { display: none; place-items: center; width: 2.5rem; height: 2.5rem; border: 1px solid color-mix(in srgb, var(--soft) 30%, transparent); border-radius: 0.45rem; padding: 0; background: transparent; color: var(--ink); cursor: pointer; }
 .site-nav__menu-toggle svg { fill: none; stroke: currentColor; stroke-linecap: round; stroke-width: 1.5; }
-.page-home-link { position: absolute; z-index: 1; top: clamp(1.75rem, 4vw, 3rem); left: 0; display: inline-flex; align-items: center; min-height: 1.75rem; color: var(--muted); font-size: 0.82rem; text-decoration: none; }
+.page-home-link { position: absolute; z-index: 1; top: clamp(1.75rem, 4vw, 3rem); left: 0; display: inline-flex; align-items: center; gap: 0.35rem; min-height: 1.75rem; color: var(--muted); font-size: 0.82rem; text-decoration: none; }
 .page-home-link:hover { color: var(--ink); }
+.return-arrow-icon { flex: 0 0 auto; width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.35; }
 .site-content > main:has(.index-page) > .page-home-link { left: max(0px, calc((100% - var(--measure)) / 2)); }
 .site-content > main:has(.article-shell) > .page-home-link { left: max(0px, calc((100% - var(--article-measure)) / 2)); }
 
@@ -376,7 +377,7 @@ button.project-media-tile { padding: 0; cursor: zoom-in; }
 
 .article-header, .article-body, .article-comments { max-width: var(--article-measure); }
 .article-header { margin-bottom: clamp(2.75rem, 6vw, 4rem); }
-.article-back { display: inline-flex; align-items: center; min-height: 1.75rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); color: var(--muted); font-size: 1rem; letter-spacing: -0.02em; text-decoration: none; }
+.article-back { display: inline-flex; align-items: center; gap: 0.4rem; min-height: 1.75rem; margin-bottom: clamp(2.5rem, 5vw, 4rem); color: var(--muted); font-size: 1rem; letter-spacing: -0.02em; text-decoration: none; }
 .article-back:hover { color: var(--ink); }
 .article-title-row { display: flex; align-items: center; flex-wrap: wrap; gap: 0.9rem 1.15rem; }
 .article-title-row .tag-list { flex: 0 0 auto; }
