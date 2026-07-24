@@ -1,0 +1,161 @@
+<canvas class="blueprint-noise-field" data-noise-field aria-hidden="true"></canvas>
+
+<script>
+  const setupNoiseField = (canvas: HTMLCanvasElement) => {
+    const context = canvas.getContext("2d");
+    if (!context) return;
+
+    const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+    let width = 0;
+    let height = 0;
+    let frame = 0;
+    let isVisible = true;
+    let pointerX = 0.72;
+    let pointerY = 0.38;
+    let targetX = pointerX;
+    let targetY = pointerY;
+    let pointerStrength = 0;
+    let targetStrength = 0;
+
+    const resize = () => {
+      const bounds = canvas.getBoundingClientRect();
+      const pixelRatio = Math.min(devicePixelRatio, 2);
+      width = bounds.width;
+      height = bounds.height;
+      canvas.width = Math.max(1, Math.round(width * pixelRatio));
+      canvas.height = Math.max(1, Math.round(height * pixelRatio));
+      context.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
+    };
+
+    const draw = (time = 0) => {
+      context.clearRect(0, 0, width, height);
+
+      const styles = getComputedStyle(canvas);
+      const fieldColor =
+        styles.getPropertyValue("--blueprint-field").trim() || "#b8dcf4";
+      const accentColor =
+        styles.getPropertyValue("--blueprint-accent").trim() || "#ffffff";
+      const spacing = width < 480 ? 24 : 27;
+      const phase = time * 0.00016;
+      pointerX += (targetX - pointerX) * 0.12;
+      pointerY += (targetY - pointerY) * 0.12;
+      pointerStrength += (targetStrength - pointerStrength) * 0.1;
+      const fieldX = pointerX * width;
+      const fieldY = pointerY * height;
+
+      context.lineCap = "round";
+      context.lineWidth = 0.8;
+      context.strokeStyle = fieldColor;
+
+      for (let y = spacing / 2; y < height; y += spacing) {
+        for (let x = spacing / 2; x < width; x += spacing) {
+          const distance = Math.hypot(x - fieldX, y - fieldY);
+          const influence =
+            Math.max(0, 1 - distance / Math.min(190, width * 0.34)) *
+            pointerStrength;
+          let angle =
+            Math.sin(x * 0.011 + phase) * 0.72 +
+            Math.cos(y * 0.014 - phase * 0.8) * 0.54 +
+            Math.sin((x + y) * 0.006 + phase * 0.55) * 0.38;
+          const pointerAngle = Math.atan2(y - fieldY, x - fieldX) + Math.PI / 2;
+          angle += Math.sin(pointerAngle - angle) * influence * 1.9;
+          const length =
+            4.5 +
+            2.5 * (0.5 + 0.5 * Math.sin(x * 0.02 - y * 0.015 + phase)) +
+            influence * 7;
+          const dx = Math.cos(angle) * length;
+          const dy = Math.sin(angle) * length;
+
+          context.beginPath();
+          context.moveTo(x - dx / 2, y - dy / 2);
+          context.lineTo(x + dx / 2, y + dy / 2);
+          context.stroke();
+        }
+      }
+
+      context.globalAlpha = 0.42;
+      context.fillStyle = accentColor;
+      for (let index = 0; index < 7; index += 1) {
+        const x =
+          ((index * 137.5 + phase * 46 + width * 0.08) % (width + 80)) - 40;
+        const y =
+          height *
+          (0.16 +
+            ((Math.sin(index * 2.1 + phase * 0.7) + 1) / 2) * 0.68);
+        context.beginPath();
+        context.arc(x, y, index % 3 === 0 ? 1.5 : 1, 0, Math.PI * 2);
+        context.fill();
+      }
+      context.globalAlpha = 1;
+
+      if (pointerStrength > 0.03) {
+        context.strokeStyle = accentColor;
+        context.globalAlpha = pointerStrength * 0.38;
+        context.lineWidth = 1;
+        context.beginPath();
+        context.arc(fieldX, fieldY, 8 + pointerStrength * 5, 0, Math.PI * 2);
+        context.stroke();
+        context.globalAlpha = 1;
+      }
+    };
+
+    const animate = (time: number) => {
+      draw(time);
+      if (!reduceMotion.matches && isVisible) {
+        frame = requestAnimationFrame(animate);
+      }
+    };
+
+    const restart = () => {
+      cancelAnimationFrame(frame);
+      draw();
+      if (!reduceMotion.matches && isVisible) {
+        frame = requestAnimationFrame(animate);
+      }
+    };
+
+    const resizeObserver = new ResizeObserver(() => {
+      resize();
+      restart();
+    });
+    const visibilityObserver = new IntersectionObserver(([entry]) => {
+      isVisible = entry?.isIntersecting ?? true;
+      restart();
+    });
+    const themeObserver = new MutationObserver(restart);
+    const updatePointer = (event: PointerEvent) => {
+      const bounds = canvas.getBoundingClientRect();
+      targetX = Math.max(0, Math.min(1, (event.clientX - bounds.left) / bounds.width));
+      targetY = Math.max(0, Math.min(1, (event.clientY - bounds.top) / bounds.height));
+      targetStrength = 1;
+      if (reduceMotion.matches) {
+        pointerX = targetX;
+        pointerY = targetY;
+        pointerStrength = 1;
+        draw();
+      }
+    };
+    const releasePointer = () => {
+      targetStrength = 0;
+      if (reduceMotion.matches) {
+        pointerStrength = 0;
+        draw();
+      }
+    };
+
+    resizeObserver.observe(canvas);
+    visibilityObserver.observe(canvas);
+    themeObserver.observe(document.documentElement, {
+      attributes: true,
+      attributeFilter: ["class", "data-theme"],
+    });
+    reduceMotion.addEventListener("change", restart);
+    canvas.addEventListener("pointermove", updatePointer);
+    canvas.addEventListener("pointerleave", releasePointer);
+    canvas.addEventListener("pointercancel", releasePointer);
+    resize();
+    restart();
+  };
+
+  document.querySelectorAll<HTMLCanvasElement>("[data-noise-field]").forEach(setupNoiseField);
+</script>

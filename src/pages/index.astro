@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import ProjectFeature from "../components/astro/ProjectFeature.astro";
 import SectionHeading from "../components/astro/SectionHeading.astro";
 import TagPill from "../components/astro/TagPill.astro";
+import BlueprintNoiseField from "../components/astro/BlueprintNoiseField.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { projects, publications } from "../lib/site-data";
 
@@ -56,6 +57,17 @@ const date = new Intl.DateTimeFormat("en", {
           <a class="text-link" href="/projects"
             >View all projects <span aria-hidden="true">→</span></a
           >
+        </div>
+      </section>
+
+      <section
+        class="blueprint-field"
+        aria-label="Interactive engineering noise field"
+      >
+        <BlueprintNoiseField />
+        <div class="blueprint-field__label" aria-hidden="true">
+          <span>VECTOR FIELD</span>
+          <span>MOVE ACROSS THE FIELD</span>
         </div>
       </section>
 
