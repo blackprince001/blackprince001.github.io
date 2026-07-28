@@ -1,5 +1,6 @@
 ---
 import type { FlagshipResource } from "../../lib/flagship-stories";
+import ArrowUpRightIcon from "../astro/ArrowUpRightIcon.astro";
 
 interface Props { resources: FlagshipResource[] }
 const { resources } = Astro.props;
@@ -8,6 +9,6 @@ const { resources } = Astro.props;
 <nav class="exhibit-resources" aria-label="Project resources">
   {resources.map((resource) => {
     const external = resource.url.startsWith("http");
-    return <a href={resource.url} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}>{resource.label}<span aria-hidden="true">↗</span></a>;
+    return <a href={resource.url} target={external ? "_blank" : undefined} rel={external ? "noopener noreferrer" : undefined}><span>{resource.label}</span><ArrowUpRightIcon /></a>;
   })}
 </nav>

@@ -1,5 +1,6 @@
 ---
 import { getCollection } from "astro:content";
+import ArrowUpRightIcon from "../../components/astro/ArrowUpRightIcon.astro";
 import TagPill from "../../components/astro/TagPill.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
 
@@ -42,7 +43,7 @@ const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", da
             <span class="entry-title">{entry.data.title}</span>
             <TagPill label={entry.data.tag} />
           </span>
-          <span class="entry-arrow" aria-hidden="true">↗</span>
+          <span class="entry-arrow" aria-hidden="true"><ArrowUpRightIcon /></span>
         </a>
       ))}
     </div>

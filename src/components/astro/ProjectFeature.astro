@@ -1,5 +1,6 @@
 ---
 import type { Project } from "../../lib/content-model";
+import ArrowUpRightIcon from "./ArrowUpRightIcon.astro";
 import ProjectMediaTile from "./ProjectMediaTile.astro";
 import TagPill from "./TagPill.astro";
 
@@ -12,7 +13,11 @@ interface Props {
 const { project, index, layout = "summary" } = Astro.props;
 const primaryLink = project.links[0];
 const media = project.images ?? [];
-const image = media[0];
+const videoPattern = /\.(mp4|webm|mov|m4v|ogv)(\?.*)?$/i;
+const youtubePattern = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/;
+const image = media.find((item) =>
+  !videoPattern.test(item) && !youtubePattern.test(item)
+);
 const external = primaryLink?.url.startsWith("http");
 const summaries: Record<string, string> = {
   "SpeakUp — Real-Time Classroom Engagement":
@@ -24,8 +29,6 @@ const summaries: Record<string, string> = {
 };
 const description = summaries[project.name] ?? (Array.isArray(project.description) ? project.description[0] : project.description);
 const paragraphs = Array.isArray(project.description) ? project.description : [project.description];
-const videoPattern = /\.(mp4|webm|mov|m4v|ogv)(\?.*)?$/i;
-const youtubePattern = /(?:youtube\.com\/(?:watch\?v=|embed\/|shorts\/)|youtu\.be\/)([A-Za-z0-9_-]{6,})/;
 const imageMedia = media.filter((item) => !videoPattern.test(item) && !youtubePattern.test(item));
 const sideMedia = media.slice(0, 2);
 const remainingMedia = media.slice(2);
@@ -45,7 +48,10 @@ const imageIndex = (src: string) => imageMedia.indexOf(src);
     >
       <img src={image} alt="" width="1200" height="750" loading={index === 0 ? "eager" : "lazy"} />
       <span class="media-label">System / {String(index + 1).padStart(2, "0")}</span>
-      <span class="media-action" aria-hidden="true">Inspect ↗</span>
+      <span class="media-action" aria-hidden="true">
+        Inspect
+        <ArrowUpRightIcon />
+      </span>
     </a>
   )}
   <div class="project-body">
@@ -66,7 +72,8 @@ const imageIndex = (src: string) => imageMedia.indexOf(src);
             target={link.url.startsWith("http") ? "_blank" : undefined}
             rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}
           >
-            {link.label} <span aria-hidden="true">↗</span>
+            <span>{link.label}</span>
+            <ArrowUpRightIcon />
           </a>
         ))}
       </div>
@@ -95,7 +102,8 @@ const imageIndex = (src: string) => imageMedia.indexOf(src);
               target={link.url.startsWith("http") ? "_blank" : undefined}
               rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}
             >
-              {link.label} <span aria-hidden="true">↗</span>
+              <span>{link.label}</span>
+              <ArrowUpRightIcon />
             </a>
           ))}
         </div>

@@ -1,4 +1,6 @@
 ---
+import ArrowUpRightIcon from "../astro/ArrowUpRightIcon.astro";
+
 interface Props { title?: string; link?: string }
 const { title = "Related post", link = "/blog" } = Astro.props;
 const external = /^https?:\/\//.test(link);
@@ -7,6 +9,7 @@ const external = /^https?:\/\//.test(link);
 <aside class="article-suggestion" aria-label="Suggested reading">
   <p>{title}</p>
   <a href={link} target={external ? "_blank" : undefined} rel={external ? "noreferrer" : undefined}>
-    Read more <span aria-hidden="true">↗</span>
+    <span>Read more</span>
+    <ArrowUpRightIcon />
   </a>
 </aside>

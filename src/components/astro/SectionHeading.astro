@@ -1,4 +1,6 @@
 ---
+import ArrowRightIcon from "./ArrowRightIcon.astro";
+
 interface Props {
   index: string;
   eyebrow: string;
@@ -16,5 +18,8 @@ const { index, eyebrow, title, href, label = "View all", headingId } = Astro.pro
     <p class="section-index">{index} / {eyebrow}</p>
     <h2 id={headingId}>{title}</h2>
   </div>
-  <a href={href} class="text-link">{label} <span aria-hidden="true">→</span></a>
+  <a href={href} class="text-link">
+    <span>{label}</span>
+    <ArrowRightIcon />
+  </a>
 </div>

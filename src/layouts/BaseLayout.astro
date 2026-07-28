@@ -22,6 +22,7 @@ const socialImage = new URL("/images/seo-image.png", Astro.site);
 const isHome = pathname === "/";
 const isBlogArticle = pathname.startsWith("/blog/") && pathname !== "/blog/";
 const isShortArticle = pathname.startsWith("/shorts/") && pathname !== "/shorts/" && !pathname.startsWith("/shorts/tag/");
+const isProjectShowcase = /^\/projects\/[^/]+\/?$/.test(pathname);
 
 const nav = [
   ["Writing", "/blog"],
@@ -85,7 +86,7 @@ const nav = [
       )}
       <div class="site-content">
         <main id="main-content">
-          {!isHome && !isBlogArticle && !isShortArticle && (
+          {!isHome && !isProjectShowcase && !isBlogArticle && !isShortArticle && (
             <a class="page-home-link" href="/">
               <ReturnArrowIcon />
               <span>Home</span>

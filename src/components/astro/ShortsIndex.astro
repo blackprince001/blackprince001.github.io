@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import ArrowUpRightIcon from "./ArrowUpRightIcon.astro";
 import TagPill from "./TagPill.astro";
 
 interface Props {
@@ -33,7 +34,7 @@ const visibleEntries = activeTag ? entries.filter((entry) => entry.data.tags.inc
             {entry.data.tags.map((tag) => <TagPill label={tag} />)}
           </span>
         </span>
-        <span class="entry-arrow" aria-hidden="true">↗</span>
+        <span class="entry-arrow" aria-hidden="true"><ArrowUpRightIcon /></span>
       </a>
     ))}
   </div>

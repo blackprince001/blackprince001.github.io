@@ -1,5 +1,7 @@
 ---
 import { getCollection } from "astro:content";
+import ArrowRightIcon from "../components/astro/ArrowRightIcon.astro";
+import ArrowUpRightIcon from "../components/astro/ArrowUpRightIcon.astro";
 import ProjectFeature from "../components/astro/ProjectFeature.astro";
 import SectionHeading from "../components/astro/SectionHeading.astro";
 import TagPill from "../components/astro/TagPill.astro";
@@ -13,6 +15,14 @@ const writing = (await getCollection("writing", ({ data }) => !data.draft))
 const recentPublications = [...publications]
   .sort((a, b) => b.year - a.year)
   .slice(0, 5);
+const selectedProjectNames = new Set([
+  "Oware Engine and a Ladder of RL Agents",
+  "Real-Time Traffic Density Estimation",
+  "Humanoid Balancing Policy with MjLab",
+]);
+const selectedProjects = projects.filter((project) =>
+  selectedProjectNames.has(project.name),
+);
 const date = new Intl.DateTimeFormat("en", {
   year: "numeric",
   month: "short",
@@ -49,13 +59,13 @@ const date = new Intl.DateTimeFormat("en", {
             href="https://robotics-course-458.vercel.app/"
             target="_blank"
             rel="noopener noreferrer"
-            >Robotics course <span aria-hidden="true">↗</span></a
+            ><span>Robotics course</span><ArrowUpRightIcon /></a
           >
           <a class="text-link" href="/blog"
-            >Read the journal <span aria-hidden="true">→</span></a
+            ><span>Read the journal</span><ArrowRightIcon /></a
           >
           <a class="text-link" href="/projects"
-            >View all projects <span aria-hidden="true">→</span></a
+            ><span>View all projects</span><ArrowRightIcon /></a
           >
         </div>
       </section>
@@ -95,7 +105,7 @@ const date = new Intl.DateTimeFormat("en", {
                   <TagPill label={entry.data.tag} />
                 </span>
                 <span class="entry-arrow" aria-hidden="true">
-                  ↗
+                  <ArrowUpRightIcon />
                 </span>
               </a>
             ))
@@ -144,7 +154,8 @@ const date = new Intl.DateTimeFormat("en", {
                   </small>
                 </span>
                 <span class="manuscript-icon" aria-hidden="true">
-                  PDF ↗
+                  <span>PDF</span>
+                  <ArrowUpRightIcon />
                 </span>
               </a>
             ))
@@ -162,11 +173,9 @@ const date = new Intl.DateTimeFormat("en", {
         />
         <div class="project-list">
           {
-            projects
-              .slice(0, 3)
-              .map((project, index) => (
-                <ProjectFeature project={project} index={index} />
-              ))
+            selectedProjects.map((project, index) => (
+              <ProjectFeature project={project} index={index} />
+            ))
           }
         </div>
       </section>

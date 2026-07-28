@@ -1,4 +1,6 @@
 ---
+import ArrowUpRightIcon from "../astro/ArrowUpRightIcon.astro";
+
 interface Props {
   href: string;
   title: string;
@@ -41,7 +43,10 @@ if (external && !label) {
       </span>
       <strong>{title}</strong>
       {description && <span class="article-link-embed__description">{description}</span>}
-      <small>{meta || "Open resource"} <span aria-hidden="true">↗</span></small>
+      <small>
+        <span>{meta || "Open resource"}</span>
+        <ArrowUpRightIcon />
+      </small>
     </span>
   </a>
 </aside>

@@ -1,5 +1,6 @@
 ---
 import type { FlagshipStory } from "../../lib/flagship-stories";
+import ReturnArrowIcon from "../astro/ReturnArrowIcon.astro";
 import TagPill from "../astro/TagPill.astro";
 import EvidenceStage from "./EvidenceStage.astro";
 import ResourceLinks from "./ResourceLinks.astro";
@@ -9,8 +10,11 @@ const { story } = Astro.props;
 ---
 
 <header class="research-hero">
+  <a class="article-back" href="/projects">
+    <ReturnArrowIcon />
+    <span>Projects</span>
+  </a>
   <div class="research-hero__copy">
-    <a class="article-back" href="/projects">← Projects</a>
     <p class="section-index">{story.eyebrow}</p>
     <h1>{story.title}</h1>
     <p class="research-hero__summary">{story.summary}</p>

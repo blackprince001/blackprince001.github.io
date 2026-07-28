@@ -1,10 +1,14 @@
+---
+import ArrowUpRightIcon from "./ArrowUpRightIcon.astro";
+---
+
 <section class="open-source" aria-labelledby="open-source-title" data-open-source-projects>
   <header class="open-source__header">
     <div>
       <p class="section-index">Repository archive</p>
       <h2 id="open-source-title">Open source</h2>
     </div>
-    <a class="text-link" href="https://github.com/blackprince001" target="_blank" rel="noopener noreferrer">GitHub profile <span aria-hidden="true">↗</span></a>
+    <a class="text-link" href="https://github.com/blackprince001" target="_blank" rel="noopener noreferrer"><span>GitHub profile</span><ArrowUpRightIcon /></a>
   </header>
 
   <div class="open-source__controls" role="group" aria-label="Sort open-source projects">
@@ -19,6 +23,7 @@
     <span></span>
     <button type="button" data-project-page="next">Next →</button>
   </nav>
+  <template data-external-arrow><ArrowUpRightIcon /></template>
 </section>
 
 <script>
@@ -124,7 +129,9 @@
         fallback.href = "https://github.com/blackprince001?tab=repositories";
         fallback.target = "_blank";
         fallback.rel = "noopener noreferrer";
-        fallback.textContent = "Browse repositories on GitHub ↗";
+        fallback.textContent = "Browse repositories on GitHub";
+        const arrowTemplate = section.querySelector<HTMLTemplateElement>("[data-external-arrow]");
+        if (arrowTemplate) fallback.append(arrowTemplate.content.cloneNode(true));
         list.replaceChildren(fallback);
       });
   });
