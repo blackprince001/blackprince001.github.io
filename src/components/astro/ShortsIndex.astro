@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import { slugifyTag } from "../../lib/content-presentation";
 import ArrowUpRightIcon from "./ArrowUpRightIcon.astro";
 import TagPill from "./TagPill.astro";
 
@@ -20,7 +21,7 @@ const visibleEntries = activeTag ? entries.filter((entry) => entry.data.tags.inc
   <nav class="short-filter" aria-label="Filter shorts by topic">
     <TagPill label="All" href="/shorts" active={!activeTag} />
     {tags.map((tag) => (
-      <TagPill label={tag} href={`/shorts/tag/${encodeURIComponent(tag)}`} active={activeTag === tag} />
+      <TagPill label={tag} href={`/shorts/tag/${slugifyTag(tag)}`} active={activeTag === tag} />
     ))}
   </nav>
   <div class="entry-list">

@@ -2,14 +2,49 @@
 import { getCollection, render, type CollectionEntry } from "astro:content";
 import ArticleLinkEmbed from "../../components/article/ArticleLinkEmbed.astro";
 import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import type { ArticleDiscoveryLink } from "../../lib/content-presentation";
 
 export async function getStaticPaths() {
-  const entries = await getCollection("shorts", ({ data }) => !data.draft);
-  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+  const entries = (await getCollection("shorts", ({ data }) => !data.draft))
+    .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+  return entries.map((entry, index) => {
+    const adjacent = [
+      entries[index + 1] && {
+        href: `/shorts/${entries[index + 1].id}`,
+        label: "Older",
+        title: entries[index + 1].data.title,
+      },
+      entries[index - 1] && {
+        href: `/shorts/${entries[index - 1].id}`,
+        label: "Newer",
+        title: entries[index - 1].data.title,
+      },
+    ].filter(Boolean) as ArticleDiscoveryLink[];
+    const adjacentIds = new Set(adjacent.map((link) => link.href));
+    const related = entries
+      .filter((candidate) =>
+        candidate.id !== entry.id
+        && candidate.data.tags.some((tag) => entry.data.tags.includes(tag))
+        && !adjacentIds.has(`/shorts/${candidate.id}`))
+      .slice(0, Math.max(0, 3 - adjacent.length))
+      .map((candidate) => ({
+        href: `/shorts/${candidate.id}`,
+        label: "Related short",
+        title: candidate.data.title,
+      }));
+
+    return {
+      params: { id: entry.id },
+      props: { entry, discoveryLinks: [...adjacent, ...related] },
+    };
+  });
 }
 
-interface Props { entry: CollectionEntry<"shorts"> }
-const { entry } = Astro.props;
+interface Props {
+  entry: CollectionEntry<"shorts">;
+  discoveryLinks: ArticleDiscoveryLink[];
+}
+const { entry, discoveryLinks } = Astro.props;
 const { Content, headings } = await render(entry);
 ---
 
@@ -22,6 +57,7 @@ const { Content, headings } = await render(entry);
   pathname={Astro.url.pathname}
   backHref="/shorts"
   backLabel="Shorts"
+  discoveryLinks={discoveryLinks}
 >
   <Content components={{ LinkEmbed: ArticleLinkEmbed }} />
 </ArticleLayout>

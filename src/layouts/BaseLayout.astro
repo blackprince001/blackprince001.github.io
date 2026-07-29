@@ -3,12 +3,19 @@ import "@fontsource-variable/inter/standard.css";
 import "@fontsource-variable/inter/standard-italic.css";
 import "../styles/global.css";
 import ReturnArrowIcon from "../components/astro/ReturnArrowIcon.astro";
+import { getSocialImagePath } from "../lib/social-images";
 
 interface Props {
   title?: string;
   description?: string;
   pathname?: string;
   robots?: string;
+  pageType?: "website" | "article";
+  publishDate?: Date;
+  tags?: string[];
+  structuredData?: Record<string, unknown>;
+  socialImagePath?: string;
+  socialImageAlt?: string;
 }
 
 const {
@@ -16,20 +23,33 @@ const {
   description = "Engineering journal of Prince Kwabena Appiah Boadu.",
   pathname = Astro.url.pathname,
   robots,
+  pageType = "website",
+  publishDate,
+  tags = [],
+  structuredData,
+  socialImagePath,
+  socialImageAlt,
 } = Astro.props;
 const canonical = new URL(pathname, Astro.site);
-const socialImage = new URL("/images/seo-image.png", Astro.site);
-const isHome = pathname === "/";
-const isBlogArticle = pathname.startsWith("/blog/") && pathname !== "/blog/";
-const isShortArticle = pathname.startsWith("/shorts/") && pathname !== "/shorts/" && !pathname.startsWith("/shorts/tag/");
-const isProjectShowcase = /^\/projects\/[^/]+\/?$/.test(pathname);
+const normalizedPath = pathname.replace(/\/+$/, "") || "/";
+const resolvedSocialImagePath = socialImagePath ?? getSocialImagePath(normalizedPath);
+const socialImage = new URL(resolvedSocialImagePath, Astro.site);
+const resolvedSocialImageAlt =
+  socialImageAlt ?? `Editorial social preview for ${title.replace(/\s*[|—]\s*blackprince$/, "")}`;
+const isHome = normalizedPath === "/";
+const isBlogArticle = normalizedPath.startsWith("/blog/");
+const isShortArticle = normalizedPath.startsWith("/shorts/") && !normalizedPath.startsWith("/shorts/tag/");
+const isProjectShowcase = /^\/projects\/[^/]+$/.test(normalizedPath);
+const structuredDataJson = structuredData
+  ? JSON.stringify(structuredData).replaceAll("<", "\\u003c")
+  : undefined;
 
 const nav = [
-  ["Writing", "/blog"],
-  ["Shorts", "/shorts"],
-  ["Projects", "/projects"],
-  ["Manuscripts", "/publications"],
-  ["Reading", "/reading"],
+  { label: "Writing", href: "/blog", section: "/blog" },
+  { label: "Shorts", href: "/shorts", section: "/shorts" },
+  { label: "Projects", href: "/projects", section: "/projects" },
+  { label: "Manuscripts", href: "/publications", section: "/publications" },
+  { label: "Reading", href: "/reading", section: "/reading" },
 ];
 ---
 
@@ -37,24 +57,33 @@ const nav = [
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
     <meta name="description" content={description} />
     {robots && <meta name="robots" content={robots} />}
     <meta name="generator" content={Astro.generator} />
     <link rel="icon" href="/icon.svg" type="image/svg+xml" />
     <link rel="alternate" type="application/rss+xml" title="blackprince — Writing" href="/rss.xml" />
-    <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />
+    {pageType === "article" && <link rel="preload" href="/fonts/JetBrainsMono-Regular.woff2" as="font" type="font/woff2" crossorigin />}
     <link rel="canonical" href={canonical} />
+    <meta property="og:site_name" content="blackprince" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:image" content={socialImage} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:alt" content={resolvedSocialImageAlt} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
     <meta property="og:url" content={canonical} />
-    <meta property="og:type" content="website" />
+    <meta property="og:type" content={pageType} />
+    {publishDate && <meta property="article:published_time" content={publishDate.toISOString()} />}
+    {tags.map((tag) => <meta property="article:tag" content={tag} />)}
     <meta name="twitter:card" content="summary_large_image" />
     <meta name="twitter:title" content={title} />
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={socialImage} />
+    <meta name="twitter:image:alt" content={resolvedSocialImageAlt} />
     <title>{title}</title>
+    {structuredDataJson && <script type="application/ld+json" set:html={structuredDataJson} />}
     <script is:inline>
       (() => {
         const root = document.documentElement;
@@ -76,11 +105,7 @@ const nav = [
             <svg aria-hidden="true" viewBox="0 0 18 18" width="18" height="18"><path d="M3 5h12M3 9h12M3 13h12" /></svg>
           </button>
           <div class="site-nav__menu" id="primary-navigation-menu">
-            {nav.map(([label, href]) => <a href={href}>{label}</a>)}
-            <button class="theme-toggle" type="button" aria-label="Toggle color theme">
-              <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><path d="M13.1 10.35A5.75 5.75 0 0 1 5.65 2.9 5.75 5.75 0 1 0 13.1 10.35Z" /></svg>
-              <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 16 16" width="16" height="16"><circle cx="8" cy="8" r="2.5" /><path d="M8 1v1.25M8 13.75V15M1 8h1.25M13.75 8H15M3.05 3.05l.9.9M12.05 12.05l.9.9M12.95 3.05l-.9.9M3.95 12.05l-.9.9" /></svg>
-            </button>
+            {nav.map(({ label, href }) => <a href={href}>{label}</a>)}
           </div>
         </nav>
       )}
@@ -92,6 +117,10 @@ const nav = [
               <span>Home</span>
             </a>
           )}
+          <button class="theme-toggle page-theme-toggle" type="button" aria-label="Toggle color theme">
+            <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 16 16" width="16" height="18"><path d="M13.1 10.35A5.75 5.75 0 0 1 5.65 2.9 5.75 5.75 0 1 0 13.1 10.35Z" /></svg>
+            <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 16 16" width="16" height="18"><circle cx="8" cy="8" r="2.5" /><path d="M8 1v1.25M8 13.75V15M1 8h1.25M13.75 8H15M3.05 3.05l.9.9M12.05 12.05l.9.9M12.95 3.05l-.9.9M3.95 12.05l-.9.9" /></svg>
+          </button>
           <slot />
         </main>
         <footer class="site-footer">

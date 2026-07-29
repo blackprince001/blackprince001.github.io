@@ -18,15 +18,50 @@ import RustRunner from "../../components/article/islands/RustRunnerIsland.astro"
 import ScrewMotionDemo from "../../components/article/islands/ScrewMotionDemoIsland.astro";
 import Sigmoid from "../../components/article/islands/SigmoidIsland.astro";
 import ArticleLayout from "../../layouts/ArticleLayout.astro";
+import { estimateReadingTime, type ArticleDiscoveryLink } from "../../lib/content-presentation";
 
 export async function getStaticPaths() {
-  const entries = await getCollection("writing", ({ data }) => !data.draft);
+  const entries = (await getCollection("writing", ({ data }) => !data.draft))
+    .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
 
-  return entries.map((entry) => ({ params: { id: entry.id }, props: { entry } }));
+  return entries.map((entry, index) => {
+    const adjacent = [
+      entries[index + 1] && {
+        href: `/blog/${entries[index + 1].id}`,
+        label: "Older",
+        title: entries[index + 1].data.title,
+      },
+      entries[index - 1] && {
+        href: `/blog/${entries[index - 1].id}`,
+        label: "Newer",
+        title: entries[index - 1].data.title,
+      },
+    ].filter(Boolean) as ArticleDiscoveryLink[];
+    const adjacentIds = new Set(adjacent.map((link) => link.href));
+    const related = entries
+      .filter((candidate) =>
+        candidate.id !== entry.id
+        && candidate.data.tag === entry.data.tag
+        && !adjacentIds.has(`/blog/${candidate.id}`))
+      .slice(0, Math.max(0, 3 - adjacent.length))
+      .map((candidate) => ({
+        href: `/blog/${candidate.id}`,
+        label: `More in ${entry.data.tag}`,
+        title: candidate.data.title,
+      }));
+
+    return {
+      params: { id: entry.id },
+      props: { entry, discoveryLinks: [...adjacent, ...related] },
+    };
+  });
 }
 
-interface Props { entry: CollectionEntry<"writing"> }
-const { entry } = Astro.props;
+interface Props {
+  entry: CollectionEntry<"writing">;
+  discoveryLinks: ArticleDiscoveryLink[];
+}
+const { entry, discoveryLinks } = Astro.props;
 const { Content, headings } = await render(entry);
 ---
 
@@ -37,6 +72,8 @@ const { Content, headings } = await render(entry);
   tags={[entry.data.tag]}
   headings={headings}
   pathname={Astro.url.pathname}
+  readingTime={entry.data.readingTime ?? estimateReadingTime(entry.body)}
+  discoveryLinks={discoveryLinks}
 >
   <Content components={{
     Figure: ArticleFigure,

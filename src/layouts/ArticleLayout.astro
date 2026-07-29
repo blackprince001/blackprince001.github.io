@@ -5,6 +5,8 @@ import ArticleComments from "../components/article/ArticleComments.astro";
 import FloatingToc from "../components/astro/FloatingToc.astro";
 import ReturnArrowIcon from "../components/astro/ReturnArrowIcon.astro";
 import TagPill from "../components/astro/TagPill.astro";
+import type { ArticleDiscoveryLink } from "../lib/content-presentation";
+import { getSocialImagePath } from "../lib/social-images";
 import BaseLayout from "./BaseLayout.astro";
 
 interface Props {
@@ -16,6 +18,8 @@ interface Props {
   pathname: string;
   backHref?: string;
   backLabel?: string;
+  readingTime?: string;
+  discoveryLinks?: ArticleDiscoveryLink[];
 }
 
 const {
@@ -27,18 +31,42 @@ const {
   pathname,
   backHref = "/blog",
   backLabel = "Writing",
+  readingTime,
+  discoveryLinks = [],
 } = Astro.props;
+const resolvedDescription = description ?? `${title}, by Prince Kwabena Appiah Boadu.`;
 const formattedDate = publishDate.toLocaleDateString("en", {
   day: "2-digit",
   month: "short",
   year: "numeric",
 });
+const canonical = new URL(pathname, Astro.site);
+const socialImage = new URL(getSocialImagePath(pathname), Astro.site);
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "Article",
+  headline: title,
+  description: resolvedDescription,
+  datePublished: publishDate.toISOString(),
+  mainEntityOfPage: canonical.href,
+  image: socialImage.href,
+  keywords: tags.join(", "),
+  author: {
+    "@type": "Person",
+    name: "Prince Kwabena Appiah Boadu",
+    url: new URL("/", Astro.site).href,
+  },
+};
 ---
 
 <BaseLayout
   title={`${title} | blackprince`}
-  description={description ?? `${title}, by Prince Kwabena Appiah Boadu.`}
+  description={resolvedDescription}
   pathname={pathname}
+  pageType="article"
+  publishDate={publishDate}
+  tags={tags}
+  structuredData={structuredData}
 >
   <article class="article-shell">
     <header class="article-header">
@@ -52,9 +80,23 @@ const formattedDate = publishDate.toLocaleDateString("en", {
       </div>
       <div class="article-meta">
         <time datetime={publishDate.toISOString()}>{formattedDate}</time>
+        {readingTime && <span>{readingTime}</span>}
       </div>
     </header>
     <div class="article-body"><slot /></div>
+    {discoveryLinks.length > 0 && (
+      <nav class="article-discovery" aria-label="Continue reading">
+        <p class="section-index">Continue reading</p>
+        <div>
+          {discoveryLinks.map((link) => (
+            <a href={link.href}>
+              <span>{link.label}</span>
+              <strong>{link.title}</strong>
+            </a>
+          ))}
+        </div>
+      </nav>
+    )}
     <ArticleComments />
   </article>
   <FloatingToc headings={headings} />

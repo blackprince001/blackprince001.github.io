@@ -8,6 +8,11 @@ const statusLabel = {
   finished: "Finished",
   "want-to-read": "Queued",
 };
+
+function localCoverPath(cover: string) {
+  const id = new URL(cover).pathname.match(/\/isbn\/([^/]+)-L\.jpg$/)?.[1];
+  return id ? `/images/books/${id}.webp` : cover;
+}
 ---
 
 <BaseLayout title="Reading — blackprince" description="Books shaping my work across engineering, science, fiction, and philosophy.">
@@ -31,7 +36,14 @@ const statusLabel = {
           <div class="book-grid">
             {books.map((book) => (
               <article class="book-entry">
-                <img src={book.cover} alt="" loading="lazy" decoding="async" />
+                <img
+                  src={localCoverPath(book.cover)}
+                  alt=""
+                  width="240"
+                  height="360"
+                  loading="lazy"
+                  decoding="async"
+                />
                 <div>
                   <TagPill label={statusLabel[book.status]} />
                   <h3>{book.title}</h3>
@@ -45,3 +57,9 @@ const statusLabel = {
     })}
   </article>
 </BaseLayout>
+
+<script>
+  if ("serviceWorker" in navigator) {
+    addEventListener("load", () => navigator.serviceWorker.register("/sw.js"));
+  }
+</script>

@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import ArrowUpRightIcon from "../../components/astro/ArrowUpRightIcon.astro";
 import TagPill from "../../components/astro/TagPill.astro";
 import BaseLayout from "../../layouts/BaseLayout.astro";
+import { estimateReadingTime } from "../../lib/content-presentation";
 
 const writing = (await getCollection("writing", ({ data }) => !data.draft))
   .sort((a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf());
@@ -38,7 +39,10 @@ const date = new Intl.DateTimeFormat("en", { year: "numeric", month: "short", da
           data-tag={entry.data.tag.toLocaleLowerCase()}
           data-description={(entry.data.description ?? "").toLocaleLowerCase()}
         >
-          <span class="entry-date">{date.format(entry.data.publishDate)}</span>
+          <span class="entry-date">
+            <time datetime={entry.data.publishDate.toISOString()}>{date.format(entry.data.publishDate)}</time>
+            <small>{entry.data.readingTime ?? estimateReadingTime(entry.body)}</small>
+          </span>
           <span class="entry-main">
             <span class="entry-title">{entry.data.title}</span>
             <TagPill label={entry.data.tag} />

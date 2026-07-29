@@ -1,4 +1,5 @@
 ---
+import { getImage, Image, type ImageMetadata } from "astro:assets";
 import katex from "katex";
 
 interface Props {
@@ -18,7 +19,35 @@ interface AstroJsxNode {
 
 const { title, src, srcs, alt = "Article figure", caption, cols } = Astro.props;
 const media = srcs?.length ? srcs : src ? [src] : [];
-const normalizeSrc = (value: string) => value.replace(/^\.\.\//, "/");
+const normalizeSrc = (value: string) => value.replace(/^\.\.\//, "").replace(/^\/+/, "");
+const articleAssets = import.meta.glob<{ default: ImageMetadata }>(
+  "../../assets/article/**/*.{avif,gif,jpeg,jpg,png,webp}",
+  { eager: true },
+);
+const optimizedMedia = await Promise.all(media.map(async (item) => {
+  const normalized = normalizeSrc(item);
+  const assetKey = `../../assets/article/${normalized}`;
+  const asset = articleAssets[assetKey]?.default;
+
+  if (!asset) {
+    throw new Error(`Article figure "${item}" is not available in src/assets/article.`);
+  }
+
+  const maximumWidth = Math.min(asset.width, 1600);
+  const widths = [...new Set(
+    [480, 768, 1024, 1280, maximumWidth].filter((width) => width <= maximumWidth),
+  )].sort((a, b) => a - b);
+  const full = await getImage({
+    src: asset,
+    width: maximumWidth,
+    format: "webp",
+    quality: 82,
+  });
+
+  return { asset, full, maximumWidth, widths };
+}));
+const columnCount = cols ?? Math.min(media.length, 4);
+const sizes = `(max-width: 52rem) calc(100vw - 2.5rem), ${Math.ceil(68 / columnCount)}rem`;
 const allowedCaptionTags = new Set(["strong", "em", "code", "span", "br"]);
 const escapeHtml = (value: string) => value
   .replaceAll("&", "&amp;")
@@ -61,12 +90,24 @@ const captionHtml = renderCaption(caption);
 {media.length > 0 && (
   <figure class="article-figure">
     {title && <p class="article-figure__title">{title}</p>}
-    <div class="article-figure__media" style={`--figure-columns: ${cols ?? Math.min(media.length, 4)}`}>
-      {media.map((item, index) => (
-        <button class="article-figure__trigger" type="button" data-figure-index={index} aria-label={`Enlarge ${media.length > 1 ? `${alt} (${index + 1})` : alt}`}>
-          <img
-            src={normalizeSrc(item)}
+    <div class="article-figure__media" style={`--figure-columns: ${columnCount}`}>
+      {optimizedMedia.map(({ asset, full, maximumWidth, widths }, index) => (
+        <button
+          class="article-figure__trigger"
+          type="button"
+          data-figure-index={index}
+          data-figure-full-src={full.src}
+          aria-label={`Enlarge ${media.length > 1 ? `${alt} (${index + 1})` : alt}`}
+        >
+          <Image
+            class="article-figure__image"
+            src={asset}
             alt={media.length > 1 ? `${alt} (${index + 1})` : alt}
+            width={maximumWidth}
+            widths={widths}
+            sizes={sizes}
+            format="webp"
+            quality={82}
             loading="lazy"
             decoding="async"
           />
@@ -78,7 +119,13 @@ const captionHtml = renderCaption(caption);
       <div class="article-figure__dialog-frame">
         <button class="article-figure__dialog-close" type="button" data-figure-close aria-label="Close image viewer">Close</button>
         {media.length > 1 && <button class="article-figure__dialog-previous" type="button" data-figure-previous aria-label="Previous image">←</button>}
-        <img data-figure-dialog-image src={normalizeSrc(media[0])} alt={media.length > 1 ? `${alt} (1)` : alt} />
+        <img
+          data-figure-dialog-image
+          width={optimizedMedia[0].full.attributes.width}
+          height={optimizedMedia[0].full.attributes.height}
+          alt={media.length > 1 ? `${alt} (1)` : alt}
+          decoding="async"
+        />
         {media.length > 1 && <button class="article-figure__dialog-next" type="button" data-figure-next aria-label="Next image">→</button>}
         {media.length > 1 && <p data-figure-count>1 / {media.length}</p>}
       </div>
@@ -103,7 +150,7 @@ const captionHtml = renderCaption(caption);
       activeIndex = (index + triggers.length) % triggers.length;
       const image = triggers[activeIndex].querySelector<HTMLImageElement>("img");
       if (!image) return;
-      dialogImage.src = image.currentSrc || image.src;
+      dialogImage.src = triggers[activeIndex].dataset.figureFullSrc || image.currentSrc || image.src;
       dialogImage.alt = image.alt;
       if (count) count.textContent = `${activeIndex + 1} / ${triggers.length}`;
     };

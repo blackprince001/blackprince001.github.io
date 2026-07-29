@@ -2,11 +2,12 @@
 import { getCollection } from "astro:content";
 import ShortsIndex from "../../../components/astro/ShortsIndex.astro";
 import BaseLayout from "../../../layouts/BaseLayout.astro";
+import { slugifyTag } from "../../../lib/content-presentation";
 
 export async function getStaticPaths() {
   const entries = await getCollection("shorts", ({ data }) => !data.draft);
   const tags = [...new Set(entries.flatMap((entry) => entry.data.tags))];
-  return tags.map((tag) => ({ params: { tag }, props: { activeTag: tag } }));
+  return tags.map((tag) => ({ params: { tag: slugifyTag(tag) }, props: { activeTag: tag } }));
 }
 
 interface Props { activeTag: string }
