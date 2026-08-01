@@ -40,7 +40,7 @@ export const flagshipStories: FlagshipStory[] = [
     resources: [
       { label: "Full write-up", url: "/blog/oware" },
       { label: "Source", url: "https://github.com/blackprince001/oware" },
-      { label: "Play", url: "https://oware-ai.vercel.app/#/" },
+      { label: "Play", url: "https://oware.pkab.work" },
     ],
     metrics: [
       { value: "7", label: "agents evaluated", context: "Search, learned, random, and self-play policies." },

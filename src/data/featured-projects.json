@@ -1,5 +1,39 @@
 [
   {
+    "name": "Flowbench — One Flow, Every Test Profile",
+    "date": "2026",
+    "tags": [
+      "Go",
+      "Python",
+      "API Testing",
+      "Load Testing"
+    ],
+    "description": [
+      "An open-source, local-first API and flow testing toolkit. Author a multi-step flow once in YAML or Python, then apply integration, system, load/stress, or soak profiles to the same canonical model. The Go engine is built around goroutine-per-VU concurrency and is documented for 10,000 concurrent virtual users on a single node.",
+      "Every step, protocol phase, extraction, assertion, and retry emits a span, so one result model powers the dashboard, flame graph, and waterfall view. Rate limiting stays honest with throttled as its own outcome class, while an optional target agent records CPU and memory alongside the run to separate generator pressure from target saturation."
+    ],
+    "images": [
+      "/featured-projects/flowbench-dashboard.png",
+      "/featured-projects/flowbench-flame.png",
+      "/featured-projects/flowbench-waterfall.png",
+      "/featured-projects/flowbench-outcomes.png"
+    ],
+    "links": [
+      {
+        "label": "Website",
+        "url": "https://flowbench.pkab.work"
+      },
+      {
+        "label": "GitHub",
+        "url": "https://github.com/blackprince001/flowbench"
+      },
+      {
+        "label": "Docs",
+        "url": "https://blackprince001.gitbook.io/flowbench-documentation"
+      }
+    ]
+  },
+  {
     "name": "SpeakUp — Real-Time Classroom Engagement",
     "date": "2026",
     "tags": [
@@ -19,7 +53,7 @@
     "links": [
       {
         "label": "Web App",
-        "url": "https://speakup-rooms.vercel.app/"
+        "url": "https://speakup.pkab.work"
       },
       {
         "label": "GitHub",
@@ -93,7 +127,7 @@
       },
       {
         "label": "Website",
-        "url": "https://oware-ai.vercel.app/#/"
+        "url": "https://oware.pkab.work"
       }
     ]
   },
