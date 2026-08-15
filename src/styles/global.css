@@ -749,6 +749,75 @@ html[data-motion-ready="true"] [data-exhibit-reveal][data-visible="true"] { opac
   .article-sidenote__content::first-letter { color: var(--ink); }
 }
 
+/* GFM footnotes (remark-gfm), rendered by markdown [^] syntax — e.g.
+   how-minds-change, which demotes citation notes to footnotes to thin out
+   an over‑dense sidenote margin. Matches the restrained editorial language:
+   a section label like .section-index, muted fine print, subtle back-links.
+   Sidenotes remain always‑visible at rest (revealed inline as marginal
+   panels on wide screens); this block styles only the collected footnote list. */
+.footnotes {
+  margin-top: clamp(3rem, 7vw, 4.5rem);
+  padding-top: 1.25rem;
+  border-top: 1px solid color-mix(in srgb, var(--soft) 30%, transparent);
+}
+.footnotes h2 {
+  /* reveal Astro's visually-hidden "Footnotes" label without affecting sr */
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0 0 0.75rem;
+  color: var(--soft);
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+.footnotes ol {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+.footnotes li {
+  margin-bottom: 0.5rem;
+  color: var(--muted);
+  font-size: 0.8rem;
+  line-height: 1.55;
+}
+.footnotes li:last-child { margin-bottom: 0; }
+.footnotes a[data-footnote-backref] {
+  color: var(--soft);
+  text-decoration: none;
+  text-decoration-thickness: 0;
+  opacity: 0.6;
+}
+@media (hover: hover) and (pointer: fine) {
+  .footnotes a[data-footnote-backref]:hover {
+    opacity: 1;
+    color: var(--ink);
+  }
+}
+.footnotes__toggle {
+  display: inline-block;
+  margin: 0 0 0.75rem;
+  padding: 0.2rem 0.45rem;
+  color: var(--soft);
+  font-family: var(--sans);
+  font-size: 0.6rem;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+  background: transparent;
+  border: 1px solid color-mix(in srgb, var(--soft) 30%, transparent);
+  border-radius: 0.3rem;
+  cursor: pointer;
+}
+.footnotes__toggle:hover {
+  color: var(--ink);
+  border-color: color-mix(in srgb, var(--soft) 55%, transparent);
+}
+/* Collapsed state: hide every footnote from the 4th onward. Toggled by the
+   client script in ArticleLayout; without JS the list stays open (all visible). */
+.footnotes--collapsed li:nth-child(n+4) { display: none; }
+
 @media (max-width: 52rem) {
   .site-frame--with-nav { display: block; width: 100%; }
   .site-nav { position: sticky; top: 0; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; margin: 0; padding: 0.65rem 1.25rem; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(14px); }

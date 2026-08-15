@@ -126,4 +126,63 @@ const structuredData = {
         setShape(video.videoWidth, video.videoHeight),
       );
     });
+
+  // Collapsible footnotes (how-minds-change and any future article with GFM
+  // footnotes): collapsed by default to the first few entries; the toggle, or
+  // clicking any in-text footnote reference, expands the whole section.
+  // No-JS: every footnote is already in the DOM, so the list just stays open.
+  (function () {
+    var articleBody = document.querySelector(".article-body");
+    if (!articleBody) return;
+    var section = articleBody.querySelector("section.footnotes");
+    var list = section && section.querySelector("ol");
+    if (!section || !list) return;
+
+    var items = list.querySelectorAll("li");
+    // Leave short lists alone.
+    if (items.length <= 3) return;
+
+    var total = items.length;
+    var button = document.createElement("button");
+    button.type = "button";
+    button.className = "footnotes__toggle";
+    button.setAttribute("aria-expanded", "false");
+    button.textContent = "Show all " + total + " footnotes";
+
+    // Insert the toggle directly above the list (after the section heading).
+    var heading = section.querySelector("h2");
+    (heading || list).insertAdjacentElement("afterend", button);
+
+    var setCollapsed = function (collapsed) {
+      section.classList.toggle("footnotes--collapsed", collapsed);
+      button.setAttribute("aria-expanded", String(!collapsed));
+      button.textContent = collapsed
+        ? "Show all " + total + " footnotes"
+        : "Show fewer footnotes";
+    };
+
+    setCollapsed(true);
+    button.addEventListener("click", function () {
+      setCollapsed(!section.classList.contains("footnotes--collapsed"));
+    });
+
+    // Clicking any in-text footnote reference expands the whole section so the
+    // jumped-to citation is immediately visible. Capture phase runs before the
+    // default anchor scroll lands on the (currently hidden) list item.
+    document.addEventListener(
+      "click",
+      function (event) {
+        var target = event.target;
+        if (
+          section.classList.contains("footnotes--collapsed") &&
+          target &&
+          target.closest &&
+          target.closest("a[data-footnote-ref]")
+        ) {
+          setCollapsed(false);
+        }
+      },
+      true,
+    );
+  })();
 </script>
