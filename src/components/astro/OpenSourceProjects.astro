@@ -55,8 +55,7 @@ import ArrowUpRightIcon from "./ArrowUpRightIcon.astro";
 
     const pill = (label: string) => {
       const element = document.createElement("span");
-      const tone = [...label].reduce((total, character) => total + character.charCodeAt(0), 0) % 7;
-      element.className = `tag-pill tag-pill--${tone}`;
+      element.className = "tag-pill";
       element.textContent = label;
       return element;
     };

@@ -2,7 +2,6 @@
 import { getCollection } from "astro:content";
 import ArrowRightIcon from "../components/astro/ArrowRightIcon.astro";
 import ArrowUpRightIcon from "../components/astro/ArrowUpRightIcon.astro";
-import ProjectFeature from "../components/astro/ProjectFeature.astro";
 import SectionHeading from "../components/astro/SectionHeading.astro";
 import TagPill from "../components/astro/TagPill.astro";
 import BlueprintNoiseField from "../components/astro/BlueprintNoiseField.astro";
@@ -24,6 +23,20 @@ const selectedProjectNames = new Set([
 const selectedProjects = projects.filter((project) =>
   selectedProjectNames.has(project.name),
 );
+const summaries: Record<string, string> = {
+  "Flowbench — One Flow, Every Test Profile":
+    "A local-first API and flow testing toolkit that carries one YAML or Python journey from integration to stress and soak, with honest outcomes and explainable results.",
+  "SpeakUp — Real-Time Classroom Engagement":
+    "A real-time classroom platform built around anonymous questions, ranked discussion, polls, and activity sequencing—without requiring student accounts.",
+  Lumen:
+    "A self-hostable research library for ingesting, organizing, searching, and reading papers with semantic retrieval and AI-assisted analysis.",
+  "Oware Engine and a Ladder of RL Agents":
+    "A custom Oware engine and evaluation ladder for DQN, PPO, AlphaZero-lite, and Minimax agents, including the training strategies that failed.",
+};
+const fallbackSummary = (project: (typeof projects)[number]) =>
+  Array.isArray(project.description) ? project.description[0] : project.description;
+const projectSlug = (name: string) =>
+  name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "");
 const date = new Intl.DateTimeFormat("en", {
   year: "numeric",
   month: "short",
@@ -172,10 +185,24 @@ const date = new Intl.DateTimeFormat("en", {
           href="/projects"
           headingId="work-title"
         />
-        <div class="project-list">
+        <div class="manuscript-list">
           {
-            selectedProjects.map((project, index) => (
-              <ProjectFeature project={project} index={index} />
+            selectedProjects.map((project) => (
+              <a
+                class="manuscript-row"
+                href={`/projects#${projectSlug(project.name)}`}
+              >
+                <span class="manuscript-year">{project.date}</span>
+                <span class="manuscript-copy">
+                  <strong>{project.name}</strong>
+                  <small>
+                    {summaries[project.name] ?? fallbackSummary(project)}
+                  </small>
+                </span>
+                <span class="entry-arrow project-row-arrow" aria-hidden="true">
+                  <ArrowUpRightIcon />
+                </span>
+              </a>
             ))
           }
         </div>

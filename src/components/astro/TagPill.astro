@@ -16,8 +16,7 @@ const {
   dataTag,
   class: className = "",
 } = Astro.props;
-const tone = [...label].reduce((total, character) => total + character.charCodeAt(0), 0) % 7;
-const classes = `tag-pill tag-pill--${tone} ${className}`.trim();
+const classes = `tag-pill ${className}`.trim();
 ---
 
 {href ? (
