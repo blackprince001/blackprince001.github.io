@@ -18,6 +18,12 @@ export default defineConfig({
     },
   },
   markdown: {
+    shikiConfig: {
+      themes: {
+        light: "github-light",
+        dark: "github-dark",
+      },
+    },
     processor: unified({
       gfm: true,
       remarkPlugins: [remarkNormalizePublicPaths, remarkMath],
