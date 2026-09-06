@@ -34,15 +34,13 @@ The acceleration command sent to the physics stepper at every timestep $t$ is:
 
 <center>$$ \dot{v}(s, v, \Delta v) = a \left[ 1 - \left(\frac{v}{v_0}\right)^\delta - \left(\frac{s^*(v, \Delta v)}{s}\right)^2 \right] $$</center>
 
-<div>
-    <video controls loop muted playsInline preload="none" poster="../video-posters/idm-sim.mp4.png">
-        <source src="../atscs/idm-sim.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-    </video>
-    <div className="text-sm text-gray-500 mt-2 text-center italic">
-        <strong>Figure 1: Vehicle Dynamics.</strong> Note the "accordion effect" as cars decelerate. This latency forces the agent to learn predictive behavior rather than reactive switching.
-    </div>
-</div>
+<VideoPlayer
+  id="traffic-idm"
+  src="../atscs/idm-sim.mp4"
+  title="IDM vehicle dynamics simulation"
+  poster="../video-posters/idm-sim.mp4.png"
+  caption="Figure 1: Vehicle dynamics. Note the accordion effect as cars decelerate."
+/>
 
 This math is critical for the RL agent. Because the IDM includes a braking term, vehicles have "inertia." If the agent switches the light to Red too late, the queue length doesn't just increase linearly; a deceleration shockwave propagates backward. The agent has to learn that clearing a queue takes time due to startup transients ($a$), penalizing it for letting lines get too long.
 
@@ -90,28 +88,24 @@ We employed a curriculum learning strategy, slowly increasing the entropy of the
 **Phase 1: Single Node**
 The goal here was simple mapping: $Queue \rightarrow Green$. The agent quickly learned to minimize the "all-red" dead time by grouping vehicles into platoons.
 
-<div>
-    <video controls loop muted playsInline preload="none" poster="../video-posters/scenario-a.mp4.png">
-        <source src="../atscs/scenario-a.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-    </video>
-    <div className="text-sm text-gray-500 mt-2 text-center italic">
-        <strong>Figure 3:</strong> Models behaviour is almost similar to when there is no traffic lights under the heavy traffic evaluation run.
-    </div>
-</div>
+<VideoPlayer
+  id="traffic-scenario-a"
+  src="../atscs/scenario-a.mp4"
+  title="Single-node platooning"
+  poster="../video-posters/scenario-a.mp4.png"
+  caption="Figure 3: model behaviour under the heavy traffic evaluation run."
+/>
 
 **Phase 2: Arterial Coordination**
 Here, I introduced a second intersection 200m downstream. The challenge is the Green Wave. The agent controlling Intersection 1 must learn that its actions affect the input state of Intersection 2.
 
-<div>
-    <video controls loop muted playsInline preload="none" poster="../video-posters/scenario-b.mp4.png">
-        <source src="../atscs/scenario-b.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-    </video>
-    <div className="text-sm text-gray-500 mt-2 text-center italic">
-        <strong>Figure 4: Emergent Coordination.</strong> Intersection 2 (Right) learns to turn green exactly 10 seconds after Intersection 1 releases traffic, matching the travel time {'$t = d/v_{max}$'}.
-    </div>
-</div>
+<VideoPlayer
+  id="traffic-scenario-b"
+  src="../atscs/scenario-b.mp4"
+  title="Arterial coordination green wave"
+  poster="../video-posters/scenario-b.mp4.png"
+  caption="Figure 4: emergent coordination across two intersections."
+/>
 
 **Phase 3: The 2x2 Grid**
 This tested the system's resistance to deadlock. We trained for 200,000 timesteps. We observed that the agent effectively learned a switching threshold function, holding the phase until the ratio of queue lengths $\frac{q_{green}}{q_{red}}$ dropped below a learned threshold $\beta$.
@@ -165,15 +159,13 @@ The 2x2 Grid represents the most chaotic system. We stress-tested the system by 
   alt="Traffic throughput and flow analysis"
 />
 
-<div>
-    <video controls loop muted playsInline preload="none" poster="../video-posters/scenario-c.mp4.png">
-        <source src="../atscs/scenario-c.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-    </video>
-    <div className="text-sm text-gray-500 mt-2 text-center italic">
-        <strong>Figure 5:</strong> Gating behaviour exhibited by model in moderating traffic.
-    </div>
-</div>
+<VideoPlayer
+  id="traffic-scenario-c"
+  src="../atscs/scenario-c.mp4"
+  title="Gating behaviour in moderating traffic"
+  poster="../video-posters/scenario-c.mp4.png"
+  caption="Figure 5: gating behaviour exhibited by the model in moderating traffic."
+/>
 
 
 The results revealed a sophisticated strategy known in traffic engineering as **Gating**. When the internal links of the grid approached saturation, the agent learned to artificially throttle the *inflow* lights at the perimeter. By holding cars outside the grid, it maintained free-flow conditions within the center. A naive greedy strategy would have filled the grid, dropping throughput to zero.

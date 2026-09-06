@@ -72,23 +72,13 @@ where $\Delta |T_1| = |T_1(t)| - |T_1(t-1)|$ is the change in territory size. Th
 
 **Training Opponent**: During training, the AI (Player 1) faces a random opponent (Player 2). This stochasticity prevents overfitting to deterministic strategies and encourages robust play.
 
-<div>
-  <video
-    controls
-    loop
-    muted
-    playsInline
-    preload="none"
-    poster="../video-posters/training.mp4.png"
-  >
-    <source src="../rl-filler/training.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div>
-
-<div className="text-sm text-gray-500 mt-2 text-center italic">
-  <strong>Training Visualization:</strong> The AI learns to capture territory strategically against a random opponent during training.
-</div>
+<VideoPlayer
+  id="floodit-training"
+  src="../rl-filler/training.mp4"
+  title="Flood-It training run"
+  poster="../video-posters/training.mp4.png"
+  caption="Training visualization: the AI learns to capture territory strategically against a random opponent during training."
+/>
 
 ### 3. Deep Q-Network Training
 
@@ -181,23 +171,13 @@ This transparency is crucial for understanding and trusting the AI's decisions. 
 
 **Move History**: A collapsible log maintains a complete record of all AI decisions, allowing users to analyze patterns in the AI's play over the course of a game.
 
-<div>
-  <video
-    controls
-    loop
-    muted
-    playsInline
-    preload="none"
-    poster="../video-posters/gameplay.mp4.png"
-  >
-    <source src="../rl-filler/gameplay.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div>
-
-<div className="text-sm text-gray-500 mt-2 text-center italic">
-  <strong>Gameplay Demo:</strong> Real-time gameplay showing territory expansion, Q-value visualization, and AI decision-making in action.
-</div>
+<VideoPlayer
+  id="floodit-gameplay"
+  src="../rl-filler/gameplay.mp4"
+  title="Flood-It gameplay demo"
+  poster="../video-posters/gameplay.mp4.png"
+  caption="Gameplay demo: real-time territory expansion, Q-value visualization, and AI decision-making in action."
+/>
 
 ## Training Results and Analysis
 
@@ -283,23 +263,13 @@ Several directions could improve the system:
 
 **Architecture Improvements**: Using a CNN policy (treating the board as an image) might capture spatial patterns better, though the current MLP performs adequately.
 
-<div>
-  <video
-    controls
-    loop
-    muted
-    playsInline
-    preload="none"
-    poster="../video-posters/ai.mp4.png"
-  >
-    <source src="../rl-filler/ai.mp4" type="video/mp4" />
-    Your browser does not support the video tag.
-  </video>
-</div>
-
-<div className="text-sm text-gray-500 mt-2 text-center italic">
-  <strong>AI vs Human Gameplay:</strong> A complete game showing the trained AI competing against a human player, demonstrating learned strategic behavior.
-</div>
+<VideoPlayer
+  id="floodit-ai-vs-human"
+  src="../rl-filler/ai.mp4"
+  title="Trained AI versus human gameplay"
+  poster="../video-posters/ai.mp4.png"
+  caption="AI versus human gameplay: a complete game showing the trained AI competing against a human player."
+/>
 
 **Multi-Agent RL**: Training multiple agents with different strategies could create a more diverse and challenging opponent pool.
 

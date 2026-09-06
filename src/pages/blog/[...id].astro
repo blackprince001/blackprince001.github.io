@@ -4,9 +4,9 @@ import ArticleExample from "../../components/article/ArticleExample.astro";
 import ArticleFigure from "../../components/article/ArticleFigure.astro";
 import ArticleSidenote from "../../components/article/ArticleSidenote.astro";
 import ArticleCodeSnippet from "../../components/article/ArticleCodeSnippet.astro";
+import VideoPlayer from "../../components/article/VideoPlayer.astro";
 import ArticlePreviewLink from "../../components/article/ArticlePreviewLink.astro";
-import ArticleSuggestion from "../../components/article/ArticleSuggestion.astro";
-import AxisAngleDemo from "../../components/article/islands/AxisAngleDemoIsland.astro";
+import ArticleSuggestion from "../../components/article/ArticleSuggestion.astro";import AxisAngleDemo from "../../components/article/islands/AxisAngleDemoIsland.astro";
 import GoRunner from "../../components/article/islands/GoRunnerIsland.astro";
 import HelloFx from "../../components/article/islands/HelloFxIsland.astro";
 import InequalitiesExample from "../../components/article/islands/InequalitiesExampleIsland.astro";
@@ -85,6 +85,7 @@ const { Content, headings } = await render(entry);
     BlogSuggestion: ArticleSuggestion,
     PreviewLink: ArticlePreviewLink,
     CodeSnippet: ArticleCodeSnippet,
+    VideoPlayer,
     MeshRenderSwitch,
     HelloFx,
     InequalitiesExample,
