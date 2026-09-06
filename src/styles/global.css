@@ -116,18 +116,19 @@ img { display: block; max-width: 100%; }
 button { font: inherit; }
 .font-mono { font-family: var(--mono) !important; }
 
-.tag-list { display: flex; flex-wrap: wrap; gap: 0.38rem; }
+.tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
 .tag-pill {
   display: inline-flex;
   align-items: center;
   width: fit-content;
-  min-height: 1.7rem;
-  border-radius: 0.45rem;
-  padding: 0.3rem 0.72rem;
-  background: color-mix(in srgb, var(--soft) 32%, var(--page));
-  color: var(--ink);
+  min-height: 2rem;
+  border: 1px solid color-mix(in srgb, var(--soft) 35%, transparent);
+  border-radius: 999px;
+  padding: 0.45rem 0.85rem;
+  background: transparent;
+  color: var(--muted);
   font-family: var(--sans);
-  font-size: 0.64rem;
+  font-size: 0.7rem;
   font-weight: 400;
   line-height: 1;
   text-decoration: none;
@@ -135,10 +136,21 @@ button { font: inherit; }
 }
 button.tag-pill { cursor: pointer; }
 .tag-pill[aria-current="page"], .tag-pill[aria-pressed="true"] {
-  background: color-mix(in srgb, var(--soft) 52%, var(--page));
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--page);
 }
 @media (hover: hover) and (pointer: fine) {
-  a.tag-pill:hover, button.tag-pill:hover { background: color-mix(in srgb, var(--soft) 42%, var(--page)); }
+  a.tag-pill:hover, button.tag-pill:hover {
+    border-color: color-mix(in srgb, var(--soft) 60%, transparent);
+    background: transparent;
+    color: var(--ink);
+  }
+  a.tag-pill[aria-current="page"]:hover, a.tag-pill[aria-pressed="true"]:hover,
+  button.tag-pill[aria-current="page"]:hover, button.tag-pill[aria-pressed="true"]:hover {
+    background: var(--ink);
+    color: var(--page);
+  }
 }
 
 .skip-link {
@@ -700,16 +712,26 @@ html[data-motion-ready="true"] [data-exhibit-reveal][data-visible="true"] { opac
   position: fixed;
   z-index: 10;
   top: 50%;
-  right: max(1.25rem, calc((100vw - 82rem) / 2));
+  left: max(1.25rem, calc((100vw - 82rem) / 2));
   transform: translateY(-50%);
 }
 .floating-toc__trigger { display: flex; align-items: center; gap: 0.65rem; border: 0; padding: 0.65rem; background: transparent; color: var(--muted); cursor: pointer; }
 .floating-toc__label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
-.floating-toc__bars { display: flex; flex-direction: column; align-items: flex-end; gap: 0.42rem; }
+.floating-toc__bars { display: flex; flex-direction: column; align-items: flex-start; gap: 0.42rem; }
 .floating-toc__bar { width: 1rem; height: 2px; border-radius: 99px; background: var(--soft); transition: width 160ms ease, background-color 160ms ease; }
 .floating-toc__bar[data-level="3"] { width: 0.72rem; }
 .floating-toc__bar[data-active] { width: 1.5rem; background: var(--ink); }
-.floating-toc__content { position: absolute; top: 50%; right: calc(100% + 0.5rem); width: min(18rem, calc(100vw - 5rem)); max-height: min(30rem, 72vh); overflow-y: auto; border: 1px solid color-mix(in srgb, var(--soft) 28%, transparent); border-radius: 0.55rem; padding: 1rem; background: color-mix(in srgb, var(--page) 96%, transparent); box-shadow: 0 1rem 3rem rgb(0 0 0 / 12%); transform: translateY(-50%); }
+.floating-toc__content { position: absolute; top: 50%; left: calc(100% + 0.5rem); width: min(18rem, calc(100vw - 5rem)); max-height: min(30rem, 72vh); overflow-y: auto; border: 1px solid color-mix(in srgb, var(--soft) 28%, transparent); border-radius: 0.55rem; padding: 1rem; background: color-mix(in srgb, var(--page) 96%, transparent); box-shadow: 0 1rem 3rem rgb(0 0 0 / 12%); transform: translateY(-50%); }
+
+/* Nudge articles right on desktop to balance the left-side TOC trigger.
+   Relative positioning (not transform): a transform would become the
+   containing block for fixed descendants and break the video modal. */
+@media (min-width: 53rem) {
+  .site-content > main:has(.article-shell) .article-shell {
+    position: relative;
+    left: clamp(0rem, 4vw, 3rem);
+  }
+}
 .floating-toc__content > p { margin: 0 0 0.75rem; color: var(--soft); font-family: var(--sans); font-size: 0.61rem; letter-spacing: 0.05em; text-transform: uppercase; }
 .floating-toc__content ol { display: grid; gap: 0.15rem; margin: 0; padding: 0; list-style: none; }
 .floating-toc__content li { margin-left: calc(var(--floating-toc-level) * 0.75rem); }
@@ -821,11 +843,11 @@ html[data-motion-ready="true"] [data-exhibit-reveal][data-visible="true"] { opac
   .reading-section { display: block; }
   .reading-section > div:first-child { max-width: 28rem; margin-bottom: 2rem; }
   .project-detail-grid { grid-template-columns: 1fr; }
-  .floating-toc { top: auto; right: 1rem; bottom: 1rem; transform: none; }
-  .floating-toc__trigger { border: 1px solid color-mix(in srgb, var(--soft) 35%, transparent); border-radius: 999px; padding: 0.65rem 0.85rem; background: var(--page); box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 10%); }
+  .floating-toc { position: fixed; top: auto; left: 1rem; right: auto; bottom: 1rem; z-index: 10; transform: none; }
+  .floating-toc__trigger { display: flex; align-items: center; gap: 0.65rem; border: 1px solid color-mix(in srgb, var(--soft) 35%, transparent); border-radius: 999px; padding: 0.65rem 0.85rem; background: var(--page); color: var(--muted); cursor: pointer; box-shadow: 0 0.5rem 1.5rem rgb(0 0 0 / 10%); }
   .floating-toc__label { position: static; width: auto; height: auto; overflow: visible; clip-path: none; font-size: 0.7rem; white-space: normal; }
   .floating-toc__bars { display: none; }
-  .floating-toc__content { top: auto; right: 0; bottom: calc(100% + 0.6rem); transform: none; }
+  .floating-toc__content { position: absolute; top: auto; left: 0; right: auto; bottom: calc(100% + 0.6rem); width: min(18rem, calc(100vw - 5rem)); max-height: min(30rem, 72vh); overflow-y: auto; border: 1px solid color-mix(in srgb, var(--soft) 28%, transparent); border-radius: 0.55rem; padding: 1rem; background: color-mix(in srgb, var(--page) 96%, transparent); box-shadow: 0 1rem 3rem rgb(0 0 0 / 12%); transform: none; }
 }
 
 @media (max-width: 36rem) {
