@@ -41,7 +41,6 @@ const resolvedSocialImageAlt =
 const isHome = normalizedPath === "/";
 const isBlogArticle = normalizedPath.startsWith("/blog/");
 const isShortArticle = normalizedPath.startsWith("/shorts/") && !normalizedPath.startsWith("/shorts/tag/");
-const isProjectShowcase = /^\/projects\/[^/]+$/.test(normalizedPath);
 const structuredDataJson = structuredData
   ? JSON.stringify(structuredData).replaceAll("<", "\\u003c")
   : undefined;
@@ -113,7 +112,7 @@ const nav = [
       )}
       <div class="site-content">
         <main id="main-content">
-          {!isHome && !isProjectShowcase && !isBlogArticle && !isShortArticle && (
+          {!isHome && !isBlogArticle && !isShortArticle && (
             <a class="page-home-link" href="/">
               <ReturnArrowIcon />
               <span>Home</span>

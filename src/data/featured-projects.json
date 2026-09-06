@@ -1,6 +1,6 @@
 [
   {
-    "name": "Flowbench — One Flow, Every Test Profile",
+    "name": "Flowbench",
     "date": "2026",
     "tags": [
       "Go",
@@ -34,7 +34,7 @@
     ]
   },
   {
-    "name": "SpeakUp — Real-Time Classroom Engagement",
+    "name": "SpeakUp",
     "date": "2026",
     "tags": [
       "FastAPI",
@@ -93,7 +93,7 @@
     ]
   },
   {
-    "name": "Oware Engine and a Ladder of RL Agents",
+    "name": "AI playing Oware",
     "date": "2026",
     "tags": [
       "Reinforcement Learning",
@@ -113,10 +113,6 @@
       "/featured-projects/oware-5.png"
     ],
     "links": [
-      {
-        "label": "Case study",
-        "url": "/projects/oware"
-      },
       {
         "label": "Write-up",
         "url": "/blog/oware"
@@ -183,7 +179,7 @@
     ]
   },
   {
-    "name": "Odumsor — Live Power-Outage Map for Ghana",
+    "name": "Odumsor: Live Power-Outage Map for Ghana",
     "date": "2026",
     "tags": [
       "Civic Tech",
@@ -282,10 +278,6 @@
       "/featured-projects/floodit-2.png"
     ],
     "links": [
-      {
-        "label": "Case study",
-        "url": "/projects/floodit"
-      },
       {
         "label": "Write-up",
         "url": "/blog/floodit"

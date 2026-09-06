@@ -199,7 +199,7 @@ for (const file of htmlFiles) {
   }
 }
 
-for (const route of ["index.html", "blog/index.html", "projects/index.html", "projects/oware/index.html", "projects/floodit/index.html", "publications/index.html", "reading/index.html", "shorts/index.html"]) {
+for (const route of ["index.html", "blog/index.html", "projects/index.html", "publications/index.html", "reading/index.html", "shorts/index.html"]) {
   const html = await readFile(join(dist, route), "utf8");
   if (/\/_astro\/[A-Za-z0-9_.-]+\.js/.test(html)) failures.push(`/${route.replace(/index\.html$/, "")} unexpectedly loads framework JavaScript`);
 }
