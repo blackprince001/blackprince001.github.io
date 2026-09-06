@@ -405,14 +405,16 @@ button.tag-pill { cursor: pointer; }
 .open-source__controls button { border: 0; border-bottom: 1px solid transparent; padding: 0 0 0.35rem; background: transparent; color: var(--muted); cursor: pointer; font-size: 0.72rem; }
 .open-source__controls button[aria-pressed="true"] { border-color: var(--ink); color: var(--ink); }
 .open-source__status { margin: 0 0 1rem; color: var(--soft); font-family: var(--sans); font-size: 0.62rem; }
-.open-source__list { display: grid; max-width: var(--measure); }
-.repository-entry { padding: 1.4rem 0; }
-.repository-entry__heading { display: flex; align-items: baseline; justify-content: space-between; gap: 1rem; font-size: var(--listing-size); font-weight: 400; line-height: 1.4; }
-.repository-entry__heading a { text-decoration: none; }
-.repository-entry__heading a:hover { text-decoration: underline; text-underline-offset: 0.2em; }
-.repository-entry__heading span { flex: 0 0 auto; color: var(--soft); font-family: var(--sans); font-size: 0.61rem; }
-.repository-entry > p { max-width: 38rem; margin: 0.55rem 0 0.85rem; color: var(--muted); font-size: 0.8rem; line-height: 1.6; }
-.open-source__pagination { display: flex; align-items: center; justify-content: space-between; max-width: var(--measure); margin-top: 2rem; }
+.open-source__grid { display: grid; grid-template-columns: 1fr; gap: 1.25rem; max-width: 56rem; }
+.open-source__grid > a { min-width: 0; }
+/* Reference look: roomier cards, larger type, prominent topic pills.
+   The `a` qualifier out-specifies the component's own slot selectors. */
+.open-source__grid [data-slot="repo-card"] { padding: clamp(1.25rem, 3vw, 1.75rem); }
+.open-source__grid a[data-slot="repo-card"] [data-slot="repo-name"] { font-size: 1.05rem; }
+.open-source__grid a[data-slot="repo-card"] [data-slot="repo-description"] { font-size: 0.9rem; }
+.open-source__grid a[data-slot="repo-card"] [data-slot="repo-topics"] > span { padding: 0.35rem 0.9rem; font-size: 0.8rem; }
+.open-source__grid a[data-slot="repo-card"] [data-slot="repo-meta"] { font-size: 0.82rem; }
+.open-source__pagination { display: flex; align-items: center; justify-content: center; gap: 2.5rem; margin-top: 2rem; }
 .open-source__pagination button { border: 0; padding: 0.5rem 0; background: transparent; color: var(--muted); cursor: pointer; font-size: 0.72rem; }
 .open-source__pagination button:hover { color: var(--ink); }
 .open-source__pagination button:disabled { opacity: 0.35; cursor: default; }
