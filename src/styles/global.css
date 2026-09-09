@@ -32,7 +32,10 @@
   --container: 68rem;
   --measure: 43rem;
   --article-measure: 48rem;
-  --listing-size: 0.95rem;
+  --body-size: 1.0625rem;
+  --body-line-height: 1.65;
+  --emphasis-weight: 600;
+  --listing-size: 1rem;
   --project-title-size: clamp(1rem, 1.3vw, 1.08rem);
   --site-rail: 9.5rem;
   --site-gap: clamp(2rem, 4vw, 4.5rem);
@@ -145,6 +148,8 @@ body {
   background: var(--page);
   color: var(--ink);
   font-family: var(--sans);
+  font-size: var(--body-size);
+  line-height: 1.5;
   font-optical-sizing: auto;
   -webkit-font-smoothing: antialiased;
   text-rendering: optimizeLegibility;
@@ -161,6 +166,7 @@ h6 { font-size: var(--heading-6); font-weight: var(--heading-weight-6); }
 a { color: inherit; }
 img { display: block; max-width: 100%; }
 button { font: inherit; }
+strong, b { font-weight: var(--emphasis-weight); }
 .font-mono { font-family: var(--mono) !important; }
 
 .tag-list { display: flex; flex-wrap: wrap; gap: 0.4rem; }
@@ -504,7 +510,7 @@ button.tag-pill { cursor: pointer; }
 .article-meta span::before { margin-right: 0.65rem; color: var(--soft); content: "·"; }
 .article-header h1 { max-width: 45rem; margin: 0; font-size: var(--heading-1); font-weight: var(--heading-weight-1); letter-spacing: -0.035em; line-height: 1.12; text-wrap: balance; }
 
-.article-body { position: relative; counter-reset: article-sidenote; color: color-mix(in srgb, var(--ink) 91%, transparent); font-size: 0.95rem; line-height: 1.75; }
+.article-body { position: relative; counter-reset: article-sidenote; color: color-mix(in srgb, var(--ink) 91%, transparent); font-size: var(--body-size); line-height: var(--body-line-height); }
 .article-body > :first-child { margin-top: 0; }
 .article-body p, .article-body ul, .article-body ol { margin: 1.25em 0; }
 .article-body h2 { margin: 4rem 0 1.25rem; font-size: var(--heading-2); font-weight: var(--heading-weight-2); letter-spacing: -0.025em; line-height: 1.22; scroll-margin-top: 2rem; }
