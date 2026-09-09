@@ -141,7 +141,6 @@ for (const file of htmlFiles) {
   const hasSiteNavigation = /<nav\s+class="site-nav"\s+aria-label="Primary navigation"/i.test(html);
   if (route === "/" && !hasSiteNavigation) failures.push("/ has no primary site navigation");
   if (route !== "/" && hasSiteNavigation) failures.push(`${route} unexpectedly includes the homepage navigation rail`);
-  if (!/\bclass="[^"]*\bpage-theme-toggle\b/i.test(html)) failures.push(`${route} has no top-right theme control`);
   if (route === "/reading/" && /covers\.openlibrary\.org/i.test(html)) {
     failures.push("/reading/ requests book covers from Open Library instead of the local cache");
   }

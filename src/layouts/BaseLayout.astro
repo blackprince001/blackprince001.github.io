@@ -85,16 +85,6 @@ const nav = [
     <meta name="twitter:image:alt" content={resolvedSocialImageAlt} />
     <title>{title}</title>
     {structuredDataJson && <script type="application/ld+json" set:html={structuredDataJson} />}
-    <script is:inline>
-      (() => {
-        const root = document.documentElement;
-        const saved = localStorage.getItem("theme");
-        const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
-        const theme = saved === "light" || saved === "dark" ? saved : systemDark ? "dark" : "light";
-        if (saved === "light" || saved === "dark") root.dataset.theme = saved;
-        root.classList.toggle("dark", theme === "dark");
-      })();
-    </script>
   </head>
   <body>
     <a class="skip-link" href="#main-content">Skip to content</a>
@@ -102,12 +92,12 @@ const nav = [
       {isHome && (
         <nav class="site-nav" aria-label="Primary navigation" data-menu-open="false">
           <a class="site-nav__home" href="/" aria-current="page">Home</a>
-          <button class="site-nav__menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation-menu" aria-label="Open navigation menu">
-            <svg aria-hidden="true" viewBox="0 0 18 18" width="18" height="18"><path d="M3 5h12M3 9h12M3 13h12" /></svg>
-          </button>
           <div class="site-nav__menu" id="primary-navigation-menu">
             {nav.map(({ label, href }) => <a href={href}>{label}</a>)}
           </div>
+          <button class="site-nav__menu-toggle" type="button" aria-expanded="false" aria-controls="primary-navigation-menu" aria-label="Open navigation menu">
+            <svg aria-hidden="true" viewBox="0 0 18 18" width="18" height="18"><path d="M3 5h12M3 9h12M3 13h12" /></svg>
+          </button>
         </nav>
       )}
       <div class="site-content">
@@ -118,10 +108,6 @@ const nav = [
               <span>Home</span>
             </a>
           )}
-          <button class="theme-toggle page-theme-toggle" type="button" aria-label="Toggle color theme">
-            <svg class="theme-icon theme-icon--moon" aria-hidden="true" viewBox="0 0 16 16" width="16" height="18"><path d="M13.1 10.35A5.75 5.75 0 0 1 5.65 2.9 5.75 5.75 0 1 0 13.1 10.35Z" /></svg>
-            <svg class="theme-icon theme-icon--sun" aria-hidden="true" viewBox="0 0 16 16" width="16" height="18"><circle cx="8" cy="8" r="2.5" /><path d="M8 1v1.25M8 13.75V15M1 8h1.25M13.75 8H15M3.05 3.05l.9.9M12.05 12.05l.9.9M12.95 3.05l-.9.9M3.95 12.05l-.9.9" /></svg>
-          </button>
           <slot />
         </main>
         <footer class="site-footer">
@@ -131,25 +117,6 @@ const nav = [
       </div>
     </div>
     <script>
-      const button = document.querySelector<HTMLButtonElement>(".theme-toggle");
-      const updateThemeButton = () => {
-        if (!button) return;
-        const nextTheme = document.documentElement.classList.contains("dark") ? "light" : "dark";
-        button.setAttribute("aria-label", `Switch to ${nextTheme} theme`);
-        button.title = `Switch to ${nextTheme} theme`;
-      };
-      updateThemeButton();
-      button?.addEventListener("click", () => {
-        const root = document.documentElement;
-        const systemDark = matchMedia("(prefers-color-scheme: dark)").matches;
-        const current = root.dataset.theme ?? (systemDark ? "dark" : "light");
-        const next = current === "dark" ? "light" : "dark";
-        root.dataset.theme = next;
-        root.classList.toggle("dark", next === "dark");
-        localStorage.setItem("theme", next);
-        updateThemeButton();
-      });
-
       const navigation = document.querySelector<HTMLElement>(".site-nav");
       const menuToggle = document.querySelector<HTMLButtonElement>(".site-nav__menu-toggle");
       const menu = document.querySelector<HTMLElement>(".site-nav__menu");

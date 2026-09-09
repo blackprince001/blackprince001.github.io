@@ -29,13 +29,14 @@
 
 <script>
   const comments = document.querySelector<HTMLElement>(".article-comments");
+  const colorScheme = matchMedia("(prefers-color-scheme: dark)");
   const syncCommentTheme = () => {
     const frame = comments?.querySelector<HTMLIFrameElement>(".giscus-frame");
     if (!frame?.contentWindow) return;
     frame.contentWindow.postMessage({
       giscus: {
         setConfig: {
-          theme: document.documentElement.classList.contains("dark") ? "dark_dimmed" : "light",
+          theme: colorScheme.matches ? "dark_dimmed" : "light",
         },
       },
     }, "https://giscus.app");
@@ -43,9 +44,6 @@
 
   if (comments) {
     new MutationObserver(syncCommentTheme).observe(comments, { childList: true, subtree: true });
-    new MutationObserver(syncCommentTheme).observe(document.documentElement, {
-      attributes: true,
-      attributeFilter: ["class", "data-theme"],
-    });
+    colorScheme.addEventListener("change", syncCommentTheme);
   }
 </script>

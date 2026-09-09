@@ -56,24 +56,8 @@
   --mono: "JetBrains Mono", "SFMono-Regular", Consolas, "Liberation Mono", monospace;
 }
 
-:root[data-theme="dark"] {
-  --page: #0a0a09;
-  --surface: #151412;
-  --ink: #f1f1eb;
-  --muted: #aaa9a0;
-  --soft: #797970;
-  --focus: #9bb5ff;
-  --blueprint-page: #082b48;
-  --blueprint-ink: #edf8ff;
-  --blueprint-muted: #b9d9ee;
-  --blueprint-grid: rgb(174 218 247 / 10%);
-  --blueprint-grid-major: rgb(174 218 247 / 17%);
-  --blueprint-field: rgb(182 222 248 / 38%);
-  --blueprint-accent: #d9efff;
-}
-
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root {
     --page: #0a0a09;
     --surface: #151412;
     --ink: #f1f1eb;
@@ -107,22 +91,8 @@
   --code-tok-punct: #24292f;
 }
 
-:root[data-theme="dark"] {
-  --code-bg: #171715;
-  --code-fg: #f1f1eb;
-  --code-chrome: #22221f;
-  --code-line: #30302c;
-  --code-stderr: #e28a86;
-  --code-tok-keyword: #dca5c3;
-  --code-tok-string: #b7c99a;
-  --code-tok-function: #a9c7e8;
-  --code-tok-number: #dfb48b;
-  --code-tok-comment: #77776f;
-  --code-tok-punct: #d7d7d0;
-}
-
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
+  :root {
     --code-bg: #171715;
     --code-fg: #f1f1eb;
     --code-chrome: #22221f;
@@ -259,26 +229,6 @@ button.tag-pill { cursor: pointer; }
 .return-arrow-icon { flex: 0 0 auto; width: 0.9rem; height: 0.9rem; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.35; }
 .site-content > main:has(.index-page) > .page-home-link { left: max(0px, calc((100% - var(--measure)) / 2)); }
 .site-content > main:has(.article-shell) > .page-home-link { left: max(0px, calc((100% - var(--article-measure)) / 2)); }
-
-.theme-toggle {
-  display: grid;
-  flex: 0 0 auto;
-  place-items: center;
-  width: 2.5rem;
-  height: 2.5rem;
-  border: 0;
-  border-radius: 999px;
-  padding: 0;
-  background: transparent;
-  color: var(--muted);
-  cursor: pointer;
-}
-.theme-toggle:hover { color: var(--ink); }
-.page-theme-toggle { position: absolute; z-index: 2; top: clamp(1.35rem, 3vw, 2.6rem); right: 0; }
-.theme-icon { grid-area: 1 / 1; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.25; transition: opacity 140ms ease, transform 180ms ease-out; }
-.theme-icon--sun { opacity: 0; transform: rotate(-30deg) scale(0.8); }
-:root.dark .theme-icon--moon { opacity: 0; transform: rotate(30deg) scale(0.8); }
-:root.dark .theme-icon--sun { opacity: 1; transform: rotate(0) scale(1); }
 
 .site-footer {
   display: flex;
@@ -524,20 +474,21 @@ button.tag-pill { cursor: pointer; }
 .article-body pre code { padding: 0; background: transparent; color: inherit; }
 /* Shiki inlines the light theme (background + token colors). Beat the inline
    styles so the fence follows the code variables, and switch tokens to the
-   dark palette when the dark theme is in place. */
+   dark palette when the system requests dark mode. */
 .article-body pre.astro-code { background-color: var(--code-bg) !important; color: var(--code-fg) !important; }
-:root.dark .astro-code,
-:root.dark .astro-code span { color: var(--shiki-dark) !important; }
-:root.dark .article-body pre.astro-code { background-color: var(--code-bg) !important; }
 @media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .astro-code,
-  :root:not([data-theme="light"]) .astro-code span { color: var(--shiki-dark) !important; }
+  :root .astro-code,
+  :root .astro-code span { color: var(--shiki-dark) !important; }
+  :root .article-body pre.astro-code { background-color: var(--code-bg) !important; }
 }
 .article-body table { display: block; overflow-x: auto; width: fit-content; max-width: 100%; margin: 2rem auto; border-collapse: collapse; font-size: 0.88rem; }
 .article-body th, .article-body td { padding: 0.7rem 0.9rem; text-align: center; vertical-align: top; }
 .article-body th { background: var(--surface); font-weight: 700; }
 .article-body center { overflow-x: auto; }
 .article-body .katex-display { overflow-x: auto; overflow-y: hidden; padding: 0.5rem 0; }
+/* Give inline equations breathing room without loosening the math itself. */
+.article-body .katex { margin-inline: 0.14em; }
+.article-body .katex-display .katex { margin-inline: 0; }
 .article-body img { border-radius: 0.55rem; }
 .article-body video { display: block; width: min(100%, 43rem); height: auto; max-height: 68dvh; margin: 3rem auto; border-radius: 0.55rem; background: #0c0c0b; object-fit: contain; }
 .article-body video[data-media-shape="landscape"] { width: min(100%, 43rem); }
