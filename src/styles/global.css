@@ -579,7 +579,7 @@ button.tag-pill { cursor: pointer; }
 .component-button:active:not(:disabled) { transform: scale(0.97); }
 .component-button:disabled { cursor: not-allowed; opacity: 0.35; }
 
-.quiz { overflow: hidden; border-radius: 0.55rem; background: var(--surface); }
+.quiz { width: min(100%, 58rem); margin-inline: auto; overflow: hidden; border-radius: 0.55rem; background: var(--surface); }
 .quiz__header { padding: 1rem 1.25rem 0; }
 .quiz__header > div:first-child { display: flex; align-items: center; justify-content: space-between; gap: 1rem; }
 .quiz__eyebrow, .quiz__progress { margin: 0 !important; color: var(--muted); font-family: var(--sans); font-size: 0.62rem; letter-spacing: 0.045em; text-transform: uppercase; }
