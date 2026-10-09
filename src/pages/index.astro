@@ -4,7 +4,6 @@ import ArrowRightIcon from "../components/astro/ArrowRightIcon.astro";
 import ArrowUpRightIcon from "../components/astro/ArrowUpRightIcon.astro";
 import SectionHeading from "../components/astro/SectionHeading.astro";
 import TagPill from "../components/astro/TagPill.astro";
-import BlueprintNoiseField from "../components/astro/BlueprintNoiseField.astro";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { projects, publications } from "../lib/site-data";
 
@@ -49,7 +48,7 @@ const date = new Intl.DateTimeFormat("en", {
     <div class="home-column">
       <section id="intro" class="hero" aria-labelledby="intro-title">
         <div class="identity-mark" aria-hidden="true">PK</div>
-        <h1 id="intro-title">Hi. I’m Prince.</h1>
+        <h1 id="intro-title">Prince Kwabena Appiah Boadu</h1>
         <div class="intro-copy">
           <p>
             I’m a systems engineer and ai/robotics researcher. I build
@@ -85,24 +84,11 @@ const date = new Intl.DateTimeFormat("en", {
       </section>
 
       <section
-        class="blueprint-field"
-        aria-label="Interactive engineering noise field"
-      >
-        <BlueprintNoiseField />
-        <div class="blueprint-field__label" aria-hidden="true">
-          <span>VECTOR FIELD</span>
-          <span>MOVE ACROSS THE FIELD</span>
-        </div>
-      </section>
-
-      <section
         id="writing"
         class="home-section"
         aria-labelledby="writing-title"
       >
         <SectionHeading
-          index="01"
-          eyebrow="Journal"
           title="Recent writing"
           href="/blog"
           headingId="writing-title"
@@ -133,8 +119,6 @@ const date = new Intl.DateTimeFormat("en", {
         aria-labelledby="manuscripts-title"
       >
         <SectionHeading
-          index="02"
-          eyebrow="Research"
           title="Recent manuscripts"
           href="/publications"
           headingId="manuscripts-title"
@@ -179,8 +163,6 @@ const date = new Intl.DateTimeFormat("en", {
 
       <section id="work" class="home-section" aria-labelledby="work-title">
         <SectionHeading
-          index="03"
-          eyebrow="Systems"
           title="Selected work"
           href="/projects"
           headingId="work-title"
@@ -195,7 +177,7 @@ const date = new Intl.DateTimeFormat("en", {
                 <span class="manuscript-year">{project.date}</span>
                 <span class="manuscript-copy">
                   <strong>{project.name}</strong>
-                  <small>
+                  <small class="project-summary">
                     {summaries[project.name] ?? fallbackSummary(project)}
                   </small>
                 </span>

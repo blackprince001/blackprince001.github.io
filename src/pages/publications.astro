@@ -10,7 +10,6 @@ const entries = [...publications].sort((a, b) => b.year - a.year);
 <BaseLayout title="Manuscripts — blackprince" description="Research manuscripts and technical publications by Prince Kwabena Appiah Boadu.">
   <article class="collection-page">
     <header class="collection-header">
-      <p class="section-index">Research archive</p>
       <h1>Manuscripts</h1>
       <p>Research manuscripts and technical publications across intelligent systems, networking, perception, and security.</p>
     </header>
@@ -23,11 +22,11 @@ const entries = [...publications].sort((a, b) => b.year - a.year);
             </a>
           )}
           <div class="publication-content">
-            <div class="publication-kicker">
+            <h2>{entry.title}</h2>
+            <div class="publication-meta">
               <span>{entry.year}</span>
               <TagPill label={entry.domain ?? "Research"} />
             </div>
-            <h2>{entry.title}</h2>
             <p>{entry.authors.join(", ")}</p>
             {entry.abstract && <p>{entry.abstract}</p>}
             <div class="publication-links">

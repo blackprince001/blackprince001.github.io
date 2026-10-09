@@ -164,10 +164,10 @@ function Scene({
         args={[10, 10]}
         cellSize={0.5}
         cellThickness={0.5}
-        cellColor="#404040"
+        cellColor="#282828"
         sectionSize={1}
         sectionThickness={1}
-        sectionColor="#505050"
+        sectionColor="#363636"
         fadeDistance={12}
         fadeStrength={1}
         followCamera={false}
@@ -195,9 +195,9 @@ export default function ScrewMotionDemo() {
 
   const containerClass = isFullscreen
     ? "fixed inset-0 z-[1000] h-[100dvh] w-full bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
-    : "my-8 rounded-lg bg-[var(--page)] text-[var(--ink)] overflow-hidden flex flex-col shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]";
+    : "demo-shell";
 
-  const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "h-[450px]";
+  const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "demo-viewport";
 
   // Determine motion type
   const motionType = pitch === 0
@@ -207,38 +207,53 @@ export default function ScrewMotionDemo() {
     : `Combined Motion (h = ${pitch.toFixed(2)})`;
 
   const demo = (
-    <div ref={containerRef} className={containerClass}>
-      {/* Controls - Top */}
-      <div className="bg-[var(--surface)] p-4 shrink-0">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[length:var(--heading-3)] font-[var(--heading-weight-3)] text-[var(--ink)]">
-            Screw Motion Visualization
-          </h3>
-          <div className="flex items-center gap-2">
-            <button
-              onClick={() => setAnimate(!animate)}
-              className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-1.5 ${
-                animate
-                  ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
-                  : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
-              }`}
-            >
-              {animate ? <Pause size={16} /> : <Play size={16} />}
-              {animate ? "Stop" : "Animate"}
-            </button>
-            <button
-              onClick={toggleFullscreen}
-              aria-label={isFullscreen ? "Exit fullscreen screw motion demo" : "Open screw motion demo fullscreen"}
-              aria-pressed={isFullscreen}
-              className="p-2 rounded-lg bg-[var(--page)] text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
-              title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
-            >
-              {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-            </button>
-          </div>
+    <div ref={containerRef} className={`demo ${containerClass}`}>
+      <div className="demo-toolbar">
+        <h3 className="text-[length:var(--heading-3)] font-[var(--heading-weight-3)] text-[var(--ink)]">
+          Screw Motion Visualization
+        </h3>
+        <div className="flex items-center gap-2">
+          <button
+            onClick={() => setAnimate(!animate)}
+            className={`px-3 py-1.5 rounded-md text-sm font-medium flex items-center gap-1.5 ${
+              animate
+                ? "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300"
+                : "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300"
+            }`}
+          >
+            {animate ? <Pause size={16} /> : <Play size={16} />}
+            {animate ? "Stop" : "Animate"}
+          </button>
+          <button
+            onClick={toggleFullscreen}
+            aria-label={isFullscreen ? "Exit fullscreen screw motion demo" : "Open screw motion demo fullscreen"}
+            aria-pressed={isFullscreen}
+            className="demo-icon-button"
+            title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+          >
+            {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+          </button>
         </div>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2">
+      {/* 3D Canvas - Center */}
+      <div className={`${canvasHeight} bg-[var(--page)] shrink-0`}>
+        <Canvas camera={{ position: [3.6, -3.6, 2.6], up: [0, 0, 1], fov: 50 }}>
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, -5, 5]} intensity={0.8} />
+          <Scene
+            axis={axis}
+            point={point}
+            thetaRad={thetaRad}
+            pitch={pitch}
+            animate={animate}
+          />
+        </Canvas>
+      </div>
+
+      {/* Controls follow the visualization. */}
+      <div className="demo-controls">
+        <div className="demo-control-grid">
           <DemoSlider
             label={<span>Rotation <Latex tex="\theta" /></span>}
             ariaLabel="Screw rotation angle"
@@ -266,27 +281,12 @@ export default function ScrewMotionDemo() {
         </div>
       </div>
 
-      {/* 3D Canvas - Center */}
-      <div className={`${canvasHeight} bg-[var(--surface)] shrink-0`}>
-        <Canvas camera={{ position: [3.6, -3.6, 2.6], up: [0, 0, 1], fov: 50 }}>
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[5, -5, 5]} intensity={0.8} />
-          <Scene
-            axis={axis}
-            point={point}
-            thetaRad={thetaRad}
-            pitch={pitch}
-            animate={animate}
-          />
-        </Canvas>
-      </div>
-
       {/* Information Panel - Bottom */}
       <InfoPanel isFullscreen={isFullscreen}>
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <div className="demo-details-grid">
           <InfoCard
             title={<>Homogeneous Transform <Latex tex="T \in SE(3)" /></>}
-            className="lg:col-span-2 overflow-x-auto"
+            className="overflow-x-auto"
           >
             <Latex display tex={`T = ${matrixTex(T)}`} />
           </InfoCard>
@@ -315,7 +315,7 @@ export default function ScrewMotionDemo() {
             </div>
           </InfoCard>
 
-          <InfoCard className="lg:col-span-3">
+          <InfoCard>
             <p className="text-xs text-zinc-500 dark:text-zinc-400">
               The screw axis passes through point <Latex tex="q" /> with direction{" "}
               <Latex tex="\hat{\omega}" />. The body rotates by <Latex tex="\theta" /> while

@@ -54,16 +54,6 @@ export default function Quiz({ quizData }: QuizProps) {
 
   return (
     <section className="quiz" aria-labelledby={labelId}>
-      <header className="quiz__header">
-        <div>
-          <p className="quiz__eyebrow">Knowledge check</p>
-          <p className="quiz__progress">{questionIndex + 1} / {quizData.length}</p>
-        </div>
-        <div className="quiz__progress-track" aria-hidden="true">
-          <span style={{ width: `${((questionIndex + 1) / quizData.length) * 100}%` }} />
-        </div>
-      </header>
-
       <div className="quiz__body">
         <h4 id={labelId} className="quiz__question"><RichText text={question.question} /></h4>
         {question.image && (
@@ -113,7 +103,7 @@ export default function Quiz({ quizData }: QuizProps) {
         <button type="button" className="component-button component-button--quiet" disabled={questionIndex === 0} onClick={() => moveTo(questionIndex - 1)}>
           <ChevronLeft aria-hidden="true" /> Previous
         </button>
-        <span>{answeredCount} answered</span>
+        <span>{quizData.length > 1 ? `Question ${questionIndex + 1} of ${quizData.length} · ` : ""}{answeredCount} answered</span>
         {submitted ? (
           <button type="button" className="component-button" disabled={questionIndex === quizData.length - 1} onClick={() => moveTo(questionIndex + 1)}>
             Next <ChevronRight aria-hidden="true" />

@@ -87,12 +87,11 @@ const structuredData = {
     <div class="article-body"><slot /></div>
     {discoveryLinks.length > 0 && (
       <nav class="article-discovery" aria-label="Continue reading">
-        <p class="section-index">Continue reading</p>
         <div>
           {discoveryLinks.map((link) => (
             <a href={link.href}>
-              <span>{link.label}</span>
               <strong>{link.title}</strong>
+              <span>{link.label}</span>
             </a>
           ))}
         </div>

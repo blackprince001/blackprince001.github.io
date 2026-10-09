@@ -48,7 +48,7 @@ function rodriguesFormula(axis: [number, number, number], theta: number): number
 function RotationAxis({ axis }: { axis: [number, number, number] }) {
   const points = useMemo(() => {
     const [wx, wy, wz] = axis;
-    const length = 2.5;
+    const length = 1.8;
     return [
       [-wx * length, -wy * length, -wz * length],
       [wx * length, wy * length, wz * length],
@@ -61,7 +61,7 @@ function RotationAxis({ axis }: { axis: [number, number, number] }) {
       <Line points={points} color="#fbbf24" lineWidth={3} opacity={0.8} />
 
       {/* Arrow head at positive end */}
-      <mesh position={[axis[0] * 2.3, axis[1] * 2.3, axis[2] * 2.3]}>
+      <mesh position={[axis[0] * 1.7, axis[1] * 1.7, axis[2] * 1.7]}>
         <coneGeometry args={[0.12, 0.3, 16]} />
         <meshStandardMaterial color="#fbbf24" />
       </mesh>
@@ -96,39 +96,83 @@ export default function AxisAngleDemo() {
 
   const containerClass = isFullscreen
     ? "fixed inset-0 z-[1000] h-[100dvh] w-full bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
-    : "my-8 rounded-lg bg-[var(--page)] text-[var(--ink)] overflow-hidden flex flex-col shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]";
+    : "demo-shell";
 
-  const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "h-[450px]";
+  const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "demo-viewport";
 
   // Preset handlers
   const presets = [
-    { name: "X-axis", x: 1, y: 0, z: 0, color: "bg-red-100 text-red-700 dark:bg-red-900/30 dark:text-red-300" },
-    { name: "Y-axis", x: 0, y: 1, z: 0, color: "bg-green-100 text-green-700 dark:bg-green-900/30 dark:text-green-300" },
-    { name: "Z-axis", x: 0, y: 0, z: 1, color: "bg-blue-100 text-blue-700 dark:bg-blue-900/30 dark:text-blue-300" },
-    { name: "XY", x: 1, y: 1, z: 0, color: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300" },
-    { name: "XYZ", x: 1, y: 1, z: 1, color: "bg-zinc-100 text-zinc-700 dark:bg-zinc-800 dark:text-zinc-300" },
+    { name: "X-axis", x: 1, y: 0, z: 0 },
+    { name: "Y-axis", x: 0, y: 1, z: 0 },
+    { name: "Z-axis", x: 0, y: 0, z: 1 },
+    { name: "XY", x: 1, y: 1, z: 0 },
+    { name: "XYZ", x: 1, y: 1, z: 1 },
   ];
 
   const demo = (
-    <div ref={containerRef} className={containerClass}>
-      {/* Controls - Top */}
-      <div className="bg-[var(--surface)] p-4 shrink-0">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[length:var(--heading-3)] font-[var(--heading-weight-3)] text-[var(--ink)]">
-            Axis-Angle to Rotation Matrix
-          </h3>
-          <button
-            onClick={toggleFullscreen}
-            aria-label={isFullscreen ? "Exit fullscreen axis-angle demo" : "Open axis-angle demo fullscreen"}
-            aria-pressed={isFullscreen}
-            className="p-2 rounded-lg bg-[var(--page)] text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
-            title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
-          >
-            {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-          </button>
-        </div>
+    <div ref={containerRef} className={`demo ${containerClass}`}>
+      <div className="demo-toolbar">
+        <h3 className="text-[length:var(--heading-3)] font-[var(--heading-weight-3)] text-[var(--ink)]">
+          Axis-Angle to Rotation Matrix
+        </h3>
+        <button
+          onClick={toggleFullscreen}
+          aria-label={isFullscreen ? "Exit fullscreen axis-angle demo" : "Open axis-angle demo fullscreen"}
+          aria-pressed={isFullscreen}
+          className="demo-icon-button"
+          title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+        >
+          {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+        </button>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-3 pt-2">
+      {/* 3D Canvas - Center */}
+      <div className={`${canvasHeight} bg-[var(--page)] shrink-0`}>
+        <Canvas camera={{ position: [3.4, -3.4, 2.4], up: [0, 0, 1], fov: 50 }}>
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, -5, 5]} intensity={0.8} />
+
+          {/* Original frame (gray, transparent) */}
+          <FrameAxes
+            rotationMatrix={null}
+            scale={0.85}
+            colors={WORLD_FRAME_COLORS}
+            opacity={0.35}
+            showLabels={false}
+          />
+
+          {/* Rotation axis */}
+          <RotationAxis axis={axis} />
+
+          {/* Rotated frame */}
+          <FrameAxes
+            rotationMatrix={R}
+            scale={1}
+            colors={BODY_FRAME_COLORS}
+            showLabels={true}
+          />
+
+          <OrbitControls enablePan={false} />
+          <Grid
+            args={[10, 10]}
+            cellSize={0.5}
+            cellThickness={0.5}
+            cellColor="#282828"
+            sectionSize={1}
+            sectionThickness={1}
+            sectionColor="#363636"
+            fadeDistance={12}
+            fadeStrength={1}
+            followCamera={false}
+            rotation={[Math.PI / 2, 0, 0]}
+            position={[0, 0, -0.01]}
+          />
+        </Canvas>
+      </div>
+
+      {/* Controls follow the visualization. */}
+      <div className="demo-controls">
+        <div className="demo-control-grid">
           <DemoSlider
             label={<span>Angle <Latex tex="\theta" /></span>}
             ariaLabel="Rotation angle"
@@ -177,7 +221,8 @@ export default function AxisAngleDemo() {
             <button
               key={p.name}
               onClick={() => { setAxisX(p.x); setAxisY(p.y); setAxisZ(p.z); }}
-              className={`px-3 py-1 text-xs rounded-full hover:opacity-80 transition-opacity ${p.color}`}
+              className="demo-preset"
+              aria-pressed={axisX === p.x && axisY === p.y && axisZ === p.z}
             >
               {p.name}
             </button>
@@ -185,56 +230,10 @@ export default function AxisAngleDemo() {
         </div>
       </div>
 
-      {/* 3D Canvas - Center */}
-      <div className={`${canvasHeight} bg-[var(--surface)] shrink-0`}>
-        <Canvas camera={{ position: [3.4, -3.4, 2.4], up: [0, 0, 1], fov: 50 }}>
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[5, -5, 5]} intensity={0.8} />
-
-          {/* Original frame (gray, transparent) */}
-          <FrameAxes
-            rotationMatrix={null}
-            label="Original"
-            scale={0.85}
-            colors={WORLD_FRAME_COLORS}
-            opacity={0.35}
-            showLabels={false}
-          />
-
-          {/* Rotation axis */}
-          <RotationAxis axis={axis} />
-
-          {/* Rotated frame */}
-          <FrameAxes
-            rotationMatrix={R}
-            label="Rotated"
-            scale={1}
-            colors={BODY_FRAME_COLORS}
-            showLabels={true}
-          />
-
-          <OrbitControls enablePan={false} />
-          <Grid
-            args={[10, 10]}
-            cellSize={0.5}
-            cellThickness={0.5}
-            cellColor="#404040"
-            sectionSize={1}
-            sectionThickness={1}
-            sectionColor="#505050"
-            fadeDistance={12}
-            fadeStrength={1}
-            followCamera={false}
-            rotation={[Math.PI / 2, 0, 0]}
-            position={[0, 0, -0.01]}
-          />
-        </Canvas>
-      </div>
-
       {/* Information Panel - Bottom */}
       <InfoPanel isFullscreen={isFullscreen}>
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
-          <InfoCard title="Rodrigues' Formula" className="lg:col-span-3 overflow-x-auto">
+        <div className="demo-details-grid">
+          <InfoCard title="Rodrigues' Formula" className="overflow-x-auto">
             <Latex display tex="R = e^{[\hat{\omega}]\theta} = I + \sin\theta \, [\hat{\omega}] + (1 - \cos\theta)\,[\hat{\omega}]^2" />
           </InfoCard>
 

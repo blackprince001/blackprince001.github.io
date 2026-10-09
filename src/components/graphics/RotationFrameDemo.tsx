@@ -56,32 +56,76 @@ export default function RotationFrameDemo() {
 
   const containerClass = isFullscreen
     ? "fixed inset-0 z-[1000] h-[100dvh] w-full bg-[var(--page)] text-[var(--ink)] flex flex-col overflow-y-auto overscroll-contain"
-    : "my-8 rounded-lg bg-[var(--page)] text-[var(--ink)] overflow-hidden flex flex-col shadow-[0_0.6rem_2rem_rgb(0_0_0/0.08)]";
+    : "demo-shell";
 
-  const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "h-[450px]";
+  const canvasHeight = isFullscreen ? "h-[45vh] min-h-[280px] shrink-0" : "demo-viewport";
 
   const degrees = (v: number) => `${v}°`;
 
   const demo = (
-    <div ref={containerRef} className={containerClass}>
-      {/* Controls - Always at top */}
-      <div className="bg-[var(--surface)] p-4 shrink-0">
-        <div className="flex items-center justify-between mb-4">
-          <h3 className="text-[length:var(--heading-3)] font-[var(--heading-weight-3)] text-[var(--ink)]">
-            3D Rotation Frame
-          </h3>
-          <button
-            onClick={toggleFullscreen}
-            aria-label={isFullscreen ? "Exit fullscreen rotation demo" : "Open rotation demo fullscreen"}
-            aria-pressed={isFullscreen}
-            className="p-2 rounded-lg bg-[var(--page)] text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
-            title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
-          >
-            {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
-          </button>
-        </div>
+    <div ref={containerRef} className={`demo ${containerClass}`}>
+      <div className="demo-toolbar">
+        <h3 className="text-[length:var(--heading-3)] font-[var(--heading-weight-3)] text-[var(--ink)]">
+          3D Rotation Frame
+        </h3>
+        <button
+          onClick={toggleFullscreen}
+          aria-label={isFullscreen ? "Exit fullscreen rotation demo" : "Open rotation demo fullscreen"}
+          aria-pressed={isFullscreen}
+          className="demo-icon-button"
+          title={isFullscreen ? "Exit fullscreen" : "Fullscreen"}
+        >
+          {isFullscreen ? <Minimize2 size={18} /> : <Maximize2 size={18} />}
+        </button>
+      </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 pt-2">
+      {/* 3D Canvas - Center, takes most space */}
+      <div className={`${canvasHeight} bg-[var(--page)] shrink-0`}>
+        <Canvas camera={{ position: [4.2, -3.6, 2.6], up: [0, 0, 1], fov: 50 }}>
+          <ambientLight intensity={0.6} />
+          <directionalLight position={[5, -5, 5]} intensity={0.8} />
+
+          {/* Fixed world frame at the origin (gray, semi-transparent) */}
+          <FrameAxes
+            rotationMatrix={null}
+            label="World {s}"
+            scale={0.9}
+            colors={WORLD_FRAME_COLORS}
+            opacity={0.5}
+            showLabels={true}
+          />
+
+          {/* Rotating body frame, offset from the world frame */}
+          <FrameAxes
+            rotationMatrix={R}
+            position={BODY_FRAME_POSITION}
+            label="Body {b}"
+            scale={1}
+            colors={BODY_FRAME_COLORS}
+            showLabels={true}
+          />
+
+          <OrbitControls enablePan={false} target={[0.9, 0.9, 0]} />
+          <Grid
+            args={[10, 10]}
+            cellSize={0.5}
+            cellThickness={0.5}
+            cellColor="#282828"
+            sectionSize={1}
+            sectionThickness={1}
+            sectionColor="#363636"
+            fadeDistance={12}
+            fadeStrength={1}
+            followCamera={false}
+            rotation={[Math.PI / 2, 0, 0]}
+            position={[0, 0, -0.01]}
+          />
+        </Canvas>
+      </div>
+
+      {/* Controls follow the visualization. */}
+      <div className="demo-controls">
+        <div className="demo-control-grid">
           <DemoSlider
             label={<span>Roll <Latex tex="(\hat{x})" /></span>}
             ariaLabel="Roll angle"
@@ -126,56 +170,12 @@ export default function RotationFrameDemo() {
         </div>
       </div>
 
-      {/* 3D Canvas - Center, takes most space */}
-      <div className={`${canvasHeight} bg-[var(--surface)] shrink-0`}>
-        <Canvas camera={{ position: [4.2, -3.6, 2.6], up: [0, 0, 1], fov: 50 }}>
-          <ambientLight intensity={0.6} />
-          <directionalLight position={[5, -5, 5]} intensity={0.8} />
-
-          {/* Fixed world frame at the origin (gray, semi-transparent) */}
-          <FrameAxes
-            rotationMatrix={null}
-            label="World {s}"
-            scale={0.9}
-            colors={WORLD_FRAME_COLORS}
-            opacity={0.5}
-            showLabels={true}
-          />
-
-          {/* Rotating body frame, offset from the world frame */}
-          <FrameAxes
-            rotationMatrix={R}
-            position={BODY_FRAME_POSITION}
-            label="Body {b}"
-            scale={1}
-            colors={BODY_FRAME_COLORS}
-            showLabels={true}
-          />
-
-          <OrbitControls enablePan={false} target={[0.9, 0.9, 0]} />
-          <Grid
-            args={[10, 10]}
-            cellSize={0.5}
-            cellThickness={0.5}
-            cellColor="#404040"
-            sectionSize={1}
-            sectionThickness={1}
-            sectionColor="#505050"
-            fadeDistance={12}
-            fadeStrength={1}
-            followCamera={false}
-            rotation={[Math.PI / 2, 0, 0]}
-            position={[0, 0, -0.01]}
-          />
-        </Canvas>
-      </div>
-
       {/* Information Panel - Bottom */}
       <InfoPanel isFullscreen={isFullscreen}>
-        <div className="grid grid-cols-1 gap-3 lg:grid-cols-3">
+        <div className="demo-details-grid">
           <InfoCard
             title={<>Rotation Matrix <Latex tex="R \in SO(3)" /></>}
-            className="lg:col-span-2 overflow-x-auto"
+            className="overflow-x-auto"
           >
             <Latex display tex={`R_{sb} = ${matrixTex(R)}`} />
           </InfoCard>
@@ -207,7 +207,7 @@ export default function RotationFrameDemo() {
             </div>
           </InfoCard>
 
-          <InfoCard className="lg:col-span-3">
+          <InfoCard>
             <div className="flex flex-wrap gap-4 text-xs">
               <div className="flex items-center gap-1.5">
                 <div className="w-3 h-3 rounded bg-red-600" />
