@@ -152,8 +152,13 @@ const date = new Intl.DateTimeFormat("en", {
                   </small>
                 </span>
                 <span class="manuscript-icon" aria-hidden="true">
-                  <span>PDF</span>
-                  <ArrowUpRightIcon />
+                  {publication.link.startsWith("https://arxiv.org/abs/") ? (
+                    <span class="tag-pill arxiv-pill">
+                      <img src="/images/arxiv-logo.svg" alt="" width="31" height="14" />
+                    </span>
+                  ) : (
+                    <><span>PDF</span><ArrowUpRightIcon /></>
+                  )}
                 </span>
               </a>
             ))

@@ -3,15 +3,14 @@
     "id": 1,
     "title": "Seamless Deployment of Machine Learning Inference at the Far Edge: An Empirical AWS IoT Greengrass Architecture for Industrial Predictive Maintenance",
     "authors": [
-      "Prince K. A. Boadu",
-      "Jeffery B. Kyei",
-      "Enoch K. Koranteng",
-      "Griffth S. Klogo"
+      "Prince Kwabena Appiah Boadu",
+      "Jeffery Baafi Kyei",
+      "Enoch Kofi Koranteng",
+      "Griffth Selorm Klogo"
     ],
     "year": 2026,
-    "link": "https://compeng.knust.com",
+    "link": "https://arxiv.org/abs/2610.14815",
     "domain": "Edge Computing · IIoT",
-    "pdf": "/publications/iot-edge-greengrass.pdf",
     "preview": "/publication-previews/iot-edge-greengrass.png",
     "abstract": "The growth of Industrial IoT devices in manufacturing generates continuous, high-volume sensor data streams requiring real-time analysis for predictive maintenance. Traditional cloud-centric architectures introduce critical limitations in latency, bandwidth, and resilience. This paper presents a hybrid cloud-edge architecture using AWS IoT Core and AWS IoT Greengrass v2, integrating local ML inference at the edge with selective cloud synchronization. The proposed configuration reduces cloud-bound bandwidth by 86.8%, cuts decision latency by 256× (23.1 ms cloud round-trip to 0.09 ms local inference), and maintains an anomaly-class F1 of 0.84 with 91% recall at the edge without cloud involvement."
   },
@@ -22,11 +21,10 @@
       "Prince Kwabena Appiah Boadu"
     ],
     "year": 2026,
-    "link": "https://compeng.knust.com",
+    "link": "https://arxiv.org/abs/2610.14326",
     "domain": "Computer Vision",
-    "pdf": "/publications/traffic-density-estimation.pdf",
     "preview": "/publication-previews/traffic-density-estimation.png",
-    "abstract": "Accurate traffic density estimation from camera feeds is a prerequisite for routing, signal control, and forecasting. Existing detectors count every vehicle in the frame without distinguishing active road participants from parked or off-road objects, producing systematically biased estimates. We introduce a two-stage framework that pairs object detection and tracking with a spatial logic layer filtering detections against a precomputed road mask, then forecasts short-horizon density with an LSTM, GRU, or TCN. Evaluated across multiple YOLO variants and RT-DETR on hardware from embedded boards to GPU servers."
+    "abstract": "A two-stage pipeline combines vehicle detection and tracking with road-mask filtering and short-horizon forecasting using LSTM, GRU, or TCN estimators. Ten detector variants are benchmarked on 5,716 annotated frames using a single NVIDIA GPU. Forecasting is evaluated on 29,243 held-out windows of detector-derived telemetry; these results do not establish absolute traffic-density accuracy. No road mask was available for the evaluation stream, limiting validation of spatial filtering."
   },
   {
     "id": 1,

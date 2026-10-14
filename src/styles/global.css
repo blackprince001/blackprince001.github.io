@@ -143,6 +143,8 @@ strong, b { font-weight: var(--emphasis-weight); }
   text-decoration: none;
   white-space: nowrap;
 }
+.arxiv-pill { min-height: 2rem; border-color: #aa142d; padding: 0.4rem 0.7rem; background: #aa142d; color: #fff; }
+.arxiv-pill img { width: 1.95rem; height: auto; filter: brightness(0) invert(1); }
 button.tag-pill { cursor: pointer; }
 .tag-pill[aria-current="page"], .tag-pill[aria-pressed="true"] {
   border-color: var(--ink);
@@ -160,6 +162,7 @@ button.tag-pill { cursor: pointer; }
     background: var(--ink);
     color: var(--page);
   }
+  a.arxiv-pill:hover { border-color: #aa142d; background: #aa142d; color: #fff; }
 }
 
 .skip-link {

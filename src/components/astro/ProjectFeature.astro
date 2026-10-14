@@ -83,7 +83,7 @@ const slug = project.name.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+
             rel={link.url.startsWith("http") ? "noopener noreferrer" : undefined}
           >
             <span>{link.label}</span>
-            <ArrowUpRightIcon />
+            {!link.url.startsWith("https://arxiv.org/abs/") && <ArrowUpRightIcon />}
           </a>
         ))}
       </div>

@@ -1,0 +1,12 @@
+---
+interface Props {
+  href: string;
+  title: string;
+}
+
+const { href, title } = Astro.props;
+---
+
+<a class="tag-pill arxiv-pill" href={href} target="_blank" rel="noreferrer" aria-label={`Read ${title} on arXiv`}>
+  <img src="/images/arxiv-logo.svg" alt="" aria-hidden="true" width="31" height="14" />
+</a>

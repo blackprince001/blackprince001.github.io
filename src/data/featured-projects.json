@@ -145,8 +145,8 @@
     ],
     "links": [
       {
-        "label": "Paper",
-        "url": "/publications/traffic-density-estimation.pdf"
+        "label": "arXiv",
+        "url": "https://arxiv.org/abs/2610.14326"
       },
       {
         "label": "Write-up",
@@ -173,8 +173,8 @@
     ],
     "links": [
       {
-        "label": "Paper",
-        "url": "/publications/iot-edge-greengrass.pdf"
+        "label": "arXiv",
+        "url": "https://arxiv.org/abs/2610.14815"
       }
     ]
   },
