@@ -1,0 +1,101 @@
+---
+title: "Ask hard, then back off"
+publishDate: "Oct 29, 2026"
+tag: "Computer Systems"
+description: "Polling a payment's status hard at first and backing off as it ages, and why the hard part of a backoff isn't always at the start."
+draft: false
+---
+
+We were getting notifications earlier than the page showing the transaction had gone through. You'd make a payment, your phone would buzz with the notification, and the status screen in your hand would still be spinning on pending.
+
+The screen wasn't broken. It was asking the server about the payment on a schedule, and the schedule was the problem. It asked at 0, 3, 8 and 16 seconds, then every 15. That's a backoff, the usual move for anything that polls: ask, wait, ask again, wait longer. But it was backing off hardest in the first half minute, which is when most payments settle.
+
+So I changed it. The new schedule starts off very aggressive, asking every second for the first 30 seconds, and then backs off: every 2 seconds up to two minutes, every 5 up to five, every 15 up to fifteen. I've been calling it aggressive polling. Here's the same mobile money deposit on both.
+
+<Clip
+  src="../polling-backoff/before-vs-now.mp4"
+  poster="../video-posters/before-vs-now.mp4.png"
+  title="The same mobile money deposit on the old and new polling"
+  caption="The same GHS 200 MoMo deposit on staging, lined up on the moment the request goes out. The old polling showed Added after 7.9 seconds, the new one after 6.2."
+/>
+
+A second and a half doesn't sound like much, and this was a kind run for the old schedule: the payment settled a couple of seconds before one of its requests. Settle just after one, and the old screen waits up to eight seconds longer. The rest of this post is about why, and about where the hard part of a backoff should go.
+
+## What a backoff is for
+
+A backoff is a rule for how long to wait before asking again. Every rule trades two costs: how late you notice a change, and how many times you ask. Ask every second and you notice within a second, but a payment stuck for an hour costs 3,600 requests. Ask every minute and the server barely notices you. Neither does the customer watching a spinner.
+
+The schedules everyone reaches for come from retrying against something that's failing. Ethernet's binary exponential backoff, TCP's retransmission timer, which doubles on every timeout,<AutoNumberedSidenote><a href="https://www.rfc-editor.org/rfc/rfc6298">RFC 6298</a>, Computing TCP's Retransmission Timer.</AutoNumberedSidenote> and the jittered backoff AWS recommends for its clients<AutoNumberedSidenote>Marc Brooker, <a href="https://aws.amazon.com/blogs/architecture/exponential-backoff-and-jitter/">Exponential Backoff And Jitter</a>, AWS Architecture Blog.</AutoNumberedSidenote> all start from the same idea: a failure is evidence that the other side is busy or down, so each one is a reason to wait longer. Jitter spreads a crowd of clients out so they don't all come back on the same tick.
+
+<BackoffFigure figure="classic" label="Interactive chart comparing five polling schedules" />
+
+Read the middle panel as lag and the bottom one as cost. Fixed spacing is honest but blunt. Linear and exponential both get cheap quickly, which is what you want when the server is struggling. Our old ramp sits between them: 3, 5, 8 and 13 seconds apart, then every 15, and every 30 after two minutes.
+
+It was meant to start at 2 seconds. The attempt counter went up before the lookup, so the first entry in the list never ran. Nobody noticed, because nobody watches the gap between the first and second request.
+
+## A pending payment isn't a failure
+
+That retry logic doesn't fit a payment. "Still pending" at second 3 isn't a sign that anything is wrong. It's what every payment says at second 3. The useful question is different: how likely is it that the answer lands in the next second?
+
+For us, that chance is highest at the start. Wallet payments settle almost at once. Mobile money settles once the customer approves the prompt on their phone, usually within half a minute. A few drag on for minutes, and a small share get stuck.
+
+<BackoffFigure figure="payments" label="Interactive chart of when payments settle and when each version of the schedule asks" />
+
+The old schedule backed off hardest exactly when payments were most likely to land. A payment that settled at second 9 waited for the request at second 16. One that settled at second 31 waited for the one at 44. Meanwhile the push notification had already arrived.
+
+I didn't get to the new schedule in one step:
+
+| Version | Schedule | Asks by 30s | by 2 min | by 15 min |
+| --- | --- | --- | --- | --- |
+| Before | 3, 5, 8, 13s apart, then every 15s; 30s after two minutes | 5 | 11 | 37 |
+| 76cd188 | 2, 3, 3, 4s apart, then every 5s; 15s after two minutes | 8 | 26 | 78 |
+| a74b69e | at once, after 1s, then every 2s; 5s after two minutes | 16 | 61 | 217 |
+| Now | 1s to 30s, 2s to two minutes, 5s to five, 15s to fifteen | 31 | 76 | 152 |
+
+The middle two each fixed the lag and paid for it in a flat way: a short ramp, one rate for the first two minutes, then a slower one. The off-by-one hit 76cd188 too, so its 1.5 second step never ran either. The current version is the first that changes rate with the payment's age. It asks harder than either at the start and less than a74b69e over the long run.
+
+Here are thirty payments drawn from the same model, run under both schedules with the same settle times. Each row is a payment. A ring marks the moment it settled on the server, dots are requests, and the coloured bar is time the customer spent looking at "pending" for a payment that was already done.
+
+<Clip
+  src="../polling-backoff/sim-before-vs-now.mp4"
+  poster="../video-posters/sim-before-vs-now.mp4.png"
+  title="Thirty modelled payments under the old and new schedules"
+  caption="Thirty modelled payments with the same settle times, run under both schedules at 6× speed."
+/>
+
+Thirty payments can be a lucky draw, so here are all four versions over the same 20,000:
+
+<BackoffFigure figure="lag" label="Interactive chart of how quickly settled payments show as done under each version" />
+
+Under the old schedule, the median payment sat on pending for 3 seconds after it had settled, and one in twenty waited 13 seconds or more. Under the new one that's half a second and a second and a half.
+
+None of this is free. The new schedule makes about 19 requests per payment where the old one made under 5, and a payment stuck for 15 minutes now costs 152 requests instead of 37. Most of the extra requests come from the payments that settle in the first half minute, and those stop asking the moment they're done. The steps after that are there to keep a stuck payment from costing what it would at one request per second.
+
+<BackoffFigure figure="load" label="Interactive chart of server load from a crowd of phones under both schedules" />
+
+The app also checks the moment a push about a payment arrives. Polling is the fallback for when that push is late or never comes, and a fallback that lags the thing it's backing up isn't much of a fallback.
+
+## Damping
+
+Aggressive polling reminds me of how a PID controller damps an input signal. Respond hard to a fresh change, then settle. A well-damped controller reaches its target quickly and then stops pushing. The old schedule was overdamped: cautious, slow, late to the truth. Asking every second forever would be the opposite problem. It would reach the truth quickly and never stop paying for it.
+
+The comparison breaks in one place, and the break is useful. A controller can measure its error all the time. A poller can't. It doesn't know the screen is wrong until it asks. So it isn't reacting to an error; it's acting on the chance that there is one. That chance, the chance the answer has landed since you last looked, is what the schedule should follow.
+
+That gives a more general rule than "hard at first": ask most when an answer is most likely. There's a neat result behind it. Say $f(t)$ is the chance the answer lands at time $t$, and you ask at a rate $r(t)$, so the gap between requests near $t$ is about $1/r(t)$. An answer landing in that gap waits half of it on average, so the average wait is
+
+$$
+W = \int f(t)\,\frac{1}{2\,r(t)}\,dt, \qquad \text{with a budget} \quad \int r(t)\,dt = N.
+$$
+
+Minimising that for a fixed number of requests gives $r(t) \propto \sqrt{f(t)}$. The square root matters: you still ask in the quiet stretches, just less often. For our payments $f$ is front-loaded, so the best schedule is front-loaded too. But that's a property of payments, not of backoffs.
+
+<BackoffFigure figure="shapes" label="Interactive chart comparing three schedules with the same budget across four shapes of waiting" />
+
+Some scenarios need you to go hard periodically, when you receive signals to close things. Others need it at the end. Each of the shapes above is something real:
+
+- **Settles early.** Our payments. Front-load it, then step down.
+- **Answer at a deadline.** A MoMo prompt the customer ignores times out around a minute in, and the failure lands then. Ask hard early for the people who approve, ease off, then ask hard again around the timeout.
+- **Right after a signal.** A push arrives, the app comes back to the foreground, or the customer taps "I've approved it". You can't place these in advance, so the schedule resets to its fast phase when the signal arrives and decays again.
+- **In batches.** Some upstreams settle on a clock, every few minutes. Asking between batches buys nothing. Go quiet, then ask hard just after each batch boundary.
+
+Exponential backoff is the special case where the answer gets less likely the longer you wait. That's true of a server that's down. It isn't true of a payment that's waiting for someone to type in their PIN.

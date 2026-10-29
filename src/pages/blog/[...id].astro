@@ -5,6 +5,7 @@ import ArticleFigure from "../../components/article/ArticleFigure.astro";
 import ArticleSidenote from "../../components/article/ArticleSidenote.astro";
 import ArticleCodeSnippet from "../../components/article/ArticleCodeSnippet.astro";
 import VideoPlayer from "../../components/article/VideoPlayer.astro";
+import ArticleClip from "../../components/article/ArticleClip.astro";
 import ArticlePreviewLink from "../../components/article/ArticlePreviewLink.astro";
 import ArticleSuggestion from "../../components/article/ArticleSuggestion.astro";import AxisAngleDemo from "../../components/article/islands/AxisAngleDemoIsland.astro";
 import GoRunner from "../../components/article/islands/GoRunnerIsland.astro";
@@ -17,6 +18,7 @@ import RotationFrameDemo from "../../components/article/islands/RotationFrameDem
 import RustRunner from "../../components/article/islands/RustRunnerIsland.astro";
 import ScrewMotionDemo from "../../components/article/islands/ScrewMotionDemoIsland.astro";
 import Sigmoid from "../../components/article/islands/SigmoidIsland.astro";
+import BackoffFigure from "../../components/article/islands/BackoffFigureIsland.astro";
 import ArticleLayout from "../../layouts/ArticleLayout.astro";
 import { estimateReadingTime, type ArticleDiscoveryLink } from "../../lib/content-presentation";
 
@@ -86,6 +88,7 @@ const { Content, headings } = await render(entry);
     PreviewLink: ArticlePreviewLink,
     CodeSnippet: ArticleCodeSnippet,
     VideoPlayer,
+    Clip: ArticleClip,
     MeshRenderSwitch,
     HelloFx,
     InequalitiesExample,
@@ -97,5 +100,6 @@ const { Content, headings } = await render(entry);
     AxisAngleDemo,
     ScrewMotionDemo,
     Quiz,
+    BackoffFigure,
   }} />
 </ArticleLayout>

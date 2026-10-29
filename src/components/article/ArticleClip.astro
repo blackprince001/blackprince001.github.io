@@ -1,0 +1,45 @@
+---
+/* Short, silent clip that plays inline and loops at its own aspect ratio (screen recordings,
+   simulations). For narrated or long videos, use VideoPlayer and its modal player instead. */
+
+interface Props {
+  src: string;
+  poster: string;
+  title: string;
+  caption?: string;
+}
+
+const { src, poster, title, caption } = Astro.props;
+const normalize = (value: string) => "/" + value.replace(/^(\.\.\/)+/, "").replace(/^\/+/, "");
+---
+
+<figure class="article-clip">
+  <video
+    src={normalize(src)}
+    poster={normalize(poster)}
+    aria-label={title}
+    muted
+    loop
+    playsinline
+    controls
+    preload="none"
+    data-article-clip
+  ></video>
+  {caption && <figcaption>{caption}</figcaption>}
+</figure>
+
+<script>
+  // Play while on screen, pause when scrolled away; never autoplay for reduced motion.
+  const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const clips = document.querySelectorAll<HTMLVideoElement>("video[data-article-clip]");
+  if (!reduce && "IntersectionObserver" in window) {
+    const io = new IntersectionObserver((entries) => {
+      for (const entry of entries) {
+        const video = entry.target as HTMLVideoElement;
+        if (entry.isIntersecting) video.play().catch(() => {});
+        else video.pause();
+      }
+    }, { threshold: 0.5 });
+    clips.forEach((clip) => io.observe(clip));
+  }
+</script>
