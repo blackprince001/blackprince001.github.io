@@ -1,0 +1,15 @@
+---
+import { BackoffFigure, type BackoffFigureName } from "./backoff/BackoffFigure";
+
+interface Props {
+  figure: BackoffFigureName;
+  label: string;
+}
+
+const { figure, label } = Astro.props;
+---
+
+<section class="interactive-island" aria-label={label}>
+  <BackoffFigure figure={figure} client:only="react" />
+  <noscript>Enable JavaScript to use this interactive chart.</noscript>
+</section>

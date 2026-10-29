@@ -501,6 +501,25 @@ button.tag-pill { cursor: pointer; }
 @keyframes figure-backdrop-in { from { background: rgb(10 10 9 / 0%); backdrop-filter: blur(0); } }
 
 .interactive-island { margin-top: 3rem; margin-bottom: 3rem; }
+
+/* Wide media: text keeps the reading measure, while figures, clips, videos and interactive
+   islands widen symmetrically around the column, up to 64rem and never closer than 1rem to the
+   viewport edge. On article pages the nav rail scrolls away with the header instead of
+   sticking, so nothing wide passes under it. Below the two-column breakpoint media stay
+   column-wide. */
+.article-body { --wide: clamp(100%, calc(100vw - 16rem), 64rem); }
+.site-frame--with-nav:has(.article-shell) > .site-nav { position: static; }
+.article-body > .article-figure,
+.article-body > .article-clip,
+.article-body > .video-player,
+.article-body > .interactive-island {
+  width: var(--wide);
+  max-width: none;
+  margin-left: calc((100% - var(--wide)) / 2);
+}
+.article-clip { margin-top: 3rem; margin-bottom: 3rem; }
+.article-body .article-clip video { width: auto; max-width: 100%; height: auto; max-height: 82dvh; margin: 0 auto; background: transparent; }
+.article-clip figcaption { max-width: var(--container); margin: 0.75rem auto 0; color: var(--muted); font-size: var(--caption-size); font-style: italic; line-height: 1.55; text-align: center; text-wrap: balance; }
 .interactive-island__fallback { margin: 0 0 0.75rem !important; color: var(--muted); font-size: var(--body-size); line-height: var(--body-line-height); }
 .interactive-island noscript { display: block; margin-top: 0.75rem; color: var(--muted); font-size: var(--body-size); }
 
@@ -757,6 +776,8 @@ button.tag-pill { cursor: pointer; }
 .footnotes--collapsed li:nth-child(n+4) { display: none; }
 
 @media (max-width: 60rem) {
+  .article-body { --wide: 100%; }
+  .site-frame--with-nav:has(.article-shell) > .site-nav { position: sticky; }
   .site-frame--with-nav { display: block; width: 100%; }
   .site-nav { position: sticky; top: 0; flex-direction: row; align-items: center; justify-content: space-between; gap: 1rem; width: 100%; margin: 0; padding: 0.65rem 1.25rem; background: color-mix(in srgb, var(--page) 94%, transparent); backdrop-filter: blur(14px); }
   .site-nav a { min-height: 2.75rem; }
